@@ -32,20 +32,20 @@ const CreateList = () => {
 
   const [price, setPrice] = useState("");
   // const [pricesqft, setPriceSqft] = useState("");
-  // const [address, setAddress] = useState("");
+  const [address, setAddress] = useState("");
   const [error, setError] = useState("");
 
   const [countries, setCountries] = useState([]);
   const [selectedCountry, setSelectedCountry] = useState("");
 
-  // const [states, setStates] = useState([]);
-  // const [selectedState, setSelectedState] = useState("");
+  const [states, setStates] = useState([]);
+  const [selectedState, setSelectedState] = useState("");
 
-  // const [cities, setCities] = useState([]);
-  // const [selectedCity, setSelectedCity] = useState("");
+  const [cities, setCities] = useState([]);
+  const [selectedCity, setSelectedCity] = useState("");
 
-  // const [locations, setLocations] = useState([]);
-  // const [selectedLocation, setSelectedLocation] = useState("");
+  const [locations, setLocations] = useState([]);
+  const [selectedLocation, setSelectedLocation] = useState("");
 
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("");
@@ -88,7 +88,7 @@ const CreateList = () => {
   // const [multiplex, setMultiplex] = useState([]);
 
   // const [mapembedcode, setMapEmbedCode] = useState([]);
-  // const [videoembedcode, setVideoEmbedCode] = useState([]);
+  const [videoembedcode, setVideoEmbedCode] = useState([]);
   // const [nearby, setNearBy] = useState([]);
   const [specifications, setSpecifications] = useState([]);
 
@@ -98,7 +98,7 @@ const CreateList = () => {
   const [sellers, setSellers] = useState([]);
   const [selectedSeller, setSelectedSeller] = useState("");
 
-  // const [zipcode, setZipCode] = useState([]);
+  const [zipcode, setZipCode] = useState([]);
   // const [reranumber, setReraNumber] = useState([]);
 
   const [metatitle, setMetatitle] = useState([]);
@@ -341,13 +341,13 @@ const CreateList = () => {
       // { key: "city", value: selectedCity, name: "City" },
       // { key: "location", value: selectedLocation, name: "Location" },
       { key: "selectedCategory", value: selectedCategory, name: "Category" },
-      // {
-      //   key: "selectedPropertytype",
-      //   value: selectedPropertytype,
-      //   name: "Property Type",
-      // },
-      // { key: "selectedBuilder", value: selectedBuilder, name: "Builder" },
-      // { key: "selectedSeller", value: selectedSeller, name: "Seller" },
+      {
+        key: "selectedPropertytype",
+        value: selectedPropertytype,
+        name: "Property Type",
+      },
+      { key: "selectedBuilder", value: selectedBuilder, name: "Builder" },
+      { key: "selectedSeller", value: selectedSeller, name: "Seller" },
       // {
       //   key: "selectedConstructionstatus",
       //   value: selectedConstructionstatus,
@@ -404,8 +404,8 @@ const CreateList = () => {
         // locationid: selectedLocation,
         categoryid: selectedCategory,
         // propertytypeid: selectedPropertytype,
-        // builderid: selectedBuilder,
-        // sellerid: selectedSeller,
+        builderid: selectedBuilder,
+        sellerid: selectedSeller,
         // constructionstatus: selectedConstructionstatus,
         // furnishingstatus: selectedFurnishingstatus,
         // amenityid: selectedAmenity,
@@ -424,14 +424,14 @@ const CreateList = () => {
         // garagessize,
         // yearbuild,
         // mapembedcode,
-        // videoembedcode,
+        videoembedcode,
         // nearby,
         specifications,
         // sellername,
         // selleremail,
         // sellerphone,
         // reranumber,
-        // zipcode,
+        zipcode,
         metatitle,
         metadescription,
         featuredimage,
@@ -777,7 +777,7 @@ const CreateList = () => {
           </div>
         </div> */}
 
-        {/* <div className="row">
+        <div className="row">
           <div className="col-lg-12">
             <h3 className="mb30">Location</h3>
           </div>
@@ -802,7 +802,7 @@ const CreateList = () => {
               </select>
             </div>
           </div>
-          <div className="col-lg-6 col-xl-6">
+          {/* <div className="col-lg-6 col-xl-6">
             <div className="my_profile_setting_input ui_kit_select_search form-group">
               <label htmlFor="stateSelect">Select State</label>
               <select
@@ -821,8 +821,8 @@ const CreateList = () => {
                 ))}
               </select>
             </div>
-          </div>
-          <div className="col-lg-6 col-xl-6">
+          </div> */}
+          {/* <div className="col-lg-6 col-xl-6">
             <div className="my_profile_setting_input ui_kit_select_search form-group">
               <label htmlFor="citySelect">Select City</label>
               <select
@@ -841,8 +841,8 @@ const CreateList = () => {
                 ))}
               </select>
             </div>
-          </div>
-          <div className="col-lg-6 col-xl-6">
+          </div> */}
+          {/* <div className="col-lg-6 col-xl-6">
             <div className="my_profile_setting_input ui_kit_select_search form-group">
               <label htmlFor="locationSelect">Select Location</label>
               <select
@@ -861,8 +861,8 @@ const CreateList = () => {
                 ))}
               </select>
             </div>
-          </div>
-          <div className="col-lg-6">
+          </div> */}
+          {/* <div className="col-lg-6">
             <div className="my_profile_setting_input form-group">
               <label htmlFor="propertyZipcode">Zip Code</label>
 
@@ -874,8 +874,8 @@ const CreateList = () => {
                 onChange={(e) => setZipCode(e.target.value)}
               />
             </div>
-          </div>
-          <div className="col-lg-12">
+          </div> */}
+          {/* <div className="col-lg-12">
             <div className="my_profile_setting_input form-group">
               <label htmlFor="propertyzipcode">Address</label>
 
@@ -887,8 +887,8 @@ const CreateList = () => {
                 onChange={handleAddressChange}
               />
             </div>
-          </div>
-        </div> */}
+          </div>*/}
+        </div> 
         <div className=" mt30 ">
           <div className="col-lg-12">
             <h3 className="mb30">Detailed Information</h3>
@@ -1169,7 +1169,7 @@ const CreateList = () => {
               </div>
             </div> */}
             {/* End .col */}
-            {/* <div className="col-lg-12">
+            <div className="col-lg-12">
               <div className="my_profile_setting_textarea">
                 <label htmlFor="videoEmbedCode">Video Embed code </label>
                 <textarea
@@ -1181,7 +1181,7 @@ const CreateList = () => {
                   placeholder="Enter Video Embed code"
                 ></textarea>
               </div>
-            </div> */}
+            </div>
             {/* End .col */}
 
             {/* <div className="col-lg-12">
