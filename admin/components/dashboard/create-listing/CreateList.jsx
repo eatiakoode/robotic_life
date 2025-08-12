@@ -6,7 +6,7 @@ import { useRouter, useParams } from "next/navigation";
 // import { getStateByCountryTableData } from "../../../api/state";
 // import { getLocationByCityTableData } from "../../../api/location";
 // import { getAmenityTableData } from "../../../api/amenity";
-// import { getBuilderTableData } from "../../../api/builder";
+import { getBuilderTableData } from "../../../api/builder";
 // import { getConstructionstatusTableData } from "../../../api/constructionstatus";
 // import { getFurnishingstatusTableData } from "../../../api/furnishingstatus";
 // import { addPropertyAPI } from "../../../api/property";
@@ -50,11 +50,14 @@ const CreateList = () => {
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("");
 
+  const [subCategories, setSubCategories] = useState([]);
+  const [selectedSubCategory, setSelectedSubCategory] = useState("");
+
   // const [propertytypes, setPropertytypes] = useState([]);
   // const [selectedPropertytype, setSelectedPropertytype] = useState("");
 
-  // const [builders, setBuilders] = useState([]);
-  // const [selectedBuilder, setSelectedBuilder] = useState("");
+  const [manufacturers, setManufacturers] = useState([]);
+  const [selectedManufacturer, setSelectedManufacturer] = useState("");
 
   // const [amenities, setAmenities] = useState([]);
   // const [selectedAmenity, setSelectedAmenity] = useState("");
@@ -190,7 +193,7 @@ const CreateList = () => {
           furnRes,
           catRes,
           amenityRes,
-          builderRes,
+          manufacturerRes,
           sellerRes,
         ] = await Promise.all([
           getCountryTableData(),
@@ -281,8 +284,8 @@ const CreateList = () => {
   const handlePropertytypeChange = (e) => {
     setSelectedPropertytype(e.target.value);
   };
-  const handleBuilderChange = (e) => {
-    setSelectedBuilder(e.target.value);
+  const handleManufacturerChange = (e) => {
+    setSelectedManufacturer(e.target.value);
   };
   const handleConstructionstatusChange = (e) => {
     setSelectedConstructionstatus(e.target.value);
@@ -341,13 +344,14 @@ const CreateList = () => {
       // { key: "city", value: selectedCity, name: "City" },
       // { key: "location", value: selectedLocation, name: "Location" },
       { key: "selectedCategory", value: selectedCategory, name: "Category" },
+      { key: "selectedSubCategory", value: selectedSubCategory, name: "Sub Category" },
       {
         key: "selectedPropertytype",
         value: selectedPropertytype,
         name: "Property Type",
       },
-      { key: "selectedBuilder", value: selectedBuilder, name: "Builder" },
-      { key: "selectedSeller", value: selectedSeller, name: "Seller" },
+      { key: "selectedManufacturer", value: selectedManufacturer, name: "Manufacturer" },
+      // { key: "selectedSeller", value: selectedSeller, name: "Seller" },
       // {
       //   key: "selectedConstructionstatus",
       //   value: selectedConstructionstatus,
@@ -404,7 +408,7 @@ const CreateList = () => {
         // locationid: selectedLocation,
         categoryid: selectedCategory,
         // propertytypeid: selectedPropertytype,
-        builderid: selectedBuilder,
+        manufacturerid: selectedManufacturer,
         sellerid: selectedSeller,
         // constructionstatus: selectedConstructionstatus,
         // furnishingstatus: selectedFurnishingstatus,
@@ -515,6 +519,73 @@ const CreateList = () => {
           </div>
         </div>
 
+        <div className="col-lg-12">
+          <div className="my_profile_setting_textarea form-group">
+            <label htmlFor="roboDescription">Description</label>
+            <textarea
+              id="roboDescription"
+              className="form-control"
+              rows="7"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="Enter robo description"
+            ></textarea>
+            {error.description && (
+              <span className="text-danger">{error.description}</span>
+            )}
+          </div>
+        </div>
+
+        <div className="col-lg-6 col-xl-6">
+          <div className="my_profile_setting_input ui_kit_select_search form-group">
+            <label>Category</label>
+            <select
+              id="categorySelect"
+              className="selectpicker form-select"
+              value={selectedCategory}
+              onChange={handleCategoryChange}
+              data-live-search="true"
+              data-width="100%"
+            >
+              <option value="">-- Select Category --</option>
+              {categories.map((categories) => (
+                <option key={categories._id} value={categories._id}>
+                  {categories.title}
+                </option>
+              ))}
+            </select>
+            {error.selectedCategory && (
+              <span className="text-danger">{error.selectedCategory}</span>
+            )}
+          </div>
+        </div>
+
+        {/* Sub Category Field */}
+        <div className="col-lg-6 col-xl-6">
+          <div className="my_profile_setting_input ui_kit_select_search form-group">
+            <label>Sub Category</label>
+            <select
+              id="subCategorySelect"
+              className="selectpicker form-select"
+              value={selectedSubCategory}
+              onChange={(e) => setSelectedSubCategory(e.target.value)}
+              data-live-search="true"
+              data-width="100%"
+              disabled={!selectedCategory || subCategories.length === 0} // Disable if no category is selected
+            >
+              <option value="">-- Select Sub Category --</option>
+              {subCategories.map((sub) => (
+                <option key={sub._id} value={sub._id}>
+                  {sub.title}
+                </option>
+              ))}
+            </select>
+            {error.selectedSubCategory && (
+              <span className="text-danger">{error.selectedSubCategory}</span>
+            )}
+          </div>
+        </div>
+
         <div className="col-lg-6">
           <div className="my_profile_setting_input form-group">
             <label htmlFor="roboPrice">Total Price</label>
@@ -529,6 +600,28 @@ const CreateList = () => {
             {error.price && <span className="text-danger">{error.price}</span>}
           </div>
         </div>
+
+        <div className="col-lg-6 col-xl-6">
+          <div className="my_profile_setting_input ui_kit_select_search form-group">
+            <label htmlFor="countrySelect">Select Country</label>
+            <select
+              id="countrySelect"
+              className="selectpicker form-select"
+              value={selectedCountry}
+              onChange={handleCountryChange}
+              data-live-search="true"
+              data-width="100%"
+            >
+              <option value="">-- Select Country --</option>
+              {countries.map((country) => (
+                <option key={country._id} value={country._id}>
+                  {country.title}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+
         {/* <div className="col-lg-6">
         <div className="my_profile_setting_input form-group">
           <label htmlFor="propertyPriceSqft">Price/Sqft</label>
@@ -547,48 +640,9 @@ const CreateList = () => {
           </div>
           
         </div> */}
-        <div className="col-lg-12">
-          <div className="my_profile_setting_textarea form-group">
-            <label htmlFor="roboDescription">Description</label>
-            <textarea
-              id="roboDescription"
-              className="form-control"
-              rows="7"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              placeholder="Enter robo description"
-            ></textarea>
-            {error.description && (
-              <span className="text-danger">{error.description}</span>
-            )}
-          </div>
-        </div>
 
         {/* End .col */}
 
-        <div className="col-lg-6 col-xl-6">
-          <div className="my_profile_setting_input ui_kit_select_search form-group">
-            <label>Category</label>
-            <select
-              id="categorySelect"
-              className="selectpicker form-select"
-              value={selectedCategory}
-              onChange={handleCategoryChange}
-              data-live-search="true"
-              data-width="100%"
-            >
-              <option value="">-- Select Category --</option>
-              {categories.map((category) => (
-                <option key={category._id} value={category._id}>
-                  {category.title}
-                </option>
-              ))}
-            </select>
-            {error.selectedCategory && (
-              <span className="text-danger">{error.selectedCategory}</span>
-            )}
-          </div>
-        </div>
         {/* <div className="col-lg-6 col-xl-6">
         <div className="my_profile_setting_input ui_kit_select_search form-group">
           <label>Property Type</label>
@@ -610,29 +664,29 @@ const CreateList = () => {
             {error.selectedPropertytype && <span className="text-danger">{error.selectedPropertytype}</span>}
         </div>
       </div> */}
-        {/* <div className="col-lg-6 col-xl-6">
-        <div className="my_profile_setting_input ui_kit_select_search form-group">
-          <label>Builder</label>
-          <select
-              id="builderSelect"
+        <div className="col-lg-6 col-xl-6">
+          <div className="my_profile_setting_input ui_kit_select_search form-group">
+            <label>Manufacturer</label>
+            <select
+              id="manufacturerSelect"
               className="selectpicker form-select"
-              value={selectedBuilder}
-              onChange={handleBuilderChange}
+              value={selectedManufacturer}
+              onChange={handleManufacturerChange}
               data-live-search="true"
               data-width="100%"
             >
-              <option value="">-- Select Builder --</option>
-              {builders.map((builder) => (
-                <option key={builder._id} value={builder._id}>
-                  {builder.title}
+              <option value="">-- Select Manufacturer --</option>
+              {manufacturers.map((manufacturer) => (
+                <option key={manufacturer._id} value={manufacturer._id}>
+                  {manufacturer.title}
                 </option>
               ))}
             </select>
-            {error.selectedBuilder && <span className="text-danger">{error.selectedBuilder}</span>}
+            {error.selectedManufacturer && <span className="text-danger">{error.selectedManufacturer}</span>}
+          </div>
         </div>
-      </div> */}
         {/* End .col */}
-        <div className="col-lg-6 col-xl-6">
+        {/* <div className="col-lg-6 col-xl-6">
           <div className="my_profile_setting_input ui_kit_select_search form-group">
             <label>Seller</label>
             <select
@@ -655,7 +709,7 @@ const CreateList = () => {
               <span className="text-danger">{error.selectedSeller}</span>
             )}
           </div>
-        </div>
+        </div> */}
         {/* End .col */}
 
         {/* <div className="col-lg-6 col-xl-6">
@@ -777,12 +831,12 @@ const CreateList = () => {
           </div>
         </div> */}
 
-        <div className="row">
+        {/* <div className="row">
           <div className="col-lg-12">
             <h3 className="mb30">Location</h3>
-          </div>
+          </div> */}
 
-          <div className="col-lg-6 col-xl-6">
+          {/* <div className="col-lg-6 col-xl-6">
             <div className="my_profile_setting_input ui_kit_select_search form-group">
               <label htmlFor="countrySelect">Select Country</label>
               <select
@@ -801,7 +855,7 @@ const CreateList = () => {
                 ))}
               </select>
             </div>
-          </div>
+          </div> */}
           {/* <div className="col-lg-6 col-xl-6">
             <div className="my_profile_setting_input ui_kit_select_search form-group">
               <label htmlFor="stateSelect">Select State</label>
@@ -888,7 +942,7 @@ const CreateList = () => {
               />
             </div>
           </div>*/}
-        </div> 
+        {/* </div> */}
         <div className=" mt30 ">
           <div className="col-lg-12">
             <h3 className="mb30">Detailed Information</h3>
@@ -978,24 +1032,24 @@ const CreateList = () => {
                     />
                   </div>
                 )} */}
-                {/* <input type="text"
+            {/* <input type="text"
               className="form-control"
               id="bedRooms"
               value={bedrooms}
               onChange={(e) => setBedRooms(e.target.value)} /> */}
-              {/* </div>
+            {/* </div>
             </div> */}
             {/* End .col */}
 
             {/* <div className="col-lg-6 col-xl-4">
               <div className="my_profile_setting_input form-group">
                 <label htmlFor="bathRooms">Bathrooms</label> */}
-                {/* <input type="text"
+            {/* <input type="text"
               className="form-control"
               id="bathRooms"
               value={bathrooms}
               onChange={(e) => setBathRooms(e.target.value)} /> */}
-                {/* <select
+            {/* <select
                   id="bathRooms"
                   className="selectpicker form-select"
                   value={bathrooms}
@@ -1041,12 +1095,12 @@ const CreateList = () => {
             {/* <div className="col-lg-6 col-xl-4">
               <div className="my_profile_setting_input form-group">
                 <label htmlFor="garages">Parkings</label> */}
-                {/* <input type="text"
+            {/* <input type="text"
               className="form-control"
               id="garages"
               value={garages}
               onChange={(e) => setGarages(e.target.value)} /> */}
-                {/* <select
+            {/* <select
                   id="garages"
                   className="selectpicker form-select"
                   value={garages}
@@ -1251,10 +1305,10 @@ const CreateList = () => {
                   </li>
                 ))} */}
 
-                {/* End li */}
+            {/* End li */}
 
-                {/* End li */}
-              {/* </ul>
+            {/* End li */}
+            {/* </ul>
             </div> */}
             {/* End .col */}
 
@@ -1313,10 +1367,10 @@ const CreateList = () => {
                     style={
                       featuredimage !== null
                         ? {
-                            backgroundImage: `url(${URL.createObjectURL(
-                              featuredimage
-                            )})`,
-                          }
+                          backgroundImage: `url(${URL.createObjectURL(
+                            featuredimage
+                          )})`,
+                        }
                         : undefined
                     }
                     htmlFor="featuredimage"
@@ -1391,29 +1445,29 @@ const CreateList = () => {
                 <ul className="mb-0">
                   {propertySelectedImgs.length > 0
                     ? propertySelectedImgs?.map((item, index) => (
-                        <li key={index} className="list-inline-item">
-                          <div className="portfolio_item">
-                            <Image
-                              width={200}
-                              height={200}
-                              className="img-fluid cover"
-                              src={URL.createObjectURL(item)}
-                              alt="fp1.jpg"
-                            />
-                            <div
-                              className="edu_stats_list"
-                              data-bs-toggle="tooltip"
-                              data-bs-placement="top"
-                              title="Delete"
-                              data-original-title="Delete"
-                            >
-                              <a onClick={() => deleteImage(item.name)}>
-                                <span className="flaticon-garbage"></span>
-                              </a>
-                            </div>
+                      <li key={index} className="list-inline-item">
+                        <div className="portfolio_item">
+                          <Image
+                            width={200}
+                            height={200}
+                            className="img-fluid cover"
+                            src={URL.createObjectURL(item)}
+                            alt="fp1.jpg"
+                          />
+                          <div
+                            className="edu_stats_list"
+                            data-bs-toggle="tooltip"
+                            data-bs-placement="top"
+                            title="Delete"
+                            data-original-title="Delete"
+                          >
+                            <a onClick={() => deleteImage(item.name)}>
+                              <span className="flaticon-garbage"></span>
+                            </a>
                           </div>
-                        </li>
-                      ))
+                        </div>
+                      </li>
+                    ))
                     : undefined}
 
                   {/* End li */}
@@ -1491,8 +1545,8 @@ const CreateList = () => {
                       />
                     </div>
                   </div> */}
-                  {/* End .col */}
-                  {/* <div className="col-xl-4">
+            {/* End .col */}
+            {/* <div className="col-xl-4">
                     <div className="my_profile_setting_input form-group">
                       <label htmlFor={`planPrice-${index}`}>
                         Plan Price {index + 1}
@@ -1508,9 +1562,9 @@ const CreateList = () => {
                       />
                     </div>
                   </div> */}
-                  {/* End .col */}
+            {/* End .col */}
 
-                  {/* <div className="col-xl-4">
+            {/* <div className="col-xl-4">
                     <div className="my_profile_setting_input form-group">
                       <label htmlFor={`planSize-${index}`}>
                         Plan Size {index + 1}
@@ -1526,8 +1580,8 @@ const CreateList = () => {
                       />
                     </div>
                   </div> */}
-                  {/* End .col */}
-                  {/* <div className="col-lg-4 col-xl-4">
+            {/* End .col */}
+            {/* <div className="col-lg-4 col-xl-4">
                     <div className="my_profile_setting_input form-group">
                       <div htmlFor="planimage">Plan Image {index + 1}</div>
                       <div className="wrap-custom-file height-150">
@@ -1561,8 +1615,8 @@ const CreateList = () => {
                       <p>*minimum 260px x 260px</p>
                     </div>
                   </div> */}
-                  {/* End .col */}
-                  {/* <div className="col-xl-4">
+            {/* End .col */}
+            {/* <div className="col-xl-4">
                     <div className="my_profile_setting_textarea mt30-991">
                       <label htmlFor={`planDescription-${index}`}>
                         Plan Description {index + 1}
