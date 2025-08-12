@@ -20,10 +20,10 @@ const SidebarMenu = () => {
     { id: 1, name: "Add Category", route: "/cmswegrow/add-category" },
     { id: 2, name: "Category List", route: "/cmswegrow/my-category" }
   ];
-  // const myCountry = [
-  //   { id: 1, name: "Add Country", route: "/cmswegrow/add-country" },
-  //   { id: 2, name: "Country List", route: "/cmswegrow/my-country" }
-  // ];
+  const myCountry = [
+    { id: 1, name: "Add Country", route: "/cmswegrow/add-country" },
+    { id: 2, name: "Country List", route: "/cmswegrow/my-country" }
+  ];
   // const myState = [
   //   { id: 1, name: "Add State", route: "/cmswegrow/add-state" },
   //   { id: 2, name: "State List", route: "/cmswegrow/my-state" }
@@ -44,18 +44,18 @@ const SidebarMenu = () => {
   //   { id: 1, name: "Add Property type", route: "/cmswegrow/add-propertytype" },
   //   { id: 2, name: "Property type List", route: "/cmswegrow/my-propertytype" }
   // ];
-  // const myBuilder = [
-  //   { id: 1, name: "Add Builder", route: "/cmswegrow/add-builder" },
-  //   { id: 2, name: "Builder List", route: "/cmswegrow/my-builder" }
-  // ];
+  const RoboManufacturer = [
+    { id: 1, name: "Add Manufacturer", route: "/cmswegrow/add-builder" },
+    { id: 2, name: "Manufacturer List", route: "/cmswegrow/my-builder" }
+  ];
   // const myAgent = [
   //   { id: 1, name: "Add Agent", route: "/cmswegrow/add-agent" },
   //   { id: 2, name: "Agent List", route: "/cmswegrow/my-agent" }
   // ];
-  const mySeller = [
-    { id: 1, name: "Add Seller", route: "/cmswegrow/add-seller" },
-    { id: 2, name: "Seller List", route: "/cmswegrow/my-seller" }
-  ];
+  // const mySeller = [
+  //   { id: 1, name: "Add Seller", route: "/cmswegrow/add-seller" },
+  //   { id: 2, name: "Seller List", route: "/cmswegrow/my-seller" }
+  // ];
   const myBlog = [
     { id: 1, name: "Add Blog category", route: "/cmswegrow/add-blogcategory" },
     { id: 2, name: "Blog category List", route: "/cmswegrow/my-blogcategory" },
@@ -170,7 +170,7 @@ const SidebarMenu = () => {
           <span>Manage Listings</span>
           <ul>
 
-            {/* <li
+            <li
               className={`treeview ${
                 isParentPageActive(myCountry, pathname) ? "active" : ""
               }`}
@@ -188,7 +188,7 @@ const SidebarMenu = () => {
                   </li>
                 ))}
               </ul>
-            </li> */}
+            </li>
             {/* <li
               className={`treeview ${
                 isParentPageActive(myState, pathname) ? "active" : ""
@@ -324,17 +324,17 @@ const SidebarMenu = () => {
                 ))}
               </ul>
             </li> */}
-            {/* <li
+            <li
               className={`treeview ${
-                isParentPageActive(myBuilder, pathname) ? "active" : ""
+                isParentPageActive(RoboManufacturer, pathname) ? "active" : ""
               }`}
             >
               <a data-bs-toggle="collapse" href="#my-builder">
-                <i className="flaticon-home"></i> <span>My Builder</span>
+                <i className="flaticon-home"></i> <span>Manufacturer</span>
                 <i className="fa fa-angle-down pull-right"></i>
               </a>
               <ul className="treeview-menu collapse" id="my-builder">
-                {myBuilder.map((item) => (
+                {RoboManufacturer.map((item) => (
                   <li key={item.id}>
                     <Link href={item.route}>
                       <i className="fa fa-circle"></i> {item.name}
@@ -342,7 +342,7 @@ const SidebarMenu = () => {
                   </li>
                 ))}
               </ul>
-            </li> */}
+            </li>
             {/* <li
               className={`treeview ${
                 isParentPageActive(myAgent, pathname) ? "active" : ""
@@ -362,7 +362,7 @@ const SidebarMenu = () => {
                 ))}
               </ul>
             </li> */}
-            <li
+            {/* <li
               className={`treeview ${
                 isParentPageActive(mySeller, pathname) ? "active" : ""
               }`}
@@ -380,7 +380,7 @@ const SidebarMenu = () => {
                   </li>
                 ))}
               </ul>
-            </li>
+            </li> */}
 
             <li
               className={`treeview ${isParentPageActive(myBlog, pathname) ? "active" : ""
@@ -442,7 +442,7 @@ const SidebarMenu = () => {
             </li>
             {/* end Propertypage */}
 
-            <li
+            {/* <li
               className={`treeview ${isParentPageActive(myTestimonial, pathname) ? "active" : ""
                 }`}
             >
@@ -459,7 +459,7 @@ const SidebarMenu = () => {
                   </li>
                 ))}
               </ul>
-            </li>
+            </li> */}
             {/* end Testimonial */}
 
             {/* <li
