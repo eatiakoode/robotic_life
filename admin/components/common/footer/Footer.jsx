@@ -271,7 +271,7 @@ const Footer = ({  showBox,setShowBox }) => {
       
       {/* Left: Image Side */}
       <div className="modal-image-side">
-        <img src="/assets/images/buildings.webp" alt="Image" class="img-fluid"/>
+        <img src="/assets/images/buildings.webp" alt="Image" className="img-fluid"/>
       </div>
 
       {/* Right: Form Side */}

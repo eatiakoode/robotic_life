@@ -25,25 +25,30 @@ const token =userData.token
   };
   
 
-  export async function getEnquiryTableData(filter) {
-    // Fake delay
-    await new Promise((resolve) => setTimeout(resolve, 10));
-    
-  
-    try {
-      const response = await fetch(process.env.NEXT_PUBLIC_ADMIN_API_URL+"api/enquiry?limit="+filter.limit+"&skip="+filter.page,
-        {
-          next: { revalidate: 60 }
-        }); // Replace with actual API endpoint
-      if (!response.ok) {
-        throw new Error("Failed to fetch products");
+  export async function getEnquiryTableData(filter = { limit: 10, page: 0 }) {
+  // Fake delay
+  await new Promise((resolve) => setTimeout(resolve, 10));
+
+  try {
+    const response = await fetch(
+      process.env.NEXT_PUBLIC_ADMIN_API_URL +
+        "api/enquiry?limit=" + filter.limit + "&skip=" + filter.page,
+      {
+        next: { revalidate: 60 }
       }
-      return await response.json();
-    } catch (error) {
-      console.error("Error fetching products:", error);
-      return []; // Return an empty array in case of an error
+    );
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch enquiries");
     }
+
+    return await response.json();
+  } catch (error) {
+    console.error("Error fetching enquiries:", error);
+    return [];
   }
+}
+
 
 
   export const deleteEnquiryAPI = async (id: string) => {

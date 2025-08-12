@@ -556,16 +556,16 @@ const MobileMenuContent = () => {
               Contact
             </div>
           </MenuItem>
-          <MenuItem className="mobile-phone-call mt-3">
+          <div className="mobile-phone-call mt-3">
             <div className="d-flex align-items-start justify-content-start gap-0">
               <span className="flaticon-call pe-2"></span>
               <a href="tel:+917421922000" className="text-decoration-none text-dark">
                 <span className="flaticon-telephone pe-1"></span> +91 742-192-2000
               </a>
             </div>
-          </MenuItem>
+          </div>
 
-          <MenuItem className="mobile-social-icons mt-3">
+          <div className="mobile-social-icons mt-3">
             <div className="d-flex gap-3 ps-2">
               <a href="https://www.facebook.com/WeGrowInfraventurespvtltd/" target="_blank" rel="noopener noreferrer">
                 <i className="fab fa-facebook-f"></i>
@@ -580,7 +580,7 @@ const MobileMenuContent = () => {
                 <i className="fab fa-linkedin-in"></i>
               </a>
             </div>
-          </MenuItem>
+          </div>
 
           
 
