@@ -32,14 +32,17 @@ const token =userData.token
 };
 
 
-export async function getLandingEnquiryTableData(filter) {
+export async function getLandingEnquiryTableData(filter = {}) {
+
+  const limit = filter.limit ?? 10; // default to 10 if not provided
+  const page = filter.page ?? 0;    // default to 0 if not provided
   // Fake delay
   await new Promise((resolve) => setTimeout(resolve, 10));
   
 
   try {
    const response = await fetch(
-        process.env.NEXT_PUBLIC_ADMIN_API_URL + "api/landingenquiry?limit="+filter.limit+"&skip="+filter.page,
+        `${process.env.NEXT_PUBLIC_ADMIN_API_URL}api/landingenquiry?limit=${limit}&skip=${page}`,
         {
           next: { revalidate: 60 }
         }

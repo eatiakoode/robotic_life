@@ -1,5 +1,4 @@
-import dynamic from "next/dynamic";
-import MyCities from "@/components/dashboard/my-cities";
+import MyCitiesWrapper from "./MyCitiesWrapper"
 
 export const metadata = {
   title: 'My Properties || WeGrow - Real Estate ',
@@ -7,12 +6,8 @@ export const metadata = {
     'WeGrow - Real Estate ',
 }
 
-const index = () => {
+export default function MyCitiesPage() {
   return (
-    <>
-      <MyCities />
-    </>
+    <MyCitiesWrapper />
   );
-};
-
-export default dynamic(() => Promise.resolve(index), { ssr: false });
+}

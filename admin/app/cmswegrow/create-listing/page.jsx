@@ -1,5 +1,4 @@
-import dynamic from "next/dynamic";
-import CreateListing from "@/components/dashboard/create-listing";
+import CreateListingWpper from "./CreateListingWrapper";
 
 export const metadata = {
   title: 'Create Listing || WeGrow - Real Estate',
@@ -7,12 +6,8 @@ export const metadata = {
     'WeGrow - Real Estate',
 }
 
-const index = () => {
+export default function CreateListingPage() {
   return (
-    <>
-      <CreateListing />
-    </>
+    <CreateListingWpper />
   );
-};
-
-export default dynamic(() => Promise.resolve(index), { ssr: false });
+}

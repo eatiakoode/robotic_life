@@ -1,16 +1,14 @@
+// app/not-found.jsx
+"use client";
 
-
-
-import dynamic from "next/dynamic";
 import NotFound from "@/components/404";
 
 export const metadata = {
-  title: '404 Not Found || WeGrow ',
-  description:
-    'WeGrow',
-}
+  title: '404 Not Found || WeGrow',
+  description: 'WeGrow',
+};
 
-const index = () => {
+const NotFoundPage = () => {
   return (
     <>
       <NotFound />
@@ -18,4 +16,4 @@ const index = () => {
   );
 };
 
-export default dynamic(() => Promise.resolve(index), { ssr: false });
+export default NotFoundPage;

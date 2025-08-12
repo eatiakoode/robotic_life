@@ -1,5 +1,5 @@
-import dynamic from "next/dynamic";
-import AddCity from "@/components/dashboard/add-city";
+import AddCityWrapper from "./AddCityWrapper";
+
 
 export const metadata = {
   title: 'My Properties || WeGrow',
@@ -7,12 +7,8 @@ export const metadata = {
     'WeGrow',
 }
 
-const index = () => {
+export default function AddCityPage() {
   return (
-    <>
-      <AddCity />
-    </>
+    <AddCityWrapper />
   );
-};
-
-export default dynamic(() => Promise.resolve(index), { ssr: false });
+}

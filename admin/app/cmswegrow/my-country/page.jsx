@@ -1,18 +1,10 @@
-import dynamic from "next/dynamic";
-import MyCountry from "@/components/dashboard/my-country";
+import MyCountryClient from "./MyCountryClient";
 
 export const metadata = {
-  title: 'My Properties || WeGrow - Real Estate ',
-  description:
-    'WeGrow - Real Estate ',
-}
-
-const index = () => {
-  return (
-    <>
-      <MyCountry />
-    </>
-  );
+  title: "My Properties || WeGrow - Real Estate",
+  description: "WeGrow - Real Estate",
 };
 
-export default dynamic(() => Promise.resolve(index), { ssr: false });
+export default function MyCountryPage() {
+  return <MyCountryClient />;
+}

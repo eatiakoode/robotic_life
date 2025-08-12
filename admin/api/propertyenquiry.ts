@@ -32,13 +32,16 @@ const token =userData.token
 };
 
 
-export async function getPropertyEnquiryTableData(filter) {
+export async function getPropertyEnquiryTableData(filter = {}) {
+
+  const limit = filter.limit ?? 10; // default to 10 if undefined/null
+  const page = filter.page ?? 0;    // default to 0 if undefined/null
   // Fake delay
   await new Promise((resolve) => setTimeout(resolve, 10));
   
 
   try {
-    const response = await fetch(process.env.NEXT_PUBLIC_ADMIN_API_URL+"api/propertyenquiry?limit="+filter.limit+"&skip="+filter.page,
+    const response = await fetch(`${process.env.NEXT_PUBLIC_ADMIN_API_URL}api/propertyenquiry?limit=${limit}&skip={page}`,
         {
           next: { revalidate: 60 }
         }); // Replace with actual API endpoint
