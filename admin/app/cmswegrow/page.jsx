@@ -1,18 +1,13 @@
-import dynamic from "next/dynamic";
+'use client';
+ 
 import AdminLogin from "@/components/adminlogin";
-
-export const metadata = {
-  title: 'Login || WeGrow',
-  description:
-    'WeGrow',
-}
-
-const index = () => {
+ 
+const CMSWeGrowClient = () => {
   return (
     <>
       <AdminLogin />
     </>
   );
 };
-
-export default dynamic(() => Promise.resolve(index), { ssr: false });
+ 
+export default CMSWeGrowClient;
