@@ -1,4 +1,5 @@
-"use client";
+
+
 
 import NotFound from "@/components/404";
 
@@ -7,8 +8,12 @@ export const metadata = {
   description: 'WeGrow',
 };
 
-const NotFoundPage = () => {
-  return <NotFound />;
+const index = () => {
+  return (
+    <>
+      <NotFound />
+    </>
+  );
 };
 
 export default NotFoundPage;

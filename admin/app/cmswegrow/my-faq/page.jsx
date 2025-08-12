@@ -1,18 +1,10 @@
-import dynamic from "next/dynamic";
-import MyFaq from "@/components/dashboard/my-faq";
+import MyFaqClient from "./MyFaqClient";
 
 export const metadata = {
-  title: 'My Properties || WeGrow - Real Estate ',
-  description:
-    'WeGrow - Real Estate ',
-}
-
-const index = () => {
-  return (
-    <>
-      <MyFaq />
-    </>
-  );
+  title: 'My Properties || WeGrow - Real Estate',
+  description: 'WeGrow - Real Estate',
 };
 
-export default dynamic(() => Promise.resolve(index), { ssr: false });
+export default function Page() {
+  return <MyFaqClient />;
+}

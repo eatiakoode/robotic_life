@@ -1,18 +1,10 @@
-import dynamic from "next/dynamic";
-import EditBlogcategory from "@/components/dashboard/edit-blogcategory";
+import EditBlogCategoryClient from "./EditBlogCategoryClient";
 
 export const metadata = {
   title: 'My Properties || WeGrow - Real Estate',
-  description:
-    'WeGrow - Real Estate',
-}
-
-const index = () => {
-  return (
-    <>
-      <EditBlogcategory />
-    </>
-  );
+  description: 'WeGrow - Real Estate',
 };
 
-export default dynamic(() => Promise.resolve(index), { ssr: false });
+export default function Page({ params }) {
+  return <EditBlogCategoryClient id={params.id} />;
+}

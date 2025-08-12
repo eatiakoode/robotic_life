@@ -1,18 +1,11 @@
-import dynamic from "next/dynamic";
-import MyCategory from "@/components/dashboard/my-category";
+'use client';
 
-export const metadata = {
-  title: 'My Properties || WeGrow - Real Estate',
-  description:
-    'WeGrow - Real Estate',
+import dynamic from 'next/dynamic';
+
+const MyCategory = dynamic(() => import('@/components/dashboard/my-category'), {
+  ssr: false,
+});
+
+export default function Page() {
+  return <MyCategory />;
 }
-
-const index = () => {
-  return (
-    <>
-      <MyCategory />
-    </>
-  );
-};
-
-export default dynamic(() => Promise.resolve(index), { ssr: false });

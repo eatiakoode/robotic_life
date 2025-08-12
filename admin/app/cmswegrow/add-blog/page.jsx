@@ -1,18 +1,10 @@
-import dynamic from "next/dynamic";
-import AddBlog from "@/components/dashboard/add-blog";
+import AddBlogPageClient from "./AddBlogPageClient";
 
 export const metadata = {
-  title: 'My Properties || WeGrow',
-  description:
-    'WeGrow',
-}
-
-const index = () => {
-  return (
-    <>
-      <AddBlog />
-    </>
-  );
+  title: 'Add Blog || WeGrow - Real Estate',
+  description: 'WeGrow - Real Estate',
 };
 
-export default dynamic(() => Promise.resolve(index), { ssr: false });
+export default function Page() {
+  return <AddBlogPageClient />;
+}

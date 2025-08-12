@@ -12,6 +12,14 @@ import { usePathname } from "next/navigation";
 const SidebarMenu = () => {
   const pathname = usePathname()
 
+  const myRobots = [
+    { id: 1, name: "Add Robot", route: "/cmswegrow/create-listing" },
+    { id: 2, name: "Robot List", route: "/cmswegrow/my-properties" }
+  ];
+  const RoboCategory = [
+    { id: 1, name: "Add Category", route: "/cmswegrow/add-category" },
+    { id: 2, name: "Category List", route: "/cmswegrow/my-category" }
+  ];
   const myCountry = [
     { id: 1, name: "Add Country", route: "/cmswegrow/add-country" },
     { id: 2, name: "Country List", route: "/cmswegrow/my-country" }
@@ -24,7 +32,6 @@ const SidebarMenu = () => {
     { id: 1, name: "Add City", route: "/cmswegrow/add-city" },
     { id: 2, name: "City List", route: "/cmswegrow/my-cities" }
   ];
- 
   const myLocation = [
     { id: 1, name: "Add Location", route: "/cmswegrow/add-location" },
     { id: 2, name: "Location List", route: "/cmswegrow/my-location" }
@@ -32,10 +39,6 @@ const SidebarMenu = () => {
   const myAmenity = [
     { id: 1, name: "Add Amenity", route: "/cmswegrow/add-amenities" },
     { id: 2, name: "Amenity List", route: "/cmswegrow/my-amenities" }
-  ];
-  const myCategory = [
-    { id: 1, name: "Add Category", route: "/cmswegrow/add-category" },
-    { id: 2, name: "Category List", route: "/cmswegrow/my-category" }
   ];
   const myPropertytype = [
     { id: 1, name: "Add Property type", route: "/cmswegrow/add-propertytype" },
@@ -52,12 +55,6 @@ const SidebarMenu = () => {
   const mySeller = [
     { id: 1, name: "Add Seller", route: "/cmswegrow/add-seller" },
     { id: 2, name: "Seller List", route: "/cmswegrow/my-seller" }
-  ];
-  
-  
-  const myProperties = [
-    { id: 1, name: "Add Property", route: "/cmswegrow/create-listing" },
-    { id: 2, name: "Property List", route: "/cmswegrow/my-properties" }
   ];
   const myBlog = [
     { id: 1, name: "Add Blog category", route: "/cmswegrow/add-blogcategory" },
@@ -89,10 +86,10 @@ const SidebarMenu = () => {
   ];
   const enquerylist = [
     { id: 1, name: "My enquery list", route: "/cmswegrow/my-enquiry" },
-    { id: 2, name: "My property enquery list", route: "/cmswegrow/my-propertyenquiry" },
-    { id: 3, name: "My landing enquery list", route: "/cmswegrow/my-landingenquiry" },
-    { id: 4, name: "My Subscribe enquery list", route: "/cmswegrow/my-subscribeenquiry" },
-    { id: 5, name: "My brochure enquery list", route: "/cmswegrow/my-brochureenquiry" },
+    // { id: 2, name: "My property enquery list", route: "/cmswegrow/my-propertyenquiry" },
+    // { id: 3, name: "My landing enquery list", route: "/cmswegrow/my-landingenquiry" },
+    // { id: 4, name: "My Subscribe enquery list", route: "/cmswegrow/my-subscribeenquiry" },
+    // { id: 5, name: "My brochure enquery list", route: "/cmswegrow/my-brochureenquiry" },
   ];
   const manageAccount = [
     {
@@ -174,7 +171,7 @@ const SidebarMenu = () => {
           <span>Manage Listings</span>
           <ul>
          
-            <li
+            {/* <li
               className={`treeview ${
                 isParentPageActive(myCountry, pathname) ? "active" : ""
               }`}
@@ -192,8 +189,8 @@ const SidebarMenu = () => {
                   </li>
                 ))}
               </ul>
-            </li>
-            <li
+            </li> */}
+           {/* <li
               className={`treeview ${
                 isParentPageActive(myState, pathname) ? "active" : ""
               }`}
@@ -236,7 +233,7 @@ const SidebarMenu = () => {
                 isParentPageActive(myLocation, pathname) ? "active" : ""
               }`}
             >
-              <a data-bs-toggle="collapse" href="#my-location">
+               <a data-bs-toggle="collapse" href="#my-location">
                 <i className="flaticon-home"></i> <span>My Location</span>
                 <i className="fa fa-angle-down pull-right"></i>
               </a>
@@ -268,19 +265,19 @@ const SidebarMenu = () => {
                   </li>
                 ))}
               </ul>
-            </li>
+            </li> */}
             
             <li
               className={`treeview ${
-                isParentPageActive(myCategory, pathname) ? "active" : ""
+                isParentPageActive(RoboCategory, pathname) ? "active" : ""
               }`}
             >
-              <a data-bs-toggle="collapse" href="#my-myCategory">
-                <i className="flaticon-home"></i> <span>My Category</span>
+              <a data-bs-toggle="collapse" href="#my-RoboCategory">
+                <i className="flaticon-home"></i> <span>Robot Category</span>
                 <i className="fa fa-angle-down pull-right"></i>
               </a>
-              <ul className="treeview-menu collapse" id="my-myCategory">
-                {myCategory.map((item) => (
+              <ul className="treeview-menu collapse" id="my-RoboCategory">
+                {RoboCategory.map((item) => (
                   <li key={item.id}>
                     <Link href={item.route}>
                       <i className="fa fa-circle"></i> {item.name}
@@ -289,13 +286,13 @@ const SidebarMenu = () => {
                 ))}
               </ul>
             </li>
-            <li
+            {/* <li
               className={`treeview ${
                 isParentPageActive(myPropertytype, pathname) ? "active" : ""
               }`}
             >
               <a data-bs-toggle="collapse" href="#my-propertytype">
-                <i className="flaticon-home"></i> <span>My Property type</span>
+                <i className="flaticon-home"></i> <span>My Robot type</span>
                 <i className="fa fa-angle-down pull-right"></i>
               </a>
               <ul className="treeview-menu collapse" id="my-propertytype">
@@ -307,8 +304,8 @@ const SidebarMenu = () => {
                   </li>
                 ))}
               </ul>
-            </li>
-            <li
+            </li> */}
+            {/* <li
               className={`treeview ${
                 isParentPageActive(myBuilder, pathname) ? "active" : ""
               }`}
@@ -326,7 +323,7 @@ const SidebarMenu = () => {
                   </li>
                 ))}
               </ul>
-            </li>
+            </li> */}
             {/* <li
               className={`treeview ${
                 isParentPageActive(myAgent, pathname) ? "active" : ""
@@ -346,7 +343,7 @@ const SidebarMenu = () => {
                 ))}
               </ul>
             </li> */}
-            <li
+            {/* <li
               className={`treeview ${
                 isParentPageActive(mySeller, pathname) ? "active" : ""
               }`}
@@ -364,19 +361,19 @@ const SidebarMenu = () => {
                   </li>
                 ))}
               </ul>
-            </li>
+            </li> */}
             {/* end properties */}
             <li
               className={`treeview ${
-                isParentPageActive(myProperties, pathname) ? "active" : ""
+                isParentPageActive(myRobots, pathname) ? "active" : ""
               }`}
             >
-              <a data-bs-toggle="collapse" href="#my-property">
-                <i className="flaticon-home"></i> <span>My Properties</span>
+              <a data-bs-toggle="collapse" href="#my-robots">
+                <i className="flaticon-home"></i> <span>Robot Listing</span>
                 <i className="fa fa-angle-down pull-right"></i>
               </a>
-              <ul className="treeview-menu collapse" id="my-property">
-                {myProperties.map((item) => (
+              <ul className="treeview-menu collapse" id="my-robots">
+                {myRobots.map((item) => (
                   <li key={item.id}>
                     <Link href={item.route}>
                       <i className="fa fa-circle"></i> {item.name}
@@ -393,7 +390,7 @@ const SidebarMenu = () => {
               }`}
             >
               <a data-bs-toggle="collapse" href="#my-blog">
-                <i className="flaticon-home"></i> <span>My Blog</span>
+                <i className="flaticon-home"></i> <span>Blogs</span>
                 <i className="fa fa-angle-down pull-right"></i>
               </a>
               <ul className="treeview-menu collapse" id="my-blog">
@@ -413,7 +410,7 @@ const SidebarMenu = () => {
               }`}
             >
               <a data-bs-toggle="collapse" href="#my-Testimonial">
-                <i className="flaticon-home"></i> <span>My Testimonial</span>
+                <i className="flaticon-home"></i> <span>Testimonials</span>
                 <i className="fa fa-angle-down pull-right"></i>
               </a>
               <ul className="treeview-menu collapse" id="my-Testimonial">
@@ -428,7 +425,7 @@ const SidebarMenu = () => {
             </li>
             {/* end Testimonial */}
 
-            <li
+            {/* <li
               className={`treeview ${
                 isParentPageActive(myPropertypage, pathname) ? "active" : ""
               }`}
@@ -446,7 +443,7 @@ const SidebarMenu = () => {
                   </li>
                 ))}
               </ul>
-            </li>
+            </li> */}
             {/* end Propertypage */}
             <li
               className={`treeview ${
@@ -454,7 +451,7 @@ const SidebarMenu = () => {
               }`}
             >
               <a data-bs-toggle="collapse" href="#my-faq">
-                <i className="flaticon-home"></i> <span>My FAQ</span>
+                <i className="flaticon-home"></i> <span>FAQs</span>
                 <i className="fa fa-angle-down pull-right"></i>
               </a>
               <ul className="treeview-menu collapse" id="my-faq">
@@ -469,7 +466,7 @@ const SidebarMenu = () => {
             </li>
             {/* end Propertypage */}
             {/* end Propertypage */}
-            <li
+            {/* <li
               className={`treeview ${
                 isParentPageActive(myLandingpage, pathname) ? "active" : ""
               }`}
@@ -487,14 +484,14 @@ const SidebarMenu = () => {
                   </li>
                 ))}
               </ul>
-            </li>
+            </li> */}
             <li
               className={`treeview ${
                 isParentPageActive(enquerylist, pathname) ? "active" : ""
               }`}
             >
               <a data-bs-toggle="collapse" href="#my-enquerylist">
-                <i className="flaticon-home"></i> <span>My enquery</span>
+                <i className="flaticon-home"></i> <span>Enqueries</span>
                 <i className="fa fa-angle-down pull-right"></i>
               </a>
               <ul className="treeview-menu collapse" id="my-enquerylist">
@@ -511,7 +508,7 @@ const SidebarMenu = () => {
 
             
 
-            {/* <li
+            <li
               className={`treeview ${
                 isParentPageActive(reviews, pathname) ? "active" : ""
               }`}
@@ -530,8 +527,8 @@ const SidebarMenu = () => {
                   </li>
                 ))}
               </ul>
-            </li> */}
-            {/* End Review */}
+            </li>
+            {/* End Review */} 
 
             {/* <li
               className={`treeview ${

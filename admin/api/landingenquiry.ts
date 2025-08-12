@@ -32,19 +32,19 @@ export const addLandingEnquiryAPI = async (title: string) => {
 };
 
 
-export async function getLandingEnquiryTableData(filter = { limit: 10, page: 0 }) {
+export async function getLandingEnquiryTableData(filter) {
   // Fake delay
   await new Promise((resolve) => setTimeout(resolve, 10));
 
 
   try {
-    const response = await fetch(
-      process.env.NEXT_PUBLIC_ADMIN_API_URL + "api/landingenquiry?limit=" + filter.limit + "&skip=" + filter.page,
-      {
-        next: { revalidate: 60 }
-      }
-    );
-    // Replace with actual API endpoint
+   const response = await fetch(
+        process.env.NEXT_PUBLIC_ADMIN_API_URL + "api/landingenquiry?limit="+filter.limit+"&skip="+filter.page,
+        {
+          next: { revalidate: 60 }
+        }
+      );
+ // Replace with actual API endpoint
     if (!response.ok) {
       throw new Error("Failed to fetch products");
     }

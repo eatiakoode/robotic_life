@@ -1,18 +1,10 @@
-import dynamic from "next/dynamic";
-import AddState from "@/components/dashboard/add-state";
+import AddStateClient from "./AddStateClient";
 
 export const metadata = {
-  title: 'My Properties || WeGrow - Real Estate',
-  description:
-    'WeGrow - Real Estate',
-}
-
-const index = () => {
-  return (
-    <>
-      <AddState />
-    </>
-  );
+  title: "My Properties || WeGrow - Real Estate",
+  description: "WeGrow - Real Estate",
 };
 
-export default dynamic(() => Promise.resolve(index), { ssr: false });
+export default function AddStatePage() {
+  return <AddStateClient />;
+}

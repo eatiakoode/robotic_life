@@ -1,18 +1,10 @@
-import dynamic from "next/dynamic";
-import AddTestimonial from "@/components/dashboard/add-testimonial";
+import AddTestimonialClient from "./AddTestimonialClient";
 
 export const metadata = {
   title: 'My Properties || WeGrow - Real Estate',
-  description:
-    'WeGrow - Real Estate',
-}
-
-const index = () => {
-  return (
-    <>
-      <AddTestimonial />
-    </>
-  );
+  description: 'WeGrow - Real Estate',
 };
 
-export default dynamic(() => Promise.resolve(index), { ssr: false });
+export default function Page() {
+  return <AddTestimonialClient />;
+}

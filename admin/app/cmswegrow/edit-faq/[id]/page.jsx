@@ -1,18 +1,10 @@
-import dynamic from "next/dynamic";
-import EditFaq from "@/components/dashboard/edit-faq";
+import EditFaqClient from "./EditFaqClient";
 
 export const metadata = {
   title: 'My Properties || WeGrow - Real Estate',
-  description:
-    'WeGrow - Real Estate',
-}
-
-const index = () => {
-  return (
-    <>
-      <EditFaq />
-    </>
-  );
+  description: 'WeGrow - Real Estate',
 };
 
-export default dynamic(() => Promise.resolve(index), { ssr: false });
+export default function Page({ params }) {
+  return <EditFaqClient id={params.id} />;
+}

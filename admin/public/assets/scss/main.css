@@ -1,6 +1,6 @@
 
 /* CSS Document */
-@import "~bootstrap/scss/bootstrap";
+@import "bootstrap/scss/bootstrap";
 @import url(../scss/all.css);
 @import url(../scss/font-awesome.min.css);
 @import url(../scss/font-awesome-animation.min.css);

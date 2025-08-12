@@ -1,18 +1,10 @@
-import dynamic from "next/dynamic";
-import AddBlogcategory from "@/components/dashboard/add-blogcategory";
+import AddBlogcategory from "./AddBlogcategory";
 
 export const metadata = {
   title: 'My Properties || WeGrow',
-  description:
-    'WeGrow',
-}
-
-const index = () => {
-  return (
-    <>
-      <AddBlogcategory />
-    </>
-  );
+  description: 'WeGrow',
 };
 
-export default dynamic(() => Promise.resolve(index), { ssr: false });
+export default function Page() {
+  return <AddBlogcategory />;
+}
