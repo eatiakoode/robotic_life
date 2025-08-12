@@ -38,6 +38,8 @@ const CreateList = () => {
   const [countries, setCountries] = useState([]);
   const [selectedCountry, setSelectedCountry] = useState("");
 
+  const [launchYear, setLaunchYear] = useState("");
+
   const [states, setStates] = useState([]);
   const [selectedState, setSelectedState] = useState("");
 
@@ -344,13 +346,21 @@ const CreateList = () => {
       // { key: "city", value: selectedCity, name: "City" },
       // { key: "location", value: selectedLocation, name: "Location" },
       { key: "selectedCategory", value: selectedCategory, name: "Category" },
-      { key: "selectedSubCategory", value: selectedSubCategory, name: "Sub Category" },
+      {
+        key: "selectedSubCategory",
+        value: selectedSubCategory,
+        name: "Sub Category",
+      },
       {
         key: "selectedPropertytype",
         value: selectedPropertytype,
         name: "Property Type",
       },
-      { key: "selectedManufacturer", value: selectedManufacturer, name: "Manufacturer" },
+      {
+        key: "selectedManufacturer",
+        value: selectedManufacturer,
+        name: "Manufacturer",
+      },
       // { key: "selectedSeller", value: selectedSeller, name: "Seller" },
       // {
       //   key: "selectedConstructionstatus",
@@ -586,18 +596,27 @@ const CreateList = () => {
           </div>
         </div>
 
-        <div className="col-lg-6">
-          <div className="my_profile_setting_input form-group">
-            <label htmlFor="roboPrice">Total Price</label>
-            <input
-              type="text"
-              className="form-control"
-              id="roboPrice"
-              value={price}
-              onChange={(e) => setPrice(e.target.value)}
-              placeholder="Enter robot price"
-            />
-            {error.price && <span className="text-danger">{error.price}</span>}
+        <div className="col-lg-6 col-xl-6">
+          <div className="my_profile_setting_input ui_kit_select_search form-group">
+            <label>Manufacturer</label>
+            <select
+              id="manufacturerSelect"
+              className="selectpicker form-select"
+              value={selectedManufacturer}
+              onChange={handleManufacturerChange}
+              data-live-search="true"
+              data-width="100%"
+            >
+              <option value="">-- Select Manufacturer --</option>
+              {manufacturers.map((manufacturer) => (
+                <option key={manufacturer._id} value={manufacturer._id}>
+                  {manufacturer.title}
+                </option>
+              ))}
+            </select>
+            {error.selectedManufacturer && (
+              <span className="text-danger">{error.selectedManufacturer}</span>
+            )}
           </div>
         </div>
 
@@ -619,6 +638,43 @@ const CreateList = () => {
                 </option>
               ))}
             </select>
+          </div>
+        </div>
+
+        <div className="col-lg-6">
+          <div className="my_profile_setting_input form-group">
+            <label htmlFor="launchYear">Launch Year</label>
+            <select
+              id="launchYear"
+              className="form-control"
+              value={launchYear}
+              onChange={(e) => setLaunchYear(e.target.value)}
+            >
+              <option value="">-- Select Year --</option>
+              {Array.from({ length: 101 }, (_, i) => {
+                const year = new Date().getFullYear() - i;
+                return (
+                  <option key={year} value={year}>
+                    {year}
+                  </option>
+                );
+              })}
+            </select>
+          </div>
+        </div>
+
+        <div className="col-lg-6">
+          <div className="my_profile_setting_input form-group">
+            <label htmlFor="roboPrice">Total Price</label>
+            <input
+              type="text"
+              className="form-control"
+              id="roboPrice"
+              value={price}
+              onChange={(e) => setPrice(e.target.value)}
+              placeholder="Enter robot price"
+            />
+            {error.price && <span className="text-danger">{error.price}</span>}
           </div>
         </div>
 
@@ -664,27 +720,7 @@ const CreateList = () => {
             {error.selectedPropertytype && <span className="text-danger">{error.selectedPropertytype}</span>}
         </div>
       </div> */}
-        <div className="col-lg-6 col-xl-6">
-          <div className="my_profile_setting_input ui_kit_select_search form-group">
-            <label>Manufacturer</label>
-            <select
-              id="manufacturerSelect"
-              className="selectpicker form-select"
-              value={selectedManufacturer}
-              onChange={handleManufacturerChange}
-              data-live-search="true"
-              data-width="100%"
-            >
-              <option value="">-- Select Manufacturer --</option>
-              {manufacturers.map((manufacturer) => (
-                <option key={manufacturer._id} value={manufacturer._id}>
-                  {manufacturer.title}
-                </option>
-              ))}
-            </select>
-            {error.selectedManufacturer && <span className="text-danger">{error.selectedManufacturer}</span>}
-          </div>
-        </div>
+
         {/* End .col */}
         {/* <div className="col-lg-6 col-xl-6">
           <div className="my_profile_setting_input ui_kit_select_search form-group">
@@ -836,7 +872,7 @@ const CreateList = () => {
             <h3 className="mb30">Location</h3>
           </div> */}
 
-          {/* <div className="col-lg-6 col-xl-6">
+        {/* <div className="col-lg-6 col-xl-6">
             <div className="my_profile_setting_input ui_kit_select_search form-group">
               <label htmlFor="countrySelect">Select Country</label>
               <select
@@ -856,7 +892,7 @@ const CreateList = () => {
               </select>
             </div>
           </div> */}
-          {/* <div className="col-lg-6 col-xl-6">
+        {/* <div className="col-lg-6 col-xl-6">
             <div className="my_profile_setting_input ui_kit_select_search form-group">
               <label htmlFor="stateSelect">Select State</label>
               <select
@@ -876,7 +912,7 @@ const CreateList = () => {
               </select>
             </div>
           </div> */}
-          {/* <div className="col-lg-6 col-xl-6">
+        {/* <div className="col-lg-6 col-xl-6">
             <div className="my_profile_setting_input ui_kit_select_search form-group">
               <label htmlFor="citySelect">Select City</label>
               <select
@@ -896,7 +932,7 @@ const CreateList = () => {
               </select>
             </div>
           </div> */}
-          {/* <div className="col-lg-6 col-xl-6">
+        {/* <div className="col-lg-6 col-xl-6">
             <div className="my_profile_setting_input ui_kit_select_search form-group">
               <label htmlFor="locationSelect">Select Location</label>
               <select
@@ -916,7 +952,7 @@ const CreateList = () => {
               </select>
             </div>
           </div> */}
-          {/* <div className="col-lg-6">
+        {/* <div className="col-lg-6">
             <div className="my_profile_setting_input form-group">
               <label htmlFor="propertyZipcode">Zip Code</label>
 
@@ -929,7 +965,7 @@ const CreateList = () => {
               />
             </div>
           </div> */}
-          {/* <div className="col-lg-12">
+        {/* <div className="col-lg-12">
             <div className="my_profile_setting_input form-group">
               <label htmlFor="propertyzipcode">Address</label>
 
@@ -1367,10 +1403,10 @@ const CreateList = () => {
                     style={
                       featuredimage !== null
                         ? {
-                          backgroundImage: `url(${URL.createObjectURL(
-                            featuredimage
-                          )})`,
-                        }
+                            backgroundImage: `url(${URL.createObjectURL(
+                              featuredimage
+                            )})`,
+                          }
                         : undefined
                     }
                     htmlFor="featuredimage"
@@ -1445,29 +1481,29 @@ const CreateList = () => {
                 <ul className="mb-0">
                   {propertySelectedImgs.length > 0
                     ? propertySelectedImgs?.map((item, index) => (
-                      <li key={index} className="list-inline-item">
-                        <div className="portfolio_item">
-                          <Image
-                            width={200}
-                            height={200}
-                            className="img-fluid cover"
-                            src={URL.createObjectURL(item)}
-                            alt="fp1.jpg"
-                          />
-                          <div
-                            className="edu_stats_list"
-                            data-bs-toggle="tooltip"
-                            data-bs-placement="top"
-                            title="Delete"
-                            data-original-title="Delete"
-                          >
-                            <a onClick={() => deleteImage(item.name)}>
-                              <span className="flaticon-garbage"></span>
-                            </a>
+                        <li key={index} className="list-inline-item">
+                          <div className="portfolio_item">
+                            <Image
+                              width={200}
+                              height={200}
+                              className="img-fluid cover"
+                              src={URL.createObjectURL(item)}
+                              alt="fp1.jpg"
+                            />
+                            <div
+                              className="edu_stats_list"
+                              data-bs-toggle="tooltip"
+                              data-bs-placement="top"
+                              title="Delete"
+                              data-original-title="Delete"
+                            >
+                              <a onClick={() => deleteImage(item.name)}>
+                                <span className="flaticon-garbage"></span>
+                              </a>
+                            </div>
                           </div>
-                        </div>
-                      </li>
-                    ))
+                        </li>
+                      ))
                     : undefined}
 
                   {/* End li */}
