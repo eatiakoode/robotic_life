@@ -1,14 +1,37 @@
 const Manufacturer = require("../models/manufacturerModel");
+const asyncHandler = require("express-async-handler");
+const { uploadPhoto, manufacturerImgResize } = require("../middlewares/uploadImage");
+const slugify = require("slugify");
 
 // Create Manufacturer
-const createManufacturer = async (req, res) => {
+const createManufacturer = asyncHandler(async (req, res) => {
   try {
-    const manufacturer = await Manufacturer.create(req.body);
-    res.status(201).json(manufacturer);
+    if (req.files) {
+      const processedImages = await manufacturerImgResize(req);
+      if (processedImages.length > 0) {
+        req.body.logoImage = "public/images/manufacturer/" + processedImages[0];
+      }
+    }
+
+    if (req.body.slug) {
+      req.body.slug = slugify(req.body.slug.toLowerCase());
+    } else if (req.body.name) {
+      req.body.slug = slugify(req.body.name.toLowerCase());
+    } else {
+      req.body.slug = "";
+    }
+
+    const newManufacturer = await Manufacturer.create(req.body);
+
+    res.json({
+      status: "success",
+      message: "Manufacturer added successfully",
+      data: newManufacturer,
+    });
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    throw new Error(error);
   }
-};
+});
 
 // Get all Manufacturers
 const getManufacturers = async (req, res) => {

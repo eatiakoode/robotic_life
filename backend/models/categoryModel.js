@@ -7,9 +7,22 @@ const CategorySchema = new mongoose.Schema(
       required: true,
       trim: true
     },
+    slug: {
+      type: String,
+      required: true,
+      unique: true,
+      index: true,
+      lowercase: true
+    },
     description: {
       type: String,
       trim: true
+    },
+    logoimage: {
+      type: String,
+      // required: true,
+      unique: true,
+      index: true,
     },
     parent: {
       type: mongoose.Schema.Types.ObjectId,

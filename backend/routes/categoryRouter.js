@@ -8,11 +8,12 @@ const {
 } = require("../controller/categoryCtrl");
 
 const { authMiddleware, isAdmin } = require("../middlewares/authMiddleware");
+const { uploadPhoto } = require("../middlewares/uploadImage");
 
 const router = express.Router();
 
 // Create Category
-router.post("/", authMiddleware, isAdmin, createCategory);
+router.post("/", authMiddleware, isAdmin,uploadPhoto.array("logo", 10), createCategory);
 
 // Get all Categories
 router.get("/", authMiddleware, isAdmin, getCategories);

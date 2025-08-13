@@ -1,14 +1,37 @@
 const Category = require("../models/categoryModel");
+const {uploadPhoto, categoryImgResize} = require("../middlewares/uploadImage");
+const slugify = require("slugify");
+const asyncHandler = require("express-async-handler");
 
 // Create Category
-const createCategory = async (req, res) => {
+const createCategory = asyncHandler(async (req, res) => {
   try {
-    const category = await Category.create(req.body);
-    res.status(201).json(category);
+    if (req.files && req.files.length > 0) {
+      const processedImages = await categoryImgResize(req);
+      if (processedImages.length > 0) {
+        req.body.logoimage = "public/images/category/" + processedImages[0];
+      }
+    }
+
+    if (req.body.slug) {
+      req.body.slug = slugify(req.body.slug.toLowerCase());
+    } else if (req.body.name) {
+      req.body.slug = slugify(req.body.name.toLowerCase());
+    } else {
+      req.body.slug = "";
+    }
+
+    const newCategory = await Category.create(req.body);
+
+    res.json({
+      status: "success",
+      message: "Category created successfully",
+      data: newCategory,
+    });
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    throw new Error(error);
   }
-};
+});
 
 // Get all categories
 const getCategories = async (req, res) => {
