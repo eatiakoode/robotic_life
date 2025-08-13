@@ -21,11 +21,11 @@ const stateRouter = require("./routes/stateRouter");
 const cityRouter = require("./routes/cityRoute");
 const locationRouter = require("./routes/locationRouter.js");
 const amenityRouter = require("./routes/amenityRouter.js");
-const categoryRouter = require("./routes/categoryRoute");
+const categoryRouter = require("./routes/categoryRouter.js");
 const propertytypeRouter = require("./routes/propertytypeRoute");
-const builderRouter = require("./routes/builderRouter");
+const manufacturerRouter = require("./routes/manufacturerRouter.js");
 const agentRouter = require("./routes/agentRouter");
-const propertyRouter = require("./routes/propertyRouter");
+const robotRouter = require("./routes/robotRouter.js");
 const propertyImagesRouter = require("./routes/propertyImagesRouter");
 const propertyPlanRouter = require("./routes/propertyPlanRouter");
 const furnishingstatusRouter = require("./routes/furnishingstatusRouter");
@@ -52,20 +52,20 @@ const enqBrochureRouter = require("./routes/enqBrochureRoute");
 
 
 // Frontend API route
-const cityFrontendRoute = require("./routes/frontend/cityFrontendRoute");
-const propertytypeFrontendRouter = require("./routes/frontend/propertytypeFrontendRouter");
+// const cityFrontendRoute = require("./routes/frontend/cityFrontendRoute");
+// const propertytypeFrontendRouter = require("./routes/frontend/propertytypeFrontendRouter");
 const propertyFrontendRouter = require("./routes/frontend/propertyFrontendRouter");
 const testimonialFrontendRouter = require("./routes/frontend/testimonialFrontendRouter");
 const blogFrontendRouter = require("./routes/frontend/blogRouter");
-const faqFrontendRouter = require("./routes/frontend/faqRouter");
+// const faqFrontendRouter = require("./routes/frontend/faqRouter");
 const enqFrontendRouter = require("./routes/frontend/enqRoute");
-const enqPropertyFrontendRouter = require("./routes/frontend/enqPropertyRouter");
+// const enqPropertyFrontendRouter = require("./routes/frontend/enqPropertyRouter");
 const propertypageFrontendRoute = require("./routes/frontend/propertypageRouter");
 const landingpageFrontendRoute = require("./routes/frontend/landingpageFrontendRoute");
 
 const enqLandingFrontendRouter = require("./routes/frontend/enqLandingRoute");
 const categoryFrontendRoute = require("./routes/frontend/categoryRoute");
-const builderFrontendRoute = require("./routes/frontend/builderRoute");
+// const builderFrontendRoute = require("./routes/frontend/builderRoute");
 
 
 const locationFrontendRoute = require("./routes/frontend/locationRoute");
@@ -105,9 +105,9 @@ app.use("/admin/api/location", locationRouter);
 app.use("/admin/api/amenity", amenityRouter);
 app.use("/admin/api/category", categoryRouter);
 app.use("/admin/api/propertytype", propertytypeRouter);
-app.use("/admin/api/builder", builderRouter);
+app.use("/admin/api/manufacturer", manufacturerRouter);
 app.use("/admin/api/agent", agentRouter);
-app.use("/admin/api/property", propertyRouter);
+app.use("/admin/api/robot", robotRouter);
 app.use("/admin/api/furnishingstatus", furnishingstatusRouter);
 app.use("/admin/api/constructionstatus", constructionstatusRouter);
 app.use("/admin/api/blogcategory", blogcategoryRouter);
@@ -134,14 +134,14 @@ app.use("/admin/api/brochureenquiry", enqBrochureRouter);
 
 
 // Frontend API
-app.use("/frontend/api/city", cityFrontendRoute);
-app.use("/frontend/api/propertytype", propertytypeFrontendRouter);
-app.use("/frontend/api/property", propertyFrontendRouter);
+// app.use("/frontend/api/city", cityFrontendRoute);
+// app.use("/frontend/api/propertytype", propertytypeFrontendRouter);
+// app.use("/frontend/api/property", propertyFrontendRouter);
 app.use("/frontend/api/testimonial", testimonialFrontendRouter);
 app.use("/frontend/api/blog", blogFrontendRouter);
-app.use("/frontend/api/faq", faqFrontendRouter);
+// app.use("/frontend/api/faq", faqFrontendRouter);
 app.use("/frontend/api/enquiry", enqFrontendRouter);
-app.use("/frontend/api/propertyenquiry", enqPropertyFrontendRouter);
+// app.use("/frontend/api/propertyenquiry", enqPropertyFrontendRouter);
 app.use("/frontend/api/propertypage", propertypageFrontendRoute);
 app.use("/frontend/api/landingpage", landingpageFrontendRoute);
 app.use("/frontend/api/landingenquiry", enqLandingFrontendRouter);
@@ -149,7 +149,7 @@ app.use("/frontend/api/landingenquiry", enqLandingFrontendRouter);
 app.use("/frontend/api/subscribeenquiry", enqSubscribeFrontendRouter);
 app.use("/frontend/api/brochureenquiry", enqBrochureFrontendRouter);
 app.use("/frontend/api/category", categoryFrontendRoute);
-app.use("/frontend/api/builder", builderFrontendRoute);
+// app.use("/frontend/api/builder", builderFrontendRoute);
 app.use("/frontend/api/location", locationFrontendRoute);
 
 
