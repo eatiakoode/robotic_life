@@ -160,6 +160,7 @@ const path = require("path");
 // app.use(express.static("public"));
 // app.use('/images', express.static('path_to_images_directory'));
 app.use('/public', express.static(path.join(__dirname, 'public')));
+app.use('/images', express.static(path.join(__dirname, 'public', 'images')));
 console.log("testimage")
 app.use(notFound);
 app.use(errorHandler);

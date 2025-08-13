@@ -153,16 +153,21 @@ const blogImgResize = async (req) => {
 //   return processedFilenames;
 // };
 
-const builderImgResize = async (req) => {
-  if (!req.files || !Array.isArray(req.files)) return;
+const manufacturerImgResize = async (req) => {
+  if (!req.files || !Array.isArray(req.files)) return [];
 
   const processedFilenames = [];
 
+  // Ensure the target directory exists
+  const outputDir = path.join("public", "images", "manufacturer");
+  if (!fs.existsSync(outputDir)) {
+    fs.mkdirSync(outputDir, { recursive: true });
+  }
+
   await Promise.all(
     req.files.map(async (file) => {
-      // const filename = `builder-${Date.now()}-${file.originalname}.jpeg`;
-      const filename =file.filename
-      const outputPath = path.join("public", "images", "builder", filename);
+      const filename = file.filename; // multer already gives unique name
+      const outputPath = path.join(outputDir, filename);
 
       await sharp(file.path)
         .resize(750, 450)
@@ -170,7 +175,7 @@ const builderImgResize = async (req) => {
         .jpeg({ quality: 90 })
         .toFile(outputPath);
 
-      fs.unlinkSync(file.path); // delete original uploaded file
+      fs.unlinkSync(file.path); // remove temp uploaded file
 
       processedFilenames.push(filename);
     })
@@ -1328,4 +1333,4 @@ const processUploadedPDFsadd = async (req) => {
 
   return processedFilenames;
 };
-module.exports = { uploadPhoto, productImgResize, blogImgResize,builderImgResize,featuredImageResize,sitePlanResize,masterPlanResize,photoUploadMiddleware,testimonialImgResize,propertySelectedImgsResize ,cityImgResize,processFloorPlanImages,photoUploadMiddleware1,processFloorPlanImagesGet,amenityImgResize,bannerImageResize,aboutImageResize,gallerySelectedImgsResize,groupFilesByFieldname,groupFilesByFieldname2,processLandingPlanGet,processLandingPlan,processUploadedPDFs,processFloorPlanImagesAdd,featuredImageResizeAdd,featuredImageResizeAddSite,propertySelectedImgsResizeadd,processUploadedPDFsadd,featuredImageResizeAddMaster,locationImgResize,categoryImgResize};
+module.exports = { uploadPhoto, productImgResize, blogImgResize,manufacturerImgResize,featuredImageResize,sitePlanResize,masterPlanResize,photoUploadMiddleware,testimonialImgResize,propertySelectedImgsResize ,cityImgResize,processFloorPlanImages,photoUploadMiddleware1,processFloorPlanImagesGet,amenityImgResize,bannerImageResize,aboutImageResize,gallerySelectedImgsResize,groupFilesByFieldname,groupFilesByFieldname2,processLandingPlanGet,processLandingPlan,processUploadedPDFs,processFloorPlanImagesAdd,featuredImageResizeAdd,featuredImageResizeAddSite,propertySelectedImgsResizeadd,processUploadedPDFsadd,featuredImageResizeAddMaster,locationImgResize,categoryImgResize};

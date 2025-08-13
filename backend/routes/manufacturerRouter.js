@@ -1,18 +1,19 @@
 const express = require("express");
 const {
-  createManufacturer,
-  getManufacturers,
-  getManufacturerById,
-  updateManufacturer,
-  deleteManufacturer
+    createManufacturer,
+    getManufacturers,
+    getManufacturerById,
+    updateManufacturer,
+    deleteManufacturer
 } = require("../controller/manufacturerCtrl");
 
 const { authMiddleware, isAdmin } = require("../middlewares/authMiddleware");
+const { uploadPhoto } = require("../middlewares/uploadImage");
 
 const router = express.Router();
 
 // Create Manufacturer
-router.post("/", authMiddleware, isAdmin, createManufacturer);
+router.post("/", authMiddleware, isAdmin, uploadPhoto.array("logo", 10), createManufacturer);
 
 // Get all Manufacturers
 router.get("/", authMiddleware, isAdmin, getManufacturers);

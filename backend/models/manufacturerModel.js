@@ -20,9 +20,9 @@ var manufacturerSchema = new mongoose.Schema(
     description: {
       type: String,
     },
-    // logoImage: {
-    //   type: String,
-    // },
+    logoImage: {
+      type: String,
+    },
     metaTitle: {
       type: String,
     },
