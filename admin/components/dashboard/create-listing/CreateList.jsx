@@ -39,15 +39,25 @@ const CreateList = () => {
   const [selectedCountry, setSelectedCountry] = useState("");
 
   const [launchYear, setLaunchYear] = useState("");
+  const [weight, setWeight] = useState("");
+  const [weightUnit, setWeightUnit] = useState("g");
+  const [height, setHeight] = useState("");
+  const [heightUnit, setHeightUnit] = useState("cm");
+  const [length, setLength] = useState("");
+  const [lengthUnit, setLengthUnit] = useState("cm");
+  const [width, setWidth] = useState("");
+  const [widthUnit, setWidthUnit] = useState("cm");
+  const [version, setVersion] = useState("");
+  const [patentNumber, setPatentNumber] = useState("");
 
-  const [states, setStates] = useState([]);
-  const [selectedState, setSelectedState] = useState("");
+  // const [states, setStates] = useState([]);
+  // const [selectedState, setSelectedState] = useState("");
 
-  const [cities, setCities] = useState([]);
-  const [selectedCity, setSelectedCity] = useState("");
+  // const [cities, setCities] = useState([]);
+  // const [selectedCity, setSelectedCity] = useState("");
 
-  const [locations, setLocations] = useState([]);
-  const [selectedLocation, setSelectedLocation] = useState("");
+  // const [locations, setLocations] = useState([]);
+  // const [selectedLocation, setSelectedLocation] = useState("");
 
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("");
@@ -94,7 +104,7 @@ const CreateList = () => {
 
   // const [mapembedcode, setMapEmbedCode] = useState([]);
   const [videoembedcode, setVideoEmbedCode] = useState([]);
-  // const [nearby, setNearBy] = useState([]);
+  const [nearby, setNearBy] = useState([]);
   const [specifications, setSpecifications] = useState([]);
 
   // const [sellername, setSellerName] = useState([]);
@@ -500,6 +510,8 @@ const CreateList = () => {
   return (
     <>
       <form onSubmit={addRobo} className="row">
+
+        {/* robot title start */}
         <div className="col-lg-6">
           <div className="my_profile_setting_input form-group">
             <label htmlFor="roboTitle">Robot Title</label>
@@ -514,6 +526,8 @@ const CreateList = () => {
             {error.title && <span className="text-danger">{error.title}</span>}
           </div>
         </div>
+        {/* robot title ends*/}
+        {/* robot slug start */}
         <div className="col-lg-6">
           <div className="my_profile_setting_input form-group">
             <label htmlFor="roboSlug">Robot Slug</label>
@@ -528,7 +542,8 @@ const CreateList = () => {
             {error.slug && <span className="text-danger">{error.slug}</span>}
           </div>
         </div>
-
+        {/* robot slug ends */}
+        {/* robot description start */}
         <div className="col-lg-12">
           <div className="my_profile_setting_textarea form-group">
             <label htmlFor="roboDescription">Description</label>
@@ -545,7 +560,8 @@ const CreateList = () => {
             )}
           </div>
         </div>
-
+        {/* robot description ends */}
+        {/* robot category start */}
         <div className="col-lg-6 col-xl-6">
           <div className="my_profile_setting_input ui_kit_select_search form-group">
             <label>Category</label>
@@ -569,7 +585,7 @@ const CreateList = () => {
             )}
           </div>
         </div>
-
+        {/* robot category ends */}
         {/* Sub Category Field */}
         <div className="col-lg-6 col-xl-6">
           <div className="my_profile_setting_input ui_kit_select_search form-group">
@@ -595,7 +611,8 @@ const CreateList = () => {
             )}
           </div>
         </div>
-
+        {/* robot sub category ends */}
+        {/* robot manufacturer start */}
         <div className="col-lg-6 col-xl-6">
           <div className="my_profile_setting_input ui_kit_select_search form-group">
             <label>Manufacturer</label>
@@ -619,7 +636,8 @@ const CreateList = () => {
             )}
           </div>
         </div>
-
+        {/* robot manufacturer ends */}
+        {/* robot country start */}
         <div className="col-lg-6 col-xl-6">
           <div className="my_profile_setting_input ui_kit_select_search form-group">
             <label htmlFor="countrySelect">Select Country</label>
@@ -640,7 +658,8 @@ const CreateList = () => {
             </select>
           </div>
         </div>
-
+        {/* robot country ends */}
+        {/* robot launch year start */}
         <div className="col-lg-6">
           <div className="my_profile_setting_input form-group">
             <label htmlFor="launchYear">Launch Year</label>
@@ -662,7 +681,7 @@ const CreateList = () => {
             </select>
           </div>
         </div>
-
+        {/* robot launch year start */}
         <div className="col-lg-6">
           <div className="my_profile_setting_input form-group">
             <label htmlFor="roboPrice">Total Price</label>
@@ -677,6 +696,36 @@ const CreateList = () => {
             {error.price && <span className="text-danger">{error.price}</span>}
           </div>
         </div>
+        {/* robot version start */}
+        <div className="col-lg-6">
+          <div className="my_profile_setting_textarea">
+            <label htmlFor="version">Version </label>
+            <input
+              type="text"
+              className="form-control"
+              id="version"
+              value={version}
+              onChange={(e) => setVersion(e.target.value)}
+              placeholder="Enter Version"
+            />
+            {error.version && <span className="text-danger">{error.version}</span>}
+          </div>
+        </div>
+        {/* robot version ends */}
+        {/* <div className="col-lg-6">
+          <div className="my_profile_setting_textarea">
+            <label htmlFor="patentNumber">Patent Number(s)</label>
+            <input
+              type="text"
+              className="form-control"
+              id="patentNumber"
+              value={patentNumber}
+              onChange={(e) => setPatentNumber(e.target.value)}
+              placeholder="Enter Patent Number"
+            />
+            {error.patentNumber && <span className="text-danger">{error.patentNumber}</span>}
+          </div>
+        </div> */}
 
         {/* <div className="col-lg-6">
         <div className="my_profile_setting_input form-group">
@@ -981,7 +1030,7 @@ const CreateList = () => {
         {/* </div> */}
         <div className=" mt30 ">
           <div className="col-lg-12">
-            <h3 className="mb30">Detailed Information</h3>
+            <h3 className="mb30">Specifications</h3>
           </div>
           <div className="row">
             {/* <div className="col-lg-6 col-xl-4">
@@ -1258,22 +1307,6 @@ const CreateList = () => {
                 ></textarea>
               </div>
             </div> */}
-            {/* End .col */}
-            <div className="col-lg-12">
-              <div className="my_profile_setting_textarea">
-                <label htmlFor="videoEmbedCode">Video Embed code </label>
-                <textarea
-                  id="videoEmbedCode"
-                  className="form-control"
-                  rows="7"
-                  value={videoembedcode}
-                  onChange={(e) => setVideoEmbedCode(e.target.value)}
-                  placeholder="Enter Video Embed code"
-                ></textarea>
-              </div>
-            </div>
-            {/* End .col */}
-
             {/* <div className="col-lg-12">
               <div className="my_profile_setting_textarea">
                 <label htmlFor="nearBy">Near By </label>
@@ -1287,19 +1320,142 @@ const CreateList = () => {
                 ></textarea>
               </div>
             </div> */}
+            {/*------ Dimensions Start ------*/}
             <div className="col-lg-12">
               <div className="my_profile_setting_textarea">
-                <label htmlFor="specifications">Specifications</label>
-                <textarea
-                  id="specifications"
-                  className="form-control"
-                  rows="7"
-                  value={specifications}
-                  onChange={(e) => setSpecifications(e.target.value)}
-                  placeholder="Enter specifications"
-                ></textarea>
+                <label htmlFor="dimensions">Dimensions</label>
+                {/* Row 1: Length + Width */}
+                <div className="row">
+                  {/* Length */}
+                  <div className="col-lg-6 position-relative mb-2">
+                    <input
+                      type="number"
+                      className="form-control pe-5"
+                      placeholder="Length"
+                      value={length}
+                      onChange={(e) => setLength(e.target.value)}
+                    />
+                    <select
+                      className="form-select position-absolute end-0 border-0 bg-transparent"
+                      style={{
+                        width: "auto",
+                        height: "auto",
+                        top: "50%",
+                        transform: "translateY(-50%)",
+                        paddingRight: "30px",
+                        paddingLeft: "8px",
+                        appearance: "none",
+                        WebkitAppearance: "none",
+                        MozAppearance: "none",
+                      }}
+                      value={lengthUnit}
+                      onChange={(e) => setLengthUnit(e.target.value)}
+                    >
+                      <option value="cm">cm</option>
+                      <option value="mm">mm</option>
+                      <option value="inch">inch</option>
+                      <option value="ft">ft</option>
+                    </select>
+                  </div>
+                  {/* Width */}
+                  <div className="col-lg-6 position-relative mb-2">
+                    <input
+                      type="number"
+                      className="form-control pe-5"
+                      placeholder="Width"
+                      value={width}
+                      onChange={(e) => setWidth(e.target.value)}
+                    />
+                    <select
+                      className="form-select position-absolute end-0 border-0 bg-transparent"
+                      style={{
+                        width: "auto",
+                        height: "auto",
+                        top: "50%",
+                        transform: "translateY(-50%)",
+                        paddingRight: "30px",
+                        paddingLeft: "8px",
+                        appearance: "none",
+                        WebkitAppearance: "none",
+                        MozAppearance: "none",
+                      }}
+                      value={widthUnit}
+                      onChange={(e) => setWidthUnit(e.target.value)}
+                    >
+                      <option value="cm">cm</option>
+                      <option value="mm">mm</option>
+                      <option value="inch">inch</option>
+                      <option value="ft">ft</option>
+                    </select>
+                  </div>
+                </div>
+                {/* Row 2: Height + Weight */}
+                <div className="row">
+                  {/* Height */}
+                  <div className="col-lg-6 position-relative mb-2">
+                    <input
+                      type="number"
+                      className="form-control pe-5"
+                      placeholder="Height"
+                      value={height}
+                      onChange={(e) => setHeight(e.target.value)}
+                    />
+                    <select
+                      className="form-select position-absolute end-0 border-0 bg-transparent"
+                      style={{
+                        width: "auto",
+                        height: "auto",
+                        top: "50%",
+                        transform: "translateY(-50%)",
+                        paddingRight: "30px",
+                        paddingLeft: "8px",
+                        appearance: "none",
+                        WebkitAppearance: "none",
+                        MozAppearance: "none",
+                      }}
+                      value={heightUnit}
+                      onChange={(e) => setHeightUnit(e.target.value)}
+                    >
+                      <option value="cm">cm</option>
+                      <option value="m">m</option>
+                      <option value="inch">inch</option>
+                      <option value="ft">ft</option>
+                    </select>
+                  </div>
+                  {/* Weight */}
+                  <div className="col-lg-6 position-relative mb-2">
+                    <input
+                      type="number"
+                      className="form-control pe-5"
+                      placeholder="Weight"
+                      value={weight}
+                      onChange={(e) => setWeight(e.target.value)}
+                    />
+                    <select
+                      className="form-select position-absolute end-0 border-0 bg-transparent"
+                      style={{
+                        width: "auto",
+                        height: "auto",
+                        top: "50%",
+                        transform: "translateY(-50%)",
+                        paddingRight: "30px",
+                        paddingLeft: "8px",
+                        appearance: "none",
+                        WebkitAppearance: "none",
+                        MozAppearance: "none",
+                      }}
+                      value={weightUnit}
+                      onChange={(e) => setWeightUnit(e.target.value)}
+                    >
+                      <option value="g">g</option>
+                      <option value="kg">kg</option>
+                      <option value="lb">lb</option>
+                    </select>
+                  </div>
+                </div>
               </div>
             </div>
+
 
             {/* <div className="col-lg-6 col-xl-6">
               <div className="my_profile_setting_input form-group">
@@ -1312,9 +1468,9 @@ const CreateList = () => {
               </div>
             </div> */}
 
-            <div className="col-xl-12">
+            {/* <div className="col-xl-12">
               <h4 className="mb10">Amenities</h4>
-            </div>
+            </div> */}
             {/* <div className="col-xxs-12 col-sm col-lg col-xl">
               <ul className="ui_kit_checkbox selectable-list row">
                 {amenities.map((amenity, index) => (
@@ -1389,6 +1545,21 @@ const CreateList = () => {
               <div className="col-lg-12">
                 <h3 className="mb30">Property media</h3>
               </div>
+              {/* End .col */}
+              <div className="col-lg-12">
+                <div className="my_profile_setting_textarea">
+                  <label htmlFor="videoEmbedCode">Video Embed code </label>
+                  <textarea
+                    id="videoEmbedCode"
+                    className="form-control"
+                    rows="7"
+                    value={videoembedcode}
+                    onChange={(e) => setVideoEmbedCode(e.target.value)}
+                    placeholder="Enter Video Embed code"
+                  ></textarea>
+                </div>
+              </div>
+              {/* End .col */}
               <div className="col-lg-6">
                 <div htmlFor="featuredimage">Featured Image</div>
                 <div className="wrap-custom-file">
@@ -1403,10 +1574,10 @@ const CreateList = () => {
                     style={
                       featuredimage !== null
                         ? {
-                            backgroundImage: `url(${URL.createObjectURL(
-                              featuredimage
-                            )})`,
-                          }
+                          backgroundImage: `url(${URL.createObjectURL(
+                            featuredimage
+                          )})`,
+                        }
                         : undefined
                     }
                     htmlFor="featuredimage"
@@ -1481,29 +1652,29 @@ const CreateList = () => {
                 <ul className="mb-0">
                   {propertySelectedImgs.length > 0
                     ? propertySelectedImgs?.map((item, index) => (
-                        <li key={index} className="list-inline-item">
-                          <div className="portfolio_item">
-                            <Image
-                              width={200}
-                              height={200}
-                              className="img-fluid cover"
-                              src={URL.createObjectURL(item)}
-                              alt="fp1.jpg"
-                            />
-                            <div
-                              className="edu_stats_list"
-                              data-bs-toggle="tooltip"
-                              data-bs-placement="top"
-                              title="Delete"
-                              data-original-title="Delete"
-                            >
-                              <a onClick={() => deleteImage(item.name)}>
-                                <span className="flaticon-garbage"></span>
-                              </a>
-                            </div>
+                      <li key={index} className="list-inline-item">
+                        <div className="portfolio_item">
+                          <Image
+                            width={200}
+                            height={200}
+                            className="img-fluid cover"
+                            src={URL.createObjectURL(item)}
+                            alt="fp1.jpg"
+                          />
+                          <div
+                            className="edu_stats_list"
+                            data-bs-toggle="tooltip"
+                            data-bs-placement="top"
+                            title="Delete"
+                            data-original-title="Delete"
+                          >
+                            <a onClick={() => deleteImage(item.name)}>
+                              <span className="flaticon-garbage"></span>
+                            </a>
                           </div>
-                        </li>
-                      ))
+                        </div>
+                      </li>
+                    ))
                     : undefined}
 
                   {/* End li */}
