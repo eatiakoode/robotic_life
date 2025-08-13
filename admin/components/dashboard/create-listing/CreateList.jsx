@@ -38,6 +38,9 @@ const CreateList = () => {
   const [countries, setCountries] = useState([]);
   const [selectedCountry, setSelectedCountry] = useState("");
 
+  const [power, setPower] = useState([]);
+  const [selectedPower, setSelectedPower] = useState("");
+
   const [launchYear, setLaunchYear] = useState("");
   const [weight, setWeight] = useState("");
   const [weightUnit, setWeightUnit] = useState("g");
@@ -49,6 +52,20 @@ const CreateList = () => {
   const [widthUnit, setWidthUnit] = useState("cm");
   const [version, setVersion] = useState("");
   const [patentNumber, setPatentNumber] = useState("");
+  const [loadCapacity, setLoadCapacity] = useState("");
+  const [batteryCapacity, setBatteryCapacity] = useState("");
+  const [batteryCapacityUnit, setBatteryCapacityUnit] = useState("mAh");
+  const [loadCapacityUnit, setLoadCapacityUnit] = useState("kg");
+  const [runtime, setRuntime] = useState("");
+  const [runtimeUnit, setRuntimeUnit] = useState("hours");
+  const [range, setRange] = useState("");
+  const [rangeUnit, setRangeUnit] = useState("km/h");
+  const [speed, setSpeed] = useState("");
+  const [speedUnit, setSpeedUnit] = useState("km/h");
+  const [accuracy, setAccuracy] = useState("");
+  const [accuracyUnit, setAccuracyUnit] = useState("cm");
+  const [operatingTemperature, setOperatingTemperature] = useState("");
+  const [operatingTemperatureUnit, setOperatingTemperatureUnit] = useState("°C");
 
   // const [states, setStates] = useState([]);
   // const [selectedState, setSelectedState] = useState("");
@@ -242,6 +259,16 @@ const CreateList = () => {
     } catch (err) {
       console.error("Error fetching states:", err);
     }
+  };
+  const handlePowerChange = async (e) => {
+    const value = e.target.value;
+    setSelectedPower(value);
+    // try {
+    //   const res = await getStateByCountryTableData(value);
+    //   setStates(res.data || []);
+    // } catch (err) {
+    //   console.error("Error fetching states:", err);
+    // }
   };
 
   const handleStateChange = async (e) => {
@@ -527,6 +554,7 @@ const CreateList = () => {
           </div>
         </div>
         {/* robot title ends*/}
+
         {/* robot slug start */}
         <div className="col-lg-6">
           <div className="my_profile_setting_input form-group">
@@ -543,6 +571,7 @@ const CreateList = () => {
           </div>
         </div>
         {/* robot slug ends */}
+
         {/* robot description start */}
         <div className="col-lg-12">
           <div className="my_profile_setting_textarea form-group">
@@ -561,6 +590,7 @@ const CreateList = () => {
           </div>
         </div>
         {/* robot description ends */}
+
         {/* robot category start */}
         <div className="col-lg-6 col-xl-6">
           <div className="my_profile_setting_input ui_kit_select_search form-group">
@@ -586,6 +616,7 @@ const CreateList = () => {
           </div>
         </div>
         {/* robot category ends */}
+
         {/* Sub Category Field */}
         <div className="col-lg-6 col-xl-6">
           <div className="my_profile_setting_input ui_kit_select_search form-group">
@@ -612,6 +643,7 @@ const CreateList = () => {
           </div>
         </div>
         {/* robot sub category ends */}
+
         {/* robot manufacturer start */}
         <div className="col-lg-6 col-xl-6">
           <div className="my_profile_setting_input ui_kit_select_search form-group">
@@ -637,10 +669,11 @@ const CreateList = () => {
           </div>
         </div>
         {/* robot manufacturer ends */}
+
         {/* robot country start */}
         <div className="col-lg-6 col-xl-6">
           <div className="my_profile_setting_input ui_kit_select_search form-group">
-            <label htmlFor="countrySelect">Select Country</label>
+            <label htmlFor="countrySelect">Country of Origin</label>
             <select
               id="countrySelect"
               className="selectpicker form-select"
@@ -659,6 +692,7 @@ const CreateList = () => {
           </div>
         </div>
         {/* robot country ends */}
+
         {/* robot launch year start */}
         <div className="col-lg-6">
           <div className="my_profile_setting_input form-group">
@@ -681,7 +715,9 @@ const CreateList = () => {
             </select>
           </div>
         </div>
-        {/* robot launch year start */}
+        {/* robot launch year ends */}
+
+        {/* robot price start */}
         <div className="col-lg-6">
           <div className="my_profile_setting_input form-group">
             <label htmlFor="roboPrice">Total Price</label>
@@ -691,15 +727,17 @@ const CreateList = () => {
               id="roboPrice"
               value={price}
               onChange={(e) => setPrice(e.target.value)}
-              placeholder="Enter robot price"
+              placeholder="Enter Robot Price"
             />
             {error.price && <span className="text-danger">{error.price}</span>}
           </div>
         </div>
+        {/* robot price ends */}
+
         {/* robot version start */}
         <div className="col-lg-6">
-          <div className="my_profile_setting_textarea">
-            <label htmlFor="version">Version </label>
+          <div className="my_profile_setting_input form-group">
+            <label htmlFor="version">Version</label>
             <input
               type="text"
               className="form-control"
@@ -712,6 +750,7 @@ const CreateList = () => {
           </div>
         </div>
         {/* robot version ends */}
+
         {/* <div className="col-lg-6">
           <div className="my_profile_setting_textarea">
             <label htmlFor="patentNumber">Patent Number(s)</label>
@@ -1322,19 +1361,20 @@ const CreateList = () => {
             </div> */}
             {/*------ Dimensions Start ------*/}
             <div className="col-lg-12">
-              <div className="my_profile_setting_textarea">
+              <div className="my_profile_setting_input form-group">
                 <label htmlFor="dimensions">Dimensions</label>
-                {/* Row 1: Length + Width */}
+                {/* dimension row start */}
                 <div className="row">
-                  {/* Length */}
+                  {/* Length start */}
                   <div className="col-lg-6 position-relative mb-2">
                     <input
                       type="number"
                       className="form-control pe-5"
-                      placeholder="Length"
+                      placeholder="Enter Robot Length"
                       value={length}
                       onChange={(e) => setLength(e.target.value)}
                     />
+                    {/* {error.title && <span className="text-danger">{error.title}</span>} */}
                     <select
                       className="form-select position-absolute end-0 border-0 bg-transparent"
                       style={{
@@ -1357,15 +1397,18 @@ const CreateList = () => {
                       <option value="ft">ft</option>
                     </select>
                   </div>
-                  {/* Width */}
+                  {/* Length ends */}
+
+                  {/* Width start */}
                   <div className="col-lg-6 position-relative mb-2">
                     <input
                       type="number"
                       className="form-control pe-5"
-                      placeholder="Width"
+                      placeholder="Enter Robot Width"
                       value={width}
                       onChange={(e) => setWidth(e.target.value)}
                     />
+                    {/* {error.width && <span className="text-danger">{error.width}</span>} */}
                     <select
                       className="form-select position-absolute end-0 border-0 bg-transparent"
                       style={{
@@ -1388,18 +1431,18 @@ const CreateList = () => {
                       <option value="ft">ft</option>
                     </select>
                   </div>
-                </div>
-                {/* Row 2: Height + Weight */}
-                <div className="row">
-                  {/* Height */}
+                  {/* Width ends */}
+
+                  {/* Height start */}
                   <div className="col-lg-6 position-relative mb-2">
                     <input
                       type="number"
                       className="form-control pe-5"
-                      placeholder="Height"
+                      placeholder="Enter Robot Height"
                       value={height}
                       onChange={(e) => setHeight(e.target.value)}
                     />
+                    {/* {error.height && <span className="text-danger">{error.height}</span>} */}
                     <select
                       className="form-select position-absolute end-0 border-0 bg-transparent"
                       style={{
@@ -1422,37 +1465,333 @@ const CreateList = () => {
                       <option value="ft">ft</option>
                     </select>
                   </div>
-                  {/* Weight */}
-                  <div className="col-lg-6 position-relative mb-2">
-                    <input
-                      type="number"
-                      className="form-control pe-5"
-                      placeholder="Weight"
-                      value={weight}
-                      onChange={(e) => setWeight(e.target.value)}
-                    />
-                    <select
-                      className="form-select position-absolute end-0 border-0 bg-transparent"
-                      style={{
-                        width: "auto",
-                        height: "auto",
-                        top: "50%",
-                        transform: "translateY(-50%)",
-                        paddingRight: "30px",
-                        paddingLeft: "8px",
-                        appearance: "none",
-                        WebkitAppearance: "none",
-                        MozAppearance: "none",
-                      }}
-                      value={weightUnit}
-                      onChange={(e) => setWeightUnit(e.target.value)}
-                    >
-                      <option value="g">g</option>
-                      <option value="kg">kg</option>
-                      <option value="lb">lb</option>
-                    </select>
-                  </div>
+                  {/* Height ends */}
                 </div>
+                {/* dimension row ends */}
+
+                {/* another row starts */}
+                <div className="row">
+                  {/* Weight start */}
+                  <div className="col-lg-6 mb-2">
+                    <label htmlFor="weight">Weight</label>
+                    <div className="position-relative">
+                      <input
+                        type="number"
+                        className="form-control pe-5"
+                        placeholder="Enter Robot Weight"
+                        value={weight}
+                        onChange={(e) => setWeight(e.target.value)}
+                      />
+                      {/* {error.weight && <span className="text-danger">{error.weight}</span>} */}
+                      <select
+                        className="form-select position-absolute end-0 border-0 bg-transparent"
+                        style={{
+                          width: "auto",
+                          height: "auto",
+                          top: "50%",
+                          transform: "translateY(-50%)",
+                          paddingRight: "30px",
+                          paddingLeft: "8px",
+                          appearance: "none",
+                          WebkitAppearance: "none",
+                          MozAppearance: "none",
+                        }}
+                        value={weightUnit}
+                        onChange={(e) => setWeightUnit(e.target.value)}
+                      >
+                        <option value="g">g</option>
+                        <option value="kg">kg</option>
+                        <option value="lb">lb</option>
+                      </select>
+                    </div>
+                  </div>
+                  {/* Weight ends */}
+
+                  {/* Power Source start */}
+                  <div className="col-lg-6 col-xl-6">
+                    <div className="my_profile_setting_input ui_kit_select_search form-group">
+                      <label htmlFor="powerSelect">Power Source</label>
+                      <select
+                        id="powerSelect"
+                        className="selectpicker form-select"
+                        value={selectedPower}
+                        onChange={handlePowerChange}
+                        data-live-search="true"
+                        data-width="100%"
+                      >
+                        <option value="">-- Select Power Source --</option>
+                        {power.map((powerSource) => (
+                          <option key={powerSource._id} value={powerSource._id}>
+                            {powerSource.title}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+                  {/* Power Source ends */}
+
+                  {/* Battery Capacity start */}
+                  <div className="col-lg-6 mb-2">
+                    <label htmlFor="batteryCapacity">Battery Capacity</label>
+                    <div className="position-relative">
+                      <input
+                        type="number"
+                        className="form-control pe-5"
+                        placeholder="Enter Battery Capacity"
+                        value={batteryCapacity}
+                        onChange={(e) => setBatteryCapacity(e.target.value)}
+                      />
+                      {/* {error.batteryCapacity && <span className="text-danger">{error.batteryCapacity}</span>} */}
+                      <select
+                        className="form-select position-absolute end-0 border-0 bg-transparent"
+                        style={{
+                          width: "auto",
+                          height: "auto",
+                          top: "50%",
+                          transform: "translateY(-50%)",
+                          paddingRight: "30px",
+                          paddingLeft: "8px",
+                          appearance: "none",
+                          WebkitAppearance: "none",
+                          MozAppearance: "none",
+                        }}
+                        value={batteryCapacityUnit}
+                        onChange={(e) => setBatteryCapacityUnit(e.target.value)}
+                      >
+                        <option value="cm">mAh</option>
+                        <option value="m">Ah</option>
+                        <option value="inch">Wh</option>
+                        {/* <option value="ft">ft</option> */}
+                      </select>
+                    </div>
+                  </div>
+                  {/* Battery Capacity ends */}
+
+                  {/* Runtime start */}
+                  <div className="col-lg-6 mb-2">
+                    <label htmlFor="runtime">Runtime</label>
+                    <div className="position-relative">
+                      <input
+                        type="number"
+                        className="form-control pe-5"
+                        placeholder="Enter Robot Runtime"
+                        value={runtime}
+                        onChange={(e) => setRuntime(e.target.value)}
+                      />
+                      {/* {error.batteryCapacity && <span className="text-danger">{error.batteryCapacity}</span>} */}
+                      <select
+                        className="form-select position-absolute end-0 border-0 bg-transparent"
+                        style={{
+                          width: "auto",
+                          height: "auto",
+                          top: "50%",
+                          transform: "translateY(-50%)",
+                          paddingRight: "30px",
+                          paddingLeft: "8px",
+                          appearance: "none",
+                          WebkitAppearance: "none",
+                          MozAppearance: "none",
+                        }}
+                        value={runtimeUnit}
+                        onChange={(e) => setRuntimeUnit(e.target.value)}
+                      >
+                        <option value="cm">h</option>
+                        <option value="m">min</option>
+                        {/* <option value="inch">Wh</option> */}
+                        {/* <option value="ft">ft</option> */}
+                      </select>
+                    </div>
+                  </div>
+                  {/* Runtime start */}
+
+                  {/* Load Capacity start */}
+                  <div className="col-lg-6 position-relative mb-2">
+                    <label htmlFor="loadCapacity">Load Capacity</label>
+                    <div className="position-relative">
+                      <input
+                        type="number"
+                        className="form-control pe-5"
+                        placeholder="Enter Load Capacity"
+                        value={loadCapacity}
+                        onChange={(e) => setLoadCapacity(e.target.value)}
+                      />
+                      {/* {error.loadCapacity && <span className="text-danger">{error.loadCapacity}</span>} */}
+                      <select
+                        className="form-select position-absolute end-0 border-0 bg-transparent"
+                        style={{
+                          width: "auto",
+                          height: "auto",
+                          top: "50%",
+                          transform: "translateY(-50%)",
+                          paddingRight: "30px",
+                          paddingLeft: "8px",
+                          appearance: "none",
+                          WebkitAppearance: "none",
+                          MozAppearance: "none",
+                        }}
+                        value={loadCapacityUnit}
+                        onChange={(e) => setLoadCapacityUnit(e.target.value)}
+                      >
+                        <option value="cm">kg</option>
+                        <option value="m">g</option>
+                        <option value="inch">lb</option>
+                        <option value="ft">t</option>
+                      </select>
+                    </div>
+                  </div>
+                  {/* Load Capacity ends */}
+
+                  {/* Speed start */}
+                  <div className="col-lg-6 mb-2">
+                    <label htmlFor="speed">Speed</label>
+                    <div className="position-relative">
+                      <input
+                        type="number"
+                        className="form-control pe-5"
+                        placeholder="Enter Robot Speed"
+                        value={speed}
+                        onChange={(e) => setSpeed(e.target.value)}
+                      />
+                      {/* {error.batteryCapacity && <span className="text-danger">{error.batteryCapacity}</span>} */}
+                      <select
+                        className="form-select position-absolute end-0 border-0 bg-transparent"
+                        style={{
+                          width: "auto",
+                          height: "auto",
+                          top: "50%",
+                          transform: "translateY(-50%)",
+                          paddingRight: "30px",
+                          paddingLeft: "8px",
+                          appearance: "none",
+                          WebkitAppearance: "none",
+                          MozAppearance: "none",
+                        }}
+                        value={speedUnit}
+                        onChange={(e) => setSpeedUnit(e.target.value)}
+                      >
+                        <option value="cm">m/s</option>
+                        <option value="m">km/h</option>
+                        <option value="inch">mph</option>
+                        {/* <option value="ft">ft</option> */}
+                      </select>
+                    </div>
+                  </div>
+                  {/* Speed ends */}
+
+                  {/* Operating Temperature start */}
+                  <div className="col-lg-6 mb-2">
+                    <label htmlFor="operatingTemperature">Operating Temperature</label>
+                    <div className="position-relative">
+                      <input
+                        type="number"
+                        className="form-control pe-5"
+                        placeholder="Enter Operating Temperature"
+                        value={operatingTemperature}
+                        onChange={(e) => setOperatingTemperature(e.target.value)}
+                      />
+                      {/* {error.batteryCapacity && <span className="text-danger">{error.batteryCapacity}</span>} */}
+                      <select
+                        className="form-select position-absolute end-0 border-0 bg-transparent"
+                        style={{
+                          width: "auto",
+                          height: "auto",
+                          top: "50%",
+                          transform: "translateY(-50%)",
+                          paddingRight: "30px",
+                          paddingLeft: "8px",
+                          appearance: "none",
+                          WebkitAppearance: "none",
+                          MozAppearance: "none",
+                        }}
+                        value={operatingTemperatureUnit}
+                        onChange={(e) => setOperatingTemperatureUnit(e.target.value)}
+                      >
+                        <option value="cm">°C</option>
+                        <option value="m">°F</option>
+                        <option value="inch">K</option>
+                        {/* <option value="ft">ft</option> */}
+                      </select>
+                    </div>
+                  </div>
+                  {/* Operating Temperature ends */}
+
+                  {/* Accuracy start */}
+                  <div className="col-lg-6 mb-2">
+                    <label htmlFor="accuracy">Accuracy</label>
+                    <div className="position-relative">
+                      <input
+                        type="number"
+                        className="form-control pe-5"
+                        placeholder="Enter Robot Accuracy"
+                        value={accuracy}
+                        onChange={(e) => setAccuracy(e.target.value)}
+                      />
+                      {/* {error.batteryCapacity && <span className="text-danger">{error.batteryCapacity}</span>} */}
+                      <select
+                        className="form-select position-absolute end-0 border-0 bg-transparent"
+                        style={{
+                          width: "auto",
+                          height: "auto",
+                          top: "50%",
+                          transform: "translateY(-50%)",
+                          paddingRight: "30px",
+                          paddingLeft: "8px",
+                          appearance: "none",
+                          WebkitAppearance: "none",
+                          MozAppearance: "none",
+                        }}
+                        value={accuracyUnit}
+                        onChange={(e) => setAccuracyUnit(e.target.value)}
+                      >
+                        <option value="cm">mm</option>
+                        <option value="m">cm</option>
+                        {/* <option value="inch">mph</option> */}
+                        {/* <option value="ft">ft</option> */}
+                      </select>
+                    </div>
+                  </div>
+                  {/* Accuracy ends */}
+
+                  {/* Range start */}
+                  <div className="col-lg-6 mb-2">
+                    <label htmlFor="range">Range</label>
+                    <div className="position-relative">
+                      <input
+                        type="number"
+                        className="form-control pe-5"
+                        placeholder="Enter Robot Range"
+                        value={range}
+                        onChange={(e) => setRange(e.target.value)}
+                      />
+                      {/* {error.batteryCapacity && <span className="text-danger">{error.batteryCapacity}</span>} */}
+                      <select
+                        className="form-select position-absolute end-0 border-0 bg-transparent"
+                        style={{
+                          width: "auto",
+                          height: "auto",
+                          top: "50%",
+                          transform: "translateY(-50%)",
+                          paddingRight: "30px",
+                          paddingLeft: "8px",
+                          appearance: "none",
+                          WebkitAppearance: "none",
+                          MozAppearance: "none",
+                        }}
+                        value={rangeUnit}
+                        onChange={(e) => setRangeUnit(e.target.value)}
+                      >
+                        <option value="cm">m</option>
+                        <option value="m">km</option>
+                        <option value="inch">mi</option>
+                        {/* <option value="ft">ft</option> */}
+                      </select>
+                    </div>
+                  </div>
+                  {/* Range ends */}
+
+
+                </div>
+                {/* another row ends */}
               </div>
             </div>
 
