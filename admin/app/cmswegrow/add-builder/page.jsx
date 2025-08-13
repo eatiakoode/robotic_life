@@ -1,18 +1,13 @@
-import dynamic from "next/dynamic";
-import AddBuilder from "@/components/dashboard/add-builder";
+// "use client"; // ✅ Marks this page as a Client Component
+
+// import AddBuilder from "@/components/dashboard/add-builder";
+import AddBuilderWrapper from "./AddBuilderWrapper";
 
 export const metadata = {
   title: 'My Properties || WeGrow',
-  description:
-    'WeGrow',
-}
-
-const index = () => {
-  return (
-    <>
-      <AddBuilder />
-    </>
-  );
+  description: 'WeGrow',
 };
 
-export default dynamic(() => Promise.resolve(index), { ssr: false });
+export default function Page() {
+  return <AddBuilderWrapper />;
+}
