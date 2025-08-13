@@ -1,6 +1,4 @@
-const mongoose = require("mongoose"); // Erase if already required
-
-// Declare the Schema of the Mongo model
+const mongoose = require("mongoose");
 
 var countrySchema = new mongoose.Schema(
   {
