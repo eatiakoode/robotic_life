@@ -30,7 +30,16 @@ const createRobot = asyncHandler(async (req, res) => {
       .populate("countryOfOrigin", "name")
       .populate("powerSource", "name")
       .populate("color", "name")
-      .populate("material", "name");
+      .populate("material", "name")
+      .populate("navigationType", "name")
+      .populate("sensors", "name")
+      .populate("primaryFunction", "name")
+      .populate("aiSoftwareFeatures", "name")
+      .populate("operatingEnvironment", "name")
+      .populate("terrainCapability", "name")
+      .populate("autonomyLevel", "name")
+      .populate("communicationMethod", "name")
+      .populate("payloadType", "name");
 
     res.status(201).json({
       message: "Robot created successfully",

@@ -96,6 +96,42 @@ const RobotSchema = new mongoose.Schema(
         ref: "Material"
       }
     ],
+    navigationType: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "NavigationType"
+    }],
+    sensors: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Sensor"
+    }],
+    primaryFunction: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "PrimaryFunction"
+    },
+    aiSoftwareFeatures: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "AISoftwareFeature"
+    }],
+    operatingEnvironment: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "OperatingEnvironment"
+    },
+    terrainCapability: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "TerrainCapability"
+    }],
+    autonomyLevel: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "AutonomyLevel"
+    },
+    communicationMethod: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "CommunicationMethod"
+    }],
+    payloadTypesSupported: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "PayloadType"
+    }],
   },
   { timestamps: true }
 );

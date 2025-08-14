@@ -75,8 +75,15 @@ const enqBrochureFrontendRouter = require("./routes/frontend/enqBrochureRoute");
 const powerSourceRouter = require("./routes/powerSourceRouter.js");
 const colorRouter = require("./routes/colorRouter.js");
 const materialRouter = require("./routes/materialRouter.js");
-
-
+const navigationTypeRouter = require("./routes/navigationTypeRouter.js");
+const sensorRouter = require("./routes/sensorRouter.js");
+const primaryFunctionRouter = require("./routes/primaryFunctionRouter.js");
+const aiSoftwareFeaturesRouter = require("./routes/aiSoftwareFeaturesRouter.js");
+const operatingEnvironmentRouter = require("./routes/operatingEnvironmentRouter.js");
+const terrainCapabilityRouter = require("./routes/terrainCapabilityRouter.js");
+const autonomyLevelRouter = require("./routes/autonomyLevelRouter.js");
+const communicationMethodRouter = require("./routes/communicationMethodRouter.js");
+const payloadTypesSupportedRouter = require("./routes/payloadTypesSupportedRouter.js");
 
 
 const cookieParser = require("cookie-parser");
@@ -157,8 +164,15 @@ app.use("/frontend/api/location", locationFrontendRoute);
 app.use("/admin/api/powersource", powerSourceRouter);
 app.use("/admin/api/color", colorRouter);
 app.use("/admin/api/material", materialRouter);
-
-
+app.use("/admin/api/navigationtype", navigationTypeRouter);
+app.use("/admin/api/sensor", sensorRouter);
+app.use("/admin/api/primaryfunction", primaryFunctionRouter);
+app.use("/admin/api/aisoftwareFeatures", aiSoftwareFeaturesRouter);
+app.use("/admin/api/operatingenvironment", operatingEnvironmentRouter);
+app.use("/admin/api/terraincapability", terrainCapabilityRouter);
+app.use("/admin/api/autonomylevel", autonomyLevelRouter);
+app.use("/admin/api/communicationmethod", communicationMethodRouter);
+app.use("/admin/api/payloadtypessupported", payloadTypesSupportedRouter);
 
 const path = require("path");
 // app.use("/public", express.static(path.join(__dirname, "public")));
