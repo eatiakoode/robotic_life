@@ -23,6 +23,13 @@ const RobotSchema = new mongoose.Schema(
       required: true,
       trim: true
     },
+    slug: {
+      type: String,
+      required: true,
+      unique: true,
+      index: true,
+      lowercase: true
+    },
     description: {
       type: String,
       trim: true
@@ -76,7 +83,19 @@ const RobotSchema = new mongoose.Schema(
     },
     runtime: unitValueSchema,
     speed: unitValueSchema,
-    accuracy: unitValueSchema
+    accuracy: unitValueSchema,
+    color: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Color"
+      }
+    ],
+    material: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Material"
+      }
+    ],
   },
   { timestamps: true }
 );

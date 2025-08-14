@@ -28,7 +28,9 @@ const createRobot = asyncHandler(async (req, res) => {
       .populate("category", "name")
       .populate("manufacturer", "name")
       .populate("countryOfOrigin", "name")
-      .populate("powerSource", "name");
+      .populate("powerSource", "name")
+      .populate("color", "name")
+      .populate("material", "name");
 
     res.status(201).json({
       message: "Robot created successfully",
