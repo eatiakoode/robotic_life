@@ -72,6 +72,7 @@ const locationFrontendRoute = require("./routes/frontend/locationRoute");
 
 const enqSubscribeFrontendRouter = require("./routes/frontend/enqSubscribeRoute");
 const enqBrochureFrontendRouter = require("./routes/frontend/enqBrochureRoute");
+const powerSourceRouter = require("./routes/powerSourceRouter.js");
 
 
 
@@ -151,7 +152,7 @@ app.use("/frontend/api/brochureenquiry", enqBrochureFrontendRouter);
 app.use("/frontend/api/category", categoryFrontendRoute);
 // app.use("/frontend/api/builder", builderFrontendRoute);
 app.use("/frontend/api/location", locationFrontendRoute);
-
+app.use("/admin/api/powersource", powerSourceRouter);
 
 
 
