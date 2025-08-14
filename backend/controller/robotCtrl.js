@@ -2,16 +2,33 @@ const Robot = require("../models/robotModel");
 const Category = require("../models/categoryModel");
 const Manufacturer = require("../models/manufacturerModel");
 const Country = require("../models/countryModel");
+const slugify = require("slugify");
+const asyncHandler = require("express-async-handler");
+const { uploadPhoto, robotImgResize } = require("../middlewares/uploadImage");
 
 // Create a new Robot
-const createRobot = async (req, res) => {
+const createRobot = asyncHandler(async (req, res) => {
   try {
+    if (req.files) {
+      const processedImages = await robotImgResize(req);
+      if (processedImages.length > 0) {
+        req.body.Image = "public/images/robot/" + processedImages[0];
+      }
+    }
+    if (req.body.slug) {
+      req.body.slug = slugify(req.body.slug.toLowerCase());
+    } else if (req.body.title) {
+      req.body.slug = slugify(req.body.title.toLowerCase());
+    } else {
+      req.body.slug = "";
+    }
     const robot = await Robot.create(req.body);
 
     const populatedRobot = await Robot.findById(robot._id)
       .populate("category", "name")
       .populate("manufacturer", "name")
-      .populate("countryOfOrigin", "name");
+      .populate("countryOfOrigin", "name")
+      .populate("powerSource", "name");
 
     res.status(201).json({
       message: "Robot created successfully",
@@ -20,7 +37,7 @@ const createRobot = async (req, res) => {
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
-};
+});
 
 // Get all robots
 const getRobots = async (req, res) => {

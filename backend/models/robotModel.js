@@ -1,4 +1,20 @@
 const mongoose = require("mongoose");
+const unitValueSchema = new mongoose.Schema(
+  {
+    value: { type: Number, required: false },
+    unit: { type: String, required: false, trim: true }
+  },
+  { _id: false }
+);
+
+const rangeUnitSchema = new mongoose.Schema(
+  {
+    min: { type: Number, required: false },
+    max: { type: Number, required: false },
+    unit: { type: String, required: false, trim: true }
+  },
+  { _id: false }
+);
 
 const RobotSchema = new mongoose.Schema(
   {
@@ -40,7 +56,27 @@ const RobotSchema = new mongoose.Schema(
       type: String,
       trim: true
     },
-
+    logoImage: {
+      type: String,
+    },
+    dimensions: {
+      length: unitValueSchema,
+      width: unitValueSchema,
+      height: unitValueSchema
+    },
+    weight: unitValueSchema,
+    batteryCapacity: unitValueSchema,
+    loadCapacity: unitValueSchema,
+    operatingTemperature: rangeUnitSchema,
+    range: unitValueSchema,
+    powerSource: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "PowerSource",
+      required: true
+    },
+    runtime: unitValueSchema,
+    speed: unitValueSchema,
+    accuracy: unitValueSchema
   },
   { timestamps: true }
 );
