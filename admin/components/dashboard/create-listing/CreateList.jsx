@@ -2,19 +2,11 @@
 
 import { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
-// import { getCityByStateTableData } from "../../../api/city";
-// import { getStateByCountryTableData } from "../../../api/state";
-// import { getLocationByCityTableData } from "../../../api/location";
-// import { getAmenityTableData } from "../../../api/amenity";
 import { getBuilderTableData } from "../../../api/builder";
-// import { getConstructionstatusTableData } from "../../../api/constructionstatus";
-// import { getFurnishingstatusTableData } from "../../../api/furnishingstatus";
-// import { addPropertyAPI } from "../../../api/property";
+import { addPropertyAPI } from "../../../api/property";
 // import { getSellerTableData } from "@/api/seller";
 
 import { getCountryTableData } from "../../../api/country";
-import { getCategoryTableData } from "../../../api/category";
-import { getPropertytypeByCategoryTableData } from "../../../api/propertytype";
 // import { addRobotAPI } from "../../../api/property";
 
 import selectedFiles from "../../../utils/selectedFiles";
@@ -64,7 +56,8 @@ const CreateList = () => {
   const [speedUnit, setSpeedUnit] = useState("km/h");
   const [accuracy, setAccuracy] = useState("");
   const [accuracyUnit, setAccuracyUnit] = useState("cm");
-  const [operatingTemperature, setOperatingTemperature] = useState("");
+  const [operatingTemperatureMin, setOperatingTemperatureMin] = useState("");
+  const [operatingTemperatureMax, setOperatingTemperatureMax] = useState("");
   const [operatingTemperatureUnit, setOperatingTemperatureUnit] =
     useState("°C");
   const [chargingTime, setChargingTime] = useState("");
@@ -162,152 +155,181 @@ const CreateList = () => {
     setPropertySelectedImgs(deleted);
   };
 
-useEffect(() => {
-  const fetchData = async () => {
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const filter = {
+          limit: 1000,
+          page: 1,
+        };
+
+        const [
+          countryRes,
+          categoryRes,
+          subCategoryRes,
+          manufacturerRes,
+          powerSourceRes,
+          colorRes,
+          materialRes,
+        ] = await Promise.all([
+          // getCountryTableData(),
+          // getCategoryTableData(filter),
+          // getSubCategoryTableData(filter),
+          // getManufacturerTableData(filter),
+          // getPowerSourceTableData(filter),
+          // getColorTableData(filter),
+          // getMaterialTableData(filter),
+        ]);
+
+        // setCountries(countryRes || []);
+        // setCategories(categoryRes.items || []);
+        // setSubCategories(subCategoryRes.items || []);
+        // setManufacturers(manufacturerRes.items || []);
+        // setPowerSources(powerSourceRes.items || []);
+        // setColors(colorRes.items || []);     // multi-select
+        // setMaterials(materialRes.items || []); // multi-select
+      } catch (err) {
+        console.error("Error loading initial data:", err);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  // --- Handlers ---
+
+  const handleCountryChange = async (e) => {
+    const value = e.target.value;
+    setSelectedCountry(value);
     try {
-      const filter = {
-        limit: 1000,
-        page: 1,
-      };
-
-      const [
-        countryRes,
-        categoryRes,
-        subCategoryRes,
-        manufacturerRes,
-        powerSourceRes,
-        colorRes,
-        materialRes,
-      ] = await Promise.all([
-        // getCountryTableData(),
-        // getCategoryTableData(filter),
-        // getSubCategoryTableData(filter),
-        // getManufacturerTableData(filter),
-        // getPowerSourceTableData(filter),
-        // getColorTableData(filter),
-        // getMaterialTableData(filter),
-      ]);
-
-      // setCountries(countryRes || []);
-      // setCategories(categoryRes.items || []);
-      // setSubCategories(subCategoryRes.items || []);
-      // setManufacturers(manufacturerRes.items || []);
-      // setPowerSources(powerSourceRes.items || []);
-      // setColors(colorRes.items || []);     // multi-select
-      // setMaterials(materialRes.items || []); // multi-select
-
+      const res = await getStateByCountryTableData(value);
+      setStates(res.data || []);
     } catch (err) {
-      console.error("Error loading initial data:", err);
+      console.error("Error fetching states:", err);
     }
   };
 
-  fetchData();
-}, []);
+  const handleStateChange = async (e) => {
+    const value = e.target.value;
+    setSelectedState(value);
+    try {
+      const res = await getCityByStateTableData(value);
+      setCities(res.data || []);
+    } catch (err) {
+      console.error("Error fetching cities:", err);
+    }
+  };
 
+  const handleCategoryChange = async (e) => {
+    const value = e.target.value;
+    setSelectedCategory(value);
+    try {
+      const res = await getSubCategoryTableData({ categoryId: value });
+      setSubCategories(res.items || []);
+    } catch (err) {
+      console.error("Error fetching subcategories:", err);
+    }
+  };
 
-// --- Handlers ---
+  const handleSubCategoryChange = (e) => {
+    setSelectedSubCategory(e.target.value);
+  };
 
-const handleCountryChange = async (e) => {
-  const value = e.target.value;
-  setSelectedCountry(value);
-  try {
-    const res = await getStateByCountryTableData(value);
-    setStates(res.data || []);
-  } catch (err) {
-    console.error("Error fetching states:", err);
-  }
-};
+  const handleManufacturerChange = (e) => {
+    setSelectedManufacturer(e.target.value);
+  };
 
-const handleStateChange = async (e) => {
-  const value = e.target.value;
-  setSelectedState(value);
-  try {
-    const res = await getCityByStateTableData(value);
-    setCities(res.data || []);
-  } catch (err) {
-    console.error("Error fetching cities:", err);
-  }
-};
+  const handlePowerChange = (e) => {
+    setSelectedPower(e.target.value);
+  };
 
-const handleCategoryChange = async (e) => {
-  const value = e.target.value;
-  setSelectedCategory(value);
-  try {
-    const res = await getSubCategoryTableData({ categoryId: value });
-    setSubCategories(res.items || []);
-  } catch (err) {
-    console.error("Error fetching subcategories:", err);
-  }
-};
+  const handleColorChange = (e) => {
+    const values = Array.from(
+      e.target.selectedOptions,
+      (option) => option.value
+    );
+    setSelectedColors(values);
+  };
 
-const handleSubCategoryChange = (e) => {
-  setSelectedSubCategory(e.target.value);
-};
+  const handleMaterialChange = (e) => {
+    const values = Array.from(
+      e.target.selectedOptions,
+      (option) => option.value
+    );
+    setSelectedMaterials(values);
+  };
 
-const handleManufacturerChange = (e) => {
-  setSelectedManufacturer(e.target.value);
-};
+  const handleYearChange = (e) => {
+    setSelectedYear(e.target.value);
+  };
 
-const handlePowerChange = (e) => {
-  setSelectedPower(e.target.value);
-};
+  // For unit dropdowns (hardcoded options)
+  const handleLengthUnitChange = (e) => {
+    setLengthUnit(e.target.value);
+  };
 
-const handleColorChange = (e) => {
-  const values = Array.from(e.target.selectedOptions, (option) => option.value);
-  setSelectedColors(values);
-};
+  const handleWidthUnitChange = (e) => {
+    setWidthUnit(e.target.value);
+  };
 
-const handleMaterialChange = (e) => {
-  const values = Array.from(e.target.selectedOptions, (option) => option.value);
-  setSelectedMaterials(values);
-};
+  const handleHeightUnitChange = (e) => {
+    setHeightUnit(e.target.value);
+  };
 
-const handleYearChange = (e) => {
-  setSelectedYear(e.target.value);
-};
-
-// For unit dropdowns (hardcoded options)
-const handleLengthUnitChange = (e) => {
-  setLengthUnit(e.target.value);
-};
-
-const handleWidthUnitChange = (e) => {
-  setWidthUnit(e.target.value);
-};
-
-const handleHeightUnitChange = (e) => {
-  setHeightUnit(e.target.value);
-};
-
-const handleWeightUnitChange = (e) => {
-  setWeightUnit(e.target.value);
-};
-
+  const handleWeightUnitChange = (e) => {
+    setWeightUnit(e.target.value);
+  };
 
   // --- Submit ---
   const addRobo = async (e) => {
     e.preventDefault();
     const newErrors = {};
 
+    // Validation list
     const requiredFields = [
       { key: "title", value: title, name: "Title" },
       { key: "slug", value: slug, name: "Slug" },
       { key: "description", value: description, name: "Description" },
-      { key: "price", value: price, name: "Price" },
-      { key: "country", value: selectedCountry, name: "Country" },
-      { key: "selectedCategory", value: selectedCategory, name: "Category" },
+      { key: "price", value: price, name: "Total Price" },
+      { key: "countryid", value: selectedCountry, name: "Country of Origin" },
+      { key: "categoryid", value: selectedCategory, name: "Category" },
       {
-        key: "selectedSubCategory",
+        key: "subcategoryid",
         value: selectedSubCategory,
         name: "Sub Category",
       },
       {
-        key: "selectedManufacturer",
+        key: "manufacturerid",
         value: selectedManufacturer,
         name: "Manufacturer",
       },
+      { key: "launchYear", value: selectedYear, name: "Launch Year" },
+      { key: "length", value: length, name: "Length" },
+      { key: "width", value: width, name: "Width" },
+      { key: "height", value: height, name: "Height" },
+      { key: "weight", value: weight, name: "Weight" },
+      {
+        key: "batteryCapacity",
+        value: batteryCapacity,
+        name: "Battery Capacity",
+      },
+      { key: "runtime", value: runtime, name: "Runtime" },
+      { key: "speed", value: speed, name: "Speed" },
+      { key: "accuracy", value: accuracy, name: "Accuracy" },
+      { key: "selectedPower", value: selectedPower, name: "Power Source" },
+      {
+        key: "colors",
+        value: selectedColors.length > 0 ? selectedColors : null,
+        name: "Colors",
+      },
+      {
+        key: "materials",
+        value: selectedMaterials.length > 0 ? selectedMaterials : null,
+        name: "Materials",
+      },
     ];
 
+    // Check for empty required fields
     requiredFields.forEach((field) => {
       if (
         !field.value ||
@@ -329,7 +351,28 @@ const handleWeightUnitChange = (e) => {
         price,
         countryid: selectedCountry,
         categoryid: selectedCategory,
+        subcategoryid: selectedSubCategory,
         manufacturerid: selectedManufacturer,
+        launchYear: selectedYear,
+        version,
+        length,
+        lengthUnit,
+        width,
+        widthUnit,
+        height,
+        heightUnit,
+        weight,
+        weightUnit,
+        batteryCapacity,
+        batteryChargingTime,
+        loadCapacity,
+        runtime,
+        speed,
+        accuracy,
+        operatingTemperature,
+        range,
+        rangeUnit,
+        selectedPower,
         videoembedcode,
         metatitle,
         metadescription,
@@ -338,27 +381,34 @@ const handleWeightUnitChange = (e) => {
 
       const formData = new FormData();
 
-      // Loop over each key-value pair in the payload
+      // Append normal fields
       for (const key in payload) {
         if (payload[key] !== undefined && payload[key] !== null) {
           formData.append(key, payload[key]);
         }
       }
+
+      // Append multi-selects
+      selectedColors.forEach((color) => {
+        formData.append("colors[]", color);
+      });
+      selectedMaterials.forEach((material) => {
+        formData.append("materials[]", material);
+      });
+
+      // Append images
       propertySelectedImgs.forEach((file) => {
-        formData.append("propertySelectedImgs", file); // Repeat key name for each file
+        formData.append("propertySelectedImgs", file);
       });
 
       const res = await addRoboAPI(formData);
       toast.success(res.message);
-      if (res.status == "success") {
+      if (res.status === "success") {
         router.push("/cmswegrow/my-properties");
       }
 
-      // alert(res.message);
-
-      // Reset fields and errors
       setError({});
-      // (Reset other fields here if needed)
+      // Optionally reset form here
     } catch (err) {
       setError({ general: err.message || "Something went wrong" });
     }
@@ -602,7 +652,7 @@ const handleWeightUnitChange = (e) => {
             <h3 className="mb30">Specifications</h3>
           </div>
           <div className="row">
-          {/* <div className="col-lg-12">
+            {/* <div className="col-lg-12">
               <div className="my_profile_setting_textarea">
                 <label htmlFor="nearBy">Near By </label>
                 <textarea
@@ -972,7 +1022,7 @@ const handleWeightUnitChange = (e) => {
                   {/* Speed ends */}
 
                   {/* Operating Temperature start */}
-                  <div className="col-lg-6 mb-2">
+                  {/* <div className="col-lg-6 mb-2">
                     <label htmlFor="operatingTemperature">
                       Operating Temperature
                     </label>
@@ -986,7 +1036,6 @@ const handleWeightUnitChange = (e) => {
                           setOperatingTemperature(e.target.value)
                         }
                       />
-                      {/* {error.batteryCapacity && <span className="text-danger">{error.batteryCapacity}</span>} */}
                       <select
                         className="form-select position-absolute end-0 border-0 bg-transparent"
                         style={{
@@ -1008,10 +1057,64 @@ const handleWeightUnitChange = (e) => {
                         <option value="cm">°C</option>
                         <option value="m">°F</option>
                         <option value="inch">K</option>
-                        {/* <option value="ft">ft</option> */}
                       </select>
                     </div>
+                  </div> */}
+                  <div className="col-lg-6 mb-2">
+                    <label>Operating Temperature</label>
+                    <div className="d-flex gap-2">
+                      {/* Min Temperature */}
+                      <div className="position-relative flex-fill">
+                        <input
+                          type="number"
+                          className="form-control pe-5"
+                          placeholder="Min"
+                          value={operatingTemperatureMin}
+                          onChange={(e) =>
+                            setOperatingTemperatureMin(e.target.value)
+                          }
+                        />
+                      </div>
+
+                      {/* Max Temperature */}
+                      <div className="position-relative flex-fill">
+                        <input
+                          type="number"
+                          className="form-control pe-5"
+                          placeholder="Max"
+                          value={operatingTemperatureMax}
+                          onChange={(e) =>
+                            setOperatingTemperatureMax(e.target.value)
+                          }
+                        />
+                      </div>
+
+                      {/* Unit Selector */}
+                      <div
+                        className="position-relative"
+                        style={{ minWidth: "80px" }}
+                      >
+                        <select
+                          className="form-select border-0 bg-transparent"
+                          style={{
+                            height: "100%",
+                            appearance: "none",
+                            WebkitAppearance: "none",
+                            MozAppearance: "none",
+                          }}
+                          value={operatingTemperatureUnit}
+                          onChange={(e) =>
+                            setOperatingTemperatureUnit(e.target.value)
+                          }
+                        >
+                          <option value="C">°C</option>
+                          <option value="F">°F</option>
+                          <option value="K">K</option>
+                        </select>
+                      </div>
+                    </div>
                   </div>
+
                   {/* Operating Temperature ends */}
 
                   {/* Accuracy start */}
@@ -1165,7 +1268,6 @@ const handleWeightUnitChange = (e) => {
                     </div>
                   </div>
                   {/* Material Select ends */}
-
                 </div>
                 {/* another row ends */}
               </div>
