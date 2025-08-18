@@ -28,7 +28,17 @@ const CategorySchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Category",
       default: null
-    }
+    },
+    metatitle: {
+      type: String,
+    },
+    metadescription: {
+      type: String,
+    },
+    status: {
+      type: Boolean,
+      default: true,
+    },
   },
   { timestamps: true }
 );

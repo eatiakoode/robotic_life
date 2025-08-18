@@ -13,12 +13,10 @@ const createCategory = asyncHandler(async (req, res) => {
       }
     }
 
-    // // normalize title/name compatibility
     // if (!req.body.name && req.body.title) {
     //   req.body.name = req.body.title;
     // }
 
-    // explicit parent null when not provided or empty
     if (!('parent' in req.body) || req.body.parent === '' || req.body.parent === 'null' || req.body.parent === undefined) {
       req.body.parent = null;
     }
