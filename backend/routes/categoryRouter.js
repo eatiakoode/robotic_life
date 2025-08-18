@@ -14,10 +14,10 @@ const { uploadPhoto } = require("../middlewares/uploadImage");
 
 const router = express.Router();
 
-router.post("/", authMiddleware, isAdmin,uploadPhoto.array("logo", 10), createCategory);
+router.post("/", authMiddleware, isAdmin, uploadPhoto.array("logo", 10), createCategory);
 router.get("/", authMiddleware, isAdmin, getCategories);
 router.get("/parent", authMiddleware, isAdmin, getParentCategories);
-router.get("/:parentId", authMiddleware, isAdmin, getSubCategories);
+router.get("/sub/:parentId", authMiddleware, isAdmin, getSubCategories);
 router.get("/:id", authMiddleware, isAdmin, getCategoryById);
 router.put("/:id", authMiddleware, isAdmin, updateCategory);
 router.delete("/:id", authMiddleware, isAdmin, deleteCategory);
