@@ -88,37 +88,44 @@ const getSubCategories = async (req, res) => {
 };
 
 // Update category
-const updateCategory = async (req, res) => {
+const updateCategory = asyncHandler(async (req, res) => {
   try {
-    // prevent self-parenting
-    if (req.body.parent && req.body.parent === req.params.id) {
-      return res.status(400).json({ error: "A category cannot be its own parent." });
+    if (req.files && req.files.length > 0) {
+      const processedImages = await categoryImgResize(req);
+      if (processedImages.length > 0) {
+        req.body.logoimage = "public/images/category/" + processedImages[0];
+      }
     }
 
-    // normalize parent on update: empty -> null; missing -> unchanged
-    if ('parent' in req.body && (req.body.parent === '' || req.body.parent === 'null' || req.body.parent === undefined)) {
+    if (!("parent" in req.body) || req.body.parent === "" || req.body.parent === "null" || req.body.parent === undefined) {
       req.body.parent = null;
     }
 
-    // allow title fallback to name
-    if (!req.body.name && req.body.title) {
-      req.body.name = req.body.title;
+    if (req.body.slug) {
+      req.body.slug = slugify(req.body.slug.toLowerCase());
+    } else if (req.body.name) {
+      req.body.slug = slugify(req.body.name.toLowerCase());
     }
 
-    const category = await Category.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-      runValidators: true
+    const updatedCategory = await Category.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true, runValidators: true }
+    );
+
+    if (!updatedCategory) {
+      return res.status(404).json({ status: "error", message: "Category not found" });
+    }
+
+    res.json({
+      status: "success",
+      message: "Category updated successfully",
+      data: updatedCategory,
     });
-
-    if (!category) {
-      return res.status(404).json({ error: "Category not found" });
-    }
-
-    res.json(category);
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    res.status(400).json({ status: "error", message: error.message });
   }
-};
+});
 
 // Delete category
 const deleteCategory = async (req, res) => {
