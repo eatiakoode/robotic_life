@@ -37,7 +37,7 @@ const CreateList = () => {
         toast.success(data.message);
         if(data.status=="success"){
           setTimeout(() => {
-          router.push("/cmswegrow/my-country");
+          router.push("/cmswegrow/my-powersource");
           }, 1500); 
         }
   

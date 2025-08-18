@@ -58,10 +58,35 @@ const CreateList = () => {
     useState("°C");
   const [chargingTime, setChargingTime] = useState("");
   const [chargingTimeUnit, setChargingTimeUnit] = useState("h");
-  const [selectedColors, setSelectedColors] = useState([]); // ✅ array for multi-select
-  const [colors, setColors] = useState([]); // ✅ from backend
-  const [materials, setMaterials] = useState([]); // ✅ from backend
-  const [selectedMaterials, setSelectedMaterials] = useState([]); // ✅ array for multi-select
+  const [selectedColors, setSelectedColors] = useState([]);
+  const [colors, setColors] = useState([]);
+  const [materials, setMaterials] = useState([]);
+  const [selectedMaterials, setSelectedMaterials] = useState([]);
+  const [navigationType, setNavigationType] = useState([]);
+  const [selectedNavigationType, setSelectedNavigationType] = useState([]);
+  const [sensors, setSensors] = useState([]);
+  const [selectedSensor, setSelectedSensor] = useState([]);
+  const [selectedAISoftwareFeature, setSelectedAISoftwareFeature] = useState(
+    []
+  );
+  const [aiSoftwareFeatures, setAISoftwareFeatures] = useState([]);
+  const [primaryFunctions, setPrimaryFunctions] = useState([]);
+  const [primaryFunction, setPrimaryFunction] = useState([]);
+  const [selectedPrimaryFunction, setSelectedPrimaryFunction] = useState("");
+  const [operatingEnvironment, setOperatingEnvironment] = useState([]);
+  const [selectedOperatingEnvironment, setSelectedOperatingEnvironment] =
+    useState("");
+  const [terrainCapabilities, setTerrainCapabilities] = useState([]);
+  const [selectedTerrainCapability, setSelectedTerrainCapability] = useState(
+    []
+  );
+  const [communicationMethods, setCommunicationMethods] = useState([]);
+  const [selectedCommunicationMethod, setSelectedCommunicationMethod] =
+    useState([]);
+  const [autonomyLevel, setAutonomyLevel] = useState([]);
+  const [selectedAutonomyLevel, setSelectedAutonomyLevel] = useState("");
+  const [payloadTypes, setPayloadTypes] = useState([]);
+  const [selectedPayloadType, setSelectedPayloadType] = useState([]);
 
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("");
@@ -158,16 +183,16 @@ const CreateList = () => {
     }
   };
 
-  const handleStateChange = async (e) => {
-    const value = e.target.value;
-    setSelectedState(value);
-    try {
-      const res = await getCityByStateTableData(value);
-      setCities(res.data || []);
-    } catch (err) {
-      console.error("Error fetching cities:", err);
-    }
-  };
+  // const handleStateChange = async (e) => {
+  //   const value = e.target.value;
+  //   setSelectedState(value);
+  //   try {
+  //     const res = await getCityByStateTableData(value);
+  //     setCities(res.data || []);
+  //   } catch (err) {
+  //     console.error("Error fetching cities:", err);
+  //   }
+  // };
 
   const handleCategoryChange = async (e) => {
     const value = e.target.value;
@@ -198,12 +223,72 @@ const CreateList = () => {
     setSelectedPower(e.target.value);
   };
 
+  const handlePrimaryFunctionChange = (e) => {
+    setSelectedPrimaryFunction(e.target.value);
+  };
+
+  const handleOperatingEnvironmentChange = (e) => {
+    setSelectedOperatingEnvironment(e.target.value);
+  };
+
+  const handleAutonomyLevelChange = (e) => {
+    setSelectedAutonomyLevel(e.target.value);
+  };
+
   const handleColorChange = (e) => {
     const values = Array.from(
       e.target.selectedOptions,
       (option) => option.value
     );
     setSelectedColors(values);
+  };
+
+  const handleNavigationTypeChange = (e) => {
+    const values = Array.from(
+      e.target.selectedOptions,
+      (option) => option.value
+    );
+    setSelectedNavigationType(values);
+  };
+
+  const handleSensorChange = (e) => {
+    const values = Array.from(
+      e.target.selectedOptions,
+      (option) => option.value
+    );
+    setSelectedSensor(values);
+  };
+
+  const handleAISoftwareFeatureChange = (e) => {
+    const values = Array.from(
+      e.target.selectedOptions,
+      (option) => option.value
+    );
+    setSelectedAISoftwareFeature(values);
+  };
+
+  const handleTerrainCapabilityChange = (e) => {
+    const values = Array.from(
+      e.target.selectedOptions,
+      (option) => option.value
+    );
+    setSelectedTerrainCapability(values);
+  };
+
+  const handleCommunicationMethodChange = (e) => {
+    const values = Array.from(
+      e.target.selectedOptions,
+      (option) => option.value
+    );
+    setSelectedCommunicationMethod(values);
+  };
+
+  const handlePayloadTypeChange = (e) => {
+    const values = Array.from(
+      e.target.selectedOptions,
+      (option) => option.value
+    );
+    setSelectedPayloadType(values);
   };
 
   const handleMaterialChange = (e) => {
@@ -236,128 +321,182 @@ const CreateList = () => {
   };
 
   // --- Submit ---
-const addRobo = async (e) => {
-  e.preventDefault();
-  const newErrors = {};
+  const addRobo = async (e) => {
+    e.preventDefault();
+    const newErrors = {};
 
-  // Validation list
-  const requiredFields = [
-    { key: "title", value: title, name: "Title" },
-    { key: "slug", value: slug, name: "Slug" },
-    { key: "description", value: description, name: "Description" },
-    { key: "price", value: price, name: "Total Price" },
-    { key: "countryid", value: selectedCountry, name: "Country of Origin" },
-    { key: "categoryid", value: selectedCategory, name: "Category" },
-    { key: "subcategoryid", value: selectedSubCategory, name: "Sub Category" },
-    { key: "manufacturerid", value: selectedManufacturer, name: "Manufacturer" },
-    { key: "launchYear", value: selectedYear, name: "Launch Year" },
-    { key: "length", value: length, name: "Length" },
-    { key: "width", value: width, name: "Width" },
-    { key: "height", value: height, name: "Height" },
-    { key: "weight", value: weight, name: "Weight" },
-    { key: "batteryCapacity", value: batteryCapacity, name: "Battery Capacity" },
-    { key: "runtime", value: runtime, name: "Runtime" },
-    { key: "speed", value: speed, name: "Speed" },
-    { key: "accuracy", value: accuracy, name: "Accuracy" },
-    { key: "selectedPower", value: selectedPower, name: "Power Source" },
-    {
-      key: "colors",
-      value: selectedColors.length > 0 ? selectedColors : null,
-      name: "Colors",
-    },
-    {
-      key: "materials",
-      value: selectedMaterials.length > 0 ? selectedMaterials : null,
-      name: "Materials",
-    },
-  ];
+    // Validation list
+    const requiredFields = [
+      { key: "title", value: title, name: "Title" },
+      { key: "slug", value: slug, name: "Slug" },
+      { key: "description", value: description, name: "Description" },
+      { key: "price", value: price, name: "Total Price" },
+      { key: "countryid", value: selectedCountry, name: "Country of Origin" },
+      { key: "categoryid", value: selectedCategory, name: "Category" },
+      {
+        key: "subcategoryid",
+        value: selectedSubCategory,
+        name: "Sub Category",
+      },
+      {
+        key: "manufacturerid",
+        value: selectedManufacturer,
+        name: "Manufacturer",
+      },
+      { key: "launchYear", value: selectedYear, name: "Launch Year" },
+      { key: "length", value: length, name: "Length" },
+      { key: "width", value: width, name: "Width" },
+      { key: "height", value: height, name: "Height" },
+      { key: "weight", value: weight, name: "Weight" },
+      {
+        key: "batteryCapacity",
+        value: batteryCapacity,
+        name: "Battery Capacity",
+      },
+      { key: "runtime", value: runtime, name: "Runtime" },
+      { key: "speed", value: speed, name: "Speed" },
+      { key: "accuracy", value: accuracy, name: "Accuracy" },
+      { key: "selectedPower", value: selectedPower, name: "Power Source" },
+      { key: "videoembedcode", value: videoembedcode, name: "Video Embed Code" },
+      { key: "selectedPrimaryFunction", value: selectedPrimaryFunction, name: "Primary Function" },
+      { key: "selectedOperatingEnvironment", value: selectedOperatingEnvironment, name: "Operating Environment" },
+      { key: "selectedAutonomyLevel", value: selectedAutonomyLevel, name: "Autonomy Level" },
+      {
+        key: "colors",
+        value: selectedColors.length > 0 ? selectedColors : null,
+        name: "Colors",
+      },
+      {
+        key: "materials",
+        value: selectedMaterials.length > 0 ? selectedMaterials : null,
+        name: "Materials",
+      },
+      {
+        key: "navigationTypes",
+        value: selectedNavigationTypes.length > 0 ? selectedNavigationTypes : null,
+        name: "Navigation Types",
+      },
+      {
+        key: "sensors",
+        value: selectedSensors.length > 0 ? selectedSensors : null,
+        name: "Sensors",
+      },
+      {
+        key: "aiSoftwareFeatures",
+        value: selectedAISoftwareFeatures.length > 0 ? selectedAISoftwareFeatures : null,
+        name: "AI Software Features",
+      },
+      {
+        key: "terrainCapability",
+        value: selectedTerrainCapability.length > 0 ? selectedTerrainCapability : null,
+        name: "Terrain Capability",
+      },
+      {
+        key: "communicationMethod",
+        value: selectedCommunicationMethod.length > 0 ? selectedCommunicationMethod : null,
+        name: "Communication Method",
+      },
+      {
+        key: "payloadType",
+        value: selectedPayloadType.length > 0 ? selectedPayloadType : null,
+        name: "Payload Type",
+      },
+    ];
 
-  // Check for empty required fields
-  requiredFields.forEach((field) => {
-    if (!field.value || (typeof field.value === "string" && !field.value.trim())) {
-      newErrors[field.key] = `${field.name} is required`;
-    }
-  });
-
-  if (Object.keys(newErrors).length > 0) {
-    return setError(newErrors);
-  }
-
-  try {
-    const userData = JSON.parse(localStorage.getItem("user"));
-    const token = userData?.token;
-    if (!token) {
-      toast.error("User not authenticated");
-      return;
-    }
-
-    const payload = {
-      title,
-      slug,
-      description,
-      price,
-      countryid: selectedCountry,
-      categoryid: selectedCategory,
-      subcategoryid: selectedSubCategory,
-      manufacturerid: selectedManufacturer,
-      launchYear: selectedYear,
-      version,
-      length,
-      lengthUnit,
-      width,
-      widthUnit,
-      height,
-      heightUnit,
-      weight,
-      weightUnit,
-      batteryCapacity,
-      batteryChargingTime,
-      loadCapacity,
-      runtime,
-      speed,
-      accuracy,
-      operatingTemperature,
-      range,
-      rangeUnit,
-      selectedPower,
-      videoembedcode,
-      metatitle,
-      metadescription,
-      featuredimage,
-    };
-
-    const formData = new FormData();
-
-    // Append normal fields
-    for (const key in payload) {
-      if (payload[key] !== undefined && payload[key] !== null) {
-        formData.append(key, payload[key]);
+    // Check for empty required fields
+    requiredFields.forEach((field) => {
+      if (
+        !field.value ||
+        (typeof field.value === "string" && !field.value.trim())
+      ) {
+        newErrors[field.key] = `${field.name} is required`;
       }
-    }
-
-    // Append multi-selects
-    selectedColors.forEach((color) => formData.append("colors[]", color));
-    selectedMaterials.forEach((material) => formData.append("materials[]", material));
-
-    // Append images
-    propertySelectedImgs.forEach((file) => {
-      formData.append("propertySelectedImgs", file);
     });
 
-    // API call
-    const res = await createRobot(formData, token);
-
-    toast.success(res.message || "Robot created successfully!");
-    if (res.status === "success") {
-      router.push("/cmswegrow/my-properties");
+    if (Object.keys(newErrors).length > 0) {
+      return setError(newErrors);
     }
 
-    setError({});
-  } catch (err) {
-    console.error(err);
-    setError({ general: err.message || "Something went wrong" });
-  }
-};
+    try {
+      const userData = JSON.parse(localStorage.getItem("user"));
+      const token = userData?.token;
+      if (!token) {
+        toast.error("User not authenticated");
+        return;
+      }
+
+      const payload = {
+        title,
+        slug,
+        description,
+        price,
+        countryid: selectedCountry,
+        categoryid: selectedCategory,
+        subcategoryid: selectedSubCategory,
+        manufacturerid: selectedManufacturer,
+        launchYear: selectedYear,
+        version,
+        length,
+        lengthUnit,
+        width,
+        widthUnit,
+        height,
+        heightUnit,
+        weight,
+        weightUnit,
+        batteryCapacity,
+        batteryChargingTime,
+        loadCapacity,
+        runtime,
+        speed,
+        accuracy,
+        operatingTemperature,
+        range,
+        rangeUnit,
+        selectedPower,
+        videoembedcode,
+        selectedPrimaryFunction,
+        selectedOperatingEnvironment,
+        selectedAutonomyLevel,
+        metatitle,
+        metadescription,
+        featuredimage,
+      };
+
+      const formData = new FormData();
+
+      // Append normal fields
+      for (const key in payload) {
+        if (payload[key] !== undefined && payload[key] !== null) {
+          formData.append(key, payload[key]);
+        }
+      }
+
+      // Append multi-selects
+      selectedColors.forEach((color) => formData.append("colors[]", color));
+      selectedMaterials.forEach((material) =>
+        formData.append("materials[]", material)
+      );
+
+      // Append images
+      propertySelectedImgs.forEach((file) => {
+        formData.append("propertySelectedImgs", file);
+      });
+
+      // API call
+      const res = await createRobot(formData, token);
+
+      toast.success(res.message || "Robot created successfully!");
+      if (res.status === "success") {
+        router.push("/cmswegrow/my-properties");
+      }
+
+      setError({});
+    } catch (err) {
+      console.error(err);
+      setError({ general: err.message || "Something went wrong" });
+    }
+  };
 
   return (
     <>
@@ -592,6 +731,7 @@ const addRobo = async (e) => {
           </div>
         </div> */}
 
+        {/* specifications start */}
         <div className=" mt30 ">
           <div className="col-lg-12">
             <h3 className="mb30">Specifications</h3>
@@ -1220,6 +1360,331 @@ const addRobo = async (e) => {
 
             <div className="row">
               <div className="col-lg-12">
+                <h3 className="mb30">Capabilities</h3>
+              </div>
+              {/* Navigation Types start */}
+              <div className="col-lg-6 col-xl-6">
+                <div className="my_profile_setting_input ui_kit_select_search form-group">
+                  <label htmlFor="navigationType">Navigation Type</label>
+                  <select
+                    id="navigationType"
+                    className="selectpicker form-select"
+                    value={
+                      selectedNavigationType.length
+                        ? selectedNavigationType
+                        : ["placeholder"]
+                    }
+                    onChange={handleNavigationTypeChange}
+                    data-live-search="true"
+                    data-width="100%"
+                    multiple
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      height: "45px",
+                    }}
+                  >
+                    <option
+                      value="placeholder"
+                      disabled
+                      hidden={selectedNavigationType.length > 0}
+                    >
+                      -- Select Navigation Type --
+                    </option>
+                    {navigationType.map((navigationType) => (
+                      <option
+                        key={navigationType._id}
+                        value={navigationType._id}
+                      >
+                        {navigationType.title}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+              {/* Navigation Types ends */}
+
+              {/* Sensor start */}
+              <div className="col-lg-6 col-xl-6">
+                <div className="my_profile_setting_input ui_kit_select_search form-group">
+                  <label htmlFor="sensor">Sensor</label>
+                  <select
+                    id="sensor"
+                    className="selectpicker form-select"
+                    value={
+                      selectedSensor.length ? selectedSensor : ["placeholder"]
+                    }
+                    onChange={handleSensorChange}
+                    data-live-search="true"
+                    data-width="100%"
+                    multiple
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      height: "45px",
+                    }}
+                  >
+                    <option
+                      value="placeholder"
+                      disabled
+                      hidden={selectedSensor.length > 0}
+                    >
+                      -- Select Sensor --
+                    </option>
+                    {sensors.map((sensor) => (
+                      <option key={sensor._id} value={sensor._id}>
+                        {sensor.title}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+              {/* Sensor ends */}
+
+              {/* Ai Software Features start */}
+              <div className="col-lg-6 col-xl-6">
+                <div className="my_profile_setting_input ui_kit_select_search form-group">
+                  <label htmlFor="aiSoftwareFeature">AI/Software Feature</label>
+                  <select
+                    id="aiSoftwareFeature"
+                    className="selectpicker form-select"
+                    value={
+                      selectedAISoftwareFeature.length
+                        ? selectedAISoftwareFeature
+                        : ["placeholder"]
+                    }
+                    onChange={handleAISoftwareFeatureChange}
+                    data-live-search="true"
+                    data-width="100%"
+                    multiple
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      height: "45px",
+                    }}
+                  >
+                    <option
+                      value="placeholder"
+                      disabled
+                      hidden={selectedAISoftwareFeature.length > 0}
+                    >
+                      -- Select AI/Software Feature --
+                    </option>
+                    {aiSoftwareFeatures.map((aiSoftwareFeature) => (
+                      <option
+                        key={aiSoftwareFeature._id}
+                        value={aiSoftwareFeature._id}
+                      >
+                        {aiSoftwareFeature.title}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+              {/* Ai Software Features ends */}
+
+              {/* Terrain Capability start */}
+              <div className="col-lg-6 col-xl-6">
+                <div className="my_profile_setting_input ui_kit_select_search form-group">
+                  <label htmlFor="terrainCapability">Terrain Capability</label>
+                  <select
+                    id="terrainCapability"
+                    className="selectpicker form-select"
+                    value={
+                      selectedTerrainCapability.length
+                        ? selectedTerrainCapability
+                        : ["placeholder"]
+                    }
+                    onChange={handleTerrainCapabilityChange}
+                    data-live-search="true"
+                    data-width="100%"
+                    multiple
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      height: "45px",
+                    }}
+                  >
+                    <option
+                      value="placeholder"
+                      disabled
+                      hidden={selectedTerrainCapability.length > 0}
+                    >
+                      -- Select Terrain Capability --
+                    </option>
+                    {terrainCapabilities.map((terrainCapability) => (
+                      <option
+                        key={terrainCapability._id}
+                        value={terrainCapability._id}
+                      >
+                        {terrainCapability.title}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+              {/* Terrain Capability ends */}
+
+              {/* Communication Method start */}
+              <div className="col-lg-6 col-xl-6">
+                <div className="my_profile_setting_input ui_kit_select_search form-group">
+                  <label htmlFor="communicationMethod">
+                    Communication Method
+                  </label>
+                  <select
+                    id="communicationMethod"
+                    className="selectpicker form-select"
+                    value={
+                      selectedCommunicationMethod.length
+                        ? selectedCommunicationMethod
+                        : ["placeholder"]
+                    }
+                    onChange={handleCommunicationMethodChange}
+                    data-live-search="true"
+                    data-width="100%"
+                    multiple
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      height: "45px",
+                    }}
+                  >
+                    <option
+                      value="placeholder"
+                      disabled
+                      hidden={selectedCommunicationMethod.length > 0}
+                    >
+                      -- Select Communication Method --
+                    </option>
+                    {communicationMethods.map((communicationMethod) => (
+                      <option
+                        key={communicationMethod._id}
+                        value={communicationMethod._id}
+                      >
+                        {communicationMethod.title}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+              {/* Communication Method ends */}
+
+              {/* Payload Type start */}
+              <div className="col-lg-6 col-xl-6">
+                <div className="my_profile_setting_input ui_kit_select_search form-group">
+                  <label htmlFor="payloadType">Payload Type Supported</label>
+                  <select
+                    id="payloadType"
+                    className="selectpicker form-select"
+                    value={
+                      selectedPayloadType.length
+                        ? selectedPayloadType
+                        : ["placeholder"]
+                    }
+                    onChange={handlePayloadTypeChange}
+                    data-live-search="true"
+                    data-width="100%"
+                    multiple
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      height: "45px",
+                    }}
+                  >
+                    <option
+                      value="placeholder"
+                      disabled
+                      hidden={selectedPayloadType.length > 0}
+                    >
+                      -- Select Payload Type --
+                    </option>
+                    {payloadTypes.map((payloadType) => (
+                      <option
+                        key={payloadType._id}
+                        value={payloadType._id}
+                      >
+                        {payloadType.title}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+              {/* Payload Type ends */}
+
+              {/* Primary Function start */}
+              <div className="col-lg-6 col-xl-6">
+                <div className="my_profile_setting_input ui_kit_select_search form-group">
+                  <label htmlFor="primaryFunction">Primary Function</label>
+                  <select
+                    id="primaryFunction"
+                    className="selectpicker form-select"
+                    value={selectedPrimaryFunction}
+                    onChange={handlePrimaryFunctionChange}
+                    data-live-search="true"
+                    data-width="100%"
+                  >
+                    <option value="">-- Select Primary Function --</option>
+                    {primaryFunction.map((func) => (
+                      <option key={func._id} value={func._id}>
+                        {func.title}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+              {/* Primary Function ends */}
+
+              {/* Operating Environment start */}
+              <div className="col-lg-6 col-xl-6">
+                <div className="my_profile_setting_input ui_kit_select_search form-group">
+                  <label htmlFor="operatingEnvironment">
+                    Operating Environment
+                  </label>
+                  <select
+                    id="operatingEnvironment"
+                    className="selectpicker form-select"
+                    value={selectedOperatingEnvironment}
+                    onChange={handleOperatingEnvironmentChange}
+                    data-live-search="true"
+                    data-width="100%"
+                  >
+                    <option value="">-- Select Operating Environment --</option>
+                    {operatingEnvironment.map((env) => (
+                      <option key={env._id} value={env._id}>
+                        {env.title}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+              {/* Operating Environment ends */}
+
+              {/* Autonomy Level start */}
+              <div className="col-lg-6 col-xl-6">
+                <div className="my_profile_setting_input ui_kit_select_search form-group">
+                  <label htmlFor="autonomyLevel">Autonomy Level</label>
+                  <select
+                    id="autonomyLevel"
+                    className="selectpicker form-select"
+                    value={selectedAutonomyLevel}
+                    onChange={handleAutonomyLevelChange}
+                    data-live-search="true"
+                    data-width="100%"
+                  >
+                    <option value="">-- Select Autonomy Level --</option>
+                    {autonomyLevel.map((level) => (
+                      <option key={level._id} value={level._id}>
+                        {level.title}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+              {/* Autonomy Level ends */}
+            </div>
+
+            <div className="row">
+              <div className="col-lg-12">
                 <h3 className="mb30">Property media</h3>
               </div>
               {/* End .col */}
@@ -1251,10 +1716,10 @@ const addRobo = async (e) => {
                     style={
                       featuredimage !== null
                         ? {
-                            backgroundImage: `url(${URL.createObjectURL(
-                              featuredimage
-                            )})`,
-                          }
+                          backgroundImage: `url(${URL.createObjectURL(
+                            featuredimage
+                          )})`,
+                        }
                         : undefined
                     }
                     htmlFor="featuredimage"
@@ -1271,29 +1736,29 @@ const addRobo = async (e) => {
                 <ul className="mb-0">
                   {propertySelectedImgs.length > 0
                     ? propertySelectedImgs?.map((item, index) => (
-                        <li key={index} className="list-inline-item">
-                          <div className="portfolio_item">
-                            <Image
-                              width={200}
-                              height={200}
-                              className="img-fluid cover"
-                              src={URL.createObjectURL(item)}
-                              alt="fp1.jpg"
-                            />
-                            <div
-                              className="edu_stats_list"
-                              data-bs-toggle="tooltip"
-                              data-bs-placement="top"
-                              title="Delete"
-                              data-original-title="Delete"
-                            >
-                              <a onClick={() => deleteImage(item.name)}>
-                                <span className="flaticon-garbage"></span>
-                              </a>
-                            </div>
+                      <li key={index} className="list-inline-item">
+                        <div className="portfolio_item">
+                          <Image
+                            width={200}
+                            height={200}
+                            className="img-fluid cover"
+                            src={URL.createObjectURL(item)}
+                            alt="fp1.jpg"
+                          />
+                          <div
+                            className="edu_stats_list"
+                            data-bs-toggle="tooltip"
+                            data-bs-placement="top"
+                            title="Delete"
+                            data-original-title="Delete"
+                          >
+                            <a onClick={() => deleteImage(item.name)}>
+                              <span className="flaticon-garbage"></span>
+                            </a>
                           </div>
-                        </li>
-                      ))
+                        </div>
+                      </li>
+                    ))
                     : undefined}
                   {/* End li */}
                 </ul>
@@ -1358,6 +1823,7 @@ const addRobo = async (e) => {
             </div>
           </div>
         </div>
+        {/* specifications ends */}
 
         <div className="col-xl-12">
           <div className="my_profile_setting_input">
