@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
-import { getCategoryById, updateCategoryAPI } from "@/api/category";
+import { getCategoryById, updateCategoryAPI, getParentCategoriesAPI } from "@/api/category";
 import { toast } from 'react-toastify';
 
 const CreateList = () => {
@@ -11,7 +11,8 @@ const CreateList = () => {
     const router = useRouter();
     const [category, setCategory] = useState({ title: "", status: false,description: "", });
     const [title, setTitle] = useState("");
-    const [h1title, setH1Title] = useState("");
+    const [parentCategory, setParentCategory] = useState("");
+    const [parentCategories, setParentCategories] = useState([]);
    const [slug, setSlug] = useState("");
    const [metatitle, setMetatitle] = useState([]);
      const [metadescription, setMetaDescription] = useState([]);
@@ -30,15 +31,19 @@ const CreateList = () => {
       if (!id) return;      
       const fetchCategory = async () => {
         try {
-          const data = await getCategoryById(id);
+          const [data, parents] = await Promise.all([
+            getCategoryById(id),
+            getParentCategoriesAPI(),
+          ]);
           // setCategory({ title: data.data.title, status: data.data.status, description: data.data.description });
           setTitle(data.data.title)
           setSlug(data.data.slug)
           setStatus(data.data.status)
           setDescription(data.data.description)
-          setH1Title(data.data.h1title)
+          setParentCategory((data.data.parent && (data.data.parent._id || data.data.parent)) || "")
           setMetatitle(data.data.metatitle)
           setMetaDescription(data.data.metadescription)
+          setParentCategories(Array.isArray(parents) ? parents : [])
           if(data.data.logoimage) {
           setLogoImage(process.env.NEXT_PUBLIC_API_URL+data.data.logoimage)
           }
@@ -59,7 +64,7 @@ const CreateList = () => {
         formData.append("title", title);
         formData.append("slug", slug);
         formData.append("description", description);
-        formData.append("h1title", h1title);
+        formData.append("parent", parentCategory || "");
          formData.append("metatitle", metatitle);
         formData.append("metadescription", metadescription);
         formData.append("status", status);
@@ -136,9 +141,20 @@ const CreateList = () => {
       {/* End .col */}
        <div className="col-lg-6 col-xl-6">
         <div className="my_profile_setting_input form-group">
-          <label htmlFor="categoryH1Title">Category H1 Title</label>
-          <input type="text" className="form-control" id="categoryH1Title" value={h1title} onChange={(e) => setH1Title(e.target.value)}/>
-          
+          <label htmlFor="categoryParent">Parent Category</label>
+          <select
+            id="categoryParent"
+            className="form-control"
+            value={parentCategory || ""}
+            onChange={(e) => setParentCategory(e.target.value)}
+          >
+            <option value="">-- No Parent --</option>
+            {parentCategories.map((cat) => (
+              <option key={cat._id} value={cat._id}>
+                {cat.name || cat.title}
+              </option>
+            ))}
+          </select>
         </div>
       </div>
       <div className="col-lg-12">

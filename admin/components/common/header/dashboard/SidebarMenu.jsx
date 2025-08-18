@@ -115,8 +115,8 @@ const SidebarMenu = () => {
             <Image
               width={170}
               height={65}
-              // src="/assets/images/logo.svg"
-              src={`${process.env.NEXT_PUBLIC_API_URL}public/assets/images/logo.svg`}
+              src="/assets/images/robotic_logo1.svg"
+              // src={`${process.env.NEXT_PUBLIC_API_URL}public/assets/images/robotic_logo1.svg`}
               alt="logo.svg"
             />
             {/* <span>WeGrow</span> */}

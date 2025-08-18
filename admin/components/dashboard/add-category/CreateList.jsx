@@ -61,15 +61,15 @@ const CreateList = () => {
 
     try {
       const formData = new FormData();
-
-      // Send name as "title" to backend
+      // Send both keys to be compatible with backend variants
       formData.append("title", name);
+      formData.append("name", name);
       formData.append("slug", slug);
       formData.append("description", description);
       formData.append("metatitle", metatitle);
       formData.append("metadescription", metadescription);
 
-      // Always send parent — even empty
+      // Always send parent; empty string will be coerced to null in backend/Mongoose
       formData.append("parent", parentCategory || "");
 
       if (logo) formData.append("logo", logo);

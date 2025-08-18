@@ -13,6 +13,16 @@ const createCategory = asyncHandler(async (req, res) => {
       }
     }
 
+    // // normalize title/name compatibility
+    // if (!req.body.name && req.body.title) {
+    //   req.body.name = req.body.title;
+    // }
+
+    // explicit parent null when not provided or empty
+    if (!('parent' in req.body) || req.body.parent === '' || req.body.parent === 'null' || req.body.parent === undefined) {
+      req.body.parent = null;
+    }
+
     if (req.body.slug) {
       req.body.slug = slugify(req.body.slug.toLowerCase());
     } else if (req.body.name) {
@@ -82,8 +92,19 @@ const getSubCategories = async (req, res) => {
 // Update category
 const updateCategory = async (req, res) => {
   try {
+    // prevent self-parenting
     if (req.body.parent && req.body.parent === req.params.id) {
       return res.status(400).json({ error: "A category cannot be its own parent." });
+    }
+
+    // normalize parent on update: empty -> null; missing -> unchanged
+    if ('parent' in req.body && (req.body.parent === '' || req.body.parent === 'null' || req.body.parent === undefined)) {
+      req.body.parent = null;
+    }
+
+    // allow title fallback to name
+    if (!req.body.name && req.body.title) {
+      req.body.name = req.body.title;
     }
 
     const category = await Category.findByIdAndUpdate(req.params.id, req.body, {
