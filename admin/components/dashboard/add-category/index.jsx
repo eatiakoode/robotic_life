@@ -10,7 +10,7 @@ const index = () => {
       {/* <!-- Main Header Nav --> */}
       <Header />
 
-      {/* <!--  Mobile Menu --> */}
+      {/* <!-- Mobile Menu --> */}
       <MobileMenu />
 
       <div className="dashboard_sidebar_menu">
@@ -25,13 +25,13 @@ const index = () => {
       </div>
       {/* End sidebar_menu */}
 
-      {/* <!-- Our Dashbord --> */}
+      {/* <!-- Our Dashboard --> */}
       <section className="our-dashbord dashbord bgc-f7 pb50">
         <div className="container-fluid ovh">
           <div className="row">
             <div className="col-lg-12 maxw100flex-992">
               <div className="row">
-                {/* Start Dashboard Navigation */}
+                {/* Dashboard Navigation */}
                 <div className="col-lg-12">
                   <div className="dashboard_navigationbar dn db-1024">
                     <div className="dropdown">
@@ -50,8 +50,8 @@ const index = () => {
 
                 <div className="col-lg-12 mb10">
                   <div className="breadcrumb_content style2">
-                    <h2 className="breadcrumb_title">Add a New Category</h2>
-                    <p>Create a category profile to associate with real estate projects and listings.</p>
+                    <h2 className="breadcrumb_title">Add a New Robot Category</h2>
+                    <p>Create a category profile to organize and classify robots.</p>
                   </div>
                 </div>
                 {/* End .col */}
@@ -60,7 +60,7 @@ const index = () => {
                   <div className="my_dashboard_review">
                     <div className="row">
                       <div className="col-lg-12">
-                        <h3 className="mb30">Create Listing</h3>
+                        <h3 className="mb30">Create Robot Category</h3>
                       </div>
 
                       <CreateList />
@@ -70,12 +70,13 @@ const index = () => {
                 {/* End .col */}
               </div>
               {/* End .row */}
-              <CopyRight/>
+              <CopyRight />
 
+              {/* Optional commented copyright */}
               {/* <div className="row mt50">
                 <div className="col-lg-12">
                   <div className="copyright-widget text-center">
-                    <p>© 2025 Suemona bakery. All rights reserved | Made With  <a target="_blank" href="https://www.akoode.com/"> <i className="fa fa-heart"></i> </a></p>
+                    <p>© 2025 Suemona bakery. All rights reserved | Made With <a target="_blank" href="https://www.akoode.com/"> <i className="fa fa-heart"></i> </a></p>
                   </div>
                 </div>
               </div> */}

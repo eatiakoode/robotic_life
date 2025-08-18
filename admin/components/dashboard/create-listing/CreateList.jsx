@@ -3,11 +3,10 @@
 import { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { getBuilderTableData } from "../../../api/builder";
-import { addPropertyAPI } from "../../../api/property";
+import { createRobot } from "../../../api/robotApi";
 // import { getSellerTableData } from "@/api/seller";
-
 import { getCountryTableData } from "../../../api/country";
-// import { addRobotAPI } from "../../../api/property";
+import { getCategoryTableData } from "@/api/category";
 
 import selectedFiles from "../../../utils/selectedFiles";
 import Image from "next/image";
@@ -20,11 +19,8 @@ const CreateList = () => {
   const [title, setTitle] = useState("");
   const [slug, setSlug] = useState("");
   const [description, setDescription] = useState("");
-  // const [highlights, setHighlights] = useState("");
 
   const [price, setPrice] = useState("");
-  // const [pricesqft, setPriceSqft] = useState("");
-  const [address, setAddress] = useState("");
   const [error, setError] = useState("");
 
   const [countries, setCountries] = useState([]);
@@ -84,10 +80,6 @@ const CreateList = () => {
   const [metadescription, setMetaDescription] = useState([]);
 
   const [featuredimage, setFeaturedImage] = useState(null);
-  // const [siteplan, setSitePlan] = useState(null);
-  // const [masterplan, setMasterPlan] = useState(null);
-  // const [roomtext, setRoomText] = useState("Bedrooms");
-  // const [customBedroom, setCustomBedroom] = useState("");
 
   const handleBedroomChange = (e) => {
     setBedRooms(e.target.value);
@@ -98,39 +90,9 @@ const CreateList = () => {
     }
   };
 
-  const [customBathrooms, setCustomBathrooms] = useState("");
-
-  const handleBathroomsChange = (e) => {
-    setBathRooms(e.target.value);
-
-    // Clear custom input if not "Custom"
-    if (e.target.value !== "Custom") {
-      setCustomBathrooms("");
-    }
-  };
-
-  const [customParking, setCustomParking] = useState("");
-
-  const handleParkingChange = (e) => {
-    setGarages(e.target.value);
-
-    // Clear custom input if not "Custom"
-    if (e.target.value !== "Custom") {
-      setCustomParking("");
-    }
-  };
-
   // upload profile
   const uploadFeaturedImage = (e) => {
     setFeaturedImage(e.target.files[0]);
-  };
-  const uploadSitePlan = (e) => {
-    // alert("test")
-    setSitePlan(e.target.files[0]);
-  };
-  const uploadMasterPlan = (e) => {
-    // alert("test")
-    setMasterPlan(e.target.files[0]);
   };
 
   const [propertySelectedImgs, setPropertySelectedImgs] = useState([]);
@@ -172,8 +134,8 @@ const CreateList = () => {
           colorRes,
           materialRes,
         ] = await Promise.all([
-          // getCountryTableData(),
-          // getCategoryTableData(filter),
+          getCountryTableData(),
+          getCategoryTableData(filter),
           // getSubCategoryTableData(filter),
           // getManufacturerTableData(filter),
           // getPowerSourceTableData(filter),
@@ -181,8 +143,8 @@ const CreateList = () => {
           // getMaterialTableData(filter),
         ]);
 
-        // setCountries(countryRes || []);
-        // setCategories(categoryRes.items || []);
+        setCountries(countryRes || []);
+        setCategories(categoryRes.items || []);
         // setSubCategories(subCategoryRes.items || []);
         // setManufacturers(manufacturerRes.items || []);
         // setPowerSources(powerSourceRes.items || []);
@@ -281,138 +243,128 @@ const CreateList = () => {
   };
 
   // --- Submit ---
-  const addRobo = async (e) => {
-    e.preventDefault();
-    const newErrors = {};
+const addRobo = async (e) => {
+  e.preventDefault();
+  const newErrors = {};
 
-    // Validation list
-    const requiredFields = [
-      { key: "title", value: title, name: "Title" },
-      { key: "slug", value: slug, name: "Slug" },
-      { key: "description", value: description, name: "Description" },
-      { key: "price", value: price, name: "Total Price" },
-      { key: "countryid", value: selectedCountry, name: "Country of Origin" },
-      { key: "categoryid", value: selectedCategory, name: "Category" },
-      {
-        key: "subcategoryid",
-        value: selectedSubCategory,
-        name: "Sub Category",
-      },
-      {
-        key: "manufacturerid",
-        value: selectedManufacturer,
-        name: "Manufacturer",
-      },
-      { key: "launchYear", value: selectedYear, name: "Launch Year" },
-      { key: "length", value: length, name: "Length" },
-      { key: "width", value: width, name: "Width" },
-      { key: "height", value: height, name: "Height" },
-      { key: "weight", value: weight, name: "Weight" },
-      {
-        key: "batteryCapacity",
-        value: batteryCapacity,
-        name: "Battery Capacity",
-      },
-      { key: "runtime", value: runtime, name: "Runtime" },
-      { key: "speed", value: speed, name: "Speed" },
-      { key: "accuracy", value: accuracy, name: "Accuracy" },
-      { key: "selectedPower", value: selectedPower, name: "Power Source" },
-      {
-        key: "colors",
-        value: selectedColors.length > 0 ? selectedColors : null,
-        name: "Colors",
-      },
-      {
-        key: "materials",
-        value: selectedMaterials.length > 0 ? selectedMaterials : null,
-        name: "Materials",
-      },
-    ];
+  // Validation list
+  const requiredFields = [
+    { key: "title", value: title, name: "Title" },
+    { key: "slug", value: slug, name: "Slug" },
+    { key: "description", value: description, name: "Description" },
+    { key: "price", value: price, name: "Total Price" },
+    { key: "countryid", value: selectedCountry, name: "Country of Origin" },
+    { key: "categoryid", value: selectedCategory, name: "Category" },
+    { key: "subcategoryid", value: selectedSubCategory, name: "Sub Category" },
+    { key: "manufacturerid", value: selectedManufacturer, name: "Manufacturer" },
+    { key: "launchYear", value: selectedYear, name: "Launch Year" },
+    { key: "length", value: length, name: "Length" },
+    { key: "width", value: width, name: "Width" },
+    { key: "height", value: height, name: "Height" },
+    { key: "weight", value: weight, name: "Weight" },
+    { key: "batteryCapacity", value: batteryCapacity, name: "Battery Capacity" },
+    { key: "runtime", value: runtime, name: "Runtime" },
+    { key: "speed", value: speed, name: "Speed" },
+    { key: "accuracy", value: accuracy, name: "Accuracy" },
+    { key: "selectedPower", value: selectedPower, name: "Power Source" },
+    {
+      key: "colors",
+      value: selectedColors.length > 0 ? selectedColors : null,
+      name: "Colors",
+    },
+    {
+      key: "materials",
+      value: selectedMaterials.length > 0 ? selectedMaterials : null,
+      name: "Materials",
+    },
+  ];
 
-    // Check for empty required fields
-    requiredFields.forEach((field) => {
-      if (
-        !field.value ||
-        (typeof field.value === "string" && !field.value.trim())
-      ) {
-        newErrors[field.key] = `${field.name} is required`;
+  // Check for empty required fields
+  requiredFields.forEach((field) => {
+    if (!field.value || (typeof field.value === "string" && !field.value.trim())) {
+      newErrors[field.key] = `${field.name} is required`;
+    }
+  });
+
+  if (Object.keys(newErrors).length > 0) {
+    return setError(newErrors);
+  }
+
+  try {
+    const userData = JSON.parse(localStorage.getItem("user"));
+    const token = userData?.token;
+    if (!token) {
+      toast.error("User not authenticated");
+      return;
+    }
+
+    const payload = {
+      title,
+      slug,
+      description,
+      price,
+      countryid: selectedCountry,
+      categoryid: selectedCategory,
+      subcategoryid: selectedSubCategory,
+      manufacturerid: selectedManufacturer,
+      launchYear: selectedYear,
+      version,
+      length,
+      lengthUnit,
+      width,
+      widthUnit,
+      height,
+      heightUnit,
+      weight,
+      weightUnit,
+      batteryCapacity,
+      batteryChargingTime,
+      loadCapacity,
+      runtime,
+      speed,
+      accuracy,
+      operatingTemperature,
+      range,
+      rangeUnit,
+      selectedPower,
+      videoembedcode,
+      metatitle,
+      metadescription,
+      featuredimage,
+    };
+
+    const formData = new FormData();
+
+    // Append normal fields
+    for (const key in payload) {
+      if (payload[key] !== undefined && payload[key] !== null) {
+        formData.append(key, payload[key]);
       }
+    }
+
+    // Append multi-selects
+    selectedColors.forEach((color) => formData.append("colors[]", color));
+    selectedMaterials.forEach((material) => formData.append("materials[]", material));
+
+    // Append images
+    propertySelectedImgs.forEach((file) => {
+      formData.append("propertySelectedImgs", file);
     });
 
-    if (Object.keys(newErrors).length > 0) {
-      return setError(newErrors);
+    // API call
+    const res = await createRobot(formData, token);
+
+    toast.success(res.message || "Robot created successfully!");
+    if (res.status === "success") {
+      router.push("/cmswegrow/my-properties");
     }
 
-    try {
-      const payload = {
-        title,
-        slug,
-        description,
-        price,
-        countryid: selectedCountry,
-        categoryid: selectedCategory,
-        subcategoryid: selectedSubCategory,
-        manufacturerid: selectedManufacturer,
-        launchYear: selectedYear,
-        version,
-        length,
-        lengthUnit,
-        width,
-        widthUnit,
-        height,
-        heightUnit,
-        weight,
-        weightUnit,
-        batteryCapacity,
-        batteryChargingTime,
-        loadCapacity,
-        runtime,
-        speed,
-        accuracy,
-        operatingTemperature,
-        range,
-        rangeUnit,
-        selectedPower,
-        videoembedcode,
-        metatitle,
-        metadescription,
-        featuredimage,
-      };
-
-      const formData = new FormData();
-
-      // Append normal fields
-      for (const key in payload) {
-        if (payload[key] !== undefined && payload[key] !== null) {
-          formData.append(key, payload[key]);
-        }
-      }
-
-      // Append multi-selects
-      selectedColors.forEach((color) => {
-        formData.append("colors[]", color);
-      });
-      selectedMaterials.forEach((material) => {
-        formData.append("materials[]", material);
-      });
-
-      // Append images
-      propertySelectedImgs.forEach((file) => {
-        formData.append("propertySelectedImgs", file);
-      });
-
-      const res = await addRoboAPI(formData);
-      toast.success(res.message);
-      if (res.status === "success") {
-        router.push("/cmswegrow/my-properties");
-      }
-
-      setError({});
-      // Optionally reset form here
-    } catch (err) {
-      setError({ general: err.message || "Something went wrong" });
-    }
-  };
+    setError({});
+  } catch (err) {
+    console.error(err);
+    setError({ general: err.message || "Something went wrong" });
+  }
+};
 
   return (
     <>

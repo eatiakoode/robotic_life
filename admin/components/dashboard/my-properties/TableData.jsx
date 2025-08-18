@@ -2,7 +2,7 @@
 
 "use client"; // Add this at the top
 import Image from "next/image";
-import { deletePropertyAPI } from "@/api/property";
+// import { deletePropertyAPI } from "@/api/property";
 import { useRouter } from "next/navigation";
 import { toast } from 'react-toastify';
 
