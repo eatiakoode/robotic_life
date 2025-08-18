@@ -58,12 +58,24 @@ const getCategoryById = async (req, res) => {
   }
 };
 
+// Get parent categories
 const getParentCategories = async (req, res) => {
   try {
     const parents = await Category.find({ parent: null });
     res.status(200).json(parents);
   } catch (error) {
     res.status(500).json({ message: "Error fetching parent categories", error });
+  }
+};
+
+// Get subcategories
+const getSubCategories = async (req, res) => {
+  try {
+    const { parentId } = req.params;
+    const subcategories = await Category.find({ parent: parentId });
+    res.status(200).json(subcategories);
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching subcategories", error });
   }
 };
 
@@ -108,5 +120,6 @@ module.exports = {
   getCategoryById,
   updateCategory,
   deleteCategory,
-  getParentCategories
+  getParentCategories,
+  getSubCategories
 };
