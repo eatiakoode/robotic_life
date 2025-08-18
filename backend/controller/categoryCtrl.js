@@ -58,6 +58,15 @@ const getCategoryById = async (req, res) => {
   }
 };
 
+const getParentCategories = async (req, res) => {
+  try {
+    const parents = await Category.find({ parent: null });
+    res.status(200).json(parents);
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching parent categories", error });
+  }
+};
+
 // Update category
 const updateCategory = async (req, res) => {
   try {
@@ -98,5 +107,6 @@ module.exports = {
   getCategories,
   getCategoryById,
   updateCategory,
-  deleteCategory
+  deleteCategory,
+  getParentCategories
 };
