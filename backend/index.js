@@ -167,7 +167,7 @@ app.use("/admin/api/material", materialRouter);
 app.use("/admin/api/navigationtype", navigationTypeRouter);
 app.use("/admin/api/sensor", sensorRouter);
 app.use("/admin/api/primaryfunction", primaryFunctionRouter);
-app.use("/admin/api/aisoftwareFeatures", aiSoftwareFeaturesRouter);
+app.use("/admin/api/aisoftwarefeatures", aiSoftwareFeaturesRouter);
 app.use("/admin/api/operatingenvironment", operatingEnvironmentRouter);
 app.use("/admin/api/terraincapability", terrainCapabilityRouter);
 app.use("/admin/api/autonomylevel", autonomyLevelRouter);
