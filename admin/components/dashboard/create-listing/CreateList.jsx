@@ -6,7 +6,7 @@ import { getBuilderTableData } from "../../../api/builder";
 import { createRobot } from "../../../api/robotApi";
 // import { getSellerTableData } from "@/api/seller";
 import { getCountryTableData } from "../../../api/country";
-import { getCategoryTableData } from "@/api/category";
+import { getParentCategoriesAPI, getSubCategoriesAPI } from "@/api/category";
 
 import selectedFiles from "../../../utils/selectedFiles";
 import Image from "next/image";
@@ -125,26 +125,13 @@ const CreateList = () => {
           page: 1,
         };
 
-        const [
-          countryRes,
-          categoryRes,
-          subCategoryRes,
-          manufacturerRes,
-          powerSourceRes,
-          colorRes,
-          materialRes,
-        ] = await Promise.all([
+        const [countryRes, parentCats] = await Promise.all([
           getCountryTableData(),
-          getCategoryTableData(filter),
-          // getSubCategoryTableData(filter),
-          // getManufacturerTableData(filter),
-          // getPowerSourceTableData(filter),
-          // getColorTableData(filter),
-          // getMaterialTableData(filter),
+          getParentCategoriesAPI(),
         ]);
 
         setCountries(countryRes || []);
-        setCategories(categoryRes.items || []);
+        setCategories(Array.isArray(parentCats) ? parentCats : []);
         // setSubCategories(subCategoryRes.items || []);
         // setManufacturers(manufacturerRes.items || []);
         // setPowerSources(powerSourceRes.items || []);
@@ -185,11 +172,17 @@ const CreateList = () => {
   const handleCategoryChange = async (e) => {
     const value = e.target.value;
     setSelectedCategory(value);
+    setSelectedSubCategory("");
+    if (!value) {
+      setSubCategories([]);
+      return;
+    }
     try {
-      const res = await getSubCategoryTableData({ categoryId: value });
-      setSubCategories(res.items || []);
+      const subs = await getSubCategoriesAPI(value);
+      setSubCategories(Array.isArray(subs) ? subs : []);
     } catch (err) {
       console.error("Error fetching subcategories:", err);
+      setSubCategories([]);
     }
   };
 
@@ -435,9 +428,9 @@ const addRobo = async (e) => {
               data-width="100%"
             >
               <option value="">-- Select Category --</option>
-              {categories.map((categories) => (
-                <option key={categories._id} value={categories._id}>
-                  {categories.title}
+              {categories.map((cat) => (
+                <option key={cat._id} value={cat._id}>
+                  {cat.name || cat.title}
                 </option>
               ))}
             </select>
@@ -464,7 +457,7 @@ const addRobo = async (e) => {
               <option value="">-- Select Sub Category --</option>
               {subCategories.map((sub) => (
                 <option key={sub._id} value={sub._id}>
-                  {sub.title}
+                  {sub.name || sub.title}
                 </option>
               ))}
             </select>

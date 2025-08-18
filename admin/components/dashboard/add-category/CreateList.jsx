@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { addCategoryAPI, getCategoriesAPI } from "@/api/category";
+import { addCategoryAPI, getParentCategoriesAPI } from "@/api/category";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 
@@ -14,15 +14,15 @@ const CreateList = () => {
   const [error, setError] = useState("");
   const [logo, setLogo] = useState(null);
   const [parentCategory, setParentCategory] = useState("");
-  const [categories, setCategories] = useState([]);
+  const [parentCategories, setParentCategories] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const data = await getCategoriesAPI();
-        setCategories(data);
+        const data = await getParentCategoriesAPI();
+        setParentCategories(Array.isArray(data) ? data : []);
       } catch (err) {
         console.error(err);
       }
@@ -164,7 +164,7 @@ const CreateList = () => {
             onChange={(e) => setParentCategory(e.target.value)}
           >
             <option value="">-- No Parent --</option>
-            {categories.map((cat) => (
+            {parentCategories.map((cat) => (
               <option key={cat._id} value={cat._id}>
                 {cat.name || cat.title}
               </option>

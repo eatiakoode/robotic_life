@@ -109,7 +109,26 @@ export const getCategoryTableData = async (filter: Record<string, any>) => {
     const errorData = await response.json();
     throw new Error(errorData.message || "Failed to fetch categories");
   }
-  return response.json();
+  const result = await response.json();
+
+  // Normalize to { items, totalCount }
+  let categories: any[] = [];
+  if (Array.isArray(result)) categories = result;
+  else if (Array.isArray(result.items)) categories = result.items;
+  else if (Array.isArray(result.data)) categories = result.data;
+  else if (Array.isArray(result.categories)) categories = result.categories;
+
+  const totalCount = (typeof result?.totalCount === "number")
+    ? result.totalCount
+    : categories.length;
+
+  // If backend doesn't paginate, emulate client-side pagination for UI
+  const limitNum = Number(filter?.limit) || categories.length || 0;
+  const pageNum = Number(filter?.page) || 1;
+  const start = (pageNum - 1) * limitNum;
+  const items = categories.slice(start, start + limitNum);
+
+  return { items, totalCount };
 };
 
 // Delete category

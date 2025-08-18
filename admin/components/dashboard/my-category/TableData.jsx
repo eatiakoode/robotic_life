@@ -33,10 +33,23 @@ const TableData = ({categoryList,setCategoryList}) => {
     <tr key={item._id}>
       <td scope="row">
         <div className="feat_property list favorite_page style2">
+          <div className="thumb">
+            <Image
+              width={150}
+              height={120}
+              className="img-whp cover"
+              src={
+                item.logoimage
+                  ? `${process.env.NEXT_PUBLIC_API_URL || ''}${item.logoimage}`
+                  : `${process.env.NEXT_PUBLIC_API_URL || ''}public/assets/images/thumbnail.webp`
+              }
+              alt={`${item.title || item.name || 'category'}`}
+              unoptimized
+            />
+          </div>
           <div className="details">
             <div className="tc_content">
-              <h4>{item.title}</h4>
-              
+              <h4>{item.title || item.name}</h4>
             </div>
           </div>
         </div>
