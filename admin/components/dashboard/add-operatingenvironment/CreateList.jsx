@@ -1,5 +1,5 @@
 "use client";
-
+ 
 import { useState } from "react";
 import { addOperatingEnvironmentAPI } from "@/api/operatingenvironment";
 import { useRouter, useParams } from "next/navigation";
@@ -9,38 +9,38 @@ const CreateList = () => {
     const [error, setError] = useState("");
     const router = useRouter();
     const [isSubmitting, setisSubmitting] = useState("");
-  
+ 
     const handleTitleChange = (e) => {
       setTitle(e.target.value);
-  
+ 
       // ✅ Clear the error when user starts typing
       if (e.target.value.trim() !== "") {
         setError("");
       }
     };
-
+ 
     const addOperatingEnvironment = async (e) => {
-
+ 
       e.preventDefault();
       setisSubmitting(true)
-  
+ 
       if (!title.trim()) {
         setError("Title is required");
         return;
       }
       // alert("testw")
       setError("");
-      
+     
       try {
         const data = await addOperatingEnvironmentAPI(title); // 🔹 Call the API function
-
+ 
         toast.success(data.message);
         if(data.status=="success"){
           setTimeout(() => {
           router.push("/cmswegrow/my-operatingenvironment");
-          }, 1500); 
+          }, 1500);
         }
-  
+ 
         setTitle(""); // ✅ Reset input after success
       } catch (error) {
         setError(error.message); // ❌ Show error if request fails
@@ -57,7 +57,7 @@ const CreateList = () => {
         </div>
       </div>
       {/* End .col */}
-
+ 
       <div className="col-lg-6 col-xl-6 d-none">
         <div className="my_profile_setting_input ui_kit_select_search form-group">
           <label>Status</label>
@@ -72,10 +72,10 @@ const CreateList = () => {
         </div>
       </div>
       {/* End .col */}
-
+ 
      
-
-
+ 
+ 
       <div className="col-xl-12">
         <div className="my_profile_setting_input">
           <button className="btn btn1 float-start" type="button" onClick={() => window.location.href = '/cmswegrow/my-dashboard'}>Back</button>
@@ -86,5 +86,5 @@ const CreateList = () => {
     </>
   );
 };
-
+ 
 export default CreateList;
