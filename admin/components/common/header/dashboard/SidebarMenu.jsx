@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import Link from "next/link";
 
@@ -10,36 +10,64 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 
 const SidebarMenu = () => {
-  const pathname = usePathname()
+  const pathname = usePathname();
 
   const myRobots = [
     { id: 1, name: "Add Robot", route: "/cmswegrow/create-listing" },
-    { id: 2, name: "Robot List", route: "/cmswegrow/my-properties" }
+    { id: 2, name: "Robot List", route: "/cmswegrow/my-properties" },
   ];
   const RoboCategory = [
     { id: 1, name: "Add Category", route: "/cmswegrow/add-category" },
-    { id: 2, name: "Category List", route: "/cmswegrow/my-category" }
+    { id: 2, name: "Category List", route: "/cmswegrow/my-category" },
   ];
   const MasterData = [
     { id: 1, name: "Add Country", route: "/cmswegrow/add-country" },
     { id: 2, name: "Add Power Source", route: "/cmswegrow/add-powersource" },
     { id: 3, name: "Add Color", route: "/cmswegrow/add-color" },
     { id: 4, name: "Add Material", route: "/cmswegrow/add-material" },
-    { id: 5, name: "Add Navigation Type", route: "/cmswegrow/add-navigationtype" },
+    {
+      id: 5,
+      name: "Add Navigation Type",
+      route: "/cmswegrow/add-navigationtype",
+    },
     { id: 6, name: "Add Sensor", route: "/cmswegrow/add-sensor" },
-    { id: 7, name: "Add Primary Function", route: "/cmswegrow/add-primaryfunction" },
-    { id: 8, name: "Add AI Software Feature", route: "/cmswegrow/add-aisoftwarefeature" },
-    { id: 9, name: "Add Operating Environment", route: "/cmswegrow/add-operatingenvironment" },
-    { id: 10, name: "Add Terrain Capability", route: "/cmswegrow/add-terraincapability" },
-    { id: 11, name: "Add Autonomy Level", route: "/cmswegrow/add-autonomylevel" },
-    { id: 12, name: "Add Communication Method", route: "/cmswegrow/add-communicationmethod" },
+    {
+      id: 7,
+      name: "Add Primary Function",
+      route: "/cmswegrow/add-primaryfunction",
+    },
+    {
+      id: 8,
+      name: "Add AI Software Feature",
+      route: "/cmswegrow/add-aisoftwarefeature",
+    },
+    {
+      id: 9,
+      name: "Add Operating Environment",
+      route: "/cmswegrow/add-operatingenvironment",
+    },
+    {
+      id: 10,
+      name: "Add Terrain Capability",
+      route: "/cmswegrow/add-terraincapability",
+    },
+    {
+      id: 11,
+      name: "Add Autonomy Level",
+      route: "/cmswegrow/add-autonomylevel",
+    },
+    {
+      id: 12,
+      name: "Add Communication Method",
+      route: "/cmswegrow/add-communicationmethod",
+    },
     { id: 13, name: "Add Payload Type", route: "/cmswegrow/add-payloadtype" },
     // { id: 14, name: "Add Payload Capacity", route: "/cmswegrow/add-payloadcapacity" },
   ];
 
   const RoboManufacturer = [
     { id: 1, name: "Add Manufacturer", route: "/cmswegrow/add-manufacturer" },
-    { id: 2, name: "Manufacturer List", route: "/cmswegrow/my-manufacturer" }
+    { id: 2, name: "Manufacturer List", route: "/cmswegrow/my-manufacturer" },
   ];
 
   const Blog = [
@@ -47,7 +75,6 @@ const SidebarMenu = () => {
     { id: 2, name: "Blog category List", route: "/cmswegrow/my-blogcategory" },
     { id: 3, name: "Add Blog", route: "/cmswegrow/add-blog" },
     { id: 4, name: "Blog List", route: "/cmswegrow/my-blog" },
-
   ];
 
   // const myTestimonial = [
@@ -57,7 +84,7 @@ const SidebarMenu = () => {
 
   const Faq = [
     { id: 1, name: "Add FAQ", route: "/cmswegrow/add-faq" },
-    { id: 2, name: "FAQ List", route: "/cmswegrow/my-faq" }
+    { id: 2, name: "FAQ List", route: "/cmswegrow/my-faq" },
   ];
 
   const reviews = [
@@ -106,9 +133,7 @@ const SidebarMenu = () => {
           {/* <span>Main</span> */}
           <ul>
             <li
-              className={`treeview ${isSinglePageActive("/my-dashboard", pathname)
-                ? "active"
-                : ""
+              className={`treeview ${isSinglePageActive("/my-dashboard", pathname) ? "active" : ""
                 }`}
             >
               <Link href="/cmswegrow/my-dashboard">
@@ -148,18 +173,17 @@ const SidebarMenu = () => {
         <li className="title">
           <span>Manage Listings</span>
           <ul>
-
-            {/* Robot Listing Start */}
+            {/* Robot Master Data Start */}
             <li
-              className={`treeview ${isParentPageActive(myRobots, pathname) ? "active" : ""
+              className={`treeview ${isParentPageActive(MasterData, pathname) ? "active" : ""
                 }`}
             >
-              <a data-bs-toggle="collapse" href="#my-robots">
-                <i className="flaticon-home"></i> <span>Robot Listing</span>
+              <a data-bs-toggle="collapse" href="#MasterData">
+                <i className="flaticon-home"></i> <span>Master Data</span>
                 <i className="fa fa-angle-down pull-right"></i>
               </a>
-              <ul className="treeview-menu collapse" id="my-robots">
-                {myRobots.map((item) => (
+              <ul className="treeview-menu collapse" id="MasterData">
+                {MasterData.map((item) => (
                   <li key={item.id}>
                     <Link href={item.route}>
                       <i className="fa fa-circle"></i> {item.name}
@@ -168,28 +192,7 @@ const SidebarMenu = () => {
                 ))}
               </ul>
             </li>
-            {/* Robot Listing End */}
-
-            {/* Robot Category Start */}
-            <li
-              className={`treeview ${isParentPageActive(RoboCategory, pathname) ? "active" : ""
-                }`}
-            >
-              <a data-bs-toggle="collapse" href="#my-RoboCategory">
-                <i className="flaticon-home"></i> <span>Robot Category</span>
-                <i className="fa fa-angle-down pull-right"></i>
-              </a>
-              <ul className="treeview-menu collapse" id="my-RoboCategory">
-                {RoboCategory.map((item) => (
-                  <li key={item.id}>
-                    <Link href={item.route}>
-                      <i className="fa fa-circle"></i> {item.name}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </li>
-            {/* Robot Category Start */}
+            {/* Robot Master Data End */}
 
             {/* Robot Manufacturer Start */}
             <li
@@ -212,17 +215,17 @@ const SidebarMenu = () => {
             </li>
             {/* Robot Manufacturer End */}
 
-            {/* Robot Master Data Start */}
+            {/* Robot Category Start */}
             <li
-              className={`treeview ${isParentPageActive(MasterData, pathname) ? "active" : ""
+              className={`treeview ${isParentPageActive(RoboCategory, pathname) ? "active" : ""
                 }`}
             >
-              <a data-bs-toggle="collapse" href="#MasterData">
-                <i className="flaticon-home"></i> <span>Master Data</span>
+              <a data-bs-toggle="collapse" href="#my-RoboCategory">
+                <i className="flaticon-home"></i> <span>Robot Category</span>
                 <i className="fa fa-angle-down pull-right"></i>
               </a>
-              <ul className="treeview-menu collapse" id="MasterData">
-                {MasterData.map((item) => (
+              <ul className="treeview-menu collapse" id="my-RoboCategory">
+                {RoboCategory.map((item) => (
                   <li key={item.id}>
                     <Link href={item.route}>
                       <i className="fa fa-circle"></i> {item.name}
@@ -231,7 +234,28 @@ const SidebarMenu = () => {
                 ))}
               </ul>
             </li>
-            {/* Robot Master Data End */}
+            {/* Robot Category Start */}
+
+            {/* Robot Listing Start */}
+            <li
+              className={`treeview ${isParentPageActive(myRobots, pathname) ? "active" : ""
+                }`}
+            >
+              <a data-bs-toggle="collapse" href="#my-robots">
+                <i className="flaticon-home"></i> <span>Robot Listing</span>
+                <i className="fa fa-angle-down pull-right"></i>
+              </a>
+              <ul className="treeview-menu collapse" id="my-robots">
+                {myRobots.map((item) => (
+                  <li key={item.id}>
+                    <Link href={item.route}>
+                      <i className="fa fa-circle"></i> {item.name}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </li>
+            {/* Robot Listing End */}
 
             {/* Robot Blog Start */}
             <li
@@ -256,7 +280,8 @@ const SidebarMenu = () => {
 
             {/* Robot Enqueries Start */}
             <li
-              className={`treeview ${isParentPageActive(enquerylist, pathname) ? "active" : ""}`}
+              className={`treeview ${isParentPageActive(enquerylist, pathname) ? "active" : ""
+                }`}
             >
               <a data-bs-toggle="collapse" href="#my-enquerylist">
                 <i className="flaticon-home"></i> <span>Enqueries</span>
@@ -276,7 +301,8 @@ const SidebarMenu = () => {
 
             {/* Robot FAQs Start */}
             <li
-              className={`treeview ${isParentPageActive(Faq, pathname) ? "active" : ""}`}
+              className={`treeview ${isParentPageActive(Faq, pathname) ? "active" : ""
+                }`}
             >
               <a data-bs-toggle="collapse" href="#faq">
                 <i className="flaticon-home"></i> <span>FAQs</span>
