@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { addBuilderAPI } from "@/api/manufacturer";
+import { addManufacturerAPI } from "@/api/manufacturer";
 import { useRouter, useParams } from "next/navigation";
 import { toast } from 'react-toastify';
 const CreateList = () => {
@@ -37,7 +37,7 @@ const CreateList = () => {
       }
     };
   
-    const addBuilder = async (e) => {
+    const addManufacturer = async (e) => {
       e.preventDefault();
       setisSubmitting(true)
     
@@ -64,12 +64,12 @@ const CreateList = () => {
         }
         
     
-        const data = await addBuilderAPI(formData); // Use FormData here
+        const data = await addManufacturerAPI(formData); // Use FormData here
         toast.success(data.message);
             
         if(data.status=="success"){
          setTimeout(() => {
-          router.push("/cmswegrow/my-builder");
+          router.push("/cmswegrow/my-manufacturer");
           }, 1500); 
         }
         // alert(data.message);
@@ -86,7 +86,7 @@ const CreateList = () => {
     
   return (
     <>
-    <form onSubmit={addBuilder} className="row">
+    <form onSubmit={addManufacturer} className="row">
     <div className="col-lg-12">
                 <div className="wrap-custom-file">
                     <input
@@ -117,23 +117,23 @@ const CreateList = () => {
             {/* End .col */}
       <div className="col-lg-6 col-xl-6">
         <div className="my_profile_setting_input form-group">
-          <label htmlFor="builderTitle">Builder Title</label>
-          <input type="text" className="form-control" id="builderTitle" value={title} onChange={handleTitleChange} />
+          <label htmlFor="manufacturerTitle">Manufacturer Title</label>
+          <input type="text" className="form-control" id="manufacturerTitle" value={title} onChange={handleTitleChange} />
           {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
         </div>
       </div>
       <div className="col-lg-6 col-xl-6">
         <div className="my_profile_setting_input form-group">
-          <label htmlFor="builderSlug">Builder Slug (SEO URL)</label>
-          <input type="text" className="form-control" id="builderSlug" value={slug} onChange={handleSlugChange} />
+          <label htmlFor="manufacturerSlug">Manufacturer Slug (SEO URL)</label>
+          <input type="text" className="form-control" id="manufacturerSlug" value={slug} onChange={handleSlugChange} />
           {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
         </div>
       </div>
       {/* End .col */}
       <div className="col-lg-12">
           <div className="my_profile_setting_textarea form-group">
-            <label htmlFor="builderDescription">Description</label>
-            <textarea id="builderDescription" className="form-control" rows="7"  value={description} onChange={(e) => setDescription(e.target.value)}  placeholder="Enter builder description"></textarea>
+            <label htmlFor="manufacturerDescription">Description</label>
+            <textarea id="manufacturerDescription" className="form-control" rows="7"  value={description} onChange={(e) => setDescription(e.target.value)}  placeholder="Enter manufacturer description"></textarea>
             {error.description && <span className="text-danger">{error.description}</span>}
           </div>
           
@@ -164,19 +164,19 @@ const CreateList = () => {
                     <div className="row">
                     <div className="col-lg-12">
         <div className="my_profile_setting_input form-group">
-          <label htmlFor="builderMetatitle">Meta Title</label>
+          <label htmlFor="manufacturerMetatitle">Meta Title</label>
          
           <input type="text"
               className="form-control"
-              id="builderMetatitle"
+              id="manufacturerMetatitle"
               value={metatitle}
               onChange={(e) => setMetatitle(e.target.value)} />
         </div>
       </div>
       <div className="col-lg-12">
           <div className="my_profile_setting_textarea form-group">
-            <label htmlFor="builderMetaDescription">Meta Description</label>
-            <textarea id="builderMetaDescription" className="form-control" rows="7"  value={metadescription} onChange={(e) => setMetaDescription(e.target.value)}  placeholder="Enter meta description"></textarea>
+            <label htmlFor="manufacturerMetaDescription">Meta Description</label>
+            <textarea id="manufacturerMetaDescription" className="form-control" rows="7"  value={metadescription} onChange={(e) => setMetaDescription(e.target.value)}  placeholder="Enter meta description"></textarea>
             {error.metadescription && <span className="text-danger">{error.metadescription}</span>}
           </div>
           

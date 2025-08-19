@@ -15,22 +15,22 @@ const index = () => {
   const [currentPage, setCurrentPage] = useState(1);
     // const [properties, setProperties] = useState(initialProperties || []);
   
-    const [builderList, setBuilderList] = useState([]);
+    const [manufacturerList, setManufacturerList] = useState([]);
     const [totalCount, setTotalCount] = useState([]);
     const [pageSize] = useState(10);
   
     useEffect(() => {
-          const fetchBuilderData = async () => {
+          const fetchManufacturerData = async () => {
           const filter ={
        
         "limit":pageSize,
         "page":currentPage
       };
        const data = await getManufacturerTableData(filter);
-          setBuilderList(data.items);
+          setManufacturerList(data.items);
           setTotalCount(data.totalCount)
         };
-      fetchBuilderData();
+      fetchManufacturerData();
     }, [currentPage]);
   return (
     <>
@@ -77,8 +77,8 @@ const index = () => {
 
                 <div className="col-lg-4 col-xl-4 mb10">
                   <div className="breadcrumb_content style2 mb30-991">
-                    <h2 className="breadcrumb_title">All Builders</h2>
-                    <p>View, search, and manage builder profiles associated with your property listings.</p>
+                    <h2 className="breadcrumb_title">All Manufacturers</h2>
+                    <p>View, search, and manage manufacturer profiles associated with the robot listings.</p>
                   </div>
                 </div>
                 {/* End .col */}
@@ -106,7 +106,7 @@ const index = () => {
                   <div className="my_dashboard_review mb40">
                     <div className="property_table">
                       <div className="table-responsive mt0">
-                        <TableData builderList={builderList} setBuilderList={setBuilderList}/>
+                        <TableData manufacturerList={manufacturerList} setManufacturerList={setManufacturerList}/>
                       </div>
                       {/* End .table-responsive */}
 

@@ -172,7 +172,7 @@ app.use("/admin/api/operatingenvironment", operatingEnvironmentRouter);
 app.use("/admin/api/terraincapability", terrainCapabilityRouter);
 app.use("/admin/api/autonomylevel", autonomyLevelRouter);
 app.use("/admin/api/communicationmethod", communicationMethodRouter);
-app.use("/admin/api/payloadtypessupported", payloadTypesSupportedRouter);
+app.use("/admin/api/payloadtype", payloadTypesSupportedRouter);
 
 const path = require("path");
 // app.use("/public", express.static(path.join(__dirname, "public")));
