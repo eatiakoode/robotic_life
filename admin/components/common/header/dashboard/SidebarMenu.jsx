@@ -196,11 +196,11 @@ const SidebarMenu = () => {
               className={`treeview ${isParentPageActive(RoboManufacturer, pathname) ? "active" : ""
                 }`}
             >
-              <a data-bs-toggle="collapse" href="#my-builder">
+              <a data-bs-toggle="collapse" href="#roboManufacturer">
                 <i className="flaticon-home"></i> <span>Manufacturer</span>
                 <i className="fa fa-angle-down pull-right"></i>
               </a>
-              <ul className="treeview-menu collapse" id="my-builder">
+              <ul className="treeview-menu collapse" id="roboManufacturer">
                 {RoboManufacturer.map((item) => (
                   <li key={item.id}>
                     <Link href={item.route}>
