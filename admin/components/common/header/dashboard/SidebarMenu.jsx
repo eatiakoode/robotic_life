@@ -30,7 +30,7 @@ const SidebarMenu = () => {
     { id: 7, name: "Add Primary Function", route: "/cmswegrow/add-primaryfunction" },
     { id: 8, name: "Add AI Software Feature", route: "/cmswegrow/add-aisoftwarefeature" },
     { id: 9, name: "Add Operating Environment", route: "/cmswegrow/add-operatingenvironment" },
-    { id: 10, name: "Add Terrain Capacity", route: "/cmswegrow/add-terraincapacity" },
+    { id: 10, name: "Add Terrain Capability", route: "/cmswegrow/add-terraincapability" },
     { id: 11, name: "Add Autonomy Level", route: "/cmswegrow/add-autonomylevel" },
     { id: 12, name: "Add Communication Method", route: "/cmswegrow/add-communicationmethod" },
     { id: 13, name: "Add Payload Type", route: "/cmswegrow/add-payloadtype" },
