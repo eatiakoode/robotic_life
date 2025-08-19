@@ -3,10 +3,7 @@ import SidebarMenu from "../../common/header/dashboard/SidebarMenu";
 import MobileMenu from "../../common/header/MobileMenu";
 import CopyRight from "../../common/footer/CopyRight";
 import CreateList from "./CreateList";
-import DetailedInfo from "./DetailedInfo";
-import FloorPlans from "./FloorPlans";
-import LocationField from "./LocationField";
-import PropertyMediaUploader from "./PropertyMediaUploader";
+import RobotMediaUploader from "./RobotMediaUploader";
 
 const index = () => {
   return (

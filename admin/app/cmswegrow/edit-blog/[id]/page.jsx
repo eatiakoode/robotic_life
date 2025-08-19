@@ -1,8 +1,8 @@
 import EditBlogClient from "./EditBlogClient";
 
 export const metadata = {
-  title: 'My Properties || WeGrow - Real Estate',
-  description: 'WeGrow - Real Estate',
+  title: 'My Robots || RoboticLife',
+  description: 'RoboticLife',
 };
 
 export default function Page({ params }) {
