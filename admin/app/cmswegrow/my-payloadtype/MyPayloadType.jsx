@@ -1,7 +1,7 @@
 "use client";
 
-import MyPayloadType from "@/components/dashboard/my-payloadtype";
+import PayloadType from "@/components/dashboard/my-payloadtype";
 
-export default function MyPayloadTypeClient() {
-  return <MyPayloadType />;
+export default function PayloadTypeClient() {
+  return <PayloadType />;
 }

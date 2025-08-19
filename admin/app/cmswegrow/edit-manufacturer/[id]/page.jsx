@@ -1,17 +1,11 @@
-import dynamic from "next/dynamic";
-import EditManufacturer from "@/components/dashboard/edit-manufacturer";
+import ClientPage from "./EditManufacturerCient";
 
 export const metadata = {
-  title: 'My Robots || RoboticLife',
-  description: 'RoboticLife',
+  title: "My Robots || RoboticLife",
+  description: "RoboticLife",
 };
 
-const index = () => {
-  return (
-    <>
-      <EditManufacturer />
-    </>
-  );
-};
-
-export default dynamic(() => Promise.resolve(index), { ssr: false });
+export default function Page({ params }) {
+  // params.id is available here
+  return <ClientPage id={params.id} />;
+}

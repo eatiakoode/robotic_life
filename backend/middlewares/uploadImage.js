@@ -57,7 +57,7 @@ const photoUploadMiddleware = uploadPhoto.fields([
   { name: 'featuredimage', maxCount: 1 },
   { name: 'siteplan', maxCount: 1 },
   { name: 'pdffile', maxCount: 1 },
-  { name: 'propertySelectedImgs', maxCount: 10 },
+  { name: 'robotSelectedImgs', maxCount: 10 },
   // ...dynamicFields
 
 
@@ -166,17 +166,28 @@ const manufacturerImgResize = async (req) => {
 
   await Promise.all(
     req.files.map(async (file) => {
-      const filename = file.filename; // multer already gives unique name
+      const filename = file.filename; // multer already gives unique name with original extension
       const outputPath = path.join(outputDir, filename);
+      const ext = path.extname(file.originalname).toLowerCase();
 
-      await sharp(file.path)
-        .resize(750, 450)
-        .toFormat("jpeg")
-        .jpeg({ quality: 90 })
-        .toFile(outputPath);
+      if (ext === ".svg" || ext === ".webp") {
+        // Copy vectors/WEBP as-is
+        fs.copyFileSync(file.path, outputPath);
+      } else {
+        // Pad to 260x260 without cropping so the full logo remains visible
+        const isPng = ext === ".png";
+        const pipeline = sharp(file.path).resize(260, 260, {
+          fit: "contain",
+          background: isPng ? { r: 255, g: 255, b: 255, alpha: 0 } : { r: 255, g: 255, b: 255, alpha: 1 },
+        });
+        if (isPng) {
+          await pipeline.png({ quality: 90 }).toFile(outputPath);
+        } else {
+          await pipeline.jpeg({ quality: 90 }).toFile(outputPath);
+        }
+      }
 
       fs.unlinkSync(file.path); // remove temp uploaded file
-
       processedFilenames.push(filename);
     })
   );
@@ -242,35 +253,39 @@ const robotImgResize = async (req) => {
 
 
 const categoryImgResize = async (req) => {
-  if (!req.files || !Array.isArray(req.files)) return;
+  if (!req.files || !Array.isArray(req.files)) return [];
 
   const processedFilenames = [];
+
+  const outputDir = path.join("public", "images", "category");
+  if (!fs.existsSync(outputDir)) {
+    fs.mkdirSync(outputDir, { recursive: true });
+  }
 
   await Promise.all(
     req.files.map(async (file) => {
       const ext = path.extname(file.originalname).toLowerCase();
-      const filename = file.filename;
-      const outputPath = path.join("public", "images", "category", filename);
+      const filename = file.filename; // keep original multer filename
+      const outputPath = path.join(outputDir, filename);
 
-      // Create folder if it doesn't exist
-      const outputDir = path.dirname(outputPath);
-      if (!fs.existsSync(outputDir)) {
-        fs.mkdirSync(outputDir, { recursive: true });
-      }
-
-      if (ext === ".webp") {
-        // Copy .webp without converting
+      if (ext === ".svg" || ext === ".webp") {
+        // Copy vector or webp as-is for quality
         fs.copyFileSync(file.path, outputPath);
       } else {
-        // Convert other image formats to .jpeg using sharp
-        await sharp(file.path)
-          .resize(1920, 500)
-          .toFormat("jpeg")
-          .jpeg({ quality: 90 })
-          .toFile(outputPath);
+        // Pad to square 260x260 while preserving full image inside the canvas
+        const isPng = ext === ".png";
+        const pipeline = sharp(file.path).resize(260, 260, {
+          fit: "contain",
+          background: isPng ? { r: 255, g: 255, b: 255, alpha: 0 } : { r: 255, g: 255, b: 255, alpha: 1 },
+        });
+        if (isPng) {
+          await pipeline.png({ quality: 90 }).toFile(outputPath);
+        } else {
+          await pipeline.jpeg({ quality: 90 }).toFile(outputPath);
+        }
       }
 
-      fs.unlinkSync(file.path); // delete original uploaded file
+      fs.unlinkSync(file.path);
       processedFilenames.push(filename);
     })
   );

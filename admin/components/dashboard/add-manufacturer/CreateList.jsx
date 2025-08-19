@@ -12,30 +12,30 @@ const CreateList = () => {
     const [logo, setLogo] = useState(null);
     const router = useRouter();
      const [isSubmitting, setisSubmitting] = useState("");
-     const [metatitle, setMetatitle] = useState([]);
-  const [metadescription, setMetaDescription] = useState([]);
+     const [metatitle, setMetatitle] = useState("");
+  const [metadescription, setMetaDescription] = useState("");
 
     // upload profile
     const uploadLogo = (e) => {
         setLogo(e.target.files[0]);
     };
   
-    const handleTitleChange = (e) => {
-      setTitle(e.target.value);
-  
-      // ✅ Clear the error when user starts typing
-      if (e.target.value.trim() !== "") {
-        setError("");
+  const handleTitleChange = (e) => {
+      const value = e.target.value;
+      setTitle(value);
+
+      if (value.trim() !== "") {
+         setError("");
+         const generatedSlug = value
+            .toLowerCase()
+            .trim()
+            .replace(/[^a-z0-9]+/g, "-")
+            .replace(/^-+|-+$/g, "");
+         setSlug(generatedSlug);
+      } else {
+         setSlug("");
       }
-    };
-    const handleSlugChange = (e) => {
-      setSlug(e.target.value);
-  
-      // ✅ Clear the error when user starts typing
-      if (e.target.value.trim() !== "") {
-        setError("");
-      }
-    };
+   };
   
     const addManufacturer = async (e) => {
       e.preventDefault();
@@ -43,10 +43,12 @@ const CreateList = () => {
     
       if (!title.trim()) {
         setError("Title is required");
+        setisSubmitting(false);
         return;
       }
       if (!slug.trim()) {
         setError("Slug is required");
+        setisSubmitting(false);
         return;
       }
     
@@ -54,11 +56,12 @@ const CreateList = () => {
     
       try {
         const formData = new FormData();
-        formData.append("title", title);
+        // Align keys with backend schema
+        formData.append("name", title);
         formData.append("slug", slug);
         formData.append("description", description);
-        formData.append("metatitle", metatitle);
-        formData.append("metadescription", metadescription);
+        formData.append("metaTitle", metatitle);
+        formData.append("metaDescription", metadescription);
         if (logo) {
           formData.append("logo", logo);
         }
@@ -67,7 +70,7 @@ const CreateList = () => {
         const data = await addManufacturerAPI(formData); // Use FormData here
         toast.success(data.message);
             
-        if(data.status=="success"){
+        if(data.status==="success"){
          setTimeout(() => {
           router.push("/cmswegrow/my-manufacturer");
           }, 1500); 
@@ -78,8 +81,12 @@ const CreateList = () => {
         setSlug("");
         setDescription("");
         setLogo(null);
+        setMetatitle("");
+        setMetaDescription("");
       } catch (error) {
         setError(error.message);
+      } finally {
+        setisSubmitting(false);
       }
     };
     
@@ -96,15 +103,14 @@ const CreateList = () => {
                         onChange={uploadLogo}
                     />
                     <label
-                        style={
-                            logo !== null
-                                ? {
-                                      backgroundImage: `url(${URL.createObjectURL(
-                                          logo
-                                      )})`,
-                                  }
-                                : undefined
-                        }
+                        style={{
+                            ...(logo
+                                ? { backgroundImage: `url(${URL.createObjectURL(logo)})` }
+                                : {}),
+                            backgroundSize: "contain",
+                            backgroundPosition: "center",
+                            backgroundRepeat: "no-repeat",
+                        }}
                         htmlFor="image1"
                     >
                         <span>
@@ -122,13 +128,20 @@ const CreateList = () => {
           {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
         </div>
       </div>
-      <div className="col-lg-6 col-xl-6">
-        <div className="my_profile_setting_input form-group">
-          <label htmlFor="manufacturerSlug">Manufacturer Slug (SEO URL)</label>
-          <input type="text" className="form-control" id="manufacturerSlug" value={slug} onChange={handleSlugChange} />
-          {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
-        </div>
-      </div>
+ <div className="col-lg-6 col-xl-6">
+               <div className="my_profile_setting_input form-group">
+                  <label htmlFor="manufacturerSlug">Manufacturer Slug (SEO URL)</label>
+                  <input
+                     type="text"
+                     className="form-control"
+                     id="manufacturerSlug"
+                     value={slug}
+                     disabled   // ✅ disable input so user can’t type
+                  />
+                  {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
+               </div>
+            </div>
+
       {/* End .col */}
       <div className="col-lg-12">
           <div className="my_profile_setting_textarea form-group">

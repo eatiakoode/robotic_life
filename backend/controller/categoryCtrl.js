@@ -9,7 +9,9 @@ const createCategory = asyncHandler(async (req, res) => {
     if (req.files && req.files.length > 0) {
       const processedImages = await categoryImgResize(req);
       if (processedImages.length > 0) {
-        req.body.logoimage = "public/images/category/" + processedImages[0];
+        const path = "public/images/category/" + processedImages[0];
+        req.body.logoimage = path;
+        req.body.logoImage = path; // mirror manufacturer field naming for frontend compatibility
       }
     }
 
@@ -31,10 +33,13 @@ const createCategory = asyncHandler(async (req, res) => {
 
     const newCategory = await Category.create(req.body);
 
+    // ensure response includes logoImage alias
+    const created = newCategory.toObject();
+    created.logoImage = created.logoImage || created.logoimage || null;
     res.json({
       status: "success",
       message: "Category created successfully",
-      data: newCategory,
+      data: created,
     });
   } catch (error) {
     throw new Error(error);
@@ -47,7 +52,13 @@ const getCategories = async (req, res) => {
     const categories = await Category.find()
       .populate("parent", "name")
       .sort({ createdAt: -1 });
-    res.json(categories);
+    // add logoImage alias in response objects
+    const output = categories.map((doc) => {
+      const obj = doc.toObject();
+      obj.logoImage = obj.logoImage || obj.logoimage || null;
+      return obj;
+    });
+    res.json(output);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -60,7 +71,9 @@ const getCategoryById = async (req, res) => {
     if (!category) {
       return res.status(404).json({ error: "Category not found" });
     }
-    res.json(category);
+    const obj = category.toObject();
+    obj.logoImage = obj.logoImage || obj.logoimage || null;
+    res.json(obj);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -93,7 +106,9 @@ const updateCategory = asyncHandler(async (req, res) => {
     if (req.files && req.files.length > 0) {
       const processedImages = await categoryImgResize(req);
       if (processedImages.length > 0) {
-        req.body.logoimage = "public/images/category/" + processedImages[0];
+        const path = "public/images/category/" + processedImages[0];
+        req.body.logoimage = path;
+        req.body.logoImage = path; // mirror manufacturer field naming
       }
     }
 
