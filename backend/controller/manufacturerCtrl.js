@@ -64,16 +64,35 @@ const getManufacturerById = async (req, res) => {
 // Update Manufacturer
 const updateManufacturer = async (req, res) => {
   try {
+    // Process new logo upload if provided
+    if (req.files && req.files.length > 0) {
+      const processedImages = await manufacturerImgResize(req);
+      if (processedImages.length > 0) {
+        req.body.logoImage = "public/images/manufacturer/" + processedImages[0];
+      }
+    }
+
+    // Normalize slug
+    if (req.body.slug) {
+      req.body.slug = slugify(req.body.slug.toLowerCase());
+    } else if (req.body.name) {
+      req.body.slug = slugify(req.body.name.toLowerCase());
+    }
+
     const manufacturer = await Manufacturer.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
-      runValidators: true
+      runValidators: true,
     });
 
     if (!manufacturer) {
       return res.status(404).json({ error: "Manufacturer not found" });
     }
 
-    res.json(manufacturer);
+    res.json({
+      status: "success",
+      message: "Manufacturer updated successfully",
+      data: manufacturer,
+    });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }

@@ -9,29 +9,29 @@ import SearchBox from "./SearchBox";
 import CopyRight from "../../common/footer/CopyRight";
 
 import { useState, useEffect } from "react";
-import { getManufacturerTableData,deleteManufacturerAPI } from "@/api/manufacturer";
+import { getManufacturerTableData } from "@/api/manufacturer";
 
 const index = () => {
   const [currentPage, setCurrentPage] = useState(1);
-    // const [properties, setProperties] = useState(initialProperties || []);
-  
     const [manufacturerList, setManufacturerList] = useState([]);
-    const [totalCount, setTotalCount] = useState([]);
+    const [totalCount, setTotalCount] = useState(0);
     const [pageSize] = useState(10);
   
     useEffect(() => {
-          const fetchManufacturerData = async () => {
-          const filter ={
-       
-        "limit":pageSize,
-        "page":currentPage
-      };
-       const data = await getManufacturerTableData(filter);
-          setManufacturerList(data.items);
-          setTotalCount(data.totalCount)
+      const fetchManufacturerData = async () => {
+        const filter = {
+          limit: pageSize,
+          page: currentPage,
         };
+        const data = await getManufacturerTableData(filter);
+        // Backend currently returns an array (protected route). Fallback to array handling.
+        const list = Array.isArray(data) ? data : (data?.items || []);
+        const count = Array.isArray(data) ? data.length : (data?.totalCount || list.length);
+        setManufacturerList(list);
+        setTotalCount(count);
+      };
       fetchManufacturerData();
-    }, [currentPage]);
+    }, [currentPage, pageSize]);
   return (
     <>
       {/* <!-- Main Header Nav --> */}
@@ -86,11 +86,11 @@ const index = () => {
                 <div className="col-lg-8 col-xl-8">
                   <div className="candidate_revew_select style2 text-end mb30-991">
                     <ul className="mb0">
-                      {/* <li className="list-inline-item">
+                      <li className="list-inline-item">
                         <div className="candidate_revew_search_box course fn-520">
                           <SearchBox />
                         </div>
-                      </li> */}
+                      </li>
                       {/* End li */}
 
                       {/* <li className="list-inline-item">

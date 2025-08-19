@@ -1,10 +1,10 @@
 // import MyCountryClient from "./MyCountryClient";
-import MyPayloadType from "./MyPayloadType";
+import PayloadType from "./MyPayloadType";
 export const metadata = {
-  title: "My Payload Types || RoboticLife",
+  title: "Payload Types || RoboticLife",
   description: "RoboticLife - Manage your payload types",
 };
 
-export default function MyPayloadTypePage() {
-  return <MyPayloadType />;
+export default function PayloadTypePage() {
+  return <PayloadType />;
 }

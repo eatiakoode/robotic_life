@@ -21,8 +21,8 @@ router.get("/", authMiddleware, isAdmin, getManufacturers);
 // Get Manufacturer by ID
 router.get("/:id", authMiddleware, isAdmin, getManufacturerById);
 
-// Update Manufacturer
-router.put("/:id", authMiddleware, isAdmin, updateManufacturer);
+// Update Manufacturer (support multipart logo updates)
+router.put("/:id", authMiddleware, isAdmin, uploadPhoto.array("logo", 10), updateManufacturer);
 
 // Delete Manufacturer
 router.delete("/:id", authMiddleware, isAdmin, deleteManufacturer);

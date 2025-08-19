@@ -25,7 +25,7 @@ const token =userData.token
       body: formData
     });
   
-    if (!response.status) {
+    if (!response.ok) {
       const errorData = await response.json();
       throw new Error(errorData.message || "Failed to add Manufacturer");
     }
@@ -40,7 +40,14 @@ const token =userData.token
     
   
     try {
-      const response = await fetch(process.env.NEXT_PUBLIC_ADMIN_API_URL+"api/manufacturer?limit="+filter.limit+"&skip="+filter.page); // Replace with actual API endpoint
+      const userData = JSON.parse(localStorage.getItem("user"));
+      const token = userData?.token;
+      const response = await fetch(process.env.NEXT_PUBLIC_ADMIN_API_URL+"api/manufacturer?limit="+filter.limit+"&skip="+filter.page, {
+        method: "GET",
+        headers: {
+          Authorization: token ? `Bearer ${token}` : "",
+        },
+      }); // Replace with actual API endpoint
       if (!response.ok) {
         throw new Error("Failed to fetch products");
       }
@@ -124,9 +131,9 @@ const token =userData.token
       body: manufacturer,
     });
   
-    if (!response.status) {
+    if (!response.ok) {
       const errorData = await response.json();
-      throw new Error(errorData.message || "Failed to add Manufacturer");
+      throw new Error(errorData.message || "Failed to update Manufacturer");
     }
   
     return response.json();
