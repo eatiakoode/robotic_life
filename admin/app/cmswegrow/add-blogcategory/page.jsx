@@ -1,8 +1,8 @@
 import AddBlogcategory from "./AddBlogcategory";
 
 export const metadata = {
-  title: 'My Properties || WeGrow',
-  description: 'WeGrow',
+  title: 'My Robots || RoboticLife',
+  description: 'RoboticLife',
 };
 
 export default function Page() {

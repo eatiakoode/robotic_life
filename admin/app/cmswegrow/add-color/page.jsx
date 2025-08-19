@@ -1,6 +1,6 @@
 export const metadata = {
-  title: "My Properties || WeGrow",
-  description: "WeGrow",
+  title: 'My Robots || RoboticLife',
+  description: 'RoboticLife',
 };
 
 import AddColorWrapper from "./AddColorWrapper";

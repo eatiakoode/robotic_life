@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
-import { getBuilderTableData } from "../../../api/builder";
+import { getBuilderTableData } from "../../../api/manufacturer";
 import { createRobot } from "../../../api/robotApi";
 // import { getSellerTableData } from "@/api/seller";
 import { getCountryTableData } from "../../../api/country";

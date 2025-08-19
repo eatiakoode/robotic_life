@@ -1,8 +1,8 @@
 import AddBlogPageClient from "./AddBlogPageClient";
 
 export const metadata = {
-  title: 'Add Blog || WeGrow - Real Estate',
-  description: 'WeGrow - Real Estate',
+  title: 'Add Blog || RoboticLife',
+  description: 'RoboticLife',
 };
 
 export default function Page() {
