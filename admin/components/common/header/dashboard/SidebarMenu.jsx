@@ -62,6 +62,7 @@ const SidebarMenu = () => {
       route: "/cmswegrow/add-communicationmethod",
     },
     { id: 13, name: "Add Payload Type", route: "/cmswegrow/add-payloadtype" },
+    { id: 14, name: "Payload Type List", route: "/cmswegrow/my-payloadtype" },
     // { id: 14, name: "Add Payload Capacity", route: "/cmswegrow/add-payloadcapacity" },
   ];
 
