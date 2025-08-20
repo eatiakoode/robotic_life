@@ -715,7 +715,7 @@ const CreateList = () => {
               <option value="">-- Select Manufacturer --</option>
               {manufacturers.map((manufacturer) => (
                 <option key={manufacturer._id} value={manufacturer._id}>
-                  {manufacturer.title}
+                  {manufacturer.name || manufacturer.title}
                 </option>
               ))}
             </select>
@@ -1006,7 +1006,7 @@ const CreateList = () => {
                         <option value="">-- Select Power Source --</option>
                         {power.map((powerSource) => (
                           <option key={powerSource._id} value={powerSource._id}>
-                            {powerSource.title}
+                            {powerSource.name || powerSource.title}
                           </option>
                         ))}
                       </select>
@@ -1400,7 +1400,7 @@ const CreateList = () => {
                         </option>
                         {colors.map((color) => (
                           <option key={color._id} value={color._id}>
-                            {color.title}
+                            {color.name}
                           </option>
                         ))}
                       </select>
@@ -1439,7 +1439,7 @@ const CreateList = () => {
                         </option>
                         {materials.map((material) => (
                           <option key={material._id} value={material._id}>
-                            {material.title}
+                            {material.name || material.title}
                           </option>
                         ))}
                       </select>
@@ -1489,7 +1489,7 @@ const CreateList = () => {
                         key={navigationType._id}
                         value={navigationType._id}
                       >
-                        {navigationType.title}
+                        {navigationType.name || navigationType.title}
                       </option>
                     ))}
                   </select>
@@ -1526,7 +1526,7 @@ const CreateList = () => {
                     </option>
                     {sensors.map((sensor) => (
                       <option key={sensor._id} value={sensor._id}>
-                        {sensor.title}
+                        {sensor.name || sensor.title}
                       </option>
                     ))}
                   </select>
@@ -1568,7 +1568,7 @@ const CreateList = () => {
                         key={aiSoftwareFeature._id}
                         value={aiSoftwareFeature._id}
                       >
-                        {aiSoftwareFeature.title}
+                        {aiSoftwareFeature.name || aiSoftwareFeature.title}
                       </option>
                     ))}
                   </select>
@@ -1610,7 +1610,7 @@ const CreateList = () => {
                         key={terrainCapability._id}
                         value={terrainCapability._id}
                       >
-                        {terrainCapability.title}
+                        {terrainCapability.name || terrainCapability.title}
                       </option>
                     ))}
                   </select>
@@ -1654,7 +1654,7 @@ const CreateList = () => {
                         key={communicationMethod._id}
                         value={communicationMethod._id}
                       >
-                        {communicationMethod.title}
+                        {communicationMethod.name || communicationMethod.title}
                       </option>
                     ))}
                   </select>
@@ -1696,7 +1696,7 @@ const CreateList = () => {
                         key={payloadType._id}
                         value={payloadType._id}
                       >
-                        {payloadType.title}
+                        {payloadType.name || payloadType.title}
                       </option>
                     ))}
                   </select>
@@ -1719,7 +1719,7 @@ const CreateList = () => {
                     <option value="">-- Select Primary Function --</option>
                     {primaryFunction.map((func) => (
                       <option key={func._id} value={func._id}>
-                        {func.title}
+                        {func.name || func.title}
                       </option>
                     ))}
                   </select>
@@ -1744,7 +1744,7 @@ const CreateList = () => {
                     <option value="">-- Select Operating Environment --</option>
                     {operatingEnvironment.map((env) => (
                       <option key={env._id} value={env._id}>
-                        {env.title}
+                        {env.name || env.title}
                       </option>
                     ))}
                   </select>
@@ -1767,7 +1767,7 @@ const CreateList = () => {
                     <option value="">-- Select Autonomy Level --</option>
                     {autonomyLevel.map((level) => (
                       <option key={level._id} value={level._id}>
-                        {level.title}
+                        {level.name || level.title}
                       </option>
                     ))}
                   </select>
