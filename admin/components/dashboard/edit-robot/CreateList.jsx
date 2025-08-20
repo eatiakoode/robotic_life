@@ -15,7 +15,7 @@ import { getConstructionstatusTableData } from "../../../api/constructionstatus"
 import { getFurnishingstatusTableData } from "../../../api/furnishingstatus";
 
 import { deletePropertyImagesAPI } from "@/api/propertyimages";
-import { deletePropertyAPI, getPropertyById, updatePropertyAPI,deletePropertySinlgeImagesAPI } from "../../../api/property";
+import { getRobotById, updateRobotAPI, deleteRobotSingleImagesAPI } from "../../../api/robot";
 
 import selectedFiles from "../../../utils/selectedFiles";
 import Image from "next/image";
@@ -213,7 +213,7 @@ const uploadMasterPlan = (e) => {
       }
       try {
          const payload = {"propertyid":propertyid,"fieldname":fieldname,"imageurl":imageurl}
-        const data = await deletePropertySinlgeImagesAPI(payload); // 🔹 Call the API function
+        const data = await deleteRobotSingleImagesAPI(payload); // 🔹 Call the API function
         
         const deleted = propertySelectedImgsget?.filter((file) => file._id !== _id);
         setPropertySelectedImgsGet(deleted);
@@ -234,7 +234,7 @@ const uploadMasterPlan = (e) => {
     
         try {
           // alert("test")
-          const data = await deletePropertyImagesAPI(_id); // 🔹 Call the API function
+          // TODO: implement robot image deletion by id if backend supports it
           // alert("test")
           const deleted = propertySelectedImgsget?.filter((file) => file._id !== _id);
           setPropertySelectedImgsGet(deleted);
@@ -259,14 +259,14 @@ useEffect(() => {
             setTitle(property.title)
             setSlug(property.slug)
             setDescription(property.description)
-            setPrice(property.price)
+            setPrice(property.totalPrice || property.price)
             setPriceSqft(property.pricesqft)
             setAddress(property.address)
-            setSelectedCountry(property.countryid)
+            setSelectedCountry(property.countryOfOrigin || property.countryid)
             setSelectedState(property.stateid)
             setSelectedCity(property.cityid)
             setSelectedLocation(property.locationid)
-            setSelectedCategory(property.categoryid)
+            setSelectedCategory(property.category || property.categoryid)
             setSelectedPropertytype(property.propertytypeid)
             setSelectedBuilder(property.builderid)
             setSelectedSeller(property.sellerid)
@@ -348,14 +348,14 @@ useEffect(() => {
 
 
             // alert(property.countryid)
-            const statesRes = await getStateByCountryTableData(property.countryid);
+            const statesRes = await getStateByCountryTableData(property.countryOfOrigin || property.countryid);
             setStates(statesRes.data || []);
             const cityRes = await getCityByStateTableData(property.stateid);
             setCities(cityRes.data || []);
             const locationRes = await getLocationByCityTableData(property.cityid);
             setLocations(locationRes.data || []);
 
-            const propertytypeRes = await getPropertytypeByCategoryTableData(property.categoryid);
+            const propertytypeRes = await getPropertytypeByCategoryTableData(property.category || property.categoryid);
             setPropertytypes(propertytypeRes.data || []);
             
           } catch (error) {
@@ -562,15 +562,11 @@ const updateProperty = async (e) => {
       formData.append("propertySelectedImgs", file); // Repeat key name for each file
     });
 
-    const res = await updatePropertyAPI(id,formData);
-    // alert(res.message);
-    toast.success(res.message);
-    
-    if(data.status=="success"){
-      setTimeout(() => {
-        router.push("/cmswegrow/my-properties");
-        }, 1500); 
-    }
+    const res = await updateRobotAPI(id,formData);
+    toast.success(res.message || "Robot updated successfully");
+    setTimeout(() => {
+      router.push("/cmswegrow/my-robot");
+    }, 1000);
     // router.push("/cmswegrow/my-properties");
 
     // Reset fields and errors

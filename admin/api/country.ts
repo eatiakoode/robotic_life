@@ -1,7 +1,17 @@
 // src/api/country.ts
 import axios from "axios";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_ADMIN_API_URL + "api/country";
+// Normalize base so it always ends with /admin/
+const normalizeAdminBase = (base: string) => {
+  let normalized = (base || "").trim();
+  if (!normalized) return "/admin/";
+  if (!normalized.endsWith("/")) normalized += "/";
+  if (!/\/admin\/$/.test(normalized)) normalized += "admin/";
+  return normalized;
+};
+
+const ADMIN_BASE = normalizeAdminBase(process.env.NEXT_PUBLIC_ADMIN_API_URL as string);
+const API_BASE_URL = ADMIN_BASE + "api/country";
 
 // Add a new country (Admin only)
 export const addCountryAPI = async (title: string) => {

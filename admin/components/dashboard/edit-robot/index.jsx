@@ -11,7 +11,7 @@ import DetailedInfo from "./DetailedInfo";
 import FloorPlans from "./FloorPlans";
 import LocationField from "./LocationField";
 import PropertyMediaUploader from "./PropertyMediaUploader";
-import { deletePropertyAPI, getPropertyById, updatePropertyAPI } from "../../../api/property";
+import { deleteRobotAPI, getRobotById, updateRobotAPI } from "../../../api/robot";
 
 const index = () => {
   const params = useParams();  
@@ -44,7 +44,7 @@ const index = () => {
       useEffect(() => {
         const fetchProperty = async () => {
           try {
-            const data = await getPropertyById(id);
+            const data = await getRobotById(id);
             // alert("ttest")
             setProperty(data.data)
             console.log("data.data.floorplan")
@@ -103,8 +103,8 @@ const index = () => {
 
                 <div className="col-lg-12 mb10">
                   <div className="breadcrumb_content style2">
-                    <h2 className="breadcrumb_title">Update Property Details</h2>
-                    <p>Update property information, images, pricing, or availability to keep your listing accurate and up-to-date.</p>
+                    <h2 className="breadcrumb_title">Update Robot Details</h2>
+                    <p>Update robot information, images, pricing, or availability to keep your listing accurate and up-to-date.</p>
                   </div>
                 </div>
                 {/* End .col */}

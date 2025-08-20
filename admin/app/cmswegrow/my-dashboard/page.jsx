@@ -1,13 +1,14 @@
+// "use client";
 import dynamic from "next/dynamic";
 import MyDashboard from "@/components/dashboard/my-dashboard";
-import { getPropertyTableData } from "@/api/property";
-import { getPropertyEnquiryTableData } from "@/api/propertyenquiry";
-import { getLandingEnquiryTableData } from "@/api/landingenquiry";
+import { getRobotTableData } from "@/api/robot";
+// import { getPropertyEnquiryTableData } from "@/api/propertyenquiry";
+// import { getLandingEnquiryTableData } from "@/api/landingenquiry";
 import { getEnquiryTableData } from "@/api/enquiry";
 export const metadata = {
-  title: 'Dashboard || Wegrow - Real Estate React Template',
+  title: 'Dashboard || RoboticLife - Robot React Template',
   description:
-    'Wegrow - Real Estate React Template',
+    'RoboticLife - Robot React Template',
 }
 export default async function MyDashboardPage() {
   try {
@@ -16,24 +17,24 @@ export default async function MyDashboardPage() {
     limit: 1000,
     page:  1
   }
-    const [propertyRes, enqueryCountProperty, enqueryCountLanding, enqueryCount] = await Promise.all([
-      getPropertyTableData(filter),
-      getPropertyEnquiryTableData(),
-      getLandingEnquiryTableData(),
-      getEnquiryTableData(),
+    const [robotRes, enqueryCountProperty, enqueryCountLanding, enqueryCount] = await Promise.all([
+      getRobotTableData(filter),
+      // getPropertyEnquiryTableData(),
+      // getLandingEnquiryTableData(),
+      // getEnquiryTableData(),
     ]);
 
-    const properties = propertyRes?.items || [];
-    const enqueryProperty = enqueryCountProperty || [];
-    const enqueryLanding = enqueryCountLanding || [];
-    const enquery = enqueryCount || [];
+    const robot = robotRes?.items || [];
+    // const enqueryProperty = enqueryCountProperty || [];
+    // const enqueryLanding = enqueryCountLanding || [];
+    // const enquery = enqueryCount || [];
 
     return (
       <MyDashboard
-        properties={properties}
-        enqueryProperty={enqueryProperty}
-        enqueryLanding={enqueryLanding}
-        enquery={enquery}
+        robot={robot}
+        // enqueryProperty={enqueryProperty}
+        // enqueryLanding={enqueryLanding}
+        // enquery={enquery}
       />
     );
   } catch (error) {

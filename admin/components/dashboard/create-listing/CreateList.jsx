@@ -2,11 +2,24 @@
 
 import { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
-import { getBuilderTableData } from "../../../api/manufacturer";
-import { createRobot } from "../../../api/robotApi";
+import { getManufacturerTableData } from "../../../api/manufacturer";
+import { addRobotAPI as createRobot } from "../../../api/robot";
 // import { getSellerTableData } from "@/api/seller";
 import { getCountryTableData } from "../../../api/country";
 import { getParentCategoriesAPI, getSubCategoriesAPI } from "@/api/category";
+import { getPowerSourceTableData } from "../../../api/powersource";
+import { getColorTableData } from "../../../api/color";
+import { getMaterialTableData } from "../../../api/material";
+import { getNavigationTypeTableData } from "../../../api/navigationtype";
+import { getSensorTableData } from "../../../api/sensor";
+import { getAISoftwareFeatureTableData } from "../../../api/aisoftwarefeature";
+import { getPrimaryFunctionTableData } from "../../../api/primaryfunction";
+import { getOperatingEnvironmentTableData } from "../../../api/operatingenvironment";
+import { getAutonomyLevelTableData } from "../../../api/autonomylevel";
+import { getPayLoadTypeTableData } from "../../../api/payloadtype";
+import { getTerrainCapabilityTableData } from "../../../api/terrain";
+import { getCommunicationMethodTableData } from "../../../api/communicationmethod";
+import { getStateByCountryTableData } from "../../../api/state";
 
 import selectedFiles from "../../../utils/selectedFiles";
 import Image from "next/image";
@@ -25,6 +38,7 @@ const CreateList = () => {
 
   const [countries, setCountries] = useState([]);
   const [selectedCountry, setSelectedCountry] = useState("");
+  const [states, setStates] = useState([]);
 
   const [power, setPower] = useState([]);
   const [selectedPower, setSelectedPower] = useState("");
@@ -150,18 +164,55 @@ const CreateList = () => {
           page: 1,
         };
 
-        const [countryRes, parentCats] = await Promise.all([
+        const [
+          countryRes,
+          parentCats,
+          manufacturerRes,
+          powerRes,
+          colorRes,
+          materialRes,
+          navTypeRes,
+          sensorRes,
+          aiRes,
+          primaryFuncRes,
+          opEnvRes,
+          autonomyRes,
+          payloadRes,
+          terrainRes,
+          commMethodRes,
+        ] = await Promise.all([
           getCountryTableData(),
           getParentCategoriesAPI(),
+          getManufacturerTableData(filter),
+          getPowerSourceTableData(),
+          getColorTableData(),
+          getMaterialTableData(),
+          getNavigationTypeTableData(),
+          getSensorTableData(),
+          getAISoftwareFeatureTableData(),
+          getPrimaryFunctionTableData(),
+          getOperatingEnvironmentTableData(),
+          getAutonomyLevelTableData(),
+          getPayLoadTypeTableData(),
+          getTerrainCapabilityTableData(),
+          getCommunicationMethodTableData(),
         ]);
 
         setCountries(countryRes || []);
         setCategories(Array.isArray(parentCats) ? parentCats : []);
-        // setSubCategories(subCategoryRes.items || []);
-        // setManufacturers(manufacturerRes.items || []);
-        // setPowerSources(powerSourceRes.items || []);
-        // setColors(colorRes.items || []);     // multi-select
-        // setMaterials(materialRes.items || []); // multi-select
+        setManufacturers(Array.isArray(manufacturerRes?.items) ? manufacturerRes.items : Array.isArray(manufacturerRes) ? manufacturerRes : []);
+        setPower(Array.isArray(powerRes) ? powerRes : powerRes?.data || []);
+        setColors(Array.isArray(colorRes) ? colorRes : colorRes?.data || []);
+        setMaterials(Array.isArray(materialRes) ? materialRes : materialRes?.data || []);
+        setNavigationType(Array.isArray(navTypeRes) ? navTypeRes : navTypeRes?.data || []);
+        setSensors(Array.isArray(sensorRes) ? sensorRes : sensorRes?.data || []);
+        setAISoftwareFeatures(Array.isArray(aiRes) ? aiRes : aiRes?.data || []);
+        setPrimaryFunction(Array.isArray(primaryFuncRes) ? primaryFuncRes : primaryFuncRes?.data || []);
+        setOperatingEnvironment(Array.isArray(opEnvRes) ? opEnvRes : opEnvRes?.data || []);
+        setAutonomyLevel(Array.isArray(autonomyRes) ? autonomyRes : autonomyRes?.data || []);
+        setPayloadTypes(Array.isArray(payloadRes) ? payloadRes : payloadRes?.data || []);
+        setTerrainCapabilities(Array.isArray(terrainRes) ? terrainRes : terrainRes?.data || []);
+        setCommunicationMethods(Array.isArray(commMethodRes) ? commMethodRes : commMethodRes?.data || []);
       } catch (err) {
         console.error("Error loading initial data:", err);
       }
@@ -299,9 +350,9 @@ const CreateList = () => {
     setSelectedMaterials(values);
   };
 
-  const handleYearChange = (e) => {
-    setSelectedYear(e.target.value);
-  };
+  // const handleYearChange = (e) => {
+  //   setLaunchYear(e.target.value);
+  // };
 
   // For unit dropdowns (hardcoded options)
   const handleLengthUnitChange = (e) => {
@@ -343,7 +394,7 @@ const CreateList = () => {
         value: selectedManufacturer,
         name: "Manufacturer",
       },
-      { key: "launchYear", value: selectedYear, name: "Launch Year" },
+      { key: "launchYear", value: launchYear, name: "Launch Year" },
       { key: "length", value: length, name: "Length" },
       { key: "width", value: width, name: "Width" },
       { key: "height", value: height, name: "Height" },
@@ -373,17 +424,17 @@ const CreateList = () => {
       },
       {
         key: "navigationTypes",
-        value: selectedNavigationTypes.length > 0 ? selectedNavigationTypes : null,
+        value: selectedNavigationType.length > 0 ? selectedNavigationType : null,
         name: "Navigation Types",
       },
       {
         key: "sensors",
-        value: selectedSensors.length > 0 ? selectedSensors : null,
+        value: selectedSensor.length > 0 ? selectedSensor : null,
         name: "Sensors",
       },
       {
         key: "aiSoftwareFeatures",
-        value: selectedAISoftwareFeatures.length > 0 ? selectedAISoftwareFeatures : null,
+        value: selectedAISoftwareFeature.length > 0 ? selectedAISoftwareFeature : null,
         name: "AI Software Features",
       },
       {
@@ -429,12 +480,12 @@ const CreateList = () => {
         title,
         slug,
         description,
-        price,
-        countryid: selectedCountry,
-        categoryid: selectedCategory,
+        totalPrice: price,
+        countryOfOrigin: selectedCountry,
+        category: selectedCategory,
         subcategoryid: selectedSubCategory,
-        manufacturerid: selectedManufacturer,
-        launchYear: selectedYear,
+        manufacturer: selectedManufacturer,
+        launchYear,
         version,
         length,
         lengthUnit,
@@ -445,19 +496,19 @@ const CreateList = () => {
         weight,
         weightUnit,
         batteryCapacity,
-        batteryChargingTime,
+        chargingTime,
         loadCapacity,
         runtime,
         speed,
         accuracy,
-        operatingTemperature,
+        // operatingTemperature can be constructed on backend if needed
         range,
         rangeUnit,
-        selectedPower,
+        powerSource: selectedPower,
         videoembedcode,
-        selectedPrimaryFunction,
-        selectedOperatingEnvironment,
-        selectedAutonomyLevel,
+        primaryFunction: selectedPrimaryFunction,
+        operatingEnvironment: selectedOperatingEnvironment,
+        autonomyLevel: selectedAutonomyLevel,
         metatitle,
         metadescription,
         featuredimage,
@@ -473,14 +524,56 @@ const CreateList = () => {
       }
 
       // Append multi-selects
-      selectedColors.forEach((color) => formData.append("colors[]", color));
+      selectedColors.forEach((color) => formData.append("color[]", color));
       selectedMaterials.forEach((material) =>
-        formData.append("materials[]", material)
+        formData.append("material[]", material)
       );
+      selectedNavigationType.forEach((nav) => formData.append("navigationType[]", nav));
+      selectedSensor.forEach((s) => formData.append("sensors[]", s));
+      selectedAISoftwareFeature.forEach((a) => formData.append("aiSoftwareFeatures[]", a));
+      selectedTerrainCapability.forEach((t) => formData.append("terrainCapability[]", t));
+      selectedCommunicationMethod.forEach((c) => formData.append("communicationMethod[]", c));
+      selectedPayloadType.forEach((p) => formData.append("payloadTypesSupported[]", p));
+
+      // Append nested unit/value fields to match backend schema
+      if (length) formData.append("dimensions.length.value", String(length));
+      if (lengthUnit) formData.append("dimensions.length.unit", String(lengthUnit));
+      if (width) formData.append("dimensions.width.value", String(width));
+      if (widthUnit) formData.append("dimensions.width.unit", String(widthUnit));
+      if (height) formData.append("dimensions.height.value", String(height));
+      if (heightUnit) formData.append("dimensions.height.unit", String(heightUnit));
+
+      if (weight) formData.append("weight.value", String(weight));
+      if (weightUnit) formData.append("weight.unit", String(weightUnit));
+
+      if (batteryCapacity) formData.append("batteryCapacity.value", String(batteryCapacity));
+      if (batteryCapacityUnit) formData.append("batteryCapacity.unit", String(batteryCapacityUnit));
+
+      if (loadCapacity) formData.append("loadCapacity.value", String(loadCapacity));
+      if (loadCapacityUnit) formData.append("loadCapacity.unit", String(loadCapacityUnit));
+
+      if (runtime) formData.append("runtime.value", String(runtime));
+      if (runtimeUnit) formData.append("runtime.unit", String(runtimeUnit));
+
+      if (speed) formData.append("speed.value", String(speed));
+      if (speedUnit) formData.append("speed.unit", String(speedUnit));
+
+      if (accuracy) formData.append("accuracy.value", String(accuracy));
+      if (accuracyUnit) formData.append("accuracy.unit", String(accuracyUnit));
+
+      if (range) formData.append("range.value", String(range));
+      if (rangeUnit) formData.append("range.unit", String(rangeUnit));
+
+      if (operatingTemperatureMin)
+        formData.append("operatingTemperature.min", String(operatingTemperatureMin));
+      if (operatingTemperatureMax)
+        formData.append("operatingTemperature.max", String(operatingTemperatureMax));
+      if (operatingTemperatureUnit)
+        formData.append("operatingTemperature.unit", String(operatingTemperatureUnit));
 
       // Append images
       propertySelectedImgs.forEach((file) => {
-        formData.append("propertySelectedImgs", file);
+        formData.append("image", file);
       });
 
       // API call
