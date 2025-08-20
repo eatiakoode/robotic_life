@@ -19,33 +19,34 @@ const CreateList = () => {
       }
     };
 
-    const addCommunicationMethod = async (e) => {
+   const addCommunicationMethod = async (e) => {
+  e.preventDefault();
+  setisSubmitting(true);
 
-      e.preventDefault();
-      setisSubmitting(true)
-  
-      if (!title.trim()) {
-        setError("Title is required");
-        return;
-      }
-      // alert("testw")
-      setError("");
-      
-      try {
-        const data = await addCommunicationMethodAPI(title); // 🔹 Call the API function
+  if (!title.trim()) {
+    setError("Title is required");
+    setisSubmitting(false);
+    return;
+  }
 
-        toast.success(data.message);
-        if(data.status=="success"){
-          setTimeout(() => {
-          router.push("/cmswegrow/my-communicationmethod");
-          }, 1500); 
-        }
-  
-        setTitle("");
-      } catch (error) {
-        setError(error.message);
-      }
-    };
+  setError("");
+         
+  try {
+    const data = await addCommunicationMethodAPI(title); 
+
+    toast.success(data.message);
+
+    if (data.status === "success") {
+      router.push("/cmswegrow/my-communicationmethod");
+    }
+
+    setTitle("");
+  } catch (error) {
+    setError(error.message);
+  } finally {
+    setisSubmitting(false);
+  }
+};
   return (
     <>
     <form onSubmit={addCommunicationMethod} className="row">

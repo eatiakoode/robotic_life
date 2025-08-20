@@ -38,7 +38,7 @@ export const addColorAPI = async (title: string) => {
   }
 };
 
-// Get all power sources
+// Get all color
 export const getColorTableData = async () => {
   try {
     const userData = JSON.parse(localStorage.getItem("user") || "{}");
