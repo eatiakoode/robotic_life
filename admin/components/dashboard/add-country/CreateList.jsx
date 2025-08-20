@@ -38,7 +38,7 @@ const CreateList = () => {
         if(data.status=="success"){
           setTimeout(() => {
           router.push("/cmswegrow/my-country");
-          }, 1500); 
+          }, 1000); 
         }
   
         setTitle(""); // ✅ Reset input after success

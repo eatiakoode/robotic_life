@@ -5,84 +5,84 @@ import { addCommunicationMethodAPI } from "@/api/communicationmethod";
 import { useRouter, useParams } from "next/navigation";
 import { toast } from 'react-toastify';
 const CreateList = () => {
-   const [title, setTitle] = useState("");
-    const [error, setError] = useState("");
-    const router = useRouter();
-    const [isSubmitting, setisSubmitting] = useState("");
-  
-    const handleTitleChange = (e) => {
-      setTitle(e.target.value);
-  
-      // ✅ Clear the error when user starts typing
-      if (e.target.value.trim() !== "") {
-        setError("");
-      }
-    };
+  const [title, setTitle] = useState("");
+  const [error, setError] = useState("");
+  const router = useRouter();
+  const [isSubmitting, setisSubmitting] = useState("");
 
-   const addCommunicationMethod = async (e) => {
-  e.preventDefault();
-  setisSubmitting(true);
+  const handleTitleChange = (e) => {
+    setTitle(e.target.value);
 
-  if (!title.trim()) {
-    setError("Title is required");
-    setisSubmitting(false);
-    return;
-  }
+    // ✅ Clear the error when user starts typing
+    if (e.target.value.trim() !== "") {
+      setError("");
+    }
+  };
 
-  setError("");
-         
-  try {
-    const data = await addCommunicationMethodAPI(title); 
+  const addCommunicationMethod = async (e) => {
+    e.preventDefault();
+    setisSubmitting(true);
 
-    toast.success(data.message);
-
-    if (data.status === "success") {
-      router.push("/cmswegrow/my-communicationmethod");
+    if (!title.trim()) {
+      setError("Title is required");
+      setisSubmitting(false);
+      return;
     }
 
-    setTitle("");
-  } catch (error) {
-    setError(error.message);
-  } finally {
-    setisSubmitting(false);
-  }
-};
+    setError("");
+
+    try {
+      const data = await addCommunicationMethodAPI(title);
+
+      toast.success(data.message || "Communication Method added successfully!");
+
+      setTimeout(() => {
+        router.push("/cmswegrow/my-communicationmethod");
+      }, 1000);
+
+      setTitle("");
+    } catch (error) {
+      setError(error.message);
+    } finally {
+      setisSubmitting(false);
+    }
+  };
   return (
     <>
-    <form onSubmit={addCommunicationMethod} className="row">
-      <div className="col-lg-6 col-xl-6">
-        <div className="my_profile_setting_input form-group">
-          <label htmlFor="communicationMethodTitle">Communication Method Title</label>
-          <input type="text" className="form-control" id="communicationMethodTitle" value={title} onChange={handleTitleChange} />
-          {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
+      <form onSubmit={addCommunicationMethod} className="row">
+        <div className="col-lg-6 col-xl-6">
+          <div className="my_profile_setting_input form-group">
+            <label htmlFor="communicationMethodTitle">Communication Method Title</label>
+            <input type="text" className="form-control" id="communicationMethodTitle" value={title} onChange={handleTitleChange} />
+            {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
+          </div>
         </div>
-      </div>
-      {/* End .col */}
+        {/* End .col */}
 
-      <div className="col-lg-6 col-xl-6 d-none">
-        <div className="my_profile_setting_input ui_kit_select_search form-group">
-          <label>Status</label>
-          <select
-            className="selectpicker form-select"
-            data-live-search="true"
-            data-width="100%"
-          >
-            <option data-tokens="1">Active</option>
-            <option data-tokens="2">Deactive</option>
-          </select>
+        <div className="col-lg-6 col-xl-6 d-none">
+          <div className="my_profile_setting_input ui_kit_select_search form-group">
+            <label>Status</label>
+            <select
+              className="selectpicker form-select"
+              data-live-search="true"
+              data-width="100%"
+            >
+              <option data-tokens="1">Active</option>
+              <option data-tokens="2">Deactive</option>
+            </select>
+          </div>
         </div>
-      </div>
-      {/* End .col */}
-
-     
+        {/* End .col */}
 
 
-      <div className="col-xl-12">
-        <div className="my_profile_setting_input">
-          <button className="btn btn1 float-start" type="button" onClick={() => window.location.href = '/cmswegrow/my-dashboard'}>Back</button>
-           <button type="submit" className="btn btn2 float-end" disabled={isSubmitting} >{isSubmitting ? 'Sending...' : 'Submit'}</button>
+
+
+        <div className="col-xl-12">
+          <div className="my_profile_setting_input">
+            <button className="btn btn1 float-start" type="button" onClick={() => window.location.href = '/cmswegrow/my-dashboard'}>Back</button>
+            <button type="submit" className="btn btn2 float-end" disabled={isSubmitting} >{isSubmitting ? 'Sending...' : 'Submit'}</button>
+          </div>
         </div>
-      </div>
       </form>
     </>
   );
