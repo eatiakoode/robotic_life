@@ -1,6 +1,7 @@
-// src/api/communicationmethod.ts
+// src/api/country.ts
 import axios from "axios";
 
+// Normalize base so it always ends with /admin/
 const normalizeAdminBase = (base: string) => {
   let normalized = (base || "").trim();
   if (!normalized) return "/admin/";
@@ -23,7 +24,7 @@ export const addCommunicationMethodAPI = async (title: string) => {
 
   const response = await axios.post(
     API_BASE_URL,
-    { title },
+    { name : title },
     {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -43,7 +44,7 @@ export const getCommunicationMethodTableData = async () => {
     });
     return response.data;
   } catch (error) {
-    console.error("Error fetching communication methods:", error);
+    console.error("Error fetching colors:", error);
     throw error;
   }
 };
@@ -65,7 +66,6 @@ export const deleteCommunicationMethodAPI = async (id: string) => {
 
   return response.data;
 };
-
 // Get a single communication method by ID
 export const getCommunicationMethodById = async (id: string) => {
   const userData = JSON.parse(localStorage.getItem("user") || "{}");
@@ -84,7 +84,7 @@ export const getCommunicationMethodById = async (id: string) => {
   return response.data;
 };
 
-// Update a communication method (Admin only)
+// Update a Communication Method (Admin only)
 export const updateCommunicationMethodAPI = async (id: string, communicationMethod: { title: string }) => {
   const userData = JSON.parse(localStorage.getItem("user") || "{}");
   const token = userData?.token;

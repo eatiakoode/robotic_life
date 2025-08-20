@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import { getCommunicationMethodTableData, deleteCommunicationMethodAPI } from "../../../api/communicationmethod";
+import { getCommunicationMethodTableData, deleteCommunicationMethodAPI } from "@/api/communicationmethod";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from 'react-toastify';
