@@ -14,48 +14,43 @@ const CreateList = () => {
     const [sensor, setSensor] = useState({ title: "", status: false });
     const [loading, setLoading] = useState(true);
   
-  useEffect(() => {
-    if (!id) return;
+    useEffect(() => {
+      if (!id) return;
 
-    const fetchSensor = async () => {
-      try {
-        const data = await getSensorById(id);
-
-        // Handle both API shapes safely
-        const sensorData = data?.data || data;
-
-        if (sensorData) {
+      const fetchSensor = async () => {
+        try {
+          const data = await getSensorById(id);
           setSensor({
-            title: sensorData.title || "",
-            status: sensorData.status ?? false,
+            title: data.name,
+            status: data.status ?? false,
           });
+        } catch (error) {
+          console.error("Error fetching Sensor:", error);
+        } finally {
+          setLoading(false);
         }
-      } catch (error) {
-        console.error("Error fetching Sensor:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
+      };
 
-    fetchSensor();
-  }, [id]);
+      fetchSensor();
+    }, [id]);
   
     const handleSubmit = async (e) => {
-      e.preventDefault();
-      try {
-        const data = await updateSensorAPI(id, sensor);
-        // alert("Sensor updated successfully!");
-        toast.success(data.message);
-        if(data.status=="success"){
-          setTimeout(() => {
-          router.push("/cmswegrow/my-sensor");
-          }, 1500); 
-        }
-      } catch (error) {
-        alert("Failed to update Sensor.");
-        console.error(error);
-      }
-    };
+  e.preventDefault();
+  try {
+    const payload = { title: sensor.title, status: sensor.status };
+    console.log("Submitting payload:", payload);
+
+    const { message } = await updateSensorAPI(id, payload);
+
+    toast.success(message);
+    setTimeout(() => {
+      router.push("/cmswegrow/my-sensor");
+    }, 1000);
+  } catch (error) {
+    toast.error("Failed to update Sensor.");
+    console.error(error);
+  }
+};
   
     const handleChange = (e) => {
       setSensor((prev) => ({ ...prev, [e.target.name]: e.target.value }));
