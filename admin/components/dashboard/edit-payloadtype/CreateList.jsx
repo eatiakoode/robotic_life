@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
-import { getCountryById, updateCountryAPI } from "@/api/country";
+import { getPayloadTypeById, updatePayloadTypeAPI } from "@/api/payloadtype";
 import { toast } from 'react-toastify';
 
 const CreateList = () => {
@@ -11,49 +11,51 @@ const CreateList = () => {
     const id = params?.id;
   
     const router = useRouter();
-    const [country, setCountry] = useState({ title: "", status: false });
+    const [payloadType, setPayloadType] = useState({ title: "", status: false });
     const [loading, setLoading] = useState(true);
   
     useEffect(() => {
       if (!id) return;
-      
-      const fetchCountry = async () => {
+
+      const fetchPayloadType = async () => {
         try {
-          const data = await getCountryById(id);
-          setCountry({ title: data.data.title, status: data.data.status });
+          const data = await getPayloadTypeById(id);
+           setPayloadType({
+      title: data.name,          // ✅ backend sends "name"
+      status: data.status ?? false, // ✅ handle undefined
+    });
         } catch (error) {
-          console.error("Error fetching Country:", error);
+          console.error("Error fetching Payload Type:", error);
         } finally {
           setLoading(false);
         }
       };
   
-      fetchCountry();
+      fetchPayloadType();
     }, [id]);
   
     const handleSubmit = async (e) => {
-      e.preventDefault();
-      try {
-        const data = await updateCountryAPI(id, country);
-        // alert("Country updated successfully!");
-        toast.success(data.message);
-        if(data.status=="success"){
-          setTimeout(() => {
-          router.push("/cmswegrow/my-country");
-          }, 500);
-        }
-      } catch (error) {
-        alert("Failed to update Country.");
-        console.error(error);
-      }
-    };
+  e.preventDefault();
+  try {
+    const data = await updatePayloadTypeAPI(id, payloadType);
+    toast.success(data.message);
+
+setTimeout(() => {
+      router.push("/cmswegrow/my-payloadtype");
+    }, 1000);
+  } catch (error) {
+    toast.error("Failed to update Payload Type.");
+    console.error(error);
+  }
+};
+
   
     const handleChange = (e) => {
-      setCountry((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+      setPayloadType((prev) => ({ ...prev, [e.target.name]: e.target.value }));
     };
   
     const handleStatusChange = () => {
-      setCountry((prev) => ({ ...prev, status: !prev.status }));
+      setPayloadType((prev) => ({ ...prev, status: !prev.status }));
     };
   
     if (loading) return <p>Loading...</p>;
@@ -62,13 +64,13 @@ const CreateList = () => {
     <form onSubmit={handleSubmit} className="row">
       <div className="col-lg-6 col-xl-6">
         <div className="my_profile_setting_input form-group">
-          <label htmlFor="countryTitle">Country Title</label>
+          <label htmlFor="payloadTypeTitle">Payload Type Title</label>
           <input
         type="text"
         className="form-control"
-        id="countryTitle"
+        id="payloadTypeTitle"
         name="title"
-        value={country.title}
+        value={payloadType.title}
         onChange={handleChange}
       />
         </div>
@@ -82,9 +84,9 @@ const CreateList = () => {
         className="selectpicker form-select"
         data-live-search="true"
         data-width="100%"
-        value={country.status ? "active" : "deactive"}
+        value={payloadType.status ? "active" : "deactive"}
         onChange={(e) =>
-          setCountry((prev) => ({
+          setPayloadType((prev) => ({
             ...prev,
             status: e.target.value === "active",
           }))
@@ -102,7 +104,7 @@ const CreateList = () => {
 
       <div className="col-xl-12">
         <div className="my_profile_setting_input">
-          <button className="btn btn1 float-start" type="button" onClick={() => window.location.href = '/cmswegrow/my-country'}>Back</button>
+          <button className="btn btn1 float-start" type="button" onClick={() => window.location.href = '/cmswegrow/my-payloadtype'}>Back</button>
           <button className="btn btn2 float-end">Submit</button>
         </div>
       </div>

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { addPayLoadTypeAPI } from "@/api/payloadtype";
+import { addPayloadTypeAPI } from "@/api/payloadtype";
 import { useRouter, useParams } from "next/navigation";
 import { toast } from 'react-toastify';
 const CreateList = () => {
@@ -19,36 +19,39 @@ const CreateList = () => {
       }
     };
 
-    const addPayLoadType = async (e) => {
+const addPayloadType = async (e) => {
+  e.preventDefault();
+  setisSubmitting(true);
 
-      e.preventDefault();
-      setisSubmitting(true)
-  
-      if (!title.trim()) {
-        setError("Title is required");
-        return;
-      }
-      // alert("testw")
-      setError("");
-      
-      try {
-        const data = await addPayLoadTypeAPI(title);
+  if (!title.trim()) {
+    setError("Title is required");
+    setisSubmitting(false);
+    return;
+  }
 
-        toast.success(data.message);
-        if(data.status=="success"){
-          setTimeout(() => {
-          router.push("/cmswegrow/my-payloadtype");
-          }, 1500); 
-        }
-  
-        setTitle("");
-      } catch (error) {
-        setError(error.message);
-      }
-    };
+  setError("");
+
+  try {
+  const data = await addPayloadTypeAPI(title);
+
+  // ✅ show toast always when API succeeds
+  toast.success(data.message || "Payload Type created successfully");
+
+  // ✅ redirect after delay
+  setTimeout(() => {
+    router.push("/cmswegrow/my-payloadtype");
+  }, 1200);
+
+  setTitle("");
+} catch (error) {
+  toast.error("Failed to create Payload Type.");
+  setError(error.message);
+}
+};
+
   return (
     <>
-    <form onSubmit={addPayLoadType} className="row">
+    <form onSubmit={addPayloadType} className="row">
       <div className="col-lg-6 col-xl-6">
         <div className="my_profile_setting_input form-group">
           <label htmlFor="payloadTitle">PayLoad Type Title</label>
