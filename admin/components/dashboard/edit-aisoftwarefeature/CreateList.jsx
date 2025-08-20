@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
-import { getSensorById, updateSensorAPI } from "@/api/sensor";
+import { getAISoftwareFeatureById, updateAISoftwareFeatureAPI } from "@/api/aisoftwarefeature";
 import { toast } from 'react-toastify';
 
 const CreateList = () => {
@@ -11,58 +11,58 @@ const CreateList = () => {
     const id = params?.id;
   
     const router = useRouter();
-    const [sensor, setSensor] = useState({ title: "", status: false });
+    const [aiSoftwareFeature, setAISoftwareFeature] = useState({ title: "", status: false });
     const [loading, setLoading] = useState(true);
   
-  useEffect(() => {
-    if (!id) return;
+    useEffect(() => {
+       if (!id) return;
+   
+       const fetchAISoftwareFeatureData = async () => {
+         try {
+           const data = await getAISoftwareFeatureById(id);
 
-    const fetchSensor = async () => {
-      try {
-        const data = await getSensorById(id);
+           // Handle both API shapes safely
+           const aiSoftwareFeatureData = data?.data || data;
 
-        // Handle both API shapes safely
-        const sensorData = data?.data || data;
+           if (aiSoftwareFeatureData) {
+             setAISoftwareFeature({
+               title: aiSoftwareFeatureData.title || "",
+               status: aiSoftwareFeatureData.status ?? false,
+             });
+           }
+         } catch (error) {
+           console.error("Error fetching AI/Software Feature:", error);
+         } finally {
+           setLoading(false);
+         }
+       };
 
-        if (sensorData) {
-          setSensor({
-            title: sensorData.title || "",
-            status: sensorData.status ?? false,
-          });
-        }
-      } catch (error) {
-        console.error("Error fetching Sensor:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchSensor();
-  }, [id]);
+       fetchAISoftwareFeatureData();
+     }, [id]);
   
     const handleSubmit = async (e) => {
       e.preventDefault();
       try {
-        const data = await updateSensorAPI(id, sensor);
-        // alert("Sensor updated successfully!");
+        const data = await updateAISoftwareFeatureAPI(id, aiSoftwareFeature);
+        // alert("AI/Software Feature updated successfully!");
         toast.success(data.message);
         if(data.status=="success"){
           setTimeout(() => {
-          router.push("/cmswegrow/my-sensor");
+          router.push("/cmswegrow/my-aisoftwarefeature");
           }, 1500); 
         }
       } catch (error) {
-        alert("Failed to update Sensor.");
+        alert("Failed to update AISoftwareFeature.");
         console.error(error);
       }
     };
   
     const handleChange = (e) => {
-      setSensor((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+      setAISoftwareFeature((prev) => ({ ...prev, [e.target.name]: e.target.value }));
     };
   
     const handleStatusChange = () => {
-      setSensor((prev) => ({ ...prev, status: !prev.status }));
+      setAISoftwareFeature((prev) => ({ ...prev, status: !prev.status }));
     };
   
     if (loading) return <p>Loading...</p>;
@@ -71,13 +71,13 @@ const CreateList = () => {
     <form onSubmit={handleSubmit} className="row">
       <div className="col-lg-6 col-xl-6">
         <div className="my_profile_setting_input form-group">
-          <label htmlFor="sensorTitle">Sensor Title</label>
+          <label htmlFor="aiSoftwareFeatureTitle">AI/Software Feature Title</label>
           <input
         type="text"
         className="form-control"
-        id="sensorTitle"
+        id="aiSoftwareFeatureTitle"
         name="title"
-        value={sensor.title}
+        value={aiSoftwareFeature.title}
         onChange={handleChange}
       />
         </div>
@@ -91,9 +91,9 @@ const CreateList = () => {
         className="selectpicker form-select"
         data-live-search="true"
         data-width="100%"
-        value={sensor.status ? "active" : "deactive"}
+        value={aiSoftwareFeature.status ? "active" : "deactive"}
         onChange={(e) =>
-          setSensor((prev) => ({
+          setAISoftwareFeature((prev) => ({
             ...prev,
             status: e.target.value === "active",
           }))
@@ -111,7 +111,7 @@ const CreateList = () => {
 
       <div className="col-xl-12">
         <div className="my_profile_setting_input">
-          <button className="btn btn1 float-start" type="button" onClick={() => window.location.href = '/cmswegrow/my-sensor'}>Back</button>
+          <button className="btn btn1 float-start" type="button" onClick={() => window.location.href = '/cmswegrow/my-aisoftwarefeature'}>Back</button>
           <button className="btn btn2 float-end">Submit</button>
         </div>
       </div>
