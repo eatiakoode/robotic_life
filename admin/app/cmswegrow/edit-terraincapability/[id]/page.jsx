@@ -1,4 +1,4 @@
-import EditNavigationTypeClient from "./EditNavigationTypeClient";
+import EditTerrainCapabilityClient from "./EditTerrainCapability";
 
 export const metadata = {
   title: 'Robots || RoboticLife',
@@ -6,5 +6,5 @@ export const metadata = {
 };
 
 export default function Page({ params }) {
-  return <EditNavigationTypeClient id={params.id} />;
+  return <EditTerrainCapabilityClient id={params.id} />;
 }
