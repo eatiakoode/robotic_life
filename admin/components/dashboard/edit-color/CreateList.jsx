@@ -7,6 +7,7 @@ import { toast } from 'react-toastify';
 
 const CreateList = () => {
   const params = useParams();
+
   const id = params?.id;
 
   const router = useRouter();
@@ -19,16 +20,10 @@ const CreateList = () => {
     const fetchColor = async () => {
       try {
         const data = await getColorById(id);
-
-        // Handle both API shapes safely
-        const colorData = data?.data || data;
-
-        if (colorData) {
-          setColor({
-            title: colorData.title || "",
-            status: colorData.status ?? false,
-          });
-        }
+        setColor({
+          title: data.name,         
+          status: data.status ?? false, 
+        });
       } catch (error) {
         console.error("Error fetching Color:", error);
       } finally {
@@ -41,33 +36,29 @@ const CreateList = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-     if (!color.title.trim()) {
-    toast.error("Color name is required");
-    return;
-  }
     try {
-      const data = await updateColorAPI(id, { name: color.title.trim(), status: color.status });
+      const data = await updateColorAPI(id, color);
       toast.success(data.message);
-      if (data.status === "success") {
-        console.log("Redirecting...");
-        setTimeout(() => {
-            console.log("Redirecting...");
-          router.push("/cmswegrow/my-color");
-          router.refresh();
-        }, 500);
-      }
+
+      setTimeout(() => {
+        router.push("/cmswegrow/my-color");
+      }, 1000);
     } catch (error) {
-      alert("Failed to update Color.");
+      toast.error("Failed to update Color.");
       console.error(error);
     }
   };
+
 
   const handleChange = (e) => {
     setColor((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  if (loading) return <p>Loading...</p>;
+  const handleStatusChange = () => {
+    setColor((prev) => ({ ...prev, status: !prev.status }));
+  };
 
+  if (loading) return <p>Loading...</p>;
   return (
     <>
       <form onSubmit={handleSubmit} className="row">
@@ -108,15 +99,12 @@ const CreateList = () => {
         </div>
         {/* End .col */}
 
+
+
+
         <div className="col-xl-12">
           <div className="my_profile_setting_input">
-            <button
-              className="btn btn1 float-start"
-              type="button"
-              onClick={() => window.location.href = '/cmswegrow/my-color'}
-            >
-              Back
-            </button>
+            <button className="btn btn1 float-start" type="button" onClick={() => window.location.href = '/cmswegrow/my-color'}>Back</button>
             <button className="btn btn2 float-end">Submit</button>
           </div>
         </div>

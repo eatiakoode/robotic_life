@@ -7,46 +7,55 @@ import { toast } from 'react-toastify';
 
 const CreateList = () => {
   const params = useParams();
+
   const id = params?.id;
+
   const router = useRouter();
-  const [material, setMaterial] = useState({ name: "", status: false, description: "" });
-  const [title, setTitle] = useState("");
-  const [status, setStatus] = useState("");
+  const [material, setMaterial] = useState({ title: "", status: false });
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+
   useEffect(() => {
     if (!id) return;
+
     const fetchMaterial = async () => {
       try {
         const data = await getMaterialById(id);
-        setTitle(data.name)
-        setStatus(Boolean(data.status))
+        setMaterial({
+          title: data.name,         
+          status: data.status ?? false, 
+        });
       } catch (error) {
         console.error("Error fetching Material:", error);
       } finally {
         setLoading(false);
       }
     };
+
     fetchMaterial();
   }, [id]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const formData = new FormData();
-      formData.append("name", title);
-      formData.append("status", status);
-      const data = await updateMaterialAPI(id, title);
+      const data = await updateMaterialAPI(id, material);
       toast.success(data.message);
-      if (data.status == "success") {
-        setTimeout(() => {
-          router.push("/cmswegrow/my-material");
-        }, 1500);
-      }
+
+      setTimeout(() => {
+        router.push("/cmswegrow/my-material");
+      }, 1000);
     } catch (error) {
-      alert("Failed to update Material.");
+      toast.error("Failed to update Material.");
       console.error(error);
     }
+  };
+
+
+  const handleChange = (e) => {
+    setMaterial((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  };
+
+  const handleStatusChange = () => {
+    setMaterial((prev) => ({ ...prev, status: !prev.status }));
   };
 
   if (loading) return <p>Loading...</p>;
@@ -61,11 +70,12 @@ const CreateList = () => {
               className="form-control"
               id="materialTitle"
               name="title"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
+              value={material.title}
+              onChange={handleChange}
             />
           </div>
         </div>
+        {/* End .col */}
 
         <div className="col-lg-6 col-xl-6">
           <div className="my_profile_setting_input ui_kit_select_search form-group">
@@ -74,14 +84,23 @@ const CreateList = () => {
               className="selectpicker form-select"
               data-live-search="true"
               data-width="100%"
-              value={status ? "active" : "deactive"}
-              onChange={(e) => setStatus(e.target.value === "active")}
+              value={material.status ? "active" : "deactive"}
+              onChange={(e) =>
+                setMaterial((prev) => ({
+                  ...prev,
+                  status: e.target.value === "active",
+                }))
+              }
             >
               <option value="active">Active</option>
               <option value="deactive">Deactive</option>
             </select>
           </div>
         </div>
+        {/* End .col */}
+
+
+
 
         <div className="col-xl-12">
           <div className="my_profile_setting_input">
