@@ -8,7 +8,11 @@ const NavigationTypeSchema = new mongoose.Schema(
       required: true,
       unique: true,
       trim: true
-    }
+    },
+    status: {
+      type: Boolean,
+      default: true,
+    },
   },
   { timestamps: true }
 );

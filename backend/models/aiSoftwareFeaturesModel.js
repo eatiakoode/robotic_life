@@ -7,7 +7,11 @@ const AiSoftwareFeatureSchema = new mongoose.Schema(
       required: [true, "AI/Software Feature name is required"],
       trim: true,
       unique: true
-    }
+    },
+    status: {
+      type: Boolean,
+      default: true,
+    },
   },
   { timestamps: true }
 );
