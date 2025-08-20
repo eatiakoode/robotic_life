@@ -12,7 +12,7 @@ const normalizeAdminBase = (base: string) => {
 const ADMIN_BASE = normalizeAdminBase(process.env.NEXT_PUBLIC_ADMIN_API_URL as string);
 const API_BASE_URL = ADMIN_BASE + "api/navigationtype";
 
-// Add a new power source (Admin only)
+// Add a new navigation type (Admin only)
 export const addNavigationTypeAPI = async (title: string) => {
   const userData = JSON.parse(localStorage.getItem("user") || "{}");
   const token = userData?.token;
@@ -21,19 +21,24 @@ export const addNavigationTypeAPI = async (title: string) => {
     throw new Error("User not authenticated!");
   }
 
-  const response = await axios.post(
-    API_BASE_URL,
-    { title },
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }
-  );
-  return response.data;
+  try {
+    const response = await axios.post(
+      API_BASE_URL,
+      { name: title },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error: any) {
+    const message = error?.response?.data?.message || error.message || "Failed to add navigation type";
+    throw new Error(message);
+  }
 };
 
-// Get all power sources
+// Get all navigation types
 export const getNavigationTypeTableData = async () => {
   try {
     const userData = JSON.parse(localStorage.getItem("user") || "{}");
@@ -48,7 +53,7 @@ export const getNavigationTypeTableData = async () => {
   }
 };
 
-// Delete a power source (Admin only)
+// Delete a navigation type (Admin only)
 export const deleteNavigationTypeAPI = async (id: string) => {
   const userData = JSON.parse(localStorage.getItem("user") || "{}");
   const token = userData?.token;
@@ -57,16 +62,20 @@ export const deleteNavigationTypeAPI = async (id: string) => {
     throw new Error("User not authenticated!");
   }
 
-  const response = await axios.delete(`${API_BASE_URL}/${id}`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-
-  return response.data;
+  try {
+    const response = await axios.delete(`${API_BASE_URL}/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error: any) {
+    const message = error?.response?.data?.message || error.message || "Failed to delete navigation type";
+    throw new Error(message);
+  }
 };
 
-// Get a single power source by ID
+// Get a single navigation type by ID
 export const getNavigationTypeById = async (id: string) => {
   const userData = JSON.parse(localStorage.getItem("user") || "{}");
   const token = userData?.token;
@@ -75,17 +84,21 @@ export const getNavigationTypeById = async (id: string) => {
     throw new Error("User not authenticated!");
   }
 
-  const response = await axios.get(`${API_BASE_URL}/${id}`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-
-  return response.data;
+  try {
+    const response = await axios.get(`${API_BASE_URL}/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error: any) {
+    const message = error?.response?.data?.message || error.message || "Failed to fetch navigation type";
+    throw new Error(message);
+  }
 };
 
-// Update a power source (Admin only)
-export const updateNavigationTypeAPI = async (id: string, navigationType: { title: string }) => {
+// Update a navigation type (Admin only)
+export const updateNavigationTypeAPI = async (id: string, name: string) => {
   const userData = JSON.parse(localStorage.getItem("user") || "{}");
   const token = userData?.token;
 
@@ -93,15 +106,23 @@ export const updateNavigationTypeAPI = async (id: string, navigationType: { titl
     throw new Error("User not authenticated!");
   }
 
-  const response = await axios.put(
-    `${API_BASE_URL}/${id}`,
-    navigationType,
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }
-  );
-
-  return response.data;
+  try {
+    const response = await axios.put(
+      `${API_BASE_URL}/${id}`,
+      { name },  // ✅ ensure it's always { name: value }
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error: any) {
+    const message =
+      error?.response?.data?.message ||
+      error.message ||
+      "Failed to update navigation type";
+    throw new Error(message);
+  }
 };
+
