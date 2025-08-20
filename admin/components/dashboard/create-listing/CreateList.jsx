@@ -16,7 +16,7 @@ import { getAISoftwareFeatureTableData } from "../../../api/aisoftwarefeature";
 import { getPrimaryFunctionTableData } from "../../../api/primaryfunction";
 import { getOperatingEnvironmentTableData } from "../../../api/operatingenvironment";
 import { getAutonomyLevelTableData } from "../../../api/autonomylevel";
-import { getPayLoadTypeTableData } from "../../../api/payloadtype";
+import { getPayloadTypeTableData } from "../../../api/payloadtype";
 import { getTerrainCapabilityTableData } from "../../../api/terrain";
 import { getCommunicationMethodTableData } from "../../../api/communicationmethod";
 import { getStateByCountryTableData } from "../../../api/state";
@@ -193,7 +193,7 @@ const CreateList = () => {
           getPrimaryFunctionTableData(),
           getOperatingEnvironmentTableData(),
           getAutonomyLevelTableData(),
-          getPayLoadTypeTableData(),
+          getPayloadTypeTableData(),
           getTerrainCapabilityTableData(),
           getCommunicationMethodTableData(),
         ]);
