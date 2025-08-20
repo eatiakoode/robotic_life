@@ -34,7 +34,7 @@ const getOperatingEnvironment = asyncHandler(async (req, res) => {
 const updateOperatingEnvironment = asyncHandler(async (req, res) => {
   const environment = await OperatingEnvironment.findByIdAndUpdate(
     req.params.id,
-    { name: req.body.name },
+    { name: req.body.name, status: req.body.status },
     { new: true }
   );
   if (!environment) {

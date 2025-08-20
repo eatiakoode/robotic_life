@@ -40,7 +40,11 @@ const getNavigationType = asyncHandler(async (req, res) => {
 // Update Navigation Type
 const updateNavigationType = asyncHandler(async (req, res) => {
   const { name } = req.body;
-  const navigationType = await NavigationType.findById(req.params.id);
+  const navigationType = await NavigationType.findByIdAndUpdate(
+    req.params.id,
+    { name: req.body.name, status: req.body.status },
+    { new: true }
+  );
 
   if (!navigationType) {
     return res.status(404).json({ message: "Navigation type not found" });
