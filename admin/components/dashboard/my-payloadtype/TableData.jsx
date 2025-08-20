@@ -1,6 +1,6 @@
 "use client"; // Add this at the top
 import Image from "next/image";
-import { getPayloadTypeTableData,deletePayloadTypeAPI } from "../../../api/payloadtype";
+import { getPayLoadTypeTableData as getPayloadTypeTableData, deletePayLoadTypeAPI as deletePayloadTypeAPI } from "../../../api/payloadtype";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from 'react-toastify';
@@ -74,7 +74,7 @@ const TableData = () => {
             data-placement="top"
             title="Edit"
           >
-            <button  onClick={() => router.push(`/cmswegrow/edit-country/${item._id}`)}>
+            <button  onClick={() => router.push(`/cmswegrow/edit-payloadtype/${item._id}`)}>
               <span className="flaticon-edit"></span>
             </button>
           </li>

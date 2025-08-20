@@ -14,7 +14,7 @@ const SidebarMenu = () => {
 
   const myRobots = [
     { id: 1, name: "Add Robot", route: "/cmswegrow/create-listing" },
-    { id: 2, name: "Robot List", route: "/cmswegrow/my-properties" },
+    { id: 2, name: "Robot List", route: "/cmswegrow/my-robot" },
   ];
   const RoboCategory = [
     { id: 1, name: "Add Category", route: "/cmswegrow/add-category" },

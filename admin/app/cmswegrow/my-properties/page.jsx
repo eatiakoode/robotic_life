@@ -1,6 +1,6 @@
 import dynamic from "next/dynamic";
 import MyProperties from "@/components/dashboard/my-properties";
-import { getPropertyTableData } from "@/api/property";
+import { getPropertyTableData } from "@/api/robot";
 
 export const metadata = {
   title: 'My Properties || WeGrow - Real Estate ',

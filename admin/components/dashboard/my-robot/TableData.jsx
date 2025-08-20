@@ -2,7 +2,7 @@
 
 "use client"; // Add this at the top
 import Image from "next/image";
-// import { deletePropertyAPI } from "@/api/property";
+import { deleteRobotAPI } from "@/api/robot";
 import { useRouter } from "next/navigation";
 import { toast } from 'react-toastify';
 
@@ -12,11 +12,11 @@ const TableData = ({properties,setProperties}) => {
     
       
       const deleteProperty = async (id) => {
-          const isConfirmed = window.confirm("Are you sure you want to delete this property?");
+          const isConfirmed = window.confirm("Are you sure you want to delete this robot?");
           if (!isConfirmed) return;
       
           try {
-            const data = await deletePropertyAPI(id); // 🔹 Call the API function
+            const data = await deleteRobotAPI(id); // 🔹 Call the API function
             toast.success(data.message);
             // alert(data.message);
             setProperties((properties) => properties.filter((property) => property._id !== id));
@@ -24,7 +24,7 @@ const TableData = ({properties,setProperties}) => {
             
             return false
           } catch (error) {
-            alert("Failed to delete Property.");
+            alert("Failed to delete Robot.");
             //setError(error.message); // ❌ Show error if request fails
           }
         };
@@ -45,17 +45,17 @@ const TableData = ({properties,setProperties}) => {
               height={220}
               className="img-whp cover"
               src={
-                item.featuredimageurl
-                 ? `${process.env.NEXT_PUBLIC_API_URL}${item.featuredimageurl.url?item.featuredimageurl.url:item.featuredimageurl}`
+                item.Image
+                 ? `${process.env.NEXT_PUBLIC_API_URL}${item.Image?.url?item.Image?.url:item.Image}`
                   : `${process.env.NEXT_PUBLIC_API_URL}public/assets/images/thumbnail.webp`
               }
-              alt= {`${item.featuredimageurl?.name?item.featuredimageurl?.name:item.title}`}
+              alt= {item.title}
               unoptimized // Optional: disables Next.js image optimization (useful if external images)
             />
             <div className="thmb_cntnt">
               <ul className="tag mb0">
                 <li className="list-inline-item">
-                  <a href="#">{item.categoryid.title}</a>
+                  <a href="#">{item.category?.title || item.categoryid?.title}</a>
                 </li>
               </ul>
             </div>
@@ -63,12 +63,14 @@ const TableData = ({properties,setProperties}) => {
           <div className="details">
             <div className="tc_content">
               <h4>{item.title}</h4>
-              <p>
-                <span className="flaticon-placeholder"></span>
-                 {item.address}, {item.locationid?.title}, {item.cityid?.title}
-              </p>
+              {item.manufacturer?.title || item.countryOfOrigin?.title ? (
+                <p>
+                  <span className="flaticon-placeholder"></span>
+                  {item.manufacturer?.title || item.countryOfOrigin?.title}
+                </p>
+              ) : null}
               <a className="fp_price text-thm" href="#">
-                ${item.price}
+                ${item.totalPrice || item.price}
                 {/* <small>/mo</small> */}
               </a>
             </div>
@@ -102,7 +104,7 @@ const TableData = ({properties,setProperties}) => {
             data-placement="top"
             title="Edit"
           >
-            <button  onClick={() => router.push(`/cmswegrow/edit-property/${item._id}`)}>
+            <button  onClick={() => router.push(`/cmswegrow/edit-robot/${item._id}`)}>
               <span className="flaticon-edit"></span>
             </button>
           </li>

@@ -7,7 +7,7 @@ import Filtering from "./Filtering";
 import Pagination from "./Pagination";
 import SearchBox from "./SearchBox";
 import CopyRight from "../../common/footer/CopyRight";
-import { getPropertyTableData } from "@/api/property";
+import { getRobotTableData } from "@/api/robot";
 
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation"; 
@@ -30,7 +30,7 @@ const index = ({ properties:initialProperties, totalCount:initialCount,filter :i
       "limit":pageSize,
       "page":currentPage
     };
-     const data = await getPropertyTableData(filter);
+     const data = await getRobotTableData(filter);
         setProperties(data.items);
           // setLoaderProperty(false)
           // setPropertyList(data.items)
@@ -86,8 +86,8 @@ const index = ({ properties:initialProperties, totalCount:initialCount,filter :i
 
                 <div className="col-lg-4 col-xl-4 mb10">
                   <div className="breadcrumb_content style2 mb30-991">
-                    <h2 className="breadcrumb_title">All Properties</h2>
-                    <p>View, filter, and manage all property listings available on your platform.</p>
+                    <h2 className="breadcrumb_title">All Robots</h2>
+                    <p>View, filter, and manage all robot listings available on your platform.</p>
                   </div>
                 </div>
                 {/* End .col */}

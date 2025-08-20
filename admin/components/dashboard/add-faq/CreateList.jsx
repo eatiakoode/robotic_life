@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { addFaqAPI } from "@/api/faq";
-import { getPropertyTableData } from "@/api/property";
+import { getPropertyTableData } from "@/api/robot";
 import { toast } from 'react-toastify';
 const CreateList = () => {
   const router = useRouter();

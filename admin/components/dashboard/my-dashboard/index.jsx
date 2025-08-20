@@ -6,7 +6,7 @@ import AllStatistics from "./AllStatistics";
 import StatisticsChart from "./StatisticsChart";
 import CopyRight from "../../common/footer/CopyRight";
 
-const index = ({properties,enqueryProperty,enqueryLanding,enquery}) => {
+const index = ({robot,enqueryProperty,enqueryLanding,enquery}) => {
   return ( 
     <>
       {/* <!-- Main Header Nav --> */}
@@ -60,7 +60,7 @@ const index = ({properties,enqueryProperty,enqueryLanding,enquery}) => {
               {/* End .row */}
 
               <div className="row">
-                <AllStatistics properties={properties} enqueryProperty={enqueryProperty} enqueryLanding={enqueryLanding} enquery={enquery}/>
+                <AllStatistics robot={robot} enqueryProperty={enqueryProperty} enqueryLanding={enqueryLanding} enquery={enquery}/>
               </div>
               {/* End .row Dashboard top statistics */}
 
