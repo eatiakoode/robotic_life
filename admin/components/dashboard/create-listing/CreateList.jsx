@@ -200,19 +200,47 @@ const CreateList = () => {
 
         setCountries(countryRes || []);
         setCategories(Array.isArray(parentCats) ? parentCats : []);
-        setManufacturers(Array.isArray(manufacturerRes?.items) ? manufacturerRes.items : Array.isArray(manufacturerRes) ? manufacturerRes : []);
+        setManufacturers(
+          Array.isArray(manufacturerRes?.items)
+            ? manufacturerRes.items
+            : Array.isArray(manufacturerRes)
+            ? manufacturerRes
+            : []
+        );
         setPower(Array.isArray(powerRes) ? powerRes : powerRes?.data || []);
         setColors(Array.isArray(colorRes) ? colorRes : colorRes?.data || []);
-        setMaterials(Array.isArray(materialRes) ? materialRes : materialRes?.data || []);
-        setNavigationType(Array.isArray(navTypeRes) ? navTypeRes : navTypeRes?.data || []);
-        setSensors(Array.isArray(sensorRes) ? sensorRes : sensorRes?.data || []);
+        setMaterials(
+          Array.isArray(materialRes) ? materialRes : materialRes?.data || []
+        );
+        setNavigationType(
+          Array.isArray(navTypeRes) ? navTypeRes : navTypeRes?.data || []
+        );
+        setSensors(
+          Array.isArray(sensorRes) ? sensorRes : sensorRes?.data || []
+        );
         setAISoftwareFeatures(Array.isArray(aiRes) ? aiRes : aiRes?.data || []);
-        setPrimaryFunction(Array.isArray(primaryFuncRes) ? primaryFuncRes : primaryFuncRes?.data || []);
-        setOperatingEnvironment(Array.isArray(opEnvRes) ? opEnvRes : opEnvRes?.data || []);
-        setAutonomyLevel(Array.isArray(autonomyRes) ? autonomyRes : autonomyRes?.data || []);
-        setPayloadTypes(Array.isArray(payloadRes) ? payloadRes : payloadRes?.data || []);
-        setTerrainCapabilities(Array.isArray(terrainRes) ? terrainRes : terrainRes?.data || []);
-        setCommunicationMethods(Array.isArray(commMethodRes) ? commMethodRes : commMethodRes?.data || []);
+        setPrimaryFunction(
+          Array.isArray(primaryFuncRes)
+            ? primaryFuncRes
+            : primaryFuncRes?.data || []
+        );
+        setOperatingEnvironment(
+          Array.isArray(opEnvRes) ? opEnvRes : opEnvRes?.data || []
+        );
+        setAutonomyLevel(
+          Array.isArray(autonomyRes) ? autonomyRes : autonomyRes?.data || []
+        );
+        setPayloadTypes(
+          Array.isArray(payloadRes) ? payloadRes : payloadRes?.data || []
+        );
+        setTerrainCapabilities(
+          Array.isArray(terrainRes) ? terrainRes : terrainRes?.data || []
+        );
+        setCommunicationMethods(
+          Array.isArray(commMethodRes)
+            ? commMethodRes
+            : commMethodRes?.data || []
+        );
       } catch (err) {
         console.error("Error loading initial data:", err);
       }
@@ -408,10 +436,26 @@ const CreateList = () => {
       { key: "speed", value: speed, name: "Speed" },
       { key: "accuracy", value: accuracy, name: "Accuracy" },
       { key: "selectedPower", value: selectedPower, name: "Power Source" },
-      { key: "videoembedcode", value: videoembedcode, name: "Video Embed Code" },
-      { key: "selectedPrimaryFunction", value: selectedPrimaryFunction, name: "Primary Function" },
-      { key: "selectedOperatingEnvironment", value: selectedOperatingEnvironment, name: "Operating Environment" },
-      { key: "selectedAutonomyLevel", value: selectedAutonomyLevel, name: "Autonomy Level" },
+      {
+        key: "videoembedcode",
+        value: videoembedcode,
+        name: "Video Embed Code",
+      },
+      {
+        key: "selectedPrimaryFunction",
+        value: selectedPrimaryFunction,
+        name: "Primary Function",
+      },
+      {
+        key: "selectedOperatingEnvironment",
+        value: selectedOperatingEnvironment,
+        name: "Operating Environment",
+      },
+      {
+        key: "selectedAutonomyLevel",
+        value: selectedAutonomyLevel,
+        name: "Autonomy Level",
+      },
       {
         key: "colors",
         value: selectedColors.length > 0 ? selectedColors : null,
@@ -424,7 +468,8 @@ const CreateList = () => {
       },
       {
         key: "navigationTypes",
-        value: selectedNavigationType.length > 0 ? selectedNavigationType : null,
+        value:
+          selectedNavigationType.length > 0 ? selectedNavigationType : null,
         name: "Navigation Types",
       },
       {
@@ -434,17 +479,26 @@ const CreateList = () => {
       },
       {
         key: "aiSoftwareFeatures",
-        value: selectedAISoftwareFeature.length > 0 ? selectedAISoftwareFeature : null,
+        value:
+          selectedAISoftwareFeature.length > 0
+            ? selectedAISoftwareFeature
+            : null,
         name: "AI Software Features",
       },
       {
         key: "terrainCapability",
-        value: selectedTerrainCapability.length > 0 ? selectedTerrainCapability : null,
+        value:
+          selectedTerrainCapability.length > 0
+            ? selectedTerrainCapability
+            : null,
         name: "Terrain Capability",
       },
       {
         key: "communicationMethod",
-        value: selectedCommunicationMethod.length > 0 ? selectedCommunicationMethod : null,
+        value:
+          selectedCommunicationMethod.length > 0
+            ? selectedCommunicationMethod
+            : null,
         name: "Communication Method",
       },
       {
@@ -528,29 +582,46 @@ const CreateList = () => {
       selectedMaterials.forEach((material) =>
         formData.append("material[]", material)
       );
-      selectedNavigationType.forEach((nav) => formData.append("navigationType[]", nav));
+      selectedNavigationType.forEach((nav) =>
+        formData.append("navigationType[]", nav)
+      );
       selectedSensor.forEach((s) => formData.append("sensors[]", s));
-      selectedAISoftwareFeature.forEach((a) => formData.append("aiSoftwareFeatures[]", a));
-      selectedTerrainCapability.forEach((t) => formData.append("terrainCapability[]", t));
-      selectedCommunicationMethod.forEach((c) => formData.append("communicationMethod[]", c));
-      selectedPayloadType.forEach((p) => formData.append("payloadTypesSupported[]", p));
+      selectedAISoftwareFeature.forEach((a) =>
+        formData.append("aiSoftwareFeatures[]", a)
+      );
+      selectedTerrainCapability.forEach((t) =>
+        formData.append("terrainCapability[]", t)
+      );
+      selectedCommunicationMethod.forEach((c) =>
+        formData.append("communicationMethod[]", c)
+      );
+      selectedPayloadType.forEach((p) =>
+        formData.append("payloadTypesSupported[]", p)
+      );
 
       // Append nested unit/value fields to match backend schema
       if (length) formData.append("dimensions.length.value", String(length));
-      if (lengthUnit) formData.append("dimensions.length.unit", String(lengthUnit));
+      if (lengthUnit)
+        formData.append("dimensions.length.unit", String(lengthUnit));
       if (width) formData.append("dimensions.width.value", String(width));
-      if (widthUnit) formData.append("dimensions.width.unit", String(widthUnit));
+      if (widthUnit)
+        formData.append("dimensions.width.unit", String(widthUnit));
       if (height) formData.append("dimensions.height.value", String(height));
-      if (heightUnit) formData.append("dimensions.height.unit", String(heightUnit));
+      if (heightUnit)
+        formData.append("dimensions.height.unit", String(heightUnit));
 
       if (weight) formData.append("weight.value", String(weight));
       if (weightUnit) formData.append("weight.unit", String(weightUnit));
 
-      if (batteryCapacity) formData.append("batteryCapacity.value", String(batteryCapacity));
-      if (batteryCapacityUnit) formData.append("batteryCapacity.unit", String(batteryCapacityUnit));
+      if (batteryCapacity)
+        formData.append("batteryCapacity.value", String(batteryCapacity));
+      if (batteryCapacityUnit)
+        formData.append("batteryCapacity.unit", String(batteryCapacityUnit));
 
-      if (loadCapacity) formData.append("loadCapacity.value", String(loadCapacity));
-      if (loadCapacityUnit) formData.append("loadCapacity.unit", String(loadCapacityUnit));
+      if (loadCapacity)
+        formData.append("loadCapacity.value", String(loadCapacity));
+      if (loadCapacityUnit)
+        formData.append("loadCapacity.unit", String(loadCapacityUnit));
 
       if (runtime) formData.append("runtime.value", String(runtime));
       if (runtimeUnit) formData.append("runtime.unit", String(runtimeUnit));
@@ -565,11 +636,20 @@ const CreateList = () => {
       if (rangeUnit) formData.append("range.unit", String(rangeUnit));
 
       if (operatingTemperatureMin)
-        formData.append("operatingTemperature.min", String(operatingTemperatureMin));
+        formData.append(
+          "operatingTemperature.min",
+          String(operatingTemperatureMin)
+        );
       if (operatingTemperatureMax)
-        formData.append("operatingTemperature.max", String(operatingTemperatureMax));
+        formData.append(
+          "operatingTemperature.max",
+          String(operatingTemperatureMax)
+        );
       if (operatingTemperatureUnit)
-        formData.append("operatingTemperature.unit", String(operatingTemperatureUnit));
+        formData.append(
+          "operatingTemperature.unit",
+          String(operatingTemperatureUnit)
+        );
 
       // Append images
       propertySelectedImgs.forEach((file) => {
@@ -1373,37 +1453,86 @@ const CreateList = () => {
                   <div className="col-lg-6 col-xl-6">
                     <div className="my_profile_setting_input ui_kit_select_search form-group">
                       <label htmlFor="colorSelect">Color</label>
-                      <select
-                        id="colorSelect"
-                        className="selectpicker form-select"
-                        value={
-                          selectedColors.length
-                            ? selectedColors
-                            : ["placeholder"]
-                        }
-                        onChange={handleColorChange}
-                        data-live-search="true"
-                        data-width="100%"
-                        multiple
-                        style={{
-                          display: "flex",
-                          alignItems: "center", // ✅ aligns text vertically
-                          height: "45px",
-                        }}
-                      >
-                        <option
+
+                      <div className="position-relative">
+                        <select
+                          id="colorSelect"
+                          className="selectpicker form-select color-select"
                           value="placeholder"
-                          disabled
-                          hidden={selectedColors.length > 0} // hide placeholder when something is selected
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            if (
+                              value !== "placeholder" &&
+                              !selectedColors.includes(value)
+                            ) {
+                              setSelectedColors([...selectedColors, value]);
+                            }
+                            e.target.blur(); // close dropdown after select
+                          }}
+                          data-live-search="true"
+                          data-width="100%"
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            height: "45px",
+                          }}
                         >
-                          -- Select Colors --
-                        </option>
-                        {colors.map((color) => (
-                          <option key={color._id} value={color._id}>
-                            {color.name}
+                          <option value="placeholder" disabled>
+                            &nbsp;
                           </option>
-                        ))}
-                      </select>
+                          {colors.map((color) => (
+                            <option key={color._id} value={color._id}>
+                              {color.name}
+                            </option>
+                          ))}
+                        </select>
+
+                        {/* Overlay UI */}
+                        <div
+                          className="form-control position-absolute top-0 start-0 h-100 w-100 d-flex align-items-center px-3 pe-5 flex-wrap"
+                          style={{
+                            background: "transparent",
+                            pointerEvents: "none",
+                            gap: "0.25rem",
+                            overflow: "hidden",
+                          }}
+                        >
+                          {selectedColors.length === 0 ? (
+                            <span className="text-muted">
+                              -- Select Colors --
+                            </span>
+                          ) : (
+                            colors
+                              .filter((c) => selectedColors.includes(c._id))
+                              .map((c) => (
+                                <span
+                                  key={c._id}
+                                  className="badge bg-light text-dark border d-flex align-items-center"
+                                  style={{
+                                    pointerEvents: "auto",
+                                    whiteSpace: "nowrap",
+                                  }}
+                                >
+                                  {c.name}
+                                  <button
+                                    type="button"
+                                    className="btn-close btn-sm ms-1"
+                                    aria-label="Remove"
+                                    style={{ fontSize: "0.65rem" }}
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      setSelectedColors(
+                                        selectedColors.filter(
+                                          (id) => id !== c._id
+                                        )
+                                      );
+                                    }}
+                                  />
+                                </span>
+                              ))
+                          )}
+                        </div>
+                      </div>
                     </div>
                   </div>
                   {/* Color ends */}
@@ -1692,10 +1821,7 @@ const CreateList = () => {
                       -- Select Payload Type --
                     </option>
                     {payloadTypes.map((payloadType) => (
-                      <option
-                        key={payloadType._id}
-                        value={payloadType._id}
-                      >
+                      <option key={payloadType._id} value={payloadType._id}>
                         {payloadType.name || payloadType.title}
                       </option>
                     ))}
@@ -1809,10 +1935,10 @@ const CreateList = () => {
                     style={
                       featuredimage !== null
                         ? {
-                          backgroundImage: `url(${URL.createObjectURL(
-                            featuredimage
-                          )})`,
-                        }
+                            backgroundImage: `url(${URL.createObjectURL(
+                              featuredimage
+                            )})`,
+                          }
                         : undefined
                     }
                     htmlFor="featuredimage"
@@ -1829,29 +1955,29 @@ const CreateList = () => {
                 <ul className="mb-0">
                   {propertySelectedImgs.length > 0
                     ? propertySelectedImgs?.map((item, index) => (
-                      <li key={index} className="list-inline-item">
-                        <div className="portfolio_item">
-                          <Image
-                            width={200}
-                            height={200}
-                            className="img-fluid cover"
-                            src={URL.createObjectURL(item)}
-                            alt="fp1.jpg"
-                          />
-                          <div
-                            className="edu_stats_list"
-                            data-bs-toggle="tooltip"
-                            data-bs-placement="top"
-                            title="Delete"
-                            data-original-title="Delete"
-                          >
-                            <a onClick={() => deleteImage(item.name)}>
-                              <span className="flaticon-garbage"></span>
-                            </a>
+                        <li key={index} className="list-inline-item">
+                          <div className="portfolio_item">
+                            <Image
+                              width={200}
+                              height={200}
+                              className="img-fluid cover"
+                              src={URL.createObjectURL(item)}
+                              alt="fp1.jpg"
+                            />
+                            <div
+                              className="edu_stats_list"
+                              data-bs-toggle="tooltip"
+                              data-bs-placement="top"
+                              title="Delete"
+                              data-original-title="Delete"
+                            >
+                              <a onClick={() => deleteImage(item.name)}>
+                                <span className="flaticon-garbage"></span>
+                              </a>
+                            </div>
                           </div>
-                        </div>
-                      </li>
-                    ))
+                        </li>
+                      ))
                     : undefined}
                   {/* End li */}
                 </ul>
