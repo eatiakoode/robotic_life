@@ -12,7 +12,7 @@ const normalizeAdminBase = (base: string) => {
 const ADMIN_BASE = normalizeAdminBase(process.env.NEXT_PUBLIC_ADMIN_API_URL as string);
 const API_BASE_URL = ADMIN_BASE + "api/primaryfunction";
 
-// Add a new power source (Admin only)
+// Add a new primary function (Admin only)
 export const addPrimaryFunctionAPI = async (title: string) => {
   const userData = JSON.parse(localStorage.getItem("user") || "{}");
   const token = userData?.token;
@@ -21,19 +21,24 @@ export const addPrimaryFunctionAPI = async (title: string) => {
     throw new Error("User not authenticated!");
   }
 
-  const response = await axios.post(
-    API_BASE_URL,
-    { title },
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }
-  );
-  return response.data;
+  try {
+    const response = await axios.post(
+      API_BASE_URL,
+      { name: title },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error: any) {
+    const message = error?.response?.data?.message || error.message || "Failed to add primary function";
+    throw new Error(message);
+  }
 };
 
-// Get all power sources
+// Get all primary functions
 export const getPrimaryFunctionTableData = async () => {
   try {
     const userData = JSON.parse(localStorage.getItem("user") || "{}");
@@ -48,7 +53,7 @@ export const getPrimaryFunctionTableData = async () => {
   }
 };
 
-// Delete a power source (Admin only)
+// Delete a primary function (Admin only)
 export const deletePrimaryFunctionAPI = async (id: string) => {
   const userData = JSON.parse(localStorage.getItem("user") || "{}");
   const token = userData?.token;
@@ -57,16 +62,20 @@ export const deletePrimaryFunctionAPI = async (id: string) => {
     throw new Error("User not authenticated!");
   }
 
-  const response = await axios.delete(`${API_BASE_URL}/${id}`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-
-  return response.data;
+  try {
+    const response = await axios.delete(`${API_BASE_URL}/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error: any) {
+    const message = error?.response?.data?.message || error.message || "Failed to delete primary function";
+    throw new Error(message);
+  }
 };
 
-// Get a single power source by ID
+// Get a single primary function by ID
 export const getPrimaryFunctionById = async (id: string) => {
   const userData = JSON.parse(localStorage.getItem("user") || "{}");
   const token = userData?.token;
@@ -75,17 +84,21 @@ export const getPrimaryFunctionById = async (id: string) => {
     throw new Error("User not authenticated!");
   }
 
-  const response = await axios.get(`${API_BASE_URL}/${id}`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-
-  return response.data;
+  try {
+    const response = await axios.get(`${API_BASE_URL}/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error: any) {
+    const message = error?.response?.data?.message || error.message || "Failed to fetch primary function";
+    throw new Error(message);
+  }
 };
 
-// Update a power source (Admin only)
-export const updatePrimaryFunctionAPI = async (id: string, primaryFunction: { title: string }) => {
+// Update a primary function (Admin only)
+export const updatePrimaryFunctionAPI = async (id: string, name: string) => {
   const userData = JSON.parse(localStorage.getItem("user") || "{}");
   const token = userData?.token;
 
@@ -93,15 +106,23 @@ export const updatePrimaryFunctionAPI = async (id: string, primaryFunction: { ti
     throw new Error("User not authenticated!");
   }
 
-  const response = await axios.put(
-    `${API_BASE_URL}/${id}`,
-    primaryFunction,
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }
-  );
-
-  return response.data;
+  try {
+    const response = await axios.put(
+      `${API_BASE_URL}/${id}`,
+      { name },  // ✅ ensure it's always { name: value }
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error: any) {
+    const message =
+      error?.response?.data?.message ||
+      error.message ||
+      "Failed to update primary function";
+    throw new Error(message);
+  }
 };
+
