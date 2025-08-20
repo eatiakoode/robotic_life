@@ -36,6 +36,7 @@ const updateAutonomyLevel = asyncHandler(async (req, res) => {
   const level = await AutonomyLevel.findByIdAndUpdate(
     req.params.id,
     { name: req.body.name },
+    { status: req.body.status },
     { new: true }
   );
   if (!level) {

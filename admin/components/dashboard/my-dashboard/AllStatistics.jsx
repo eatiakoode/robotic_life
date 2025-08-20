@@ -1,39 +1,49 @@
-const AllStatistics = ({robot,enqueryProperty,enqueryLanding,enquery}) => {
+"use client";
+
+const AllStatistics = ({
+  robot = [],
+  manufacturer = [],
+  materials = [],
+  enquery = [],
+}) => {
   const allStatistics = [
     {
       id: 1,
       blockStyle: "",
       icon: "flaticon-home",
       timer: robot.length,
-      name: "All Properties",
+      name: "Total Robots",
     },
-    // {
-    //   id: 2,
-    //   blockStyle: "style2",
-    //   icon: "flaticon-view",
-    //   timer: enqueryProperty.length,
-    //   name: "Total Property Page Enquiry",
-    // },
-    // {
-    //   id: 3,
-    //   blockStyle: "style3",
-    //   icon: "flaticon-chat",
-    //   timer: enqueryLanding.length,
-    //   name: "Total Landing Page Enquiry",
-    // },
-    // {
-    //   id: 4,
-    //   blockStyle: "style4",
-    //   icon: "flaticon-heart",
-    //   timer: enquery.length,
-    //   name: "Total Contact Us Enquiry",
-    // },
+    {
+      id: 2,
+      blockStyle: "style2",
+      icon: "flaticon-industry", // you can change this to a better manufacturer icon
+      timer: manufacturer.length,
+      name: "Total Manufacturers",
+    },
+    {
+      id: 3,
+      blockStyle: "style3",
+      icon: "flaticon-layers", // for materials
+      timer: materials.length,
+      name: "Total Materials",
+    },
+    {
+      id: 4,
+      blockStyle: "style4",
+      icon: "flaticon-chat", // for enquiries
+      timer: enquery.length,
+      name: "Total Enquiries",
+    },
   ];
 
   return (
     <>
       {allStatistics.map((item) => (
-        <div className="col-sm-6 col-md-6 col-lg-6 col-xl-3" key={item.id}>
+        <div
+          className="col-sm-6 col-md-6 col-lg-6 col-xl-3"
+          key={item.id}
+        >
           <div className={`ff_one ${item.blockStyle}`}>
             <div className="detais">
               <div className="timer">{item.timer}</div>

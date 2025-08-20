@@ -32,7 +32,7 @@ const getSensor = asyncHandler(async (req, res) => {
 const updateSensor = asyncHandler(async (req, res) => {
   const sensor = await Sensor.findByIdAndUpdate(
     req.params.id,
-    { name: req.body.name },
+    { name: req.body.name, status: req.body.status },
     { new: true }
   );
   if (!sensor) {

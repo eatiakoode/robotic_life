@@ -92,7 +92,7 @@ export const updatePayloadTypeAPI = async (id: string, payloadType: { title: str
   const response = await axios.put(
     `${API_BASE_URL}/${id}`,
     {
-      name: payloadType.title, // ✅ backend expects "name"
+      name: payloadType.title, 
       status: payloadType.status,
     },
     {

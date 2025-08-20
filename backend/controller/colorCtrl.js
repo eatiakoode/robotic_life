@@ -39,6 +39,7 @@ const updateColor = asyncHandler(async (req, res) => {
   const updatedColor = await Color.findByIdAndUpdate(
     req.params.id,
     { name: name.trim() },
+    { status: req.body.status },
     { new: true, runValidators: true }
   );
   if (!updatedColor) {
