@@ -53,13 +53,13 @@ const SidebarMenu = () => {
     },
     {
       id: 15,
-      name: "Add AI Software",
-      route: "/cmswegrow/add-aisoftware",
+      name: "Add AI/Software Feature",
+      route: "/cmswegrow/add-aisoftwarefeature",
     },
     {
       id: 16,
-      name: "AI Software List",
-      route: "/cmswegrow/my-aisoftware",
+      name: "AI/Software Feature List",
+      route: "/cmswegrow/my-aisoftwarefeature",
     },
     {
       id: 17,

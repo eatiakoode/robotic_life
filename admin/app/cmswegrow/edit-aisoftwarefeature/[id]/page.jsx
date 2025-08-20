@@ -1,4 +1,4 @@
-import EditAISoftwareClient from "./EditAISoftwareClient";
+import EditAISoftwareFeatureClient from "./EditAISoftwareFeatureClient";
 
 export const metadata = {
   title: 'Robots || RoboticLife',
@@ -6,5 +6,5 @@ export const metadata = {
 };
 
 export default function Page({ params }) {
-  return <EditAISoftwareClient id={params.id} />;
+  return <EditAISoftwareFeatureClient id={params.id} />;
 }

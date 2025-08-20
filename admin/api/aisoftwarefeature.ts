@@ -12,7 +12,7 @@ const normalizeAdminBase = (base: string) => {
 const ADMIN_BASE = normalizeAdminBase(process.env.NEXT_PUBLIC_ADMIN_API_URL as string);
 const API_BASE_URL = ADMIN_BASE + "api/aisoftwarefeatures";
 
-// Add a new AI software feature (Admin only)
+// Add a new AI/Software feature (Admin only)
 export const addAISoftwareFeatureAPI = async (title: string) => {
   const userData = JSON.parse(localStorage.getItem("user") || "{}");
   const token = userData?.token;
@@ -21,19 +21,24 @@ export const addAISoftwareFeatureAPI = async (title: string) => {
     throw new Error("User not authenticated!");
   }
 
-  const response = await axios.post(
-    API_BASE_URL,
-    { title },
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }
-  );
-  return response.data;
+  try {
+    const response = await axios.post(
+      API_BASE_URL,
+      { name: title },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error: any) {
+    const message = error?.response?.data?.message || error.message || "Failed to add AI/Software feature";
+    throw new Error(message);
+  }
 };
 
-// Get all AI software features
+// Get all AI/Software features
 export const getAISoftwareFeatureTableData = async () => {
   try {
     const userData = JSON.parse(localStorage.getItem("user") || "{}");
@@ -43,12 +48,12 @@ export const getAISoftwareFeatureTableData = async () => {
     });
     return response.data;
   } catch (error) {
-    console.error("Error fetching AI software features:", error);
+    console.error("Error fetching sensors:", error);
     throw error;
   }
 };
 
-// Delete a AI software feature (Admin only)
+// Delete an AI/Software feature (Admin only)
 export const deleteAISoftwareFeatureAPI = async (id: string) => {
   const userData = JSON.parse(localStorage.getItem("user") || "{}");
   const token = userData?.token;
@@ -57,16 +62,19 @@ export const deleteAISoftwareFeatureAPI = async (id: string) => {
     throw new Error("User not authenticated!");
   }
 
-  const response = await axios.delete(`${API_BASE_URL}/${id}`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-
-  return response.data;
+  try {
+    const response = await axios.delete(`${API_BASE_URL}/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error: any) {
+    const message = error?.response?.data?.message || error.message || "Failed to delete AI/Software feature";
+    throw new Error(message);
+  }
 };
-
-// Get a single AI software feature by ID
+// Get a single AI/Software feature by ID
 export const getAISoftwareFeatureById = async (id: string) => {
   const userData = JSON.parse(localStorage.getItem("user") || "{}");
   const token = userData?.token;
@@ -75,17 +83,21 @@ export const getAISoftwareFeatureById = async (id: string) => {
     throw new Error("User not authenticated!");
   }
 
-  const response = await axios.get(`${API_BASE_URL}/${id}`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-
-  return response.data;
+  try {
+    const response = await axios.get(`${API_BASE_URL}/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error: any) {
+    const message = error?.response?.data?.message || error.message || "Failed to fetch AI/Software feature";
+    throw new Error(message);
+  }
 };
 
-// Update a AI software feature (Admin only)
-export const updateAISoftwareFeatureAPI = async (id: string, feature: { title: string }) => {
+// Update an AI/Software feature (Admin only)
+export const updateAISoftwareFeatureAPI = async (id: string, feature: { name: string }) => {
   const userData = JSON.parse(localStorage.getItem("user") || "{}");
   const token = userData?.token;
 
@@ -93,15 +105,20 @@ export const updateAISoftwareFeatureAPI = async (id: string, feature: { title: s
     throw new Error("User not authenticated!");
   }
 
-  const response = await axios.put(
-    `${API_BASE_URL}/${id}`,
-    feature,
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }
-  );
-
-  return response.data;
+  try {
+    const response = await axios.put(
+      `${API_BASE_URL}/${id}`,
+      feature,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error: any) {
+    const message = error?.response?.data?.message || error.message || "Failed to update feature";
+    throw new Error(message);
+  }
 };
+
