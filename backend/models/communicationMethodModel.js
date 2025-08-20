@@ -7,7 +7,11 @@ const CommunicationMethodSchema = new mongoose.Schema(
       required: [true, "Communication Method name is required"],
       trim: true,
       unique: true
-    }
+    },
+    status: {
+      type: Boolean,
+      default: true,
+    },
   },
   { timestamps: true }
 );

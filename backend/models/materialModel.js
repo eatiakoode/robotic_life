@@ -7,7 +7,11 @@ const MaterialSchema = new mongoose.Schema(
       required: true,
       trim: true,
       unique: true
-    }
+    },
+    status: {
+      type: Boolean,
+      default: true,
+    },
   },
   { timestamps: true }
 );

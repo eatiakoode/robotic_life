@@ -7,7 +7,11 @@ const SensorSchema = new mongoose.Schema(
       required: [true, "Sensor name is required"],
       trim: true,
       unique: true
-    }
+    },
+    status: {
+      type: Boolean,
+      default: true,
+    },
   },
   { timestamps: true }
 );
