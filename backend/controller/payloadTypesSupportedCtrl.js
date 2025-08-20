@@ -35,7 +35,7 @@ const getPayloadType = asyncHandler(async (req, res) => {
 const updatePayloadType = asyncHandler(async (req, res) => {
   const type = await PayloadTypesSupported.findByIdAndUpdate(
     req.params.id,
-    { name: req.body.name },
+    { name: req.body.name, status: req.body.status },
     { new: true }
   );
   if (!type) {

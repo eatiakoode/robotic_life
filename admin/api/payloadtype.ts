@@ -13,7 +13,7 @@ const ADMIN_BASE = normalizeAdminBase(process.env.NEXT_PUBLIC_ADMIN_API_URL as s
 const API_BASE_URL = ADMIN_BASE + "api/payloadtype";
 
 // Add a new payload type (Admin only)
-export const addPayLoadTypeAPI = async (title: string) => {
+export const addPayloadTypeAPI = async (title: string) => {
   const userData = JSON.parse(localStorage.getItem("user") || "{}");
   const token = userData?.token;
 
@@ -22,19 +22,17 @@ export const addPayLoadTypeAPI = async (title: string) => {
   }
 
   const response = await axios.post(
-    API_BASE_URL,
-    { title },
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }
-  );
+  API_BASE_URL,
+  { name: title }, // ✅ backend expects this
+  {
+    headers: { Authorization: `Bearer ${token}` },
+  }
+);
   return response.data;
 };
 
 // Get all payload types
-export const getPayLoadTypeTableData = async () => {
+export const getPayloadTypeTableData = async () => {
   try {
     const userData = JSON.parse(localStorage.getItem("user") || "{}");
     const token = userData?.token;
@@ -49,7 +47,7 @@ export const getPayLoadTypeTableData = async () => {
 };
 
 // Delete a payload type (Admin only)
-export const deletePayLoadTypeAPI = async (id: string) => {
+export const deletePayloadTypeAPI = async (id: string) => {
   const userData = JSON.parse(localStorage.getItem("user") || "{}");
   const token = userData?.token;
 
@@ -67,7 +65,7 @@ export const deletePayLoadTypeAPI = async (id: string) => {
 };
 
 // Get a single payload type by ID
-export const getPayLoadTypeById = async (id: string) => {
+export const getPayloadTypeById = async (id: string) => {
   const userData = JSON.parse(localStorage.getItem("user") || "{}");
   const token = userData?.token;
 
@@ -85,23 +83,22 @@ export const getPayLoadTypeById = async (id: string) => {
 };
 
 // Update a payload type (Admin only)
-export const updatePayLoadTypeAPI = async (id: string, payloadType: { title: string }) => {
+export const updatePayloadTypeAPI = async (id: string, payloadType: { title: string; status?: boolean }) => {
   const userData = JSON.parse(localStorage.getItem("user") || "{}");
   const token = userData?.token;
 
-  if (!token) {
-    throw new Error("User not authenticated!");
-  }
+  if (!token) throw new Error("User not authenticated!");
 
   const response = await axios.put(
     `${API_BASE_URL}/${id}`,
-    payloadType,
     {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+      name: payloadType.title, // ✅ backend expects "name"
+      status: payloadType.status,
+    },
+    {
+      headers: { Authorization: `Bearer ${token}` },
     }
   );
 
-  return response.data;
+  return response.data; // { message, data }
 };

@@ -35,7 +35,7 @@ const getCommunicationMethod = asyncHandler(async (req, res) => {
 const updateCommunicationMethod = asyncHandler(async (req, res) => {
   const method = await CommunicationMethod.findByIdAndUpdate(
     req.params.id,
-    { name: req.body.name },
+    { name: req.body.name, status: req.body.status },
     { new: true }
   );
   if (!method) {
