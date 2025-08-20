@@ -1,7 +1,6 @@
-// src/api/country.ts
+// src/api/communicationmethod.ts
 import axios from "axios";
 
-// Normalize base so it always ends with /admin/
 const normalizeAdminBase = (base: string) => {
   let normalized = (base || "").trim();
   if (!normalized) return "/admin/";
@@ -23,14 +22,12 @@ export const addCommunicationMethodAPI = async (title: string) => {
   }
 
   const response = await axios.post(
-    API_BASE_URL,
-    { name : title },
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }
-  );
+  API_BASE_URL,
+  { name: title }, 
+  {
+    headers: { Authorization: `Bearer ${token}` },
+  }
+);
   return response.data;
 };
 
@@ -44,7 +41,7 @@ export const getCommunicationMethodTableData = async () => {
     });
     return response.data;
   } catch (error) {
-    console.error("Error fetching colors:", error);
+    console.error("Error fetching communication methods:", error);
     throw error;
   }
 };
@@ -66,6 +63,7 @@ export const deleteCommunicationMethodAPI = async (id: string) => {
 
   return response.data;
 };
+
 // Get a single communication method by ID
 export const getCommunicationMethodById = async (id: string) => {
   const userData = JSON.parse(localStorage.getItem("user") || "{}");
@@ -84,24 +82,23 @@ export const getCommunicationMethodById = async (id: string) => {
   return response.data;
 };
 
-// Update a Communication Method (Admin only)
-export const updateCommunicationMethodAPI = async (id: string, communicationMethod: { title: string }) => {
+// Update a communication method (Admin only)
+export const updateCommunicationMethodAPI = async (id: string, communicationMethod: { title: string; status?: boolean }) => {
   const userData = JSON.parse(localStorage.getItem("user") || "{}");
   const token = userData?.token;
 
-  if (!token) {
-    throw new Error("User not authenticated!");
-  }
+  if (!token) throw new Error("User not authenticated!");
 
   const response = await axios.put(
     `${API_BASE_URL}/${id}`,
-    communicationMethod,
     {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+      name: communicationMethod.title, 
+      status: communicationMethod.status,
+    },
+    {
+      headers: { Authorization: `Bearer ${token}` },
     }
   );
 
-  return response.data;
+  return response.data; // { message, data }
 };

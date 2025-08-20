@@ -21,21 +21,14 @@ export const addOperatingEnvironmentAPI = async (title: string) => {
     throw new Error("User not authenticated!");
   }
 
-  try {
-    const response = await axios.post(
-      API_BASE_URL,
-      { name: title },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-    return response.data;
-  } catch (error: any) {
-    const message = error?.response?.data?.message || error.message || "Failed to add operating environment";
-    throw new Error(message);
+  const response = await axios.post(
+  API_BASE_URL,
+  { name: title },
+  {
+    headers: { Authorization: `Bearer ${token}` },
   }
+);
+  return response.data;
 };
 
 // Get all operating environments
@@ -62,17 +55,13 @@ export const deleteOperatingEnvironmentAPI = async (id: string) => {
     throw new Error("User not authenticated!");
   }
 
-  try {
-    const response = await axios.delete(`${API_BASE_URL}/${id}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    return response.data;
-  } catch (error: any) {
-    const message = error?.response?.data?.message || error.message || "Failed to delete operating environment";
-    throw new Error(message);
-  }
+  const response = await axios.delete(`${API_BASE_URL}/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  return response.data;
 };
 
 // Get a single operating environment by ID
@@ -84,45 +73,32 @@ export const getOperatingEnvironmentById = async (id: string) => {
     throw new Error("User not authenticated!");
   }
 
-  try {
-    const response = await axios.get(`${API_BASE_URL}/${id}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    return response.data;
-  } catch (error: any) {
-    const message = error?.response?.data?.message || error.message || "Failed to fetch operating environment";
-    throw new Error(message);
-  }
+  const response = await axios.get(`${API_BASE_URL}/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  return response.data;
 };
 
 // Update an operating environment (Admin only)
-export const updateOperatingEnvironmentAPI = async (id: string, name: string) => {
+export const updateOperatingEnvironmentAPI = async (id: string, operatingEnvironment: { title: string; status?: boolean }) => {
   const userData = JSON.parse(localStorage.getItem("user") || "{}");
   const token = userData?.token;
 
-  if (!token) {
-    throw new Error("User not authenticated!");
-  }
+  if (!token) throw new Error("User not authenticated!");
 
-  try {
-    const response = await axios.put(
-      `${API_BASE_URL}/${id}`,
-      { name },  // ✅ ensure it's always { name: value }
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-    return response.data;
-  } catch (error: any) {
-    const message =
-      error?.response?.data?.message ||
-      error.message ||
-      "Failed to update operating environment";
-    throw new Error(message);
-  }
+  const response = await axios.put(
+    `${API_BASE_URL}/${id}`,
+    {
+      name: operatingEnvironment.title, // ✅ backend expects "name"
+      status: operatingEnvironment.status,
+    },
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
+
+  return response.data; // { message, data }
 };
-

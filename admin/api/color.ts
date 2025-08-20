@@ -21,24 +21,17 @@ export const addColorAPI = async (title: string) => {
     throw new Error("User not authenticated!");
   }
 
-  try {
-    const response = await axios.post(
-      API_BASE_URL,
-      { name: title },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-    return response.data;
-  } catch (error: any) {
-    const message = error?.response?.data?.message || error.message || "Failed to add color";
-    throw new Error(message);
+  const response = await axios.post(
+  API_BASE_URL,
+  { name: title }, // ✅ backend expects this
+  {
+    headers: { Authorization: `Bearer ${token}` },
   }
+);
+  return response.data;
 };
 
-// Get all color
+// Get all colors
 export const getColorTableData = async () => {
   try {
     const userData = JSON.parse(localStorage.getItem("user") || "{}");
@@ -53,7 +46,7 @@ export const getColorTableData = async () => {
   }
 };
 
-// Delete a power source (Admin only)
+// Delete a color (Admin only)
 export const deleteColorAPI = async (id: string) => {
   const userData = JSON.parse(localStorage.getItem("user") || "{}");
   const token = userData?.token;
@@ -62,20 +55,16 @@ export const deleteColorAPI = async (id: string) => {
     throw new Error("User not authenticated!");
   }
 
-  try {
-    const response = await axios.delete(`${API_BASE_URL}/${id}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    return response.data;
-  } catch (error: any) {
-    const message = error?.response?.data?.message || error.message || "Failed to delete color";
-    throw new Error(message);
-  }
+  const response = await axios.delete(`${API_BASE_URL}/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  return response.data;
 };
 
-// Get a single power source by ID
+// Get a single color by ID
 export const getColorById = async (id: string) => {
   const userData = JSON.parse(localStorage.getItem("user") || "{}");
   const token = userData?.token;
@@ -84,41 +73,32 @@ export const getColorById = async (id: string) => {
     throw new Error("User not authenticated!");
   }
 
-  try {
-    const response = await axios.get(`${API_BASE_URL}/${id}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    return response.data;
-  } catch (error: any) {
-    const message = error?.response?.data?.message || error.message || "Failed to fetch color";
-    throw new Error(message);
-  }
+  const response = await axios.get(`${API_BASE_URL}/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  return response.data;
 };
 
-// Update a power source (Admin only)
-export const updateColorAPI = async (id: string, color: { name: string }) => {
+// Update a color (Admin only)
+export const updateColorAPI = async (id: string, color: { title: string; status?: boolean }) => {
   const userData = JSON.parse(localStorage.getItem("user") || "{}");
   const token = userData?.token;
 
-  if (!token) {
-    throw new Error("User not authenticated!");
-  }
+  if (!token) throw new Error("User not authenticated!");
 
-  try {
-    const response = await axios.put(
-      `${API_BASE_URL}/${id}`,
-      color,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-    return response.data;
-  } catch (error: any) {
-    const message = error?.response?.data?.message || error.message || "Failed to update color";
-    throw new Error(message);
-  }
+  const response = await axios.put(
+    `${API_BASE_URL}/${id}`,
+    {
+      name: color.title, 
+      status: color.status,
+    },
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
+
+  return response.data; // { message, data }
 };

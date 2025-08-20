@@ -21,21 +21,14 @@ export const addPowerSourceAPI = async (title: string) => {
     throw new Error("User not authenticated!");
   }
 
-  try {
-    const response = await axios.post(
-      API_BASE_URL,
-      { name: title },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-    return response.data;
-  } catch (error: any) {
-    const message = error?.response?.data?.message || error.message || "Failed to add power source";
-    throw new Error(message);
+  const response = await axios.post(
+  API_BASE_URL,
+  { name: title }, // ✅ backend expects this
+  {
+    headers: { Authorization: `Bearer ${token}` },
   }
+);
+  return response.data;
 };
 
 // Get all power sources
@@ -62,17 +55,13 @@ export const deletePowerSourceAPI = async (id: string) => {
     throw new Error("User not authenticated!");
   }
 
-  try {
-    const response = await axios.delete(`${API_BASE_URL}/${id}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    return response.data;
-  } catch (error: any) {
-    const message = error?.response?.data?.message || error.message || "Failed to delete power source";
-    throw new Error(message);
-  }
+  const response = await axios.delete(`${API_BASE_URL}/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  return response.data;
 };
 
 // Get a single power source by ID
@@ -84,45 +73,32 @@ export const getPowerSourceById = async (id: string) => {
     throw new Error("User not authenticated!");
   }
 
-  try {
-    const response = await axios.get(`${API_BASE_URL}/${id}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    return response.data;
-  } catch (error: any) {
-    const message = error?.response?.data?.message || error.message || "Failed to fetch power source";
-    throw new Error(message);
-  }
+  const response = await axios.get(`${API_BASE_URL}/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  return response.data;
 };
 
 // Update a power source (Admin only)
-export const updatePowerSourceAPI = async (id: string, name: string) => {
+export const updatePowerSourceAPI = async (id: string, powerSource: { title: string; status?: boolean }) => {
   const userData = JSON.parse(localStorage.getItem("user") || "{}");
   const token = userData?.token;
 
-  if (!token) {
-    throw new Error("User not authenticated!");
-  }
+  if (!token) throw new Error("User not authenticated!");
 
-  try {
-    const response = await axios.put(
-      `${API_BASE_URL}/${id}`,
-      { name },  // ✅ ensure it's always { name: value }
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-    return response.data;
-  } catch (error: any) {
-    const message =
-      error?.response?.data?.message ||
-      error.message ||
-      "Failed to update power source";
-    throw new Error(message);
-  }
+  const response = await axios.put(
+    `${API_BASE_URL}/${id}`,
+    {
+      name: powerSource.title, 
+      status: powerSource.status,
+    },
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
+
+  return response.data; // { message, data }
 };
-

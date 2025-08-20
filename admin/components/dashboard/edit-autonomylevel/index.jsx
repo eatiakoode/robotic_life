@@ -50,8 +50,8 @@ const index = () => {
 
                 <div className="col-lg-12 mb10">
                   <div className="breadcrumb_content style2">
-                    <h2 className="breadcrumb_title">Edit Power Source Details</h2>
-                    <p>Update Power Source information to keep profiles accurate and up-to-date.</p>
+                    <h2 className="breadcrumb_title">Edit Autonomy Level Details</h2>
+                    <p>Update Autonomy Level information to keep profiles accurate and up-to-date.</p>
                   </div>
                 </div>
                 {/* End .col */}

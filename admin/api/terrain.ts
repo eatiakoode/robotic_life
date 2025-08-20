@@ -10,7 +10,7 @@ const normalizeAdminBase = (base: string) => {
 };
 
 const ADMIN_BASE = normalizeAdminBase(process.env.NEXT_PUBLIC_ADMIN_API_URL as string);
-const API_BASE_URL = ADMIN_BASE + "api/terraincapability";
+const API_BASE_URL = ADMIN_BASE + "api/terrainCapability";
 
 // Add a new terrain capability (Admin only)
 export const addTerrainCapabilityAPI = async (title: string) => {
@@ -21,21 +21,14 @@ export const addTerrainCapabilityAPI = async (title: string) => {
     throw new Error("User not authenticated!");
   }
 
-  try {
-    const response = await axios.post(
-      API_BASE_URL,
-      { name: title },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-    return response.data;
-  } catch (error: any) {
-    const message = error?.response?.data?.message || error.message || "Failed to add terrain capability";
-    throw new Error(message);
+  const response = await axios.post(
+  API_BASE_URL,
+  { name: title },
+  {
+    headers: { Authorization: `Bearer ${token}` },
   }
+);
+  return response.data;
 };
 
 // Get all terrain capabilities
@@ -62,17 +55,13 @@ export const deleteTerrainCapabilityAPI = async (id: string) => {
     throw new Error("User not authenticated!");
   }
 
-  try {
-    const response = await axios.delete(`${API_BASE_URL}/${id}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    return response.data;
-  } catch (error: any) {
-    const message = error?.response?.data?.message || error.message || "Failed to delete terrain capability";
-    throw new Error(message);
-  }
+  const response = await axios.delete(`${API_BASE_URL}/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  return response.data;
 };
 
 // Get a single terrain capability by ID
@@ -84,45 +73,32 @@ export const getTerrainCapabilityById = async (id: string) => {
     throw new Error("User not authenticated!");
   }
 
-  try {
-    const response = await axios.get(`${API_BASE_URL}/${id}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    return response.data;
-  } catch (error: any) {
-    const message = error?.response?.data?.message || error.message || "Failed to fetch terrain capability";
-    throw new Error(message);
-  }
+  const response = await axios.get(`${API_BASE_URL}/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  return response.data;
 };
 
 // Update a terrain capability (Admin only)
-export const updateTerrainCapabilityAPI = async (id: string, name: string) => {
+export const updateTerrainCapabilityAPI = async (id: string, terrainCapability: { title: string; status?: boolean }) => {
   const userData = JSON.parse(localStorage.getItem("user") || "{}");
   const token = userData?.token;
 
-  if (!token) {
-    throw new Error("User not authenticated!");
-  }
+  if (!token) throw new Error("User not authenticated!");
 
-  try {
-    const response = await axios.put(
-      `${API_BASE_URL}/${id}`,
-      { name },  // ✅ ensure it's always { name: value }
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-    return response.data;
-  } catch (error: any) {
-    const message =
-      error?.response?.data?.message ||
-      error.message ||
-      "Failed to update terrain capability";
-    throw new Error(message);
-  }
+  const response = await axios.put(
+    `${API_BASE_URL}/${id}`,
+    {
+      name: terrainCapability.title,
+      status: terrainCapability.status,
+    },
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
+
+  return response.data; // { message, data }
 };
-

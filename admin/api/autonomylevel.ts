@@ -21,21 +21,14 @@ export const addAutonomyLevelAPI = async (title: string) => {
     throw new Error("User not authenticated!");
   }
 
-  try {
-    const response = await axios.post(
-      API_BASE_URL,
-      { name: title },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-    return response.data;
-  } catch (error: any) {
-    const message = error?.response?.data?.message || error.message || "Failed to add autonomy level";
-    throw new Error(message);
+  const response = await axios.post(
+  API_BASE_URL,
+  { name: title }, 
+  {
+    headers: { Authorization: `Bearer ${token}` },
   }
+);
+  return response.data;
 };
 
 // Get all autonomy levels
@@ -62,17 +55,13 @@ export const deleteAutonomyLevelAPI = async (id: string) => {
     throw new Error("User not authenticated!");
   }
 
-  try {
-    const response = await axios.delete(`${API_BASE_URL}/${id}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    return response.data;
-  } catch (error: any) {
-    const message = error?.response?.data?.message || error.message || "Failed to delete autonomy level";
-    throw new Error(message);
-  }
+  const response = await axios.delete(`${API_BASE_URL}/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  return response.data;
 };
 
 // Get a single autonomy level by ID
@@ -84,45 +73,32 @@ export const getAutonomyLevelById = async (id: string) => {
     throw new Error("User not authenticated!");
   }
 
-  try {
-    const response = await axios.get(`${API_BASE_URL}/${id}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    return response.data;
-  } catch (error: any) {
-    const message = error?.response?.data?.message || error.message || "Failed to fetch autonomy level";
-    throw new Error(message);
-  }
+  const response = await axios.get(`${API_BASE_URL}/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  return response.data;
 };
 
 // Update an autonomy level (Admin only)
-export const updateAutonomyLevelAPI = async (id: string, name: string) => {
+export const updateAutonomyLevelAPI = async (id: string, autonomyLevel: { title: string; status?: boolean }) => {
   const userData = JSON.parse(localStorage.getItem("user") || "{}");
   const token = userData?.token;
 
-  if (!token) {
-    throw new Error("User not authenticated!");
-  }
+  if (!token) throw new Error("User not authenticated!");
 
-  try {
-    const response = await axios.put(
-      `${API_BASE_URL}/${id}`,
-      { name },  // ✅ ensure it's always { name: value }
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-    return response.data;
-  } catch (error: any) {
-    const message =
-      error?.response?.data?.message ||
-      error.message ||
-      "Failed to update autonomy level";
-    throw new Error(message);
-  }
+  const response = await axios.put(
+    `${API_BASE_URL}/${id}`,
+    {
+      name: autonomyLevel.title, 
+      status: autonomyLevel.status,
+    },
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
+
+  return response.data; // { message, data }
 };
-
