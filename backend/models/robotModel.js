@@ -110,7 +110,7 @@ const RobotSchema = new mongoose.Schema(
     },
     aiSoftwareFeatures: [{
       type: mongoose.Schema.Types.ObjectId,
-      ref: "AISoftwareFeature"
+      ref: "AiSoftwareFeature"
     }],
     operatingEnvironment: {
       type: mongoose.Schema.Types.ObjectId,

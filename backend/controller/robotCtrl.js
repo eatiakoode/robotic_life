@@ -39,7 +39,7 @@ const createRobot = asyncHandler(async (req, res) => {
       .populate("terrainCapability", "name")
       .populate("autonomyLevel", "name")
       .populate("communicationMethod", "name")
-      .populate("payloadType", "name");
+      .populate("payloadTypesSupported", "name");
 
     res.status(201).json({
       message: "Robot created successfully",

@@ -16,4 +16,4 @@ const PayloadTypesSupportedSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-module.exports = mongoose.model("PayloadTypesSupported", PayloadTypesSupportedSchema);
+module.exports = mongoose.model("PayloadType", PayloadTypesSupportedSchema);
