@@ -39,7 +39,7 @@ const CreateList = () => {
         toast.success(data.message);
         if(data.status=="success"){
           setTimeout(() => {
-          router.push("/cmswegrow/my-country");
+          router.push("/cmsroboticlife/my-country");
           }, 500);
         }
       } catch (error) {
@@ -102,7 +102,7 @@ const CreateList = () => {
 
       <div className="col-xl-12">
         <div className="my_profile_setting_input">
-          <button className="btn btn1 float-start" type="button" onClick={() => window.location.href = '/cmswegrow/my-country'}>Back</button>
+          <button className="btn btn1 float-start" type="button" onClick={() => window.location.href = '/cmsroboticlife/my-country'}>Back</button>
           <button className="btn btn2 float-end">Submit</button>
         </div>
       </div>

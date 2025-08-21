@@ -120,7 +120,7 @@ const TableData = ({ categoryList, setCategoryList }) => {
             >
               <button
                 onClick={() =>
-                  router.push(`/cmswegrow/edit-category/${item._id}`)
+                  router.push(`/cmsroboticlife/edit-category/${item._id}`)
                 }
               >
                 <span className="flaticon-edit"></span>

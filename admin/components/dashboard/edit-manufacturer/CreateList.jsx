@@ -64,11 +64,11 @@ const CreateList = () => {
       }
       const data = await updateManufacturerAPI(id, formData);
       // alert("Manufacturer updated successfully!");
-      // router.push("/cmswegrow/my-manufacturer");
+      // router.push("/cmsroboticlife/my-manufacturer");
       toast.success(data.message);
       if (data.status == "success") {
         setTimeout(() => {
-          router.push("/cmswegrow/my-manufacturer");
+          router.push("/cmsroboticlife/my-manufacturer");
         }, 1500);
       }
     } catch (error) {
@@ -206,7 +206,7 @@ const CreateList = () => {
 
         <div className="col-xl-12">
           <div className="my_profile_setting_input">
-            <button className="btn btn1 float-start" type="button" onClick={() => window.location.href = '/cmswegrow/my-manufacturer'}>Back</button>
+            <button className="btn btn1 float-start" type="button" onClick={() => window.location.href = '/cmsroboticlife/my-manufacturer'}>Back</button>
             <button className="btn btn2 float-end">Submit</button>
           </div>
         </div>

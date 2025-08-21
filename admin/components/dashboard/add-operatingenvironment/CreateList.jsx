@@ -38,7 +38,7 @@ const CreateList = () => {
       toast.success(data.message || "Operating Environment added successfully!");
 
       setTimeout(() => {
-        router.push("/cmswegrow/my-operatingenvironment");
+        router.push("/cmsroboticlife/my-operatingenvironment");
       }, 1000);
 
       setTitle("");
@@ -80,7 +80,7 @@ const CreateList = () => {
 
         <div className="col-xl-12">
           <div className="my_profile_setting_input">
-            <button className="btn btn1 float-start" type="button" onClick={() => window.location.href = '/cmswegrow/my-dashboard'}>Back</button>
+            <button className="btn btn1 float-start" type="button" onClick={() => window.location.href = '/cmsroboticlife/my-dashboard'}>Back</button>
             <button type="submit" className="btn btn2 float-end" disabled={isSubmitting} >{isSubmitting ? 'Sending...' : 'Submit'}</button>
           </div>
         </div>

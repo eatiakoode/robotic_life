@@ -658,7 +658,7 @@ const CreateList = () => {
 
       toast.success(res.message || "Robot created successfully!");
    
-        router.push("/cmswegrow/my-properties");
+        router.push("/cmsroboticlife/my-properties");
 
       setError({});
     } catch (err) {
@@ -2522,7 +2522,7 @@ const CreateList = () => {
             <button
               className="btn btn1 float-start"
               type="button"
-              onClick={() => (window.location.href = "/cmswegrow/my-dashboard")}
+              onClick={() => (window.location.href = "/cmsroboticlife/my-dashboard")}
             >
               Back
             </button>

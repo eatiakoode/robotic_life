@@ -565,9 +565,9 @@ const updateProperty = async (e) => {
     const res = await updateRobotAPI(id,formData);
     toast.success(res.message || "Robot updated successfully");
     setTimeout(() => {
-      router.push("/cmswegrow/my-robot");
+      router.push("/cmsroboticlife/my-robot");
     }, 1000);
-    // router.push("/cmswegrow/my-properties");
+    // router.push("/cmsroboticlife/my-properties");
 
     // Reset fields and errors
     setError({});
@@ -1624,7 +1624,7 @@ const updateProperty = async (e) => {
                   
       <div className="col-xl-12">
         <div className="my_profile_setting_input">
-          <button className="btn btn1 float-start" type="button" onClick={() => window.location.href = '/cmswegrow/my-properties'}>Back</button>
+          <button className="btn btn1 float-start" type="button" onClick={() => window.location.href = '/cmsroboticlife/my-properties'}>Back</button>
           <button className="btn btn2 float-end" type="submit" >Submit</button>
         </div>
       </div>

@@ -58,11 +58,11 @@ const CreateList = () => {
         }
         const data = await updateTestimonialAPI(id, formData);
         // alert("Testimonial updated successfully!");
-        // router.push("/cmswegrow/my-testimonial");
+        // router.push("/cmsroboticlife/my-testimonial");
         toast.success(data.message);
         if(data.status=="success"){
           setTimeout(() => {
-          router.push("/cmswegrow/my-testimonial");
+          router.push("/cmsroboticlife/my-testimonial");
           }, 1500); 
         }
       } catch (error) {
@@ -171,7 +171,7 @@ const CreateList = () => {
 
       <div className="col-xl-12">
         <div className="my_profile_setting_input">
-          <button className="btn btn1 float-start" type="button" onClick={() => window.location.href = '/cmswegrow/my-testimonial'}>Back</button>
+          <button className="btn btn1 float-start" type="button" onClick={() => window.location.href = '/cmsroboticlife/my-testimonial'}>Back</button>
           <button className="btn btn2 float-end">Submit</button>
         </div>
       </div>

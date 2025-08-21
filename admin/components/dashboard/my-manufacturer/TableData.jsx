@@ -113,7 +113,7 @@ const TableData = ({ manufacturerList, setManufacturerList }) => {
             >
               <button
                 onClick={() =>
-                  router.push(`/cmswegrow/edit-manufacturer/${item._id}`)
+                  router.push(`/cmsroboticlife/edit-manufacturer/${item._id}`)
                 }
               >
                 <span className="flaticon-edit"></span>
