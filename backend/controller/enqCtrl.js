@@ -8,10 +8,10 @@ const createEnquiry = asyncHandler(async (req, res) => {
   try {
     const newEnquiry = await Enquiry.create(req.body);
     // const emailsend  =await enqueryContactMail(req, res);
-    const message={
-      "status":"success",
-      "message":"Thank you for your message. It has been sent.",
-      "data":newEnquiry
+    const message = {
+      "status": "success",
+      "message": "Thank you for your message. It has been sent.",
+      "data": newEnquiry
     }
     res.json(message);
   } catch (error) {
@@ -35,10 +35,10 @@ const deleteEnquiry = asyncHandler(async (req, res) => {
   validateMongoDbId(id);
   try {
     const deletedEnquiry = await Enquiry.findByIdAndDelete(id);
-     const message={
-      "status":"success",
-      "message":"Data deleted sucessfully",
-      "data":deletedEnquiry
+    const message = {
+      "status": "success",
+      "message": "Data deleted sucessfully",
+      "data": deletedEnquiry
     }
     res.json(message);
     // res.json(deletedEnquiry);
@@ -60,30 +60,30 @@ const getallEnquiry = asyncHandler(async (req, res) => {
   try {
     // const getallEnquiry = await Enquiry.find();
     // res.json(getallEnquiry);
-    let limit=100;
-    let skip=1;
-    
+    let limit = 100;
+    let skip = 1;
 
-    if (req.query.limit ) {
-      limit=req.query.limit;
-      skip=req.query.skip;     
+
+    if (req.query.limit) {
+      limit = req.query.limit;
+      skip = req.query.skip;
     }
-    
+
     const [EnquiryList, totalCount] = await Promise.all([
-              Enquiry.find()
-                .sort({ _id: -1})
-                .skip((skip - 1) * limit)
-                .limit(limit)
-                .lean(),
-            
-              Enquiry.countDocuments() // total matching without skip/limit
-            ]);
-            res.status(200).json({
-          items: EnquiryList,
-          totalCount: totalCount,
-          currentPage: skip,
-          totalPages: Math.ceil(totalCount / limit)
-        });
+      Enquiry.find()
+        .sort({ _id: -1 })
+        .skip((skip - 1) * limit)
+        .limit(limit)
+        .lean(),
+
+      Enquiry.countDocuments() // total matching without skip/limit
+    ]);
+    res.status(200).json({
+      items: EnquiryList,
+      totalCount: totalCount,
+      currentPage: skip,
+      totalPages: Math.ceil(totalCount / limit)
+    });
   } catch (error) {
     throw new Error(error);
   }

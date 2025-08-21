@@ -1,6 +1,4 @@
-const mongoose = require("mongoose"); // Erase if already required
-
-// Declare the Schema of the Mongo model
+const mongoose = require("mongoose");
 
 var faqSchema = new mongoose.Schema(
   {
@@ -10,17 +8,17 @@ var faqSchema = new mongoose.Schema(
       unique: true,
       index: true,
     },
-    description:{
+    description: {
       type: String,
       required: true,
       unique: true,
       index: true,
     },
     robotid: {
-         type: mongoose.Schema.Types.ObjectId,
-         ref: "Robot", 
-         required: true,
-       },
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Robot",
+      required: true,
+    },
     status: {
       type: Boolean,
       default: true,
@@ -31,5 +29,4 @@ var faqSchema = new mongoose.Schema(
   }
 );
 
-//Export the model
 module.exports = mongoose.model("Faq", faqSchema);

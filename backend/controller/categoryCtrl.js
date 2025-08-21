@@ -1,5 +1,5 @@
 const Category = require("../models/categoryModel");
-const {uploadPhoto, categoryImgResize} = require("../middlewares/uploadImage");
+const { uploadPhoto, categoryImgResize } = require("../middlewares/uploadImage");
 const slugify = require("slugify");
 const asyncHandler = require("express-async-handler");
 
@@ -33,7 +33,6 @@ const createCategory = asyncHandler(async (req, res) => {
 
     const newCategory = await Category.create(req.body);
 
-    // ensure response includes logoImage alias
     const created = newCategory.toObject();
     created.logoImage = created.logoImage || created.logoimage || null;
     res.json({
@@ -52,7 +51,6 @@ const getCategories = async (req, res) => {
     const categories = await Category.find()
       .populate("parent", "name")
       .sort({ createdAt: -1 });
-    // add logoImage alias in response objects
     const output = categories.map((doc) => {
       const obj = doc.toObject();
       obj.logoImage = obj.logoImage || obj.logoimage || null;

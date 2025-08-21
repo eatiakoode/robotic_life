@@ -1,6 +1,4 @@
-const mongoose = require("mongoose"); // Erase if already required
-
-// Declare the Schema of the Mongo model
+const mongoose = require("mongoose"); 
 
 var blogSchema = new mongoose.Schema(
   {
@@ -16,33 +14,33 @@ var blogSchema = new mongoose.Schema(
       unique: true,
       index: true,
     },
-    description:{
+    description: {
       type: String,
       required: true,
       // unique: true,
       index: true,
     },
-    logoimage:{
+    logoimage: {
       type: String,
       // required: true,
       // unique: true,
       index: true,
     },
-    blogcategory:{
+    blogcategory: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Blogcategory", 
+      ref: "Blogcategory",
       required: true,
     },
-    source:{
+    source: {
       type: String,
     },
-    date:{
+    date: {
       type: String,
     },
-    metatitle:{
+    metatitle: {
       type: String,
     },
-    metadescription:{
+    metadescription: {
       type: String,
     },
     status: {
@@ -55,5 +53,4 @@ var blogSchema = new mongoose.Schema(
   }
 );
 
-//Export the model
 module.exports = mongoose.model("Blog", blogSchema);

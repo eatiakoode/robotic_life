@@ -75,7 +75,7 @@ const getFaq = asyncHandler(async (req, res) => {
   validateMongoDbId(id);
 
   try {
-    const getaFaq = await Faq.findById(id).populate("robotid", "name"); // populate robot name if needed
+    const getaFaq = await Faq.findById(id).populate("robotid", "name");
 
     if (!getaFaq) {
       return res.status(404).json({
