@@ -21447,5 +21447,14 @@ button.gm-ui-hover-effect:focus {
   }
 }
 
+/* Fix placeholder showing with selected items */
+.color-select:not(:focus) {
+  color: transparent;   /* hide default select text */
+}
+.color-select:focus {
+  color: inherit;       /* show when dropdown open */
+}
+
+
 
 

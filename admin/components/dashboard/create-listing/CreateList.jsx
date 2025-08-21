@@ -1453,7 +1453,6 @@ const CreateList = () => {
                   <div className="col-lg-6 col-xl-6">
                     <div className="my_profile_setting_input ui_kit_select_search form-group">
                       <label htmlFor="colorSelect">Color</label>
-
                       <div className="position-relative">
                         <select
                           id="colorSelect"
@@ -1467,7 +1466,7 @@ const CreateList = () => {
                             ) {
                               setSelectedColors([...selectedColors, value]);
                             }
-                            e.target.blur(); // close dropdown after select
+                            e.target.blur(); // close dropdown after each select
                           }}
                           data-live-search="true"
                           data-width="100%"
@@ -1502,34 +1501,43 @@ const CreateList = () => {
                               -- Select Colors --
                             </span>
                           ) : (
-                            colors
-                              .filter((c) => selectedColors.includes(c._id))
-                              .map((c) => (
-                                <span
-                                  key={c._id}
-                                  className="badge bg-light text-dark border d-flex align-items-center"
-                                  style={{
-                                    pointerEvents: "auto",
-                                    whiteSpace: "nowrap",
-                                  }}
-                                >
-                                  {c.name}
-                                  <button
-                                    type="button"
-                                    className="btn-close btn-sm ms-1"
-                                    aria-label="Remove"
-                                    style={{ fontSize: "0.65rem" }}
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      setSelectedColors(
-                                        selectedColors.filter(
-                                          (id) => id !== c._id
-                                        )
-                                      );
+                            <>
+                              {colors
+                                .filter((c) => selectedColors.includes(c._id))
+                                .slice(0, 3) // sirf pehle 3 badges
+                                .map((c) => (
+                                  <span
+                                    key={c._id}
+                                    className="badge bg-light text-dark border d-flex align-items-center"
+                                    style={{
+                                      pointerEvents: "auto",
+                                      whiteSpace: "nowrap",
                                     }}
-                                  />
+                                  >
+                                    {c.name}
+                                    <button
+                                      type="button"
+                                      className="btn-close btn-sm ms-1"
+                                      aria-label="Remove"
+                                      style={{ fontSize: "0.65rem" }}
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        setSelectedColors(
+                                          selectedColors.filter(
+                                            (id) => id !== c._id
+                                          )
+                                        );
+                                      }}
+                                    />
+                                  </span>
+                                ))}
+
+                              {selectedColors.length > 3 && (
+                                <span className="badge bg-secondary text-white">
+                                  +{selectedColors.length - 3} more
                                 </span>
-                              ))
+                              )}
+                            </>
                           )}
                         </div>
                       </div>
@@ -1555,14 +1563,14 @@ const CreateList = () => {
                         multiple
                         style={{
                           display: "flex",
-                          alignItems: "center", // ✅ aligns text vertically
+                          alignItems: "center",
                           height: "45px",
                         }}
                       >
                         <option
                           value="placeholder"
                           disabled
-                          hidden={selectedMaterials.length > 0} // hide placeholder when something is selected
+                          hidden={selectedMaterials.length > 0}
                         >
                           -- Select Materials --
                         </option>
