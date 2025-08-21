@@ -15,8 +15,8 @@ const { authMiddleware, isAdmin } = require("../middlewares/authMiddleware");
 const router = express.Router();
 
 router.post("/", authMiddleware, isAdmin, uploadPhoto.array("logo", 10),
- createBlog);
-router.put("/:id", authMiddleware, isAdmin,uploadPhoto.array("logo", 10), updateBlog);
+  createBlog);
+router.put("/:id", authMiddleware, isAdmin, uploadPhoto.array("logo", 10), updateBlog);
 router.delete("/:id", authMiddleware, isAdmin, deleteBlog);
 router.get("/:id", getBlog);
 router.get("/", getallBlog);

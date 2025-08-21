@@ -37,7 +37,7 @@ const createManufacturer = asyncHandler(async (req, res) => {
 const getManufacturers = async (req, res) => {
   try {
     const manufacturers = await Manufacturer.find()
-      .populate("robotList", "title") // Optional: fetch related robots
+      .populate("robotList", "title") 
       .sort({ createdAt: -1 });
     res.json(manufacturers);
   } catch (error) {
@@ -64,7 +64,6 @@ const getManufacturerById = async (req, res) => {
 // Update Manufacturer
 const updateManufacturer = async (req, res) => {
   try {
-    // Process new logo upload if provided
     if (req.files && req.files.length > 0) {
       const processedImages = await manufacturerImgResize(req);
       if (processedImages.length > 0) {
@@ -72,7 +71,6 @@ const updateManufacturer = async (req, res) => {
       }
     }
 
-    // Normalize slug
     if (req.body.slug) {
       req.body.slug = slugify(req.body.slug.toLowerCase());
     } else if (req.body.name) {

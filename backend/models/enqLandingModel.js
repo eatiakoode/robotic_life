@@ -1,6 +1,5 @@
-const mongoose = require("mongoose"); // Erase if already required
+const mongoose = require("mongoose");
 
-// Declare the Schema of the Mongo model
 var enqLandingSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -15,19 +14,18 @@ var enqLandingSchema = new mongoose.Schema({
     required: true,
   },
   landingpageid: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Landingpage", 
-        required: true,
-    },  
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Landingpage",
+    required: true,
+  },
   status: {
     type: String,
     default: "Submitted",
     enum: ["Submitted", "Contacted", "In Progress", "Resolved"],
   },
 },
-{
-  timestamps: true,
-});
+  {
+    timestamps: true,
+  });
 
-//Export the model
 module.exports = mongoose.model("Enquirylanding", enqLandingSchema);

@@ -10,7 +10,7 @@ const { authMiddleware, isAdmin } = require("../middlewares/authMiddleware");
 const { uploadPhoto } = require("../middlewares/uploadImage");
 const router = express.Router();
 
-router.post("/", authMiddleware, isAdmin,uploadPhoto.array("image", 10), createRobot);
+router.post("/", authMiddleware, isAdmin, uploadPhoto.array("image", 10), createRobot);
 router.get("/", authMiddleware, isAdmin, getRobots);
 router.get("/:id", authMiddleware, isAdmin, getRobotById);
 router.put("/:id", authMiddleware, isAdmin, updateRobot);

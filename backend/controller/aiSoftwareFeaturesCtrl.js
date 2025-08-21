@@ -33,10 +33,10 @@ const getAiSoftwareFeature = asyncHandler(async (req, res) => {
 // Update
 const updateAiSoftwareFeature = asyncHandler(async (req, res) => {
   const feature = await AiSoftwareFeature.findByIdAndUpdate(
-      req.params.id,
-      { name: req.body.name, status: req.body.status },
-      { new: true }
-    );
+    req.params.id,
+    { name: req.body.name, status: req.body.status },
+    { new: true }
+  );
   if (!feature) {
     res.status(404);
     throw new Error("AI/Software Feature not found");
