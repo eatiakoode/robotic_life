@@ -77,8 +77,8 @@ const index = () => {
 
                 <div className="col-lg-4 col-xl-4 mb10">
                   <div className="breadcrumb_content style2 mb30-991">
-                    <h2 className="breadcrumb_title">All Categorys</h2>
-                    <p>View, search, and manage category profiles associated with your property listings.</p>
+                    <h2 className="breadcrumb_title">All Categories</h2>
+                    <p>View, search, and manage category profiles associated with your robot listings.</p>
                   </div>
                 </div>
                 {/* End .col */}
@@ -86,11 +86,11 @@ const index = () => {
                 <div className="col-lg-8 col-xl-8">
                   <div className="candidate_revew_select style2 text-end mb30-991">
                     <ul className="mb0">
-                      {/* <li className="list-inline-item">
+                      <li className="list-inline-item">
                         <div className="candidate_revew_search_box course fn-520">
                           <SearchBox />
                         </div>
-                      </li> */}
+                      </li>
                       {/* End li */}
 
                       {/* <li className="list-inline-item">

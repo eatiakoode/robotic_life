@@ -50,8 +50,8 @@ const updatePowerSource = asyncHandler(async (req, res) => {
 
   const updatedSource = await PowerSource.findByIdAndUpdate(
     req.params.id,
-    { name: name.trim() },
-    { new: true, runValidators: true }
+    { name: req.body.name, status: req.body.status },
+    { new: true }
   );
 
   if (!updatedSource) {

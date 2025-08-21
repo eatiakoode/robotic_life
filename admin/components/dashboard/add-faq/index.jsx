@@ -51,7 +51,7 @@ const index = () => {
                 <div className="col-lg-12 mb10">
                   <div className="breadcrumb_content style2">
                     <h2 className="breadcrumb_title">Add a New FAQ</h2>
-                    <p>Create a frequently asked question and answer to help users better understand your services or processes.</p>
+                    <p>Create a frequently asked question and answer to help users better understand.</p>
                   </div>
                 </div>
                 {/* End .col */}

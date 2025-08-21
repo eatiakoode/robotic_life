@@ -34,7 +34,7 @@ const getPrimaryFunction = asyncHandler(async (req, res) => {
 const updatePrimaryFunction = asyncHandler(async (req, res) => {
   const primaryFunction = await PrimaryFunction.findByIdAndUpdate(
     req.params.id,
-    { name: req.body.name },
+    { name: req.body.name, status: req.body.status },
     { new: true }
   );
   if (!primaryFunction) {

@@ -34,7 +34,7 @@ const getTerrainCapability = asyncHandler(async (req, res) => {
 const updateTerrainCapability = asyncHandler(async (req, res) => {
   const capability = await TerrainCapability.findByIdAndUpdate(
     req.params.id,
-    { name: req.body.name },
+    { name: req.body.name, status: req.body.status },
     { new: true }
   );
   if (!capability) {

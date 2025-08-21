@@ -16,9 +16,9 @@ var faqSchema = new mongoose.Schema(
       unique: true,
       index: true,
     },
-    propertyid: {
+    robotid: {
          type: mongoose.Schema.Types.ObjectId,
-         ref: "Property", 
+         ref: "Robot", 
          required: true,
        },
     status: {

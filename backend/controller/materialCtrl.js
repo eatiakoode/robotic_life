@@ -45,7 +45,11 @@ const getMaterialById = asyncHandler(async (req, res) => {
 const updateMaterial = asyncHandler(async (req, res) => {
   const { name } = req.body;
 
-  const material = await Material.findById(req.params.id);
+  const material = await Material.findByIdAndUpdate(
+    req.params.id,
+    { name: req.body.name, status: req.body.status },
+    { new: true }
+  );
   if (!material) {
     res.status(404);
     throw new Error("Material not found");
