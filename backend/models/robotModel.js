@@ -63,9 +63,9 @@ const RobotSchema = new mongoose.Schema(
       type: String,
       trim: true
     },
-    logoImage: {
+    images: [{
       type: String,
-    },
+    }],
     dimensions: {
       length: unitValueSchema,
       width: unitValueSchema,
