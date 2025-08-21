@@ -204,8 +204,8 @@ const CreateList = () => {
           Array.isArray(manufacturerRes?.items)
             ? manufacturerRes.items
             : Array.isArray(manufacturerRes)
-            ? manufacturerRes
-            : []
+              ? manufacturerRes
+              : []
         );
         setPower(Array.isArray(powerRes) ? powerRes : powerRes?.data || []);
         setColors(Array.isArray(colorRes) ? colorRes : colorRes?.data || []);
@@ -1666,41 +1666,104 @@ const CreateList = () => {
               {/* Navigation Types start */}
               <div className="col-lg-6 col-xl-6">
                 <div className="my_profile_setting_input ui_kit_select_search form-group">
-                  <label htmlFor="navigationType">Navigation Type</label>
-                  <select
-                    id="navigationType"
-                    className="selectpicker form-select"
-                    value={
-                      selectedNavigationType.length
-                        ? selectedNavigationType
-                        : ["placeholder"]
-                    }
-                    onChange={handleNavigationTypeChange}
-                    data-live-search="true"
-                    data-width="100%"
-                    multiple
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      height: "45px",
-                    }}
-                  >
-                    <option
+                  <label htmlFor="navigationTypeSelect">Navigation Type</label>
+
+                  <div className="position-relative">
+                    <select
+                      id="navigationTypeSelect"
+                      className="selectpicker form-select navigationType-select"
                       value="placeholder"
-                      disabled
-                      hidden={selectedNavigationType.length > 0}
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        if (
+                          value !== "placeholder" &&
+                          !selectedNavigationType.includes(value)
+                        ) {
+                          setSelectedNavigationType([
+                            ...selectedNavigationType,
+                            value,
+                          ]);
+                        }
+                        e.target.blur(); // close dropdown after each select
+                      }}
+                      data-live-search="true"
+                      data-width="100%"
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        height: "45px",
+                      }}
                     >
-                      -- Select Navigation Type --
-                    </option>
-                    {navigationType.map((navigationType) => (
-                      <option
-                        key={navigationType._id}
-                        value={navigationType._id}
-                      >
-                        {navigationType.name || navigationType.title}
+                      <option value="placeholder" disabled>
+                        &nbsp;
                       </option>
-                    ))}
-                  </select>
+                      {navigationType.map((navigationType) => (
+                        <option key={navigationType._id} value={navigationType._id}>
+                          {navigationType.name || navigationType.title}
+                        </option>
+                      ))}
+                    </select>
+
+                    {/* Overlay UI */}
+                    <div
+                      className="form-control position-absolute top-0 start-0 h-100 w-100 d-flex align-items-center px-3 pe-5"
+                      style={{
+                        background: "transparent",
+                        pointerEvents: "none", // disable by default
+                      }}
+                    >
+                      <div
+                        className="d-flex align-items-center flex-nowrap"
+                        style={{
+                          gap: "0.25rem",
+                          overflowX: "auto",
+                          whiteSpace: "nowrap",
+                          scrollbarWidth: "thin",
+                          maxWidth: "100%",
+                          pointerEvents: "auto", // enable scroll here
+                        }}
+                        onMouseDown={(e) => e.stopPropagation()} // stop dropdown from opening while scroll
+                      >
+                        {selectedNavigationType.length === 0 ? (
+                          <span className="text-muted">
+                            -- Select Navigation Types --
+                          </span>
+                        ) : (
+                          <>
+                            {navigationType
+                              .filter((m) =>
+                                selectedNavigationType.includes(m._id)
+                              )
+                              .map((m) => (
+                                <span
+                                  key={m._id}
+                                  className="badge bg-light text-dark border d-flex align-items-center"
+                                  style={{
+                                    pointerEvents: "auto",
+                                  }}
+                                >
+                                  {m.name || m.title}
+                                  <button
+                                    type="button"
+                                    className="btn-close btn-sm ms-1"
+                                    aria-label="Remove"
+                                    style={{ fontSize: "0.65rem" }}
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      setSelectedNavigationType(
+                                        selectedNavigationType.filter(
+                                          (id) => id !== m._id
+                                        )
+                                      );
+                                    }}
+                                  />
+                                </span>
+                              ))}
+                          </>
+                        )}
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
               {/* Navigation Types ends */}
@@ -1745,41 +1808,104 @@ const CreateList = () => {
               {/* Ai Software Features start */}
               <div className="col-lg-6 col-xl-6">
                 <div className="my_profile_setting_input ui_kit_select_search form-group">
-                  <label htmlFor="aiSoftwareFeature">AI/Software Feature</label>
-                  <select
-                    id="aiSoftwareFeature"
-                    className="selectpicker form-select"
-                    value={
-                      selectedAISoftwareFeature.length
-                        ? selectedAISoftwareFeature
-                        : ["placeholder"]
-                    }
-                    onChange={handleAISoftwareFeatureChange}
-                    data-live-search="true"
-                    data-width="100%"
-                    multiple
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      height: "45px",
-                    }}
-                  >
-                    <option
+                  <label htmlFor="aiSoftwareFeatureSelect">AI/Software Feature Type</label>
+
+                  <div className="position-relative">
+                    <select
+                      id="aiSoftwareFeatureSelect"
+                      className="selectpicker form-select aiSoftwareFeature-select"
                       value="placeholder"
-                      disabled
-                      hidden={selectedAISoftwareFeature.length > 0}
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        if (
+                          value !== "placeholder" &&
+                          !selectedAISoftwareFeature.includes(value)
+                        ) {
+                          setSelectedAISoftwareFeature([
+                            ...selectedAISoftwareFeature,
+                            value,
+                          ]);
+                        }
+                        e.target.blur(); // close dropdown after each select
+                      }}
+                      data-live-search="true"
+                      data-width="100%"
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        height: "45px",
+                      }}
                     >
-                      -- Select AI/Software Feature --
-                    </option>
-                    {aiSoftwareFeatures.map((aiSoftwareFeature) => (
-                      <option
-                        key={aiSoftwareFeature._id}
-                        value={aiSoftwareFeature._id}
-                      >
-                        {aiSoftwareFeature.name || aiSoftwareFeature.title}
+                      <option value="placeholder" disabled>
+                        &nbsp;
                       </option>
-                    ))}
-                  </select>
+                      {aiSoftwareFeatures.map((aiSoftwareFeature) => (
+                        <option key={aiSoftwareFeature._id} value={aiSoftwareFeature._id}>
+                          {aiSoftwareFeature.name || aiSoftwareFeature.title}
+                        </option>
+                      ))}
+                    </select>
+
+                    {/* Overlay UI */}
+                    <div
+                      className="form-control position-absolute top-0 start-0 h-100 w-100 d-flex align-items-center px-3 pe-5"
+                      style={{
+                        background: "transparent",
+                        pointerEvents: "none", // disable by default
+                      }}
+                    >
+                      <div
+                        className="d-flex align-items-center flex-nowrap"
+                        style={{
+                          gap: "0.25rem",
+                          overflowX: "auto",
+                          whiteSpace: "nowrap",
+                          scrollbarWidth: "thin",
+                          maxWidth: "100%",
+                          pointerEvents: "auto", // enable scroll here
+                        }}
+                        onMouseDown={(e) => e.stopPropagation()} // stop dropdown from opening while scroll
+                      >
+                        {selectedAISoftwareFeature.length === 0 ? (
+                          <span className="text-muted">
+                            -- Select AI/Software Features --
+                          </span>
+                        ) : (
+                          <>
+                            {aiSoftwareFeatures
+                              .filter((m) =>
+                                selectedAISoftwareFeature.includes(m._id)
+                              )
+                              .map((m) => (
+                                <span
+                                  key={m._id}
+                                  className="badge bg-light text-dark border d-flex align-items-center"
+                                  style={{
+                                    pointerEvents: "auto",
+                                  }}
+                                >
+                                  {m.name || m.title}
+                                  <button
+                                    type="button"
+                                    className="btn-close btn-sm ms-1"
+                                    aria-label="Remove"
+                                    style={{ fontSize: "0.65rem" }}
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      setSelectedAISoftwareFeature(
+                                        selectedAISoftwareFeature.filter(
+                                          (id) => id !== m._id
+                                        )
+                                      );
+                                    }}
+                                  />
+                                </span>
+                              ))}
+                          </>
+                        )}
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
               {/* Ai Software Features ends */}
@@ -1787,41 +1913,104 @@ const CreateList = () => {
               {/* Terrain Capability start */}
               <div className="col-lg-6 col-xl-6">
                 <div className="my_profile_setting_input ui_kit_select_search form-group">
-                  <label htmlFor="terrainCapability">Terrain Capability</label>
-                  <select
-                    id="terrainCapability"
-                    className="selectpicker form-select"
-                    value={
-                      selectedTerrainCapability.length
-                        ? selectedTerrainCapability
-                        : ["placeholder"]
-                    }
-                    onChange={handleTerrainCapabilityChange}
-                    data-live-search="true"
-                    data-width="100%"
-                    multiple
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      height: "45px",
-                    }}
-                  >
-                    <option
+                  <label htmlFor="terrainCapabilitySelect">Terrain Capability Type</label>
+
+                  <div className="position-relative">
+                    <select
+                      id="terrainCapabilitySelect"
+                      className="selectpicker form-select terrainCapability-select"
                       value="placeholder"
-                      disabled
-                      hidden={selectedTerrainCapability.length > 0}
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        if (
+                          value !== "placeholder" &&
+                          !selectedTerrainCapability.includes(value)
+                        ) {
+                          setSelectedTerrainCapability([
+                            ...selectedTerrainCapability,
+                            value,
+                          ]);
+                        }
+                        e.target.blur(); // close dropdown after each select
+                      }}
+                      data-live-search="true"
+                      data-width="100%"
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        height: "45px",
+                      }}
                     >
-                      -- Select Terrain Capability --
-                    </option>
-                    {terrainCapabilities.map((terrainCapability) => (
-                      <option
-                        key={terrainCapability._id}
-                        value={terrainCapability._id}
-                      >
-                        {terrainCapability.name || terrainCapability.title}
+                      <option value="placeholder" disabled>
+                        &nbsp;
                       </option>
-                    ))}
-                  </select>
+                      {terrainCapabilities.map((terrainCapability) => (
+                        <option key={terrainCapability._id} value={terrainCapability._id}>
+                          {terrainCapability.name || terrainCapability.title}
+                        </option>
+                      ))}
+                    </select>
+
+                    {/* Overlay UI */}
+                    <div
+                      className="form-control position-absolute top-0 start-0 h-100 w-100 d-flex align-items-center px-3 pe-5"
+                      style={{
+                        background: "transparent",
+                        pointerEvents: "none", // disable by default
+                      }}
+                    >
+                      <div
+                        className="d-flex align-items-center flex-nowrap"
+                        style={{
+                          gap: "0.25rem",
+                          overflowX: "auto",
+                          whiteSpace: "nowrap",
+                          scrollbarWidth: "thin",
+                          maxWidth: "100%",
+                          pointerEvents: "auto", // enable scroll here
+                        }}
+                        onMouseDown={(e) => e.stopPropagation()} // stop dropdown from opening while scroll
+                      >
+                        {selectedTerrainCapability.length === 0 ? (
+                          <span className="text-muted">
+                            -- Select Terrain Capabilities --
+                          </span>
+                        ) : (
+                          <>
+                            {terrainCapabilities
+                              .filter((m) =>
+                                selectedTerrainCapability.includes(m._id)
+                              )
+                              .map((m) => (
+                                <span
+                                  key={m._id}
+                                  className="badge bg-light text-dark border d-flex align-items-center"
+                                  style={{
+                                    pointerEvents: "auto",
+                                  }}
+                                >
+                                  {m.name || m.title}
+                                  <button
+                                    type="button"
+                                    className="btn-close btn-sm ms-1"
+                                    aria-label="Remove"
+                                    style={{ fontSize: "0.65rem" }}
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      setSelectedTerrainCapability(
+                                        selectedTerrainCapability.filter(
+                                          (id) => id !== m._id
+                                        )
+                                      );
+                                    }}
+                                  />
+                                </span>
+                              ))}
+                          </>
+                        )}
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
               {/* Terrain Capability ends */}
@@ -1829,43 +2018,104 @@ const CreateList = () => {
               {/* Communication Method start */}
               <div className="col-lg-6 col-xl-6">
                 <div className="my_profile_setting_input ui_kit_select_search form-group">
-                  <label htmlFor="communicationMethod">
-                    Communication Method
-                  </label>
-                  <select
-                    id="communicationMethod"
-                    className="selectpicker form-select"
-                    value={
-                      selectedCommunicationMethod.length
-                        ? selectedCommunicationMethod
-                        : ["placeholder"]
-                    }
-                    onChange={handleCommunicationMethodChange}
-                    data-live-search="true"
-                    data-width="100%"
-                    multiple
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      height: "45px",
-                    }}
-                  >
-                    <option
+                  <label htmlFor="communicationMethodSelect">Communication Method Type</label>
+
+                  <div className="position-relative">
+                    <select
+                      id="communicationMethodSelect"
+                      className="selectpicker form-select communicationMethod-select"
                       value="placeholder"
-                      disabled
-                      hidden={selectedCommunicationMethod.length > 0}
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        if (
+                          value !== "placeholder" &&
+                          !selectedCommunicationMethod.includes(value)
+                        ) {
+                          setSelectedCommunicationMethod([
+                            ...selectedCommunicationMethod,
+                            value,
+                          ]);
+                        }
+                        e.target.blur(); // close dropdown after each select
+                      }}
+                      data-live-search="true"
+                      data-width="100%"
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        height: "45px",
+                      }}
                     >
-                      -- Select Communication Method --
-                    </option>
-                    {communicationMethods.map((communicationMethod) => (
-                      <option
-                        key={communicationMethod._id}
-                        value={communicationMethod._id}
-                      >
-                        {communicationMethod.name || communicationMethod.title}
+                      <option value="placeholder" disabled>
+                        &nbsp;
                       </option>
-                    ))}
-                  </select>
+                      {communicationMethods.map((communicationMethod) => (
+                        <option key={communicationMethod._id} value={communicationMethod._id}>
+                          {communicationMethod.name || communicationMethod.title}
+                        </option>
+                      ))}
+                    </select>
+
+                    {/* Overlay UI */}
+                    <div
+                      className="form-control position-absolute top-0 start-0 h-100 w-100 d-flex align-items-center px-3 pe-5"
+                      style={{
+                        background: "transparent",
+                        pointerEvents: "none", // disable by default
+                      }}
+                    >
+                      <div
+                        className="d-flex align-items-center flex-nowrap"
+                        style={{
+                          gap: "0.25rem",
+                          overflowX: "auto",
+                          whiteSpace: "nowrap",
+                          scrollbarWidth: "thin",
+                          maxWidth: "100%",
+                          pointerEvents: "auto", // enable scroll here
+                        }}
+                        onMouseDown={(e) => e.stopPropagation()} // stop dropdown from opening while scroll
+                      >
+                        {selectedCommunicationMethod.length === 0 ? (
+                          <span className="text-muted">
+                            -- Select Communication Methods --
+                          </span>
+                        ) : (
+                          <>
+                            {communicationMethods
+                              .filter((m) =>
+                                selectedCommunicationMethod.includes(m._id)
+                              )
+                              .map((m) => (
+                                <span
+                                  key={m._id}
+                                  className="badge bg-light text-dark border d-flex align-items-center"
+                                  style={{
+                                    pointerEvents: "auto",
+                                  }}
+                                >
+                                  {m.name || m.title}
+                                  <button
+                                    type="button"
+                                    className="btn-close btn-sm ms-1"
+                                    aria-label="Remove"
+                                    style={{ fontSize: "0.65rem" }}
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      setSelectedCommunicationMethod(
+                                        selectedCommunicationMethod.filter(
+                                          (id) => id !== m._id
+                                        )
+                                      );
+                                    }}
+                                  />
+                                </span>
+                              ))}
+                          </>
+                        )}
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
               {/* Communication Method ends */}
@@ -1873,38 +2123,104 @@ const CreateList = () => {
               {/* Payload Type start */}
               <div className="col-lg-6 col-xl-6">
                 <div className="my_profile_setting_input ui_kit_select_search form-group">
-                  <label htmlFor="payloadType">Payload Type Supported</label>
-                  <select
-                    id="payloadType"
-                    className="selectpicker form-select"
-                    value={
-                      selectedPayloadType.length
-                        ? selectedPayloadType
-                        : ["placeholder"]
-                    }
-                    onChange={handlePayloadTypeChange}
-                    data-live-search="true"
-                    data-width="100%"
-                    multiple
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      height: "45px",
-                    }}
-                  >
-                    <option
+                  <label htmlFor="payloadTypeSelect">Payload Type</label>
+
+                  <div className="position-relative">
+                    <select
+                      id="payloadTypeSelect"
+                      className="selectpicker form-select payloadType-select"
                       value="placeholder"
-                      disabled
-                      hidden={selectedPayloadType.length > 0}
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        if (
+                          value !== "placeholder" &&
+                          !selectedPayloadType.includes(value)
+                        ) {
+                          setSelectedPayloadType([
+                            ...selectedPayloadType,
+                            value,
+                          ]);
+                        }
+                        e.target.blur(); // close dropdown after each select
+                      }}
+                      data-live-search="true"
+                      data-width="100%"
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        height: "45px",
+                      }}
                     >
-                      -- Select Payload Type --
-                    </option>
-                    {payloadTypes.map((payloadType) => (
-                      <option key={payloadType._id} value={payloadType._id}>
-                        {payloadType.name || payloadType.title}
+                      <option value="placeholder" disabled>
+                        &nbsp;
                       </option>
-                    ))}
-                  </select>
+                      {payloadTypes.map((payloadType) => (
+                        <option key={payloadType._id} value={payloadType._id}>
+                          {payloadType.name || payloadType.title}
+                        </option>
+                      ))}
+                    </select>
+
+                    {/* Overlay UI */}
+                    <div
+                      className="form-control position-absolute top-0 start-0 h-100 w-100 d-flex align-items-center px-3 pe-5"
+                      style={{
+                        background: "transparent",
+                        pointerEvents: "none", // disable by default
+                      }}
+                    >
+                      <div
+                        className="d-flex align-items-center flex-nowrap"
+                        style={{
+                          gap: "0.25rem",
+                          overflowX: "auto",
+                          whiteSpace: "nowrap",
+                          scrollbarWidth: "thin",
+                          maxWidth: "100%",
+                          pointerEvents: "auto", // enable scroll here
+                        }}
+                        onMouseDown={(e) => e.stopPropagation()} // stop dropdown from opening while scroll
+                      >
+                        {selectedPayloadType.length === 0 ? (
+                          <span className="text-muted">
+                            -- Select Payload Types --
+                          </span>
+                        ) : (
+                          <>
+                            {payloadTypes
+                              .filter((m) =>
+                                selectedPayloadType.includes(m._id)
+                              )
+                              .map((m) => (
+                                <span
+                                  key={m._id}
+                                  className="badge bg-light text-dark border d-flex align-items-center"
+                                  style={{
+                                    pointerEvents: "auto",
+                                  }}
+                                >
+                                  {m.name || m.title}
+                                  <button
+                                    type="button"
+                                    className="btn-close btn-sm ms-1"
+                                    aria-label="Remove"
+                                    style={{ fontSize: "0.65rem" }}
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      setSelectedPayloadType(
+                                        selectedPayloadType.filter(
+                                          (id) => id !== m._id
+                                        )
+                                      );
+                                    }}
+                                  />
+                                </span>
+                              ))}
+                          </>
+                        )}
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
               {/* Payload Type ends */}
@@ -2014,10 +2330,10 @@ const CreateList = () => {
                     style={
                       featuredimage !== null
                         ? {
-                            backgroundImage: `url(${URL.createObjectURL(
-                              featuredimage
-                            )})`,
-                          }
+                          backgroundImage: `url(${URL.createObjectURL(
+                            featuredimage
+                          )})`,
+                        }
                         : undefined
                     }
                     htmlFor="featuredimage"
@@ -2034,29 +2350,29 @@ const CreateList = () => {
                 <ul className="mb-0">
                   {propertySelectedImgs.length > 0
                     ? propertySelectedImgs?.map((item, index) => (
-                        <li key={index} className="list-inline-item">
-                          <div className="portfolio_item">
-                            <Image
-                              width={200}
-                              height={200}
-                              className="img-fluid cover"
-                              src={URL.createObjectURL(item)}
-                              alt="fp1.jpg"
-                            />
-                            <div
-                              className="edu_stats_list"
-                              data-bs-toggle="tooltip"
-                              data-bs-placement="top"
-                              title="Delete"
-                              data-original-title="Delete"
-                            >
-                              <a onClick={() => deleteImage(item.name)}>
-                                <span className="flaticon-garbage"></span>
-                              </a>
-                            </div>
+                      <li key={index} className="list-inline-item">
+                        <div className="portfolio_item">
+                          <Image
+                            width={200}
+                            height={200}
+                            className="img-fluid cover"
+                            src={URL.createObjectURL(item)}
+                            alt="fp1.jpg"
+                          />
+                          <div
+                            className="edu_stats_list"
+                            data-bs-toggle="tooltip"
+                            data-bs-placement="top"
+                            title="Delete"
+                            data-original-title="Delete"
+                          >
+                            <a onClick={() => deleteImage(item.name)}>
+                              <span className="flaticon-garbage"></span>
+                            </a>
                           </div>
-                        </li>
-                      ))
+                        </div>
+                      </li>
+                    ))
                     : undefined}
                   {/* End li */}
                 </ul>
