@@ -262,17 +262,6 @@ const CreateList = () => {
     }
   };
 
-  // const handleStateChange = async (e) => {
-  //   const value = e.target.value;
-  //   setSelectedState(value);
-  //   try {
-  //     const res = await getCityByStateTableData(value);
-  //     setCities(res.data || []);
-  //   } catch (err) {
-  //     console.error("Error fetching cities:", err);
-  //   }
-  // };
-
   const handleCategoryChange = async (e) => {
     const value = e.target.value;
     setSelectedCategory(value);
@@ -377,10 +366,6 @@ const CreateList = () => {
     );
     setSelectedMaterials(values);
   };
-
-  // const handleYearChange = (e) => {
-  //   setLaunchYear(e.target.value);
-  // };
 
   // For unit dropdowns (hardcoded options)
   const handleLengthUnitChange = (e) => {
