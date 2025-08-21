@@ -1706,40 +1706,108 @@ const CreateList = () => {
               {/* Navigation Types ends */}
 
               {/* Sensor start */}
-              <div className="col-lg-6 col-xl-6">
-                <div className="my_profile_setting_input ui_kit_select_search form-group">
-                  <label htmlFor="sensor">Sensor</label>
-                  <select
-                    id="sensor"
-                    className="selectpicker form-select"
-                    value={
-                      selectedSensor.length ? selectedSensor : ["placeholder"]
-                    }
-                    onChange={handleSensorChange}
-                    data-live-search="true"
-                    data-width="100%"
-                    multiple
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      height: "45px",
-                    }}
-                  >
-                    <option
-                      value="placeholder"
-                      disabled
-                      hidden={selectedSensor.length > 0}
-                    >
-                      -- Select Sensor --
-                    </option>
-                    {sensors.map((sensor) => (
-                      <option key={sensor._id} value={sensor._id}>
-                        {sensor.name || sensor.title}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              </div>
+             <div className="col-lg-6 col-xl-6">
+                    <div className="my_profile_setting_input ui_kit_select_search form-group">
+                      <label htmlFor="sensorSelect">Sensor</label>
+
+                      <div className="position-relative">
+                        <select
+                          id="sensorSelect"
+                          className="selectpicker form-select sensor  -select"
+                          value="placeholder"
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            if (
+                              value !== "placeholder" &&
+                              !selectedSensor.includes(value)
+                            ) {
+                              setSelectedSensor([
+                                ...selectedSensor,
+                                value,
+                              ]);
+                            }
+                            e.target.blur(); // close dropdown after each select
+                          }}
+                          data-live-search="true"
+                          data-width="100%"
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            height: "45px",
+                          }}
+                        >
+                          <option value="placeholder" disabled>
+                            &nbsp;
+                          </option>
+                          {sensors.map((sensor) => (
+                            <option key={sensor._id} value={sensor._id}>
+                              {sensor.name || sensor.title}
+                            </option>
+                          ))}
+                        </select>
+
+                        {/* Overlay UI */}
+                        <div
+                          className="form-control position-absolute top-0 start-0 h-100 w-100 d-flex align-items-center px-3 pe-5"
+                          style={{
+                            background: "transparent",
+                            pointerEvents: "none", 
+                          }}
+                        >
+                          <div
+                            className="d-flex align-items-center flex-nowrap"
+                            style={{
+                              gap: "0.25rem",
+                              overflowX: "auto",
+                              whiteSpace: "nowrap",
+                              scrollbarWidth: "thin",
+                              maxWidth: "100%",
+                              pointerEvents: "auto", // enable scroll here
+                            }}
+                            onMouseDown={(e) => e.stopPropagation()} // stop dropdown from opening while scroll
+                          >
+                            {selectedSensor.length === 0 ? (
+                              <span className="text-muted">
+                                -- Select Sensor --
+                              </span>
+                            ) : (
+                              <>
+                                {sensors
+                                  .filter((m) =>
+                                    selectedSensor.includes(m._id)
+                                  )
+                                  .map((m) => (
+                                    <span
+                                      key={m._id}
+                                      className="badge bg-light text-dark border d-flex align-items-center"
+                                      style={{
+                                        pointerEvents: "auto",
+                                      }}
+                                    >
+                                      {m.name || m.title}
+                                      <button
+                                        type="button"
+                                        className="btn-close btn-sm ms-1"
+                                        aria-label="Remove"
+                                        style={{ fontSize: "0.65rem" }}
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          setSelectedSensor(
+                                            selectedSensor.filter(
+                                              (id) => id !== m._id
+                                            )
+                                          );
+                                        }}
+                                      />
+                                    </span>
+                                  ))}
+                              </>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
               {/* Sensor ends */}
 
               {/* Ai Software Features start */}
