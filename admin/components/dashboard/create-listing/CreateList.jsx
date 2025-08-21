@@ -1453,6 +1453,7 @@ const CreateList = () => {
                   <div className="col-lg-6 col-xl-6">
                     <div className="my_profile_setting_input ui_kit_select_search form-group">
                       <label htmlFor="colorSelect">Color</label>
+
                       <div className="position-relative">
                         <select
                           id="colorSelect"
@@ -1466,7 +1467,7 @@ const CreateList = () => {
                             ) {
                               setSelectedColors([...selectedColors, value]);
                             }
-                            e.target.blur(); // close dropdown after each select
+                            e.target.blur(); // dropdown band ho jaye select ke baad
                           }}
                           data-live-search="true"
                           data-width="100%"
@@ -1486,59 +1487,63 @@ const CreateList = () => {
                           ))}
                         </select>
 
+                        {/* Overlay UI with scroll */}
                         {/* Overlay UI */}
                         <div
-                          className="form-control position-absolute top-0 start-0 h-100 w-100 d-flex align-items-center px-3 pe-5 flex-wrap"
+                          className="form-control position-absolute top-0 start-0 h-100 w-100 d-flex align-items-center px-3 pe-5"
                           style={{
                             background: "transparent",
-                            pointerEvents: "none",
-                            gap: "0.25rem",
-                            overflow: "hidden",
+                            pointerEvents: "none", // block all by default
                           }}
                         >
-                          {selectedColors.length === 0 ? (
-                            <span className="text-muted">
-                              -- Select Colors --
-                            </span>
-                          ) : (
-                            <>
-                              {colors
-                                .filter((c) => selectedColors.includes(c._id))
-                                .slice(0, 3) // sirf pehle 3 badges
-                                .map((c) => (
-                                  <span
-                                    key={c._id}
-                                    className="badge bg-light text-dark border d-flex align-items-center"
-                                    style={{
-                                      pointerEvents: "auto",
-                                      whiteSpace: "nowrap",
-                                    }}
-                                  >
-                                    {c.name}
-                                    <button
-                                      type="button"
-                                      className="btn-close btn-sm ms-1"
-                                      aria-label="Remove"
-                                      style={{ fontSize: "0.65rem" }}
-                                      onClick={(e) => {
-                                        e.stopPropagation();
-                                        setSelectedColors(
-                                          selectedColors.filter(
-                                            (id) => id !== c._id
-                                          )
-                                        );
+                          <div
+                            className="d-flex align-items-center flex-nowrap"
+                            style={{
+                              gap: "0.25rem",
+                              overflowX: "auto",
+                              whiteSpace: "nowrap",
+                              scrollbarWidth: "thin",
+                              maxWidth: "100%",
+                              pointerEvents: "auto", // enable only here
+                            }}
+                            onMouseDown={(e) => e.stopPropagation()} // stop dropdown opening on scroll
+                          >
+                            {selectedColors.length === 0 ? (
+                              <span className="text-muted">
+                                -- Select Colors --
+                              </span>
+                            ) : (
+                              <>
+                                {colors
+                                  .filter((c) => selectedColors.includes(c._id))
+                                  .map((c) => (
+                                    <span
+                                      key={c._id}
+                                      className="badge bg-light text-dark border d-flex align-items-center"
+                                      style={{
+                                        pointerEvents: "auto",
                                       }}
-                                    />
-                                  </span>
-                                ))}
-
-                              {selectedColors.length > 3 && (
-                                <span className="badge bg-secondary text-white">
-                                  +{selectedColors.length - 3} more
-                                </span>
-                              )}
-                            </>
-                          )}
+                                    >
+                                      {c.name}
+                                      <button
+                                        type="button"
+                                        className="btn-close btn-sm ms-1"
+                                        aria-label="Remove"
+                                        style={{ fontSize: "0.65rem" }}
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          setSelectedColors(
+                                            selectedColors.filter(
+                                              (id) => id !== c._id
+                                            )
+                                          );
+                                        }}
+                                      />
+                                    </span>
+                                  ))}
+                              </>
+                            )}
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -1549,37 +1554,103 @@ const CreateList = () => {
                   <div className="col-lg-6 col-xl-6">
                     <div className="my_profile_setting_input ui_kit_select_search form-group">
                       <label htmlFor="materialSelect">Material</label>
-                      <select
-                        id="materialSelect"
-                        className="selectpicker form-select"
-                        value={
-                          selectedMaterials.length
-                            ? selectedMaterials
-                            : ["placeholder"]
-                        }
-                        onChange={handleMaterialChange}
-                        data-live-search="true"
-                        data-width="100%"
-                        multiple
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          height: "45px",
-                        }}
-                      >
-                        <option
+
+                      <div className="position-relative">
+                        <select
+                          id="materialSelect"
+                          className="selectpicker form-select material-select"
                           value="placeholder"
-                          disabled
-                          hidden={selectedMaterials.length > 0}
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            if (
+                              value !== "placeholder" &&
+                              !selectedMaterials.includes(value)
+                            ) {
+                              setSelectedMaterials([
+                                ...selectedMaterials,
+                                value,
+                              ]);
+                            }
+                            e.target.blur(); // close dropdown after each select
+                          }}
+                          data-live-search="true"
+                          data-width="100%"
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            height: "45px",
+                          }}
                         >
-                          -- Select Materials --
-                        </option>
-                        {materials.map((material) => (
-                          <option key={material._id} value={material._id}>
-                            {material.name || material.title}
+                          <option value="placeholder" disabled>
+                            &nbsp;
                           </option>
-                        ))}
-                      </select>
+                          {materials.map((material) => (
+                            <option key={material._id} value={material._id}>
+                              {material.name || material.title}
+                            </option>
+                          ))}
+                        </select>
+
+                        {/* Overlay UI */}
+                        <div
+                          className="form-control position-absolute top-0 start-0 h-100 w-100 d-flex align-items-center px-3 pe-5"
+                          style={{
+                            background: "transparent",
+                            pointerEvents: "none", // disable by default
+                          }}
+                        >
+                          <div
+                            className="d-flex align-items-center flex-nowrap"
+                            style={{
+                              gap: "0.25rem",
+                              overflowX: "auto",
+                              whiteSpace: "nowrap",
+                              scrollbarWidth: "thin",
+                              maxWidth: "100%",
+                              pointerEvents: "auto", // enable scroll here
+                            }}
+                            onMouseDown={(e) => e.stopPropagation()} // stop dropdown from opening while scroll
+                          >
+                            {selectedMaterials.length === 0 ? (
+                              <span className="text-muted">
+                                -- Select Materials --
+                              </span>
+                            ) : (
+                              <>
+                                {materials
+                                  .filter((m) =>
+                                    selectedMaterials.includes(m._id)
+                                  )
+                                  .map((m) => (
+                                    <span
+                                      key={m._id}
+                                      className="badge bg-light text-dark border d-flex align-items-center"
+                                      style={{
+                                        pointerEvents: "auto",
+                                      }}
+                                    >
+                                      {m.name || m.title}
+                                      <button
+                                        type="button"
+                                        className="btn-close btn-sm ms-1"
+                                        aria-label="Remove"
+                                        style={{ fontSize: "0.65rem" }}
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          setSelectedMaterials(
+                                            selectedMaterials.filter(
+                                              (id) => id !== m._id
+                                            )
+                                          );
+                                        }}
+                                      />
+                                    </span>
+                                  ))}
+                              </>
+                            )}
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
                   {/* Material Select ends */}
