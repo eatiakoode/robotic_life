@@ -96,6 +96,17 @@ const getRobotById = async (req, res) => {
 // Update a robot
 const updateRobot = async (req, res) => {
   try {
+    if (req.files && req.files.length > 0) {
+      const processedImages = await robotImgResize(req);
+      if (processedImages.length > 0) {
+        req.body.images = "public/images/robot/" + processedImages[0];
+      }
+    }
+    if (req.body.slug) {
+      req.body.slug = slugify(req.body.slug.toLowerCase());
+    } else if (req.body.name) {
+      req.body.slug = slugify(req.body.name.toLowerCase());
+    }
     const robot = await Robot.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
       runValidators: true,
