@@ -137,6 +137,12 @@ const RobotSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "PayloadType"
     }],
+    metaTitle: {
+      type: String,
+    },
+    metaDescription: {
+      type: String,
+    },
 
   },
   { timestamps: true }
