@@ -2190,7 +2190,7 @@ const EditList = () => {
         </div>
 
         {/* Featured image start */}
-        <div className="col-lg-12">
+        {/* <div className="col-lg-12">
           <div className="my_profile_setting_input form-group">
             <label htmlFor="featuredImage">Featured Image</label>
             <input
@@ -2218,7 +2218,7 @@ const EditList = () => {
               </div>
             )}
           </div>
-        </div>
+        </div> */}
 
         {/* Multiple images start */}
         <div className="col-lg-12">
@@ -2234,7 +2234,7 @@ const EditList = () => {
             />
             
             {/* Display existing images */}
-            {existingImages.length > 0 && (
+            {/* {existingImages.length > 0 && (
               <div className="mt-3">
                 <h6>Existing Images:</h6>
                 <div className="row">
@@ -2261,7 +2261,7 @@ const EditList = () => {
                   ))}
                 </div>
               </div>
-            )}
+            )} */}
 
             {/* Display new selected images */}
             {robotSelectedImgs.length > 0 && (
