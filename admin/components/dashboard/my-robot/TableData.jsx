@@ -57,12 +57,12 @@ const TableData = ({ robots = [], setRobots }) => {
     if (item.images && Array.isArray(item.images) && item.images.length > 0) {
       // Use the first image from the images array
       imageUrl = item.images[0];
-    } else if (item.Image) {
-      // Fallback to Image field (capital I) if it exists
-      imageUrl = typeof item.Image === 'object' ? item.Image.url : item.Image;
-    } else if (item.image) {
-      // Fallback to image field (lowercase) if it exists  
-      imageUrl = typeof item.image === 'object' ? item.image.url : item.image;
+    } else if (item.images) {
+      // Fallback to images field (capital I) if it exists
+      imageUrl = typeof item.images === 'object' ? item.images.url : item.images;
+    } else if (item.images) {
+      // Fallback to image field (lowercase) if it exists
+      imageUrl = typeof item.images === 'object' ? item.images.url : item.images;
     }
     
     if (!imageUrl) {
