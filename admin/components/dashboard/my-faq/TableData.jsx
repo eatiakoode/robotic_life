@@ -13,15 +13,15 @@ const TableData = ({faqList,setFaqList}) => {
         if (!isConfirmed) return;
     
         try {
-          const data = await deleteFaqAPI(id); // 🔹 Call the API function
+          const data = await deleteFaqAPI(id);
           
           // alert(data.message);
           toast.success(data.message);
           setFaqList((prevFaqList) => prevFaqList.filter((faq) => faq._id !== id));
-          //setTitle(""); // ✅ Reset input after success
+          //setTitle(""); 
         } catch (error) {
           alert("Failed to delete Faq.");
-          //setError(error.message); // ❌ Show error if request fails
+          //setError(error.message); // 
         }
       };
   let theadConent = [
@@ -36,7 +36,7 @@ const TableData = ({faqList,setFaqList}) => {
         <div className="feat_robot list favorite_page style2">
           <div className="details">
             <div className="tc_content">
-              <h4>{item.title}</h4>
+              <h4>{item.name || item.title}</h4>
               
             </div>
           </div>

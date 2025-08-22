@@ -16,7 +16,7 @@ const CreateList = () => {
     const [loading, setLoading] = useState(true);
     const [description, setDescription] = useState("");
     const [error, setError] = useState("");  
-    const [properties, setProperties] = useState([]);
+    const [robots, setRobots] = useState([]);
     const [selectedRobot, setSelectedRobot] = useState("");
     useEffect(() => {
       if (!id) return;      
@@ -38,7 +38,7 @@ const CreateList = () => {
       };
   
       fetchFaq();
-      const fetchProperties = async () => {
+      const fetchRobots = async () => {
               try {
                  const filter = {
     limit: 1000,
@@ -47,13 +47,13 @@ const CreateList = () => {
                 const response = await getRobotTableData(filter);
                 
         
-                setProperties(response?.items || []);
+                setRobots(response?.items || []);
               } catch (err) {
                 console.error("Error fetching robot:", err);
               }
             };
         
-            fetchProperties();
+            fetchRobots();
     }, [id]);
   
     const handleSubmit = async (e) => {
@@ -114,7 +114,7 @@ const CreateList = () => {
               <option value="">-- Select Robot --</option>
               {robots.map((robot) => (
                 <option key={robot._id} value={robot._id}>
-                  {robot.title}
+                  {robot.name || robot.title}
                 </option>
               ))}
             </select>

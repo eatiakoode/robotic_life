@@ -73,6 +73,7 @@ const RobotSchema = new mongoose.Schema(
     },
     weight: unitValueSchema,
     batteryCapacity: unitValueSchema,
+    batteryChargeTime: unitValueSchema,
     loadCapacity: unitValueSchema,
     operatingTemperature: rangeUnitSchema,
     range: unitValueSchema,
@@ -132,6 +133,7 @@ const RobotSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "PayloadType"
     }],
+    
   },
   { timestamps: true }
 );

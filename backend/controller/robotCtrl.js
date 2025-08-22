@@ -12,7 +12,7 @@ const createRobot = asyncHandler(async (req, res) => {
     if (req.files) {
       const processedImages = await robotImgResize(req);
       if (processedImages.length > 0) {
-        req.body.Image = "public/images/robot/" + processedImages[0];
+        req.body.images = "public/images/robot/" + processedImages[0];
       }
     }
     if (req.body.slug) {
