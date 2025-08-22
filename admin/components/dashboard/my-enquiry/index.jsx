@@ -105,14 +105,14 @@ const index = () => {
                       <TableData enquiryList={enquiryList} setEnquiryList={setEnquiryList}/>
                     </div>
 
-                    <div className="mbp_pagination">
+                    {/* <div className="mbp_pagination">
                         <Pagination
                         totalCount={totalCount}
                          pageSize={pageSize}
                       currentPage={currentPage}
                         onPageChange={(page) => setCurrentPage(page)}
                        />
-                      </div>
+                      </div> */}
 
                   </div>
                 </div>

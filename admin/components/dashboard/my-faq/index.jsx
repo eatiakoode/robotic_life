@@ -117,14 +117,14 @@ const index = () => {
                       </div>
                       {/* End .table-responsive */}
 
-                      <div className="mbp_pagination">
+                      {/* <div className="mbp_pagination">
                         <Pagination
                         totalCount={totalCount}
                          pageSize={pageSize}
                       currentPage={currentPage}
                         onPageChange={(page) => setCurrentPage(page)}
                        />
-                      </div>
+                      </div> */}
                       {/* End .mbp_pagination */}
                     </div>
                     {/* End .property_table */}
