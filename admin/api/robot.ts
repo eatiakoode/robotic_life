@@ -1,102 +1,109 @@
 // api/robot.ts
 
-export const addRobotAPI = async (formData: FormData) => {
-  const userData = JSON.parse(localStorage.getItem("user") || "{}");
-  const token = userData?.token;
+// 🔑 Safe helper for getting token (SSR compatible)
+function getAuthToken(): string | null {
+  if (typeof window === "undefined") {
+    return null; // No localStorage during SSR
+  }
+  try {
+    const userData = JSON.parse(localStorage.getItem("user") || "{}");
+    return userData?.token || null;
+  } catch {
+    return null;
+  }
+}
 
+/**
+ * Add new robot
+ */
+export const addRobotAPI = async (formData: FormData) => {
+  const token = getAuthToken();
   if (!token) throw new Error("User not authenticated!");
 
-  const response = await fetch(`${process.env.NEXT_PUBLIC_ADMIN_API_URL}api/robot`, {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-    body: formData,
-  });
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_ADMIN_API_URL}api/robot`,
+    {
+      method: "POST",
+      headers: { Authorization: `Bearer ${token}` },
+      body: formData,
+    }
+  );
 
   if (!response.ok) {
-    const errorData = await response.json();
+    const errorData = await response.json().catch(() => ({}));
     throw new Error(errorData.message || "Failed to add Robot");
   }
 
   return response.json();
 };
 
-// Optimized function with proper error handling and caching
-export async function getRobotTableData(filter: { limit: number; page: number }, token?: string) {
-  try {
-    // Get token from localStorage if not provided
-    if (!token && typeof window !== 'undefined') {
-      try {
-        const userData = JSON.parse(localStorage.getItem("user") || "{}");
-        token = userData?.token;
-      } catch (err) {
-        console.error("Error parsing user data from localStorage:", err);
-      }
-    }
-    
-    if (!token) {
-      const error = new Error("Authentication required. Please log in.");
-      if (typeof window === 'undefined') {
-        console.warn("No auth token available on server-side");
-        return { items: [], totalCount: 0 };
-      }
-      throw error;
-    }
+/**
+ * Get robot table data with pagination
+ * ✅ SSR safe (returns empty if no token on server-side)
+ */
+export async function getRobotTableData(
+  filter: { limit: number; page: number },
+  passedToken?: string
+) {
+  let token = passedToken || getAuthToken();
 
-    // Calculate skip value (convert page to 0-based index)
+  // 🚀 On server, return empty instead of throwing
+  if (!token && typeof window === "undefined") {
+    return {
+      items: [],
+      totalCount: 0,
+      currentPage: filter.page,
+      totalPages: 0,
+      hasNextPage: false,
+      hasPrevPage: false,
+    };
+  }
+
+  if (!token) throw new Error("Authentication required. Please log in.");
+
+  try {
     const skip = Math.max(0, (filter.page - 1) * filter.limit);
     const limit = Math.max(1, filter.limit);
 
     const url = `${process.env.NEXT_PUBLIC_ADMIN_API_URL}api/robot?limit=${limit}&skip=${skip}`;
-    
-    const requestOptions = {
+
+    const response = await fetch(url, {
       method: "GET",
       headers: {
-        "Authorization": `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       },
-      // Add cache control for better performance
-      ...(typeof window === 'undefined' && { 
-        next: { revalidate: 300 } // 5 minutes cache
+      ...(typeof window === "undefined" && {
+        next: { revalidate: 300 },
       }),
-    };
-
-    const response = await fetch(url, requestOptions);
+    });
 
     if (!response.ok) {
-      let errorMessage = `HTTP ${response.status}`;
-      
-      try {
-        const errorData = await response.json();
-        errorMessage = errorData.message || errorData.error || errorMessage;
-      } catch {
-        errorMessage = `${errorMessage}: ${response.statusText}`;
-      }
-      
-      console.error(`API Error: ${errorMessage}`);
-      
-      // Handle specific error cases
-      if (response.status === 401) {
-        throw new Error("Authentication failed. Please log in again.");
-      } else if (response.status === 403) {
-        throw new Error("Access denied. Insufficient permissions.");
-      } else if (response.status >= 500) {
-        throw new Error("Server error. Please try again later.");
-      }
-      
+      const errorData = await response.json().catch(() => ({}));
+      let errorMessage =
+        errorData.message || errorData.error || `HTTP ${response.status}`;
+
+      if (response.status === 401) errorMessage = "Authentication failed.";
+      if (response.status === 403) errorMessage = "Access denied.";
+      if (response.status >= 500) errorMessage = "Server error.";
+
       throw new Error(errorMessage);
     }
 
     const data = await response.json();
-    
-    // Validate and normalize response structure
-    const items = Array.isArray(data.items) ? data.items : 
-                 Array.isArray(data) ? data : [];
-    
-    const totalCount = typeof data.totalCount === 'number' ? data.totalCount :
-                      typeof data.total === 'number' ? data.total :
-                      items.length;
+
+    const items = Array.isArray(data.items)
+      ? data.items
+      : Array.isArray(data)
+      ? data
+      : [];
+
+    const totalCount =
+      typeof data.totalCount === "number"
+        ? data.totalCount
+        : typeof data.total === "number"
+        ? data.total
+        : items.length;
 
     return {
       items,
@@ -104,124 +111,136 @@ export async function getRobotTableData(filter: { limit: number; page: number },
       currentPage: filter.page,
       totalPages: Math.ceil(totalCount / limit),
       hasNextPage: skip + limit < totalCount,
-      hasPrevPage: filter.page > 1
+      hasPrevPage: filter.page > 1,
     };
+  } catch (error: any) {
+    console.error("getRobotTableData error:", error.message);
 
-  } catch (error) {
-    console.error("getRobotTableData error:", error);
-    
-    // Re-throw authentication errors to handle them properly in UI
-    if (error.message.includes("Authentication") || error.message.includes("log in")) {
-      throw error;
-    }
-    
-    // For other errors, return empty state with error logged
-    return { 
-      items: [], 
+    // 🚀 Only bubble up auth error so UI can redirect
+    if (error.message.includes("Authentication")) throw error;
+
+    return {
+      items: [],
       totalCount: 0,
       currentPage: 1,
       totalPages: 0,
       hasNextPage: false,
       hasPrevPage: false,
-      error: error.message
+      error: error.message,
     };
   }
 }
 
-export const deleteRobotAPI = async (id: string) => {
-  const userData = JSON.parse(localStorage.getItem("user") || "{}");
-  const token = userData?.token;
+/**
+ * SWR-compatible fetcher
+ */
+export const robotFetcher = (url: string) => {
+  const token = getAuthToken();
+  if (!token) throw new Error("User not authenticated!");
+  return fetch(url, {
+    headers: { Authorization: `Bearer ${token}` },
+  }).then((res) => {
+    if (!res.ok) throw new Error("Failed to fetch robots");
+    return res.json();
+  });
+};
 
+/**
+ * Delete robot
+ */
+export const deleteRobotAPI = async (id: string) => {
+  const token = getAuthToken();
   if (!token) throw new Error("User not authenticated!");
 
-  const response = await fetch(`${process.env.NEXT_PUBLIC_ADMIN_API_URL}api/robot/${id}`, {
-    method: "DELETE",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    // Remove body as it's not needed for DELETE with id in URL
-  });
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_ADMIN_API_URL}api/robot/${id}`,
+    {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
 
   if (!response.ok) {
-    const errorData = await response.json();
+    const errorData = await response.json().catch(() => ({}));
     throw new Error(errorData.message || "Failed to delete Robot");
   }
 
   return response.json();
 };
 
-export const getRobotById = async (id: string, token?: string) => {
-  // Only access localStorage on client-side
-  if (!token && typeof window !== 'undefined') {
-    const userData = JSON.parse(localStorage.getItem("user") || "{}");
-    token = userData?.token;
-  }
+/**
+ * Get robot by ID
+ */
+export const getRobotById = async (id: string, passedToken?: string) => {
+  const token = passedToken || getAuthToken();
+  if (!token) throw new Error("User not authenticated!");
 
-  if (!token) {
-    if (typeof window === 'undefined') {
-      // Server-side: return null
-      return null;
-    } else {
-      // Client-side: throw error
-      throw new Error("User not authenticated!");
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_ADMIN_API_URL}api/robot/${id}`,
+    {
+      method: "GET",
+      headers: { Authorization: `Bearer ${token}` },
     }
-  }
-
-  const response = await fetch(`${process.env.NEXT_PUBLIC_ADMIN_API_URL}api/robot/${id}`, {
-    method: "GET",
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
+  );
 
   if (!response.ok) {
-    const errorData = await response.json();
+    const errorData = await response.json().catch(() => ({}));
     throw new Error(errorData.message || "Failed to get Robot");
   }
 
   return response.json();
 };
 
+/**
+ * Update robot
+ */
 export const updateRobotAPI = async (id: string, formData: FormData) => {
-  const userData = JSON.parse(localStorage.getItem("user") || "{}");
-  const token = userData?.token;
-
+  const token = getAuthToken();
   if (!token) throw new Error("User not authenticated!");
 
-  const response = await fetch(`${process.env.NEXT_PUBLIC_ADMIN_API_URL}api/robot/${id}`, {
-    method: "PUT",
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-    body: formData,
-  });
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_ADMIN_API_URL}api/robot/${id}`,
+    {
+      method: "PUT",
+      headers: { Authorization: `Bearer ${token}` },
+      body: formData,
+    }
+  );
 
   if (!response.ok) {
-    const errorData = await response.json();
+    const errorData = await response.json().catch(() => ({}));
     throw new Error(errorData.message || "Failed to update Robot");
   }
 
   return response.json();
 };
 
-export const deleteRobotSingleImagesAPI = async (payload: { id: string; image: string }) => {
-  const userData = JSON.parse(localStorage.getItem("user") || "{}");
-  const token = userData?.token;
-
+/**
+ * Delete single robot image
+ */
+export const deleteRobotSingleImagesAPI = async (payload: {
+  id: string;
+  image: string;
+}) => {
+  const token = getAuthToken();
   if (!token) throw new Error("User not authenticated!");
 
-  const response = await fetch(`${process.env.NEXT_PUBLIC_ADMIN_API_URL}api/robot/image`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify(payload),
-  });
-
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_ADMIN_API_URL}api/robot/image`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(payload),
+    }
+  );
   if (!response.ok) {
-    const errorData = await response.json();
+    const errorData = await response.json().catch(() => ({}));
     throw new Error(errorData.message || "Failed to delete Robot image");
   }
 
