@@ -32,7 +32,7 @@ const TableData = () => {
   let tbodyContent = blogList?.map((item) => (
     <tr key={item._id}>
       <td scope="row" className="align-middle text-center">
-        <h4 className="mb-0">{item.name}</h4>
+        <h4 className="mb-0">{item.title}</h4>
       </td>
 
       <td className="align-middle text-center">
