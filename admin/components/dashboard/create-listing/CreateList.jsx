@@ -27,14 +27,14 @@ import { toast } from "react-toastify";
 
 const CreateList = () => {
   const router = useRouter();
-  // const [pdffile, setPDFFile] = useState(null);
+  
   // --- State Hooks ---
   const [title, setTitle] = useState("");
   const [slug, setSlug] = useState("");
   const [description, setDescription] = useState("");
-
   const [price, setPrice] = useState("");
-  const [error, setError] = useState("");
+  const [error, setError] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [countries, setCountries] = useState([]);
   const [selectedCountry, setSelectedCountry] = useState("");
@@ -61,17 +61,17 @@ const CreateList = () => {
   const [runtime, setRuntime] = useState("");
   const [runtimeUnit, setRuntimeUnit] = useState("h");
   const [range, setRange] = useState("");
-  const [rangeUnit, setRangeUnit] = useState("km/h");
+  const [rangeUnit, setRangeUnit] = useState("km");
   const [speed, setSpeed] = useState("");
   const [speedUnit, setSpeedUnit] = useState("km/h");
   const [accuracy, setAccuracy] = useState("");
   const [accuracyUnit, setAccuracyUnit] = useState("cm");
   const [operatingTemperatureMin, setOperatingTemperatureMin] = useState("");
   const [operatingTemperatureMax, setOperatingTemperatureMax] = useState("");
-  const [operatingTemperatureUnit, setOperatingTemperatureUnit] =
-    useState("°C");
+  const [operatingTemperatureUnit, setOperatingTemperatureUnit] = useState("°C");
   const [chargingTime, setChargingTime] = useState("");
   const [chargingTimeUnit, setChargingTimeUnit] = useState("h");
+  
   const [selectedColors, setSelectedColors] = useState([]);
   const [colors, setColors] = useState([]);
   const [materials, setMaterials] = useState([]);
@@ -80,23 +80,17 @@ const CreateList = () => {
   const [selectedNavigationType, setSelectedNavigationType] = useState([]);
   const [sensors, setSensors] = useState([]);
   const [selectedSensor, setSelectedSensor] = useState([]);
-  const [selectedAISoftwareFeature, setSelectedAISoftwareFeature] = useState(
-    []
-  );
+  const [selectedAISoftwareFeature, setSelectedAISoftwareFeature] = useState([]);
   const [aiSoftwareFeatures, setAISoftwareFeatures] = useState([]);
   const [primaryFunctions, setPrimaryFunctions] = useState([]);
   const [primaryFunction, setPrimaryFunction] = useState([]);
   const [selectedPrimaryFunction, setSelectedPrimaryFunction] = useState("");
   const [operatingEnvironment, setOperatingEnvironment] = useState([]);
-  const [selectedOperatingEnvironment, setSelectedOperatingEnvironment] =
-    useState("");
+  const [selectedOperatingEnvironment, setSelectedOperatingEnvironment] = useState("");
   const [terrainCapabilities, setTerrainCapabilities] = useState([]);
-  const [selectedTerrainCapability, setSelectedTerrainCapability] = useState(
-    []
-  );
+  const [selectedTerrainCapability, setSelectedTerrainCapability] = useState([]);
   const [communicationMethods, setCommunicationMethods] = useState([]);
-  const [selectedCommunicationMethod, setSelectedCommunicationMethod] =
-    useState([]);
+  const [selectedCommunicationMethod, setSelectedCommunicationMethod] = useState([]);
   const [autonomyLevel, setAutonomyLevel] = useState([]);
   const [selectedAutonomyLevel, setSelectedAutonomyLevel] = useState("");
   const [payloadTypes, setPayloadTypes] = useState([]);
@@ -104,37 +98,23 @@ const CreateList = () => {
 
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("");
-
   const [subCategories, setSubCategories] = useState([]);
   const [selectedSubCategory, setSelectedSubCategory] = useState("");
-
   const [manufacturers, setManufacturers] = useState([]);
   const [selectedManufacturer, setSelectedManufacturer] = useState("");
 
-  const [videoembedcode, setVideoEmbedCode] = useState([]);
-  const [nearby, setNearBy] = useState([]);
-  const [specifications, setSpecifications] = useState([]);
-
-  const [metatitle, setMetatitle] = useState([]);
-  const [metadescription, setMetaDescription] = useState([]);
-
+  const [videoembedcode, setVideoEmbedCode] = useState("");
+  const [nearby, setNearBy] = useState("");
+  const [specifications, setSpecifications] = useState("");
+  const [metatitle, setMetatitle] = useState("");
+  const [metadescription, setMetaDescription] = useState("");
   const [featuredimage, setFeaturedImage] = useState(null);
-
-  const handleBedroomChange = (e) => {
-    setBedRooms(e.target.value);
-
-    // Clear custom input if not "Custom"
-    if (e.target.value !== "Custom") {
-      setCustomBedroom("");
-    }
-  };
+  const [robotSelectedImgs, setRobotSelectedImgs] = useState([]);
 
   // upload profile
   const uploadFeaturedImage = (e) => {
     setFeaturedImage(e.target.files[0]);
   };
-
-  const [robotSelectedImgs, setRobotSelectedImgs] = useState([]);
 
   // multiple image select
   const multipleImage = (e) => {
@@ -243,11 +223,13 @@ const CreateList = () => {
         );
       } catch (err) {
         console.error("Error loading initial data:", err);
+        toast.error("Failed to load form data. Please refresh the page.");
       }
     };
 
     fetchData();
   }, []);
+
   useEffect(() => {
     if (title) {
       const generatedSlug = title
@@ -262,7 +244,6 @@ const CreateList = () => {
   }, [title]);
 
   // --- Handlers ---
-
   const handleCountryChange = async (e) => {
     const value = e.target.value;
     setSelectedCountry(value);
@@ -379,306 +360,248 @@ const CreateList = () => {
     setSelectedMaterials(values);
   };
 
-  // For unit dropdowns (hardcoded options)
-  const handleLengthUnitChange = (e) => {
-    setLengthUnit(e.target.value);
-  };
-
-  const handleWidthUnitChange = (e) => {
-    setWidthUnit(e.target.value);
-  };
-
-  const handleHeightUnitChange = (e) => {
-    setHeightUnit(e.target.value);
-  };
-
-  const handleWeightUnitChange = (e) => {
-    setWeightUnit(e.target.value);
-  };
-
   // --- Submit ---
   const addRobo = async (e) => {
     e.preventDefault();
+    
+    if (isSubmitting) {
+      console.log("Already submitting, please wait...");
+      return;
+    }
+
+    console.log("Starting form submission...");
+    setIsSubmitting(true);
+    setError({});
+
     const newErrors = {};
 
-    // Validation list
+    // Updated validation - only check truly required fields
     const requiredFields = [
       { key: "title", value: title, name: "Title" },
-      { key: "slug", value: slug, name: "Slug" },
       { key: "description", value: description, name: "Description" },
       { key: "price", value: price, name: "Total Price" },
-      { key: "countryid", value: selectedCountry, name: "Country of Origin" },
-      { key: "categoryid", value: selectedCategory, name: "Category" },
-      {
-        key: "subcategoryid",
-        value: selectedSubCategory,
-        name: "Sub Category",
-      },
-      {
-        key: "manufacturerid",
-        value: selectedManufacturer,
-        name: "Manufacturer",
-      },
+      { key: "selectedCountry", value: selectedCountry, name: "Country of Origin" },
+      { key: "selectedCategory", value: selectedCategory, name: "Category" },
+      { key: "selectedSubCategory", value: selectedSubCategory, name: "Sub Category" },
+      { key: "selectedManufacturer", value: selectedManufacturer, name: "Manufacturer" },
       { key: "launchYear", value: launchYear, name: "Launch Year" },
-      { key: "length", value: length, name: "Length" },
-      { key: "width", value: width, name: "Width" },
-      { key: "height", value: height, name: "Height" },
-      { key: "weight", value: weight, name: "Weight" },
-      {
-        key: "batteryCapacity",
-        value: batteryCapacity,
-        name: "Battery Capacity",
-      },
-      { key: "runtime", value: runtime, name: "Runtime" },
-      { key: "speed", value: speed, name: "Speed" },
-      { key: "accuracy", value: accuracy, name: "Accuracy" },
       { key: "selectedPower", value: selectedPower, name: "Power Source" },
-      {
-        key: "videoembedcode",
-        value: videoembedcode,
-        name: "Video Embed Code",
-      },
-      {
-        key: "selectedPrimaryFunction",
-        value: selectedPrimaryFunction,
-        name: "Primary Function",
-      },
-      {
-        key: "selectedOperatingEnvironment",
-        value: selectedOperatingEnvironment,
-        name: "Operating Environment",
-      },
-      {
-        key: "selectedAutonomyLevel",
-        value: selectedAutonomyLevel,
-        name: "Autonomy Level",
-      },
-      {
-        key: "colors",
-        value: selectedColors.length > 0 ? selectedColors : null,
-        name: "Colors",
-      },
-      {
-        key: "materials",
-        value: selectedMaterials.length > 0 ? selectedMaterials : null,
-        name: "Materials",
-      },
-      {
-        key: "navigationTypes",
-        value:
-          selectedNavigationType.length > 0 ? selectedNavigationType : null,
-        name: "Navigation Types",
-      },
-      {
-        key: "sensors",
-        value: selectedSensor.length > 0 ? selectedSensor : null,
-        name: "Sensors",
-      },
-      {
-        key: "aiSoftwareFeatures",
-        value:
-          selectedAISoftwareFeature.length > 0
-            ? selectedAISoftwareFeature
-            : null,
-        name: "AI Software Features",
-      },
-      {
-        key: "terrainCapability",
-        value:
-          selectedTerrainCapability.length > 0
-            ? selectedTerrainCapability
-            : null,
-        name: "Terrain Capability",
-      },
-      {
-        key: "communicationMethod",
-        value:
-          selectedCommunicationMethod.length > 0
-            ? selectedCommunicationMethod
-            : null,
-        name: "Communication Method",
-      },
-      {
-        key: "payloadType",
-        value: selectedPayloadType.length > 0 ? selectedPayloadType : null,
-        name: "Payload Type",
-      },
+      { key: "selectedPrimaryFunction", value: selectedPrimaryFunction, name: "Primary Function" },
+      { key: "selectedOperatingEnvironment", value: selectedOperatingEnvironment, name: "Operating Environment" },
+      { key: "selectedAutonomyLevel", value: selectedAutonomyLevel, name: "Autonomy Level" },
+      { key: "videoembedcode", value: videoembedcode, name: "Video Embed Code" },
     ];
 
     // Check for empty required fields
     requiredFields.forEach((field) => {
-      if (
-        !field.value ||
-        (typeof field.value === "string" && !field.value.trim())
-      ) {
+      if (!field.value || (typeof field.value === "string" && !field.value.trim())) {
         newErrors[field.key] = `${field.name} is required`;
       }
     });
 
+    // Validate at least some specifications are provided
+    if (!length && !width && !height && !weight) {
+      newErrors.dimensions = "At least one dimension (length, width, height, or weight) is required";
+    }
+
     if (Object.keys(newErrors).length > 0) {
-      return setError(newErrors);
+      console.log("Validation errors:", newErrors);
+      setError(newErrors);
+      setIsSubmitting(false);
+      toast.error("Please fill in all required fields");
+      return;
     }
 
     try {
+      console.log("Getting user data from localStorage...");
       const userData = JSON.parse(localStorage.getItem("user"));
       const token = userData?.token;
+      
       if (!token) {
-        toast.error("User not authenticated");
+        toast.error("User not authenticated. Please login again.");
+        setIsSubmitting(false);
         return;
       }
 
-      const payload = {
-        title,
-        slug,
-        description,
-        totalPrice: price,
-        countryOfOrigin: selectedCountry,
-        category: selectedCategory,
-        subcategoryid: selectedSubCategory,
-        manufacturer: selectedManufacturer,
-        launchYear,
-        version,
-        length,
-        lengthUnit,
-        width,
-        widthUnit,
-        height,
-        heightUnit,
-        weight,
-        weightUnit,
-        batteryCapacity,
-        chargingTime,
-        loadCapacity,
-        runtime,
-        speed,
-        accuracy,
-        // operatingTemperature can be constructed on backend if needed
-        range,
-        rangeUnit,
-        powerSource: selectedPower,
-        videoembedcode,
-        primaryFunction: selectedPrimaryFunction,
-        operatingEnvironment: selectedOperatingEnvironment,
-        autonomyLevel: selectedAutonomyLevel,
-        metatitle,
-        metadescription,
-        featuredimage,
-      };
-
+      console.log("Creating FormData...");
       const formData = new FormData();
 
-      // Append normal fields
-      for (const key in payload) {
-        if (payload[key] !== undefined && payload[key] !== null) {
-          formData.append(key, payload[key]);
-        }
+      // Append basic fields
+      formData.append("title", title.trim());
+      formData.append("slug", slug);
+      formData.append("description", description.trim());
+      formData.append("totalPrice", price);
+      formData.append("countryOfOrigin", selectedCountry);
+      formData.append("category", selectedCategory);
+      formData.append("subcategoryid", selectedSubCategory);
+      formData.append("manufacturer", selectedManufacturer);
+      formData.append("launchYear", launchYear);
+      formData.append("powerSource", selectedPower);
+      formData.append("videoembedcode", videoembedcode.trim());
+      formData.append("primaryFunction", selectedPrimaryFunction);
+      formData.append("operatingEnvironment", selectedOperatingEnvironment);
+      formData.append("autonomyLevel", selectedAutonomyLevel);
+
+      // Optional fields
+      if (version) formData.append("version", version.trim());
+      if (metatitle) formData.append("metatitle", metatitle.trim());
+      if (metadescription) formData.append("metadescription", metadescription.trim());
+
+      // Dimensions with validation
+      if (length) {
+        formData.append("dimensions.length.value", String(length));
+        formData.append("dimensions.length.unit", lengthUnit);
+      }
+      if (width) {
+        formData.append("dimensions.width.value", String(width));
+        formData.append("dimensions.width.unit", widthUnit);
+      }
+      if (height) {
+        formData.append("dimensions.height.value", String(height));
+        formData.append("dimensions.height.unit", heightUnit);
       }
 
-      // Append multi-selects
-      selectedColors.forEach((color) => formData.append("color[]", color));
-      selectedMaterials.forEach((material) =>
-        formData.append("material[]", material)
-      );
-      selectedNavigationType.forEach((nav) =>
-        formData.append("navigationType[]", nav)
-      );
-      selectedSensor.forEach((s) => formData.append("sensors[]", s));
-      selectedAISoftwareFeature.forEach((a) =>
-        formData.append("aiSoftwareFeatures[]", a)
-      );
-      selectedTerrainCapability.forEach((t) =>
-        formData.append("terrainCapability[]", t)
-      );
-      selectedCommunicationMethod.forEach((c) =>
-        formData.append("communicationMethod[]", c)
-      );
-      selectedPayloadType.forEach((p) =>
-        formData.append("payloadTypesSupported[]", p)
-      );
+      // Weight
+      if (weight) {
+        formData.append("weight.value", String(weight));
+        formData.append("weight.unit", weightUnit);
+      }
 
-      // Append nested unit/value fields to match backend schema
-      if (length) formData.append("dimensions.length.value", String(length));
-      if (lengthUnit)
-        formData.append("dimensions.length.unit", String(lengthUnit));
-      if (width) formData.append("dimensions.width.value", String(width));
-      if (widthUnit)
-        formData.append("dimensions.width.unit", String(widthUnit));
-      if (height) formData.append("dimensions.height.value", String(height));
-      if (heightUnit)
-        formData.append("dimensions.height.unit", String(heightUnit));
-
-      if (weight) formData.append("weight.value", String(weight));
-      if (weightUnit) formData.append("weight.unit", String(weightUnit));
-
-      if (batteryCapacity)
+      // Other specifications (optional)
+      if (batteryCapacity) {
         formData.append("batteryCapacity.value", String(batteryCapacity));
-      if (batteryCapacityUnit)
-        formData.append("batteryCapacity.unit", String(batteryCapacityUnit));
-
-      if (loadCapacity)
+        formData.append("batteryCapacity.unit", batteryCapacityUnit);
+      }
+      if (loadCapacity) {
         formData.append("loadCapacity.value", String(loadCapacity));
-      if (loadCapacityUnit)
-        formData.append("loadCapacity.unit", String(loadCapacityUnit));
+        formData.append("loadCapacity.unit", loadCapacityUnit);
+      }
+      if (runtime) {
+        formData.append("runtime.value", String(runtime));
+        formData.append("runtime.unit", runtimeUnit);
+      }
+      if (speed) {
+        formData.append("speed.value", String(speed));
+        formData.append("speed.unit", speedUnit);
+      }
+      if (accuracy) {
+        formData.append("accuracy.value", String(accuracy));
+        formData.append("accuracy.unit", accuracyUnit);
+      }
+      if (range) {
+        formData.append("range.value", String(range));
+        formData.append("range.unit", rangeUnit);
+      }
+      if (chargingTime) {
+        formData.append("chargingTime.value", String(chargingTime));
+        formData.append("chargingTime.unit", chargingTimeUnit);
+      }
 
-      if (runtime) formData.append("runtime.value", String(runtime));
-      if (runtimeUnit) formData.append("runtime.unit", String(runtimeUnit));
+      // Operating Temperature
+      if (operatingTemperatureMin) {
+        formData.append("operatingTemperature.min", String(operatingTemperatureMin));
+      }
+      if (operatingTemperatureMax) {
+        formData.append("operatingTemperature.max", String(operatingTemperatureMax));
+      }
+      if (operatingTemperatureMin || operatingTemperatureMax) {
+        formData.append("operatingTemperature.unit", operatingTemperatureUnit);
+      }
 
-      if (speed) formData.append("speed.value", String(speed));
-      if (speedUnit) formData.append("speed.unit", String(speedUnit));
+      // Multi-select fields (only if they have selections)
+      if (selectedColors.length > 0) {
+        selectedColors.forEach((color) => formData.append("color", color));
+      }
+      if (selectedMaterials.length > 0) {
+        selectedMaterials.forEach((material) => formData.append("material", material));
+      }
+      if (selectedNavigationType.length > 0) {
+        selectedNavigationType.forEach((nav) => formData.append("navigationType", nav));
+      }
+      if (selectedSensor.length > 0) {
+        selectedSensor.forEach((s) => formData.append("sensors", s));
+      }
+      if (selectedAISoftwareFeature.length > 0) {
+        selectedAISoftwareFeature.forEach((a) => formData.append("aiSoftwareFeatures", a));
+      }
+      if (selectedTerrainCapability.length > 0) {
+        selectedTerrainCapability.forEach((t) => formData.append("terrainCapability", t));
+      }
+      if (selectedCommunicationMethod.length > 0) {
+        selectedCommunicationMethod.forEach((c) => formData.append("communicationMethod", c));
+      }
+      if (selectedPayloadType.length > 0) {
+        selectedPayloadType.forEach((p) => formData.append("payloadTypesSupported", p));
+      }
 
-      if (accuracy) formData.append("accuracy.value", String(accuracy));
-      if (accuracyUnit) formData.append("accuracy.unit", String(accuracyUnit));
-
-      if (range) formData.append("range.value", String(range));
-      if (rangeUnit) formData.append("range.unit", String(rangeUnit));
-
-      if (operatingTemperatureMin)
-        formData.append(
-          "operatingTemperature.min",
-          String(operatingTemperatureMin)
-        );
-      if (operatingTemperatureMax)
-        formData.append(
-          "operatingTemperature.max",
-          String(operatingTemperatureMax)
-        );
-      if (operatingTemperatureUnit)
-        formData.append(
-          "operatingTemperature.unit",
-          String(operatingTemperatureUnit)
-        );
-
-      // Append images
-      robotSelectedImgs.forEach((file) => {
+      // Images
+      if (featuredimage) {
+        console.log("Adding featured image:", featuredimage.name);
+        formData.append("images", featuredimage);
+      }
+      
+      robotSelectedImgs.forEach((file, index) => {
+        console.log(`Adding additional image ${index + 1}:`, file.name);
         formData.append("images", file);
       });
 
-      // API call
+      console.log("Calling API...");
+      console.log("FormData entries:");
+      for (let pair of formData.entries()) {
+        console.log(pair[0], pair[1]);
+      }
+
       const res = await createRobot(formData, token);
+      console.log("API Response:", res);
 
       toast.success(res.message || "Robot created successfully!");
-        router.push("/cmsroboticlife/my-robot");
+      router.push("/cmsroboticlife/my-robot");
       setError({});
     } catch (err) {
-      console.error(err);
-      setError({ general: err.message || "Something went wrong" });
+      console.error("Submission error:", err);
+      console.error("Error details:", {
+        message: err.message,
+        response: err.response?.data,
+        status: err.response?.status
+      });
+      
+      let errorMessage = "Something went wrong";
+      
+      if (err.response?.data?.message) {
+        errorMessage = err.response.data.message;
+      } else if (err.message) {
+        errorMessage = err.message;
+      }
+      
+      setError({ general: errorMessage });
+      toast.error(errorMessage);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   return (
     <>
       <form onSubmit={addRobo} className="row">
+        {/* Show general error if exists */}
+        {error.general && (
+          <div className="col-12 mb-3">
+            <div className="alert alert-danger">{error.general}</div>
+          </div>
+        )}
+
         {/* robot title start */}
         <div className="col-lg-6">
           <div className="my_profile_setting_input form-group">
-            <label htmlFor="roboTitle">Robot Title</label>
+            <label htmlFor="roboTitle">Robot Title *</label>
             <input
               type="text"
-              className="form-control"
+              className={`form-control ${error.title ? 'is-invalid' : ''}`}
               id="roboTitle"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="Enter robot Title"
+              required
             />
             {error.title && <span className="text-danger">{error.title}</span>}
           </div>
@@ -697,7 +620,6 @@ const CreateList = () => {
               placeholder="Auto-generated slug"
               disabled
             />
-            {error.slug && <span className="text-danger">{error.slug}</span>}
           </div>
         </div>
         {/* robot slug ends */}
@@ -705,14 +627,15 @@ const CreateList = () => {
         {/* robot description start */}
         <div className="col-lg-12">
           <div className="my_profile_setting_textarea form-group">
-            <label htmlFor="roboDescription">Description</label>
+            <label htmlFor="roboDescription">Description *</label>
             <textarea
               id="roboDescription"
-              className="form-control"
+              className={`form-control ${error.description ? 'is-invalid' : ''}`}
               rows="7"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Enter robo description"
+              required
             ></textarea>
             {error.description && (
               <span className="text-danger">{error.description}</span>
@@ -724,14 +647,15 @@ const CreateList = () => {
         {/* robot category start */}
         <div className="col-lg-6 col-xl-6">
           <div className="my_profile_setting_input ui_kit_select_search form-group">
-            <label>Category</label>
+            <label>Category *</label>
             <select
               id="categorySelect"
-              className="selectpicker form-select"
+              className={`selectpicker form-select ${error.selectedCategory ? 'is-invalid' : ''}`}
               value={selectedCategory}
               onChange={handleCategoryChange}
               data-live-search="true"
               data-width="100%"
+              required
             >
               <option value="">-- Select Category --</option>
               {categories.map((cat) => (
@@ -750,15 +674,16 @@ const CreateList = () => {
         {/* Sub Category Field */}
         <div className="col-lg-6 col-xl-6">
           <div className="my_profile_setting_input ui_kit_select_search form-group">
-            <label>Sub Category</label>
+            <label>Sub Category *</label>
             <select
               id="subCategorySelect"
-              className="selectpicker form-select"
+              className={`selectpicker form-select ${error.selectedSubCategory ? 'is-invalid' : ''}`}
               value={selectedSubCategory}
-              onChange={(e) => setSelectedSubCategory(e.target.value)}
+              onChange={handleSubCategoryChange}
               data-live-search="true"
               data-width="100%"
-              disabled={!selectedCategory || subCategories.length === 0} // Disable if no category is selected
+              disabled={!selectedCategory || subCategories.length === 0}
+              required
             >
               <option value="">-- Select Sub Category --</option>
               {subCategories.map((sub) => (
@@ -777,14 +702,15 @@ const CreateList = () => {
         {/* robot manufacturer start */}
         <div className="col-lg-6 col-xl-6">
           <div className="my_profile_setting_input ui_kit_select_search form-group">
-            <label>Manufacturer</label>
+            <label>Manufacturer *</label>
             <select
               id="manufacturerSelect"
-              className="selectpicker form-select"
+              className={`selectpicker form-select ${error.selectedManufacturer ? 'is-invalid' : ''}`}
               value={selectedManufacturer}
               onChange={handleManufacturerChange}
               data-live-search="true"
               data-width="100%"
+              required
             >
               <option value="">-- Select Manufacturer --</option>
               {manufacturers.map((manufacturer) => (
@@ -803,14 +729,15 @@ const CreateList = () => {
         {/* robot country start */}
         <div className="col-lg-6 col-xl-6">
           <div className="my_profile_setting_input ui_kit_select_search form-group">
-            <label htmlFor="countrySelect">Country of Origin</label>
+            <label htmlFor="countrySelect">Country of Origin *</label>
             <select
               id="countrySelect"
-              className="selectpicker form-select"
+              className={`selectpicker form-select ${error.selectedCountry ? 'is-invalid' : ''}`}
               value={selectedCountry}
               onChange={handleCountryChange}
               data-live-search="true"
               data-width="100%"
+              required
             >
               <option value="">-- Select Country --</option>
               {countries.map((country) => (
@@ -819,6 +746,9 @@ const CreateList = () => {
                 </option>
               ))}
             </select>
+            {error.selectedCountry && (
+              <span className="text-danger">{error.selectedCountry}</span>
+            )}
           </div>
         </div>
         {/* robot country ends */}
@@ -826,12 +756,13 @@ const CreateList = () => {
         {/* robot launch year start */}
         <div className="col-lg-6">
           <div className="my_profile_setting_input form-group">
-            <label htmlFor="launchYear">Launch Year</label>
+            <label htmlFor="launchYear">Launch Year *</label>
             <select
               id="launchYear"
-              className="form-control"
+              className={`form-control ${error.launchYear ? 'is-invalid' : ''}`}
               value={launchYear}
               onChange={(e) => setLaunchYear(e.target.value)}
+              required
             >
               <option value="">-- Select Year --</option>
               {Array.from({ length: 101 }, (_, i) => {
@@ -843,6 +774,9 @@ const CreateList = () => {
                 );
               })}
             </select>
+            {error.launchYear && (
+              <span className="text-danger">{error.launchYear}</span>
+            )}
           </div>
         </div>
         {/* robot launch year ends */}
@@ -850,14 +784,15 @@ const CreateList = () => {
         {/* robot price start */}
         <div className="col-lg-6">
           <div className="my_profile_setting_input form-group">
-            <label htmlFor="roboPrice">Total Price</label>
+            <label htmlFor="roboPrice">Total Price *</label>
             <input
               type="text"
-              className="form-control"
+              className={`form-control ${error.price ? 'is-invalid' : ''}`}
               id="roboPrice"
               value={price}
               onChange={(e) => setPrice(e.target.value)}
               placeholder="Enter Robot Price"
+              required
             />
             {error.price && <span className="text-danger">{error.price}</span>}
           </div>
@@ -876,47 +811,19 @@ const CreateList = () => {
               onChange={(e) => setVersion(e.target.value)}
               placeholder="Enter Version"
             />
-            {error.version && (
-              <span className="text-danger">{error.version}</span>
-            )}
           </div>
         </div>
         {/* robot version ends */}
-
-        {/* <div className="col-lg-6">
-          <div className="my_profile_setting_textarea">
-            <label htmlFor="patentNumber">Patent Number(s)</label>
-            <input
-              type="text"
-              className="form-control"
-              id="patentNumber"
-              value={patentNumber}
-              onChange={(e) => setPatentNumber(e.target.value)}
-              placeholder="Enter Patent Number"
-            />
-            {error.patentNumber && <span className="text-danger">{error.patentNumber}</span>}
-          </div>
-        </div> */}
 
         {/* specifications start */}
         <div className=" mt30 ">
           <div className="col-lg-12">
             <h3 className="mb30">Specifications</h3>
+            {error.dimensions && (
+              <div className="alert alert-warning">{error.dimensions}</div>
+            )}
           </div>
           <div className="row">
-            {/* <div className="col-lg-12">
-              <div className="my_profile_setting_textarea">
-                <label htmlFor="nearBy">Near By </label>
-                <textarea
-                  id="nearBy"
-                  className="form-control"
-                  rows="7"
-                  value={nearby}
-                  onChange={(e) => setNearBy(e.target.value)}
-                  placeholder="Enter Near By"
-                ></textarea>
-              </div>
-            </div> */}
             {/*------ Dimensions Start ------*/}
             <div className="col-lg-12">
               <div className="my_profile_setting_input form-group">
@@ -932,7 +839,6 @@ const CreateList = () => {
                       value={length}
                       onChange={(e) => setLength(e.target.value)}
                     />
-                    {/* {error.title && <span className="text-danger">{error.title}</span>} */}
                     <select
                       className="form-select position-absolute end-0 border-0 bg-transparent"
                       style={{
@@ -966,7 +872,6 @@ const CreateList = () => {
                       value={width}
                       onChange={(e) => setWidth(e.target.value)}
                     />
-                    {/* {error.width && <span className="text-danger">{error.width}</span>} */}
                     <select
                       className="form-select position-absolute end-0 border-0 bg-transparent"
                       style={{
@@ -1000,7 +905,6 @@ const CreateList = () => {
                       value={height}
                       onChange={(e) => setHeight(e.target.value)}
                     />
-                    {/* {error.height && <span className="text-danger">{error.height}</span>} */}
                     <select
                       className="form-select position-absolute end-0 border-0 bg-transparent"
                       style={{
@@ -1040,7 +944,6 @@ const CreateList = () => {
                         value={weight}
                         onChange={(e) => setWeight(e.target.value)}
                       />
-                      {/* {error.weight && <span className="text-danger">{error.weight}</span>} */}
                       <select
                         className="form-select position-absolute end-0 border-0 bg-transparent"
                         style={{
@@ -1068,14 +971,15 @@ const CreateList = () => {
                   {/* Power Source start */}
                   <div className="col-lg-6 col-xl-6">
                     <div className="my_profile_setting_input ui_kit_select_search form-group">
-                      <label htmlFor="powerSelect">Power Source</label>
+                      <label htmlFor="powerSelect">Power Source *</label>
                       <select
                         id="powerSelect"
-                        className="selectpicker form-select"
+                        className={`selectpicker form-select ${error.selectedPower ? 'is-invalid' : ''}`}
                         value={selectedPower}
                         onChange={handlePowerChange}
                         data-live-search="true"
                         data-width="100%"
+                        required
                       >
                         <option value="">-- Select Power Source --</option>
                         {power.map((powerSource) => (
@@ -1084,6 +988,9 @@ const CreateList = () => {
                           </option>
                         ))}
                       </select>
+                      {error.selectedPower && (
+                        <span className="text-danger">{error.selectedPower}</span>
+                      )}
                     </div>
                   </div>
                   {/* Power Source ends */}
@@ -1099,7 +1006,6 @@ const CreateList = () => {
                         value={batteryCapacity}
                         onChange={(e) => setBatteryCapacity(e.target.value)}
                       />
-                      {/* {error.batteryCapacity && <span className="text-danger">{error.batteryCapacity}</span>} */}
                       <select
                         className="form-select position-absolute end-0 border-0 bg-transparent"
                         style={{
@@ -1116,10 +1022,9 @@ const CreateList = () => {
                         value={batteryCapacityUnit}
                         onChange={(e) => setBatteryCapacityUnit(e.target.value)}
                       >
-                        <option value="cm">mAh</option>
-                        <option value="m">Ah</option>
-                        <option value="inch">Wh</option>
-                        {/* <option value="ft">ft</option> */}
+                        <option value="mAh">mAh</option>
+                        <option value="Ah">Ah</option>
+                        <option value="Wh">Wh</option>
                       </select>
                     </div>
                   </div>
@@ -1136,7 +1041,6 @@ const CreateList = () => {
                         value={chargingTime}
                         onChange={(e) => setChargingTime(e.target.value)}
                       />
-                      {/* {error.batteryCapacity && <span className="text-danger">{error.batteryCapacity}</span>} */}
                       <select
                         className="form-select position-absolute end-0 border-0 bg-transparent"
                         style={{
@@ -1153,10 +1057,8 @@ const CreateList = () => {
                         value={chargingTimeUnit}
                         onChange={(e) => setChargingTimeUnit(e.target.value)}
                       >
-                        <option value="cm">h</option>
-                        <option value="m">min</option>
-                        {/* <option value="inch">Wh</option> */}
-                        {/* <option value="ft">ft</option> */}
+                        <option value="h">h</option>
+                        <option value="min">min</option>
                       </select>
                     </div>
                   </div>
@@ -1173,7 +1075,6 @@ const CreateList = () => {
                         value={runtime}
                         onChange={(e) => setRuntime(e.target.value)}
                       />
-                      {/* {error.batteryCapacity && <span className="text-danger">{error.batteryCapacity}</span>} */}
                       <select
                         className="form-select position-absolute end-0 border-0 bg-transparent"
                         style={{
@@ -1190,14 +1091,12 @@ const CreateList = () => {
                         value={runtimeUnit}
                         onChange={(e) => setRuntimeUnit(e.target.value)}
                       >
-                        <option value="cm">h</option>
-                        <option value="m">min</option>
-                        {/* <option value="inch">Wh</option> */}
-                        {/* <option value="ft">ft</option> */}
+                        <option value="h">h</option>
+                        <option value="min">min</option>
                       </select>
                     </div>
                   </div>
-                  {/* Runtime start */}
+                  {/* Runtime ends */}
 
                   {/* Load Capacity start */}
                   <div className="col-lg-6 position-relative mb-2">
@@ -1210,7 +1109,6 @@ const CreateList = () => {
                         value={loadCapacity}
                         onChange={(e) => setLoadCapacity(e.target.value)}
                       />
-                      {/* {error.loadCapacity && <span className="text-danger">{error.loadCapacity}</span>} */}
                       <select
                         className="form-select position-absolute end-0 border-0 bg-transparent"
                         style={{
@@ -1227,10 +1125,10 @@ const CreateList = () => {
                         value={loadCapacityUnit}
                         onChange={(e) => setLoadCapacityUnit(e.target.value)}
                       >
-                        <option value="cm">kg</option>
-                        <option value="m">g</option>
-                        <option value="inch">lb</option>
-                        <option value="ft">t</option>
+                        <option value="kg">kg</option>
+                        <option value="g">g</option>
+                        <option value="lb">lb</option>
+                        <option value="t">t</option>
                       </select>
                     </div>
                   </div>
@@ -1247,7 +1145,6 @@ const CreateList = () => {
                         value={speed}
                         onChange={(e) => setSpeed(e.target.value)}
                       />
-                      {/* {error.batteryCapacity && <span className="text-danger">{error.batteryCapacity}</span>} */}
                       <select
                         className="form-select position-absolute end-0 border-0 bg-transparent"
                         style={{
@@ -1264,54 +1161,15 @@ const CreateList = () => {
                         value={speedUnit}
                         onChange={(e) => setSpeedUnit(e.target.value)}
                       >
-                        <option value="cm">m/s</option>
-                        <option value="m">km/h</option>
-                        <option value="inch">mph</option>
-                        {/* <option value="ft">ft</option> */}
+                        <option value="m/s">m/s</option>
+                        <option value="km/h">km/h</option>
+                        <option value="mph">mph</option>
                       </select>
                     </div>
                   </div>
                   {/* Speed ends */}
 
                   {/* Operating Temperature start */}
-                  {/* <div className="col-lg-6 mb-2">
-                    <label htmlFor="operatingTemperature">
-                      Operating Temperature
-                    </label>
-                    <div className="position-relative">
-                      <input
-                        type="number"
-                        className="form-control pe-5"
-                        placeholder="Enter Operating Temperature"
-                        value={operatingTemperature}
-                        onChange={(e) =>
-                          setOperatingTemperature(e.target.value)
-                        }
-                      />
-                      <select
-                        className="form-select position-absolute end-0 border-0 bg-transparent"
-                        style={{
-                          width: "auto",
-                          height: "auto",
-                          top: "50%",
-                          transform: "translateY(-50%)",
-                          paddingRight: "30px",
-                          paddingLeft: "8px",
-                          appearance: "none",
-                          WebkitAppearance: "none",
-                          MozAppearance: "none",
-                        }}
-                        value={operatingTemperatureUnit}
-                        onChange={(e) =>
-                          setOperatingTemperatureUnit(e.target.value)
-                        }
-                      >
-                        <option value="cm">°C</option>
-                        <option value="m">°F</option>
-                        <option value="inch">K</option>
-                      </select>
-                    </div>
-                  </div> */}
                   <div className="col-lg-6 mb-2">
                     <label>Operating Temperature</label>
                     <div className="d-flex gap-2">
@@ -1359,14 +1217,13 @@ const CreateList = () => {
                             setOperatingTemperatureUnit(e.target.value)
                           }
                         >
-                          <option value="C">°C</option>
-                          <option value="F">°F</option>
+                          <option value="°C">°C</option>
+                          <option value="°F">°F</option>
                           <option value="K">K</option>
                         </select>
                       </div>
                     </div>
                   </div>
-
                   {/* Operating Temperature ends */}
 
                   {/* Accuracy start */}
@@ -1380,7 +1237,6 @@ const CreateList = () => {
                         value={accuracy}
                         onChange={(e) => setAccuracy(e.target.value)}
                       />
-                      {/* {error.batteryCapacity && <span className="text-danger">{error.batteryCapacity}</span>} */}
                       <select
                         className="form-select position-absolute end-0 border-0 bg-transparent"
                         style={{
@@ -1397,10 +1253,8 @@ const CreateList = () => {
                         value={accuracyUnit}
                         onChange={(e) => setAccuracyUnit(e.target.value)}
                       >
-                        <option value="cm">mm</option>
-                        <option value="m">cm</option>
-                        {/* <option value="inch">mph</option> */}
-                        {/* <option value="ft">ft</option> */}
+                        <option value="mm">mm</option>
+                        <option value="cm">cm</option>
                       </select>
                     </div>
                   </div>
@@ -1417,7 +1271,6 @@ const CreateList = () => {
                         value={range}
                         onChange={(e) => setRange(e.target.value)}
                       />
-                      {/* {error.batteryCapacity && <span className="text-danger">{error.batteryCapacity}</span>} */}
                       <select
                         className="form-select position-absolute end-0 border-0 bg-transparent"
                         style={{
@@ -1434,10 +1287,9 @@ const CreateList = () => {
                         value={rangeUnit}
                         onChange={(e) => setRangeUnit(e.target.value)}
                       >
-                        <option value="cm">m</option>
-                        <option value="m">km</option>
-                        <option value="inch">mi</option>
-                        {/* <option value="ft">ft</option> */}
+                        <option value="m">m</option>
+                        <option value="km">km</option>
+                        <option value="mi">mi</option>
                       </select>
                     </div>
                   </div>
@@ -1481,7 +1333,6 @@ const CreateList = () => {
                           ))}
                         </select>
 
-                        {/* Overlay UI with scroll */}
                         {/* Overlay UI */}
                         <div
                           className="form-control position-absolute top-0 start-0 h-100 w-100 d-flex align-items-center px-3 pe-5"
@@ -1773,7 +1624,7 @@ const CreateList = () => {
                   <div className="position-relative">
                     <select
                       id="sensorSelect"
-                      className="selectpicker form-select sensor  -select"
+                      className="selectpicker form-select sensor-select"
                       value="placeholder"
                       onChange={(e) => {
                         const value = e.target.value;
@@ -2304,14 +2155,15 @@ const CreateList = () => {
               {/* Primary Function start */}
               <div className="col-lg-6 col-xl-6">
                 <div className="my_profile_setting_input ui_kit_select_search form-group">
-                  <label htmlFor="primaryFunction">Primary Function</label>
+                  <label htmlFor="primaryFunction">Primary Function *</label>
                   <select
                     id="primaryFunction"
-                    className="selectpicker form-select"
+                    className={`selectpicker form-select ${error.selectedPrimaryFunction ? 'is-invalid' : ''}`}
                     value={selectedPrimaryFunction}
                     onChange={handlePrimaryFunctionChange}
                     data-live-search="true"
                     data-width="100%"
+                    required
                   >
                     <option value="">-- Select Primary Function --</option>
                     {primaryFunction.map((func) => (
@@ -2320,6 +2172,9 @@ const CreateList = () => {
                       </option>
                     ))}
                   </select>
+                  {error.selectedPrimaryFunction && (
+                    <span className="text-danger">{error.selectedPrimaryFunction}</span>
+                  )}
                 </div>
               </div>
               {/* Primary Function ends */}
@@ -2328,15 +2183,16 @@ const CreateList = () => {
               <div className="col-lg-6 col-xl-6">
                 <div className="my_profile_setting_input ui_kit_select_search form-group">
                   <label htmlFor="operatingEnvironment">
-                    Operating Environment
+                    Operating Environment *
                   </label>
                   <select
                     id="operatingEnvironment"
-                    className="selectpicker form-select"
+                    className={`selectpicker form-select ${error.selectedOperatingEnvironment ? 'is-invalid' : ''}`}
                     value={selectedOperatingEnvironment}
                     onChange={handleOperatingEnvironmentChange}
                     data-live-search="true"
                     data-width="100%"
+                    required
                   >
                     <option value="">-- Select Operating Environment --</option>
                     {operatingEnvironment.map((env) => (
@@ -2345,6 +2201,9 @@ const CreateList = () => {
                       </option>
                     ))}
                   </select>
+                  {error.selectedOperatingEnvironment && (
+                    <span className="text-danger">{error.selectedOperatingEnvironment}</span>
+                  )}
                 </div>
               </div>
               {/* Operating Environment ends */}
@@ -2352,14 +2211,15 @@ const CreateList = () => {
               {/* Autonomy Level start */}
               <div className="col-lg-6 col-xl-6">
                 <div className="my_profile_setting_input ui_kit_select_search form-group">
-                  <label htmlFor="autonomyLevel">Autonomy Level</label>
+                  <label htmlFor="autonomyLevel">Autonomy Level *</label>
                   <select
                     id="autonomyLevel"
-                    className="selectpicker form-select"
+                    className={`selectpicker form-select ${error.selectedAutonomyLevel ? 'is-invalid' : ''}`}
                     value={selectedAutonomyLevel}
                     onChange={handleAutonomyLevelChange}
                     data-live-search="true"
                     data-width="100%"
+                    required
                   >
                     <option value="">-- Select Autonomy Level --</option>
                     {autonomyLevel.map((level) => (
@@ -2368,6 +2228,9 @@ const CreateList = () => {
                       </option>
                     ))}
                   </select>
+                  {error.selectedAutonomyLevel && (
+                    <span className="text-danger">{error.selectedAutonomyLevel}</span>
+                  )}
                 </div>
               </div>
               {/* Autonomy Level ends */}
@@ -2380,15 +2243,19 @@ const CreateList = () => {
               {/* End .col */}
               <div className="col-lg-12">
                 <div className="my_profile_setting_textarea">
-                  <label htmlFor="videoEmbedCode">Video Embed code </label>
+                  <label htmlFor="videoEmbedCode">Video Embed code *</label>
                   <textarea
                     id="videoEmbedCode"
-                    className="form-control"
+                    className={`form-control ${error.videoembedcode ? 'is-invalid' : ''}`}
                     rows="7"
                     value={videoembedcode}
                     onChange={(e) => setVideoEmbedCode(e.target.value)}
                     placeholder="Enter Video Embed code"
+                    required
                   ></textarea>
+                  {error.videoembedcode && (
+                    <span className="text-danger">{error.videoembedcode}</span>
+                  )}
                 </div>
               </div>
               {/* End .col */}
@@ -2398,7 +2265,6 @@ const CreateList = () => {
                   <input
                     type="file"
                     id="featuredimage"
-                    // accept="image/png, image/gif, image/jpeg"
                     accept="image/png, image/gif, image/jpeg, image/svg+xml, image/svg, image/webp, image/avif"
                     onChange={uploadFeaturedImage}
                   />
@@ -2459,7 +2325,6 @@ const CreateList = () => {
                     type="file"
                     onChange={multipleImage}
                     multiple
-                    // accept="image/png, image/gif, image/jpeg"
                     accept="image/png, image/gif, image/jpeg, image/svg+xml, image/svg, image/webp, image/avif"
                   />
                   <div className="icon">
@@ -2501,11 +2366,6 @@ const CreateList = () => {
                       onChange={(e) => setMetaDescription(e.target.value)}
                       placeholder="Enter meta description"
                     ></textarea>
-                    {error.metadescription && (
-                      <span className="text-danger">
-                        {error.metadescription}
-                      </span>
-                    )}
                   </div>
                 </div>
                 {/* End .col */}
@@ -2524,8 +2384,12 @@ const CreateList = () => {
             >
               Back
             </button>
-            <button className="btn btn2 float-end" type="submit">
-              Submit
+            <button 
+              className="btn btn2 float-end" 
+              type="submit"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? "Submitting..." : "Submit"}
             </button>
           </div>
         </div>
