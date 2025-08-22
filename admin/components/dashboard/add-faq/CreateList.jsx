@@ -11,13 +11,13 @@ const CreateList = () => {
    const [title, setTitle] = useState("");
    const [description, setDescription] = useState("");
     const [error, setError] = useState("");
-    const [properties, setProperties] = useState([]);
+    const [robot, setRobot] = useState([]);
     const [selectedRobot, setSelectedRobot] = useState("");
 
     // upload profile
     
   useEffect(() => {
-      const fetchProperties = async () => {
+      const fetchRobots = async () => {
         try {
           const filter = {
     limit: 1000,
@@ -26,13 +26,13 @@ const CreateList = () => {
           const response = await getRobotTableData(filter);
          
   
-          setProperties(response?.items || []);
+          setRobot(response?.items || []);
         } catch (err) {
           console.error("Error fetching robot:", err);
         }
       };
   
-      fetchProperties();
+      fetchRobots();
     }, []);
     const handleTitleChange = (e) => {
       setTitle(e.target.value);
@@ -103,7 +103,7 @@ const CreateList = () => {
               data-width="100%"
             >
               <option value="">-- Select Robot --</option>
-              {properties.map((robot) => (
+              {robot.map((robot) => (
                 <option key={robot._id} value={robot._id}>
                   {robot.title}
                 </option>

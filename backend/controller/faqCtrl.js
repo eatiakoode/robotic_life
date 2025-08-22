@@ -22,10 +22,11 @@ const updateFaq = asyncHandler(async (req, res) => {
   validateMongoDbId(id);
 
   try {
-    const updatedFaq = await Faq.findByIdAndUpdate(id, req.body, {
-      new: true,
-      runValidators: true,
-    });
+    const updatedFaq = await Faq.findByIdAndUpdate(
+        req.params.id,
+        { name: req.body.name, status: req.body.status },
+        { new: true }
+      );
 
     if (!updatedFaq) {
       return res.status(404).json({
