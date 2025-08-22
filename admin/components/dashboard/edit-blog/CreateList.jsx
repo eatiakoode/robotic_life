@@ -31,6 +31,14 @@ const CreateList = () => {
     setLogoImage("");
     setLogo(e.target.files[0]);
   };
+  const generateSlug = (text) => {
+    return text
+      .toLowerCase()
+      .trim()
+      .replace(/[^a-z0-9\s-]/g, "") // remove special chars
+      .replace(/\s+/g, "-") // spaces -> hyphens
+      .replace(/-+/g, "-"); // collapse multiple hyphens
+  };
 
   // Fetch blog + categories
   useEffect(() => {
@@ -81,6 +89,12 @@ const CreateList = () => {
     fetchBlog();
     fetchBlogcategories();
   }, [id]);
+  
+  useEffect(() => {
+    if (title) {
+      setSlug(generateSlug(title));
+    }
+  }, [title]);
 
   const handleBlogcategoryChange = (e) => {
     setSelectedBlogcategory(e.target.value);
@@ -195,7 +209,7 @@ const CreateList = () => {
               className="form-control"
               id="BlogSlug"
               value={slug}
-              onChange={(e) => setSlug(e.target.value)}
+              disabled // ✅ disable manual editing
             />
           </div>
         </div>

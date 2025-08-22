@@ -52,12 +52,12 @@ const TableData = () => {
       <td className="align-middle text-center">
         <ul className="view_edit_delete_list mb0 d-flex justify-content-center">
           <li className="list-inline-item" title="Edit">
-            <button onClick={() => router.push(`/cmsroboticlife/edit-blog/${item._id}`)}>
+            <button onClick={() => router.push(`/cmsroboticlife/edit-blogcategory/${item._id}`)}>
               <span className="flaticon-edit"></span>
             </button>
           </li>
           <li className="list-inline-item" title="Delete">
-            <a href="#" onClick={() => deleteBlog(item._id)}>
+            <a href="#" onClick={() => deleteBlogcategory(item._id)}>
               <span className="flaticon-garbage"></span>
             </a>
           </li>
