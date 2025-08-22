@@ -96,6 +96,8 @@ const getRobotById = async (req, res) => {
 // Update a robot
 const updateRobot = async (req, res) => {
   try {
+    console.log("req.body");
+    console.log(req.body);
     if (req.files && req.files.length > 0) {
       const processedImages = await robotImgResize(req);
       if (processedImages.length > 0) {

@@ -18,7 +18,6 @@ import { getAutonomyLevelTableData } from "../../../api/autonomylevel";
 import { getPayloadTypeTableData } from "../../../api/payloadtype";
 import { getTerrainCapabilityTableData } from "../../../api/terrain";
 import { getCommunicationMethodTableData } from "../../../api/communicationmethod";
-// import { getCountryTableData } from "../../../api/country";
 
 import selectedFiles from "../../../utils/selectedFiles";
 import Image from "next/image";
@@ -35,7 +34,7 @@ const EditList = () => {
   const [slug, setSlug] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
-  const [error, setError] = useState("");
+  const [error, setError] = useState({});
   const [loading, setLoading] = useState(false);
 
   const [countries, setCountries] = useState([]);
@@ -63,7 +62,7 @@ const EditList = () => {
   const [runtime, setRuntime] = useState("");
   const [runtimeUnit, setRuntimeUnit] = useState("h");
   const [range, setRange] = useState("");
-  const [rangeUnit, setRangeUnit] = useState("km/h");
+  const [rangeUnit, setRangeUnit] = useState("km");
   const [speed, setSpeed] = useState("");
   const [speedUnit, setSpeedUnit] = useState("km/h");
   const [accuracy, setAccuracy] = useState("");
@@ -105,16 +104,23 @@ const EditList = () => {
   const [manufacturers, setManufacturers] = useState([]);
   const [selectedManufacturer, setSelectedManufacturer] = useState("");
 
-  const [videoembedcode, setVideoEmbedCode] = useState([]);
+  const [videoembedcode, setVideoEmbedCode] = useState("");
   const [nearby, setNearBy] = useState([]);
   const [specifications, setSpecifications] = useState([]);
-  const [metatitle, setMetatitle] = useState([]);
-  const [metadescription, setMetaDescription] = useState([]);
+  const [metatitle, setMetatitle] = useState("");
+  const [metadescription, setMetaDescription] = useState("");
 
   const [featuredimage, setFeaturedImage] = useState(null);
   const [existingFeaturedImage, setExistingFeaturedImage] = useState("");
   const [robotSelectedImgs, setRobotSelectedImgs] = useState([]);
   const [existingImages, setExistingImages] = useState([]);
+
+  const normalizeImagePath = (path) => {
+  if (!path) return "";
+  return path.startsWith("http")
+    ? path
+    : "/" + path.replace(/^public\//, "");
+};
 
   // Load existing robot data when in edit mode
   useEffect(() => {
@@ -204,7 +210,7 @@ const EditList = () => {
           // Range
           if (robotData.range) {
             setRange(robotData.range.value || "");
-            setRangeUnit(robotData.range.unit || "km/h");
+            setRangeUnit(robotData.range.unit || "km");
           }
           
           // Operating temperature
@@ -215,7 +221,10 @@ const EditList = () => {
           }
           
           // Charging time
-          setChargingTime(robotData.chargingTime || "");
+          if (robotData.chargingTime) {
+            setChargingTime(robotData.chargingTime.value || robotData.chargingTime || "");
+            setChargingTimeUnit(robotData.chargingTime.unit || "h");
+          }
           
           // Multi-select fields - extract IDs from objects or use direct IDs
           setSelectedColors(robotData.color?.map(c => c._id || c) || []);
@@ -262,6 +271,7 @@ const EditList = () => {
 
     loadRobotData();
   }, [isEditMode, robotId, router]);
+  
 
   // Load initial dropdown data
   useEffect(() => {
@@ -332,17 +342,24 @@ const EditList = () => {
     fetchData();
   }, []);
 
-  // Auto-generate slug from title (only for create mode or when explicitly changed)
+  // Generate slug from title
+  const generateSlug = (titleText) => {
+    if (!titleText) return "";
+    return titleText
+      .toLowerCase()
+      .trim()
+      .replace(/[^a-z0-9\s-]/g, "")
+      .replace(/\s+/g, "-");
+  };
+
+  // Auto-generate slug from title - Updated logic
   useEffect(() => {
-    if (title && (!isEditMode || !slug)) {
-      const generatedSlug = title
-        .toLowerCase()
-        .trim()
-        .replace(/[^a-z0-9\s-]/g, "")
-        .replace(/\s+/g, "-");
+    if (!isEditMode && title) {
+      // Only auto-generate in create mode
+      const generatedSlug = generateSlug(title);
       setSlug(generatedSlug);
     }
-  }, [title, isEditMode, slug]);
+  }, [title, isEditMode]);
 
   // --- Handlers ---
   const handleCountryChange = async (e) => {
@@ -472,10 +489,17 @@ const EditList = () => {
     e.preventDefault();
     const newErrors = {};
 
+    // Ensure slug is generated if empty
+    let finalSlug = slug?.trim();
+    if (!finalSlug && title?.trim()) {
+      finalSlug = generateSlug(title);
+      setSlug(finalSlug);
+    }
+
     // Validation list
     const requiredFields = [
       { key: "title", value: title, name: "Title" },
-      { key: "slug", value: slug, name: "Slug" },
+      { key: "slug", value: finalSlug, name: "Slug" },
       { key: "description", value: description, name: "Description" },
       { key: "price", value: price, name: "Total Price" },
       { key: "countryid", value: selectedCountry, name: "Country of Origin" },
@@ -528,50 +552,30 @@ const EditList = () => {
 
       setLoading(true);
 
-      const payload = {
-        title,
-        slug,
-        description,
-        totalPrice: price,
-        countryOfOrigin: selectedCountry,
-        category: selectedCategory,
-        subcategoryid: selectedSubCategory,
-        manufacturer: selectedManufacturer,
-        launchYear,
-        version,
-        length,
-        lengthUnit,
-        width,
-        widthUnit,
-        height,
-        heightUnit,
-        weight,
-        weightUnit,
-        batteryCapacity,
-        chargingTime,
-        loadCapacity,
-        runtime,
-        speed,
-        accuracy,
-        range,
-        rangeUnit,
-        powerSource: selectedPower,
-        videoembedcode,
-        primaryFunction: selectedPrimaryFunction,
-        operatingEnvironment: selectedOperatingEnvironment,
-        autonomyLevel: selectedAutonomyLevel,
-        metatitle,
-        metadescription,
-        featuredimage,
-      };
-
       const formData = new FormData();
 
-      // Append normal fields
-      for (const key in payload) {
-        if (payload[key] !== undefined && payload[key] !== null) {
-          formData.append(key, payload[key]);
-        }
+      // Append basic fields - Make sure slug is included
+      formData.append("title", title?.trim() || "");
+      formData.append("slug", finalSlug || "");
+      formData.append("description", description?.trim() || "");
+      formData.append("totalPrice", price?.toString() || "");
+      formData.append("countryOfOrigin", selectedCountry || "");
+      formData.append("category", selectedCategory || "");
+      formData.append("subcategoryid", selectedSubCategory || "");
+      formData.append("manufacturer", selectedManufacturer || "");
+      formData.append("launchYear", launchYear?.toString() || "");
+      if (version) formData.append("version", version);
+      formData.append("powerSource", selectedPower || "");
+      formData.append("videoembedcode", videoembedcode?.trim() || "");
+      formData.append("primaryFunction", selectedPrimaryFunction || "");
+      formData.append("operatingEnvironment", selectedOperatingEnvironment || "");
+      formData.append("autonomyLevel", selectedAutonomyLevel || "");
+      if (metatitle) formData.append("metatitle", metatitle);
+      if (metadescription) formData.append("metadescription", metadescription);
+
+      // Featured image
+      if (featuredimage) {
+        formData.append("featuredimage", featuredimage);
       }
 
       // Append multi-selects
@@ -617,6 +621,11 @@ const EditList = () => {
       if (operatingTemperatureMax) formData.append("operatingTemperature.max", String(operatingTemperatureMax));
       if (operatingTemperatureUnit) formData.append("operatingTemperature.unit", String(operatingTemperatureUnit));
 
+      if (chargingTime) {
+        formData.append("chargingTime.value", String(chargingTime));
+        formData.append("chargingTime.unit", String(chargingTimeUnit));
+      }
+
       // Append new images
       robotSelectedImgs.forEach((file) => {
         formData.append("images", file);
@@ -627,6 +636,12 @@ const EditList = () => {
         existingImages.forEach((img, index) => {
           formData.append(`existingImages[${index}]`, img);
         });
+      }
+
+      // Debug: Log what's being sent
+      console.log("FormData contents:");
+      for (let pair of formData.entries()) {
+        console.log(pair[0], pair[1]);
       }
 
       let res;
@@ -2189,7 +2204,7 @@ const EditList = () => {
               <div className="mt-2">
                 <p>Current featured image:</p>
                 <Image
-                  src={existingFeaturedImage}
+                  src={normalizeImagePath(existingFeaturedImage)}
                   alt="Featured"
                   width={200}
                   height={150}
@@ -2223,11 +2238,11 @@ const EditList = () => {
               <div className="mt-3">
                 <h6>Existing Images:</h6>
                 <div className="row">
-                  {existingImages.map((image, index) => (
+                  {existingImages.map((img, index) => (
                     <div key={index} className="col-md-3 mb-3">
                       <div className="position-relative">
                         <Image
-                          src={image}
+                          src={normalizeImagePath(img)}
                           alt={`Existing ${index}`}
                           width={200}
                           height={150}

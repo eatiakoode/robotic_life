@@ -35,10 +35,7 @@ const token =userData.token
   
 
   export async function getManufacturerTableData(filter) {
-    // Fake delay
     await new Promise((resolve) => setTimeout(resolve, 10));
-    
-  
     try {
       const userData = JSON.parse(localStorage.getItem("user"));
       const token = userData?.token;
@@ -47,14 +44,14 @@ const token =userData.token
         headers: {
           Authorization: token ? `Bearer ${token}` : "",
         },
-      }); // Replace with actual API endpoint
+      }); 
       if (!response.ok) {
         throw new Error("Failed to fetch products");
       }
       return await response.json();
     } catch (error) {
       console.error("Error fetching products:", error);
-      return []; // Return an empty array in case of an error
+      return []; 
     }
   }
 

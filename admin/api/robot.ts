@@ -197,10 +197,11 @@ export const getRobotById = async (id: string, passedToken?: string) => {
 /**
  * Update robot
  */
-export const updateRobotAPI = async (id: string, formData: FormData) => {
-  const token = getAuthToken();
+export const updateRobotAPI = async (id: string, formData, passedToken?: string) => {
+  const token = passedToken || getAuthToken();
   if (!token) throw new Error("User not authenticated!");
-
+  console.log("formData data");
+  console.log(formData);
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_ADMIN_API_URL}api/robot/${id}`,
     {
@@ -210,10 +211,11 @@ export const updateRobotAPI = async (id: string, formData: FormData) => {
     }
   );
 
-  if (!response.ok) {
-    const errorData = await response.json().catch(() => ({}));
-    throw new Error(errorData.message || "Failed to update Robot");
-  }
+if (!response.ok) {
+  let errorText = await response.text(); 
+  console.error("Update Robot API error:", errorText);
+  throw new Error(errorText || "Failed to update Robot");
+}
 
   return response.json();
 };
