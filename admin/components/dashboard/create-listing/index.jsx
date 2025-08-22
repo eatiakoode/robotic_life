@@ -3,7 +3,7 @@ import SidebarMenu from "../../common/header/dashboard/SidebarMenu";
 import MobileMenu from "../../common/header/MobileMenu";
 import CopyRight from "../../common/footer/CopyRight";
 import CreateList from "./CreateList";
-import RobotMediaUploader from "./RobotMediaUploader";
+// import RobotMediaUploader from "./RobotMediaUploader";
 
 const index = () => {
   return (
@@ -63,38 +63,9 @@ const index = () => {
                       <div className="col-lg-12">
                         <h3 className="mb30">Basic Information</h3>
                       </div>
-
                       <CreateList />
                     </div>
                   </div>
-                  {/* <div className="my_dashboard_review mt30">
-                    <div className="row">
-                      <div className="col-lg-12">
-                        <h3 className="mb30">Location</h3>
-                      </div>
-
-                      <LocationField />
-                    </div>
-                  </div> */}
-                  {/* <div className="my_dashboard_review mt30 ">
-                    <div className="col-lg-12">
-                      <h3 className="mb30">Detailed Information</h3>
-                    </div>
-                    <DetailedInfo />
-                  </div> */}
-                  {/* <div className="my_dashboard_review mt30">
-                    <div className="col-lg-12">
-                      <h3 className="mb30">Property media</h3>
-                    </div>
-                    <PropertyMediaUploader />
-                  </div> */}
-                  {/* <div className="my_dashboard_review mt30">
-                    <div className="col-lg-12">
-                      <h3 className="mb30">Floor Plans</h3>
-                      <button className="btn admore_btn mb30">Add More</button>
-                    </div>
-                    <FloorPlans />
-                  </div> */}
                 </div>
                 {/* End .col */}
               </div>

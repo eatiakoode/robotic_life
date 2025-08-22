@@ -134,17 +134,17 @@ const CreateList = () => {
     setFeaturedImage(e.target.files[0]);
   };
 
-  const [propertySelectedImgs, setPropertySelectedImgs] = useState([]);
+  const [robotSelectedImgs, setRobotSelectedImgs] = useState([]);
 
   // multiple image select
   const multipleImage = (e) => {
     // checking is same file matched with old stored array
-    const isExist = propertySelectedImgs?.some((file1) =>
+    const isExist = robotSelectedImgs?.some((file1) =>
       selectedFiles(e)?.some((file2) => file1.name === file2.name)
     );
 
     if (!isExist) {
-      setPropertySelectedImgs((old) => [...old, ...selectedFiles(e)]);
+      setRobotSelectedImgs((old) => [...old, ...selectedFiles(e)]);
     } else {
       alert("You have selected one image already!");
     }
@@ -152,8 +152,8 @@ const CreateList = () => {
 
   // delete image
   const deleteImage = (name) => {
-    const deleted = propertySelectedImgs?.filter((file) => file.name !== name);
-    setPropertySelectedImgs(deleted);
+    const deleted = robotSelectedImgs?.filter((file) => file.name !== name);
+    setRobotSelectedImgs(deleted);
   };
 
   useEffect(() => {
@@ -649,7 +649,7 @@ const CreateList = () => {
         );
 
       // Append images
-      propertySelectedImgs.forEach((file) => {
+      robotSelectedImgs.forEach((file) => {
         formData.append("images", file);
       });
 
@@ -657,9 +657,7 @@ const CreateList = () => {
       const res = await createRobot(formData, token);
 
       toast.success(res.message || "Robot created successfully!");
-   
-        router.push("/cmsroboticlife/my-properties");
-
+        router.push("/cmsroboticlife/my-robot");
       setError({});
     } catch (err) {
       console.error(err);
@@ -2426,8 +2424,8 @@ const CreateList = () => {
               </div>
               <div className="col-lg-12">
                 <ul className="mb-0">
-                  {propertySelectedImgs.length > 0
-                    ? propertySelectedImgs?.map((item, index) => (
+                  {robotSelectedImgs.length > 0
+                    ? robotSelectedImgs?.map((item, index) => (
                       <li key={index} className="list-inline-item">
                         <div className="portfolio_item">
                           <Image

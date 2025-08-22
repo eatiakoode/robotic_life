@@ -1,63 +1,11 @@
-"use client";
-
-import { useEffect, useState } from "react";
-import { useRouter, useParams } from "next/navigation";
 import Header from "../../common/header/dashboard/Header";
 import SidebarMenu from "../../common/header/dashboard/SidebarMenu";
 import MobileMenu from "../../common/header/MobileMenu";
 import CopyRight from "../../common/footer/CopyRight";
 import CreateList from "./CreateList";
-import DetailedInfo from "./DetailedInfo";
-import FloorPlans from "./FloorPlans";
-import LocationField from "./LocationField";
-import PropertyMediaUploader from "./PropertyMediaUploader";
-import { deleteRobotAPI, getRobotById, updateRobotAPI } from "../../../api/robot";
+// import RobotMediaUploader from "./RobotMediaUploader";
 
 const index = () => {
-  const params = useParams();  
-      const id = params?.id; 
-  const [inputs, setInputs] = useState([]);
-  // const [getinputs, setGetInputs] = useState([]);
-  const [property, setProperty] = useState([]);
-  const [planimage, setPlanImage] = useState(null);
-  
-  const handleAddInput = () => {
-    setInputs([
-      ...inputs,
-      {
-        id: Date.now(),
-        title: '',
-        bedrooms: '',
-        price: '',
-        areasize: '',
-        planimage: null,
-        description: ''
-      }
-    ]);
-  };
-    
-      // const handleInputChange = (index, event) => {
-      //   const newInputs = [...inputs];
-      //   newInputs[index].value = event.target.value;
-      //   setInputs(newInputs);
-      // };
-      useEffect(() => {
-        const fetchProperty = async () => {
-          try {
-            const data = await getRobotById(id);
-            // alert("ttest")
-            setProperty(data.data)
-            console.log("data.data.floorplan")
-            console.log(data.data.floorplan)
-            // setGetInputs()
-
-          } catch (error) {
-            alert("Failed to update Blog.");
-            console.error(error);
-          }
-        }
-        fetchProperty();
-      }, [id,setProperty]);
   return (
     <>
       {/* <!-- Main Header Nav --> */}
@@ -103,8 +51,8 @@ const index = () => {
 
                 <div className="col-lg-12 mb10">
                   <div className="breadcrumb_content style2">
-                    <h2 className="breadcrumb_title">Update Robot Details</h2>
-                    <p>Update robot information, images, pricing, or availability to keep your listing accurate and up-to-date.</p>
+                    <h2 className="breadcrumb_title">Add a New Robot</h2>
+                    <p>Enter robot details, upload images, videos and assign specifications, capabilities, and manufacturer to create a new listing.</p>
                   </div>
                 </div>
                 {/* End .col */}
@@ -113,39 +61,10 @@ const index = () => {
                   <div className="my_dashboard_review">
                     <div className="row">
                       <div className="col-lg-12">
-                        <h3 className="mb30">Create Listing</h3>
+                        <h3 className="mb30">Basic Information</h3>
                       </div>
-
-                      <CreateList property={property}/>
+                      <CreateList />
                     </div>
-                  </div>
-                  {/* <div className="my_dashboard_review mt30">
-                    <div className="row">
-                      <div className="col-lg-12">
-                        <h3 className="mb30">Location</h3>
-                      </div>
-
-                      <LocationField />
-                    </div>
-                  </div> */}
-                  {/* <div className="my_dashboard_review mt30 ">
-                    <div className="col-lg-12">
-                      <h3 className="mb30">Detailed Information</h3>
-                    </div>
-                    <DetailedInfo />
-                  </div> */}
-                  {/* <div className="my_dashboard_review mt30">
-                    <div className="col-lg-12">
-                      <h3 className="mb30">Property media</h3>
-                    </div>
-                    <PropertyMediaUploader />
-                  </div> */}
-                  <div className="my_dashboard_review mt30">
-                    <div className="col-lg-12">
-                      <h3 className="mb30">Floor Plans</h3>
-                      <button className="btn admore_btn mb30" onClick={handleAddInput} >Add More</button>
-                    </div>
-                    <FloorPlans property={property} inputs={inputs} setInputs={setInputs} setPlanImage={setPlanImage} planimage={planimage}/>
                   </div>
                 </div>
                 {/* End .col */}

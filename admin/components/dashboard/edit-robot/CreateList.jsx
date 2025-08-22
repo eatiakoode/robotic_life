@@ -1,129 +1,124 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
-import { getCityByStateTableData } from "../../../api/city";
-
+import { getManufacturerTableData } from "../../../api/manufacturer";
+import { addRobotAPI as createRobot } from "../../../api/robot";
+// import { getSellerTableData } from "@/api/seller";
 import { getCountryTableData } from "../../../api/country";
+import { getParentCategoriesAPI, getSubCategoriesAPI } from "@/api/category";
+import { getPowerSourceTableData } from "../../../api/powersource";
+import { getColorTableData } from "../../../api/color";
+import { getMaterialTableData } from "../../../api/material";
+import { getNavigationTypeTableData } from "../../../api/navigationtype";
+import { getSensorTableData } from "../../../api/sensor";
+import { getAISoftwareFeatureTableData } from "../../../api/aisoftwarefeature";
+import { getPrimaryFunctionTableData } from "../../../api/primaryfunction";
+import { getOperatingEnvironmentTableData } from "../../../api/operatingenvironment";
+import { getAutonomyLevelTableData } from "../../../api/autonomylevel";
+import { getPayloadTypeTableData } from "../../../api/payloadtype";
+import { getTerrainCapabilityTableData } from "../../../api/terrain";
+import { getCommunicationMethodTableData } from "../../../api/communicationmethod";
 import { getStateByCountryTableData } from "../../../api/state";
-import { getLocationByCityTableData } from "../../../api/location";
-import { getCategoryTableData } from "../../../api/category";
-import { getPropertytypeByCategoryTableData} from "../../../api/propertytype";
-import { getAmenityTableData } from "../../../api/amenity";
-import { getBuilderTableData } from "../../../api/manufacturer";
-import { getConstructionstatusTableData } from "../../../api/constructionstatus";
-import { getFurnishingstatusTableData } from "../../../api/furnishingstatus";
-
-import { deletePropertyImagesAPI } from "@/api/propertyimages";
-import { getRobotById, updateRobotAPI, deleteRobotSingleImagesAPI } from "../../../api/robot";
 
 import selectedFiles from "../../../utils/selectedFiles";
 import Image from "next/image";
-import { toast } from 'react-toastify';
+import { toast } from "react-toastify";
 
-import predefinedOptions from "@/data/bedroomoption"
-import predefinedOptionsbathroom from "@/data/bathroomoption"
-import predefinedOptionsparking from "@/data/parkingoption"
-import { getSellerTableData } from "@/api/seller";
-
-
-
-const CreateList = ({property}) => {
+const CreateList = () => {
   const router = useRouter();
-  const params = useParams();  
-      const id = params?.id; 
+  // const [pdffile, setPDFFile] = useState(null);
   // --- State Hooks ---
-  const [pdffile, setPDFFile] = useState(null);
-  const [getpdffile, setGetPDFFile] = useState(null);
-const [title, setTitle] = useState("");
-const [slug, setSlug] = useState("");
-const [description, setDescription] = useState("");
-const [highlights, setHighlights] = useState("");
-const [price, setPrice] = useState("");
-const [pricesqft, setPriceSqft] = useState("");
+  const [title, setTitle] = useState("");
+  const [slug, setSlug] = useState("");
+  const [description, setDescription] = useState("");
 
-const [address, setAddress] = useState("");
-const [error, setError] = useState("");
+  const [price, setPrice] = useState("");
+  const [error, setError] = useState("");
 
-const [countries, setCountries] = useState([]);
-const [selectedCountry, setSelectedCountry] = useState("");
+  const [countries, setCountries] = useState([]);
+  const [selectedCountry, setSelectedCountry] = useState("");
+  const [states, setStates] = useState([]);
 
-const [states, setStates] = useState([]);
-const [selectedState, setSelectedState] = useState("");
+  const [power, setPower] = useState([]);
+  const [selectedPower, setSelectedPower] = useState("");
 
-const [cities, setCities] = useState([]);
-const [selectedCity, setSelectedCity] = useState("");
+  const [launchYear, setLaunchYear] = useState("");
+  const [weight, setWeight] = useState("");
+  const [weightUnit, setWeightUnit] = useState("g");
+  const [height, setHeight] = useState("");
+  const [heightUnit, setHeightUnit] = useState("cm");
+  const [length, setLength] = useState("");
+  const [lengthUnit, setLengthUnit] = useState("cm");
+  const [width, setWidth] = useState("");
+  const [widthUnit, setWidthUnit] = useState("cm");
+  const [version, setVersion] = useState("");
+  const [patentNumber, setPatentNumber] = useState("");
+  const [loadCapacity, setLoadCapacity] = useState("");
+  const [batteryCapacity, setBatteryCapacity] = useState("");
+  const [batteryCapacityUnit, setBatteryCapacityUnit] = useState("mAh");
+  const [loadCapacityUnit, setLoadCapacityUnit] = useState("kg");
+  const [runtime, setRuntime] = useState("");
+  const [runtimeUnit, setRuntimeUnit] = useState("h");
+  const [range, setRange] = useState("");
+  const [rangeUnit, setRangeUnit] = useState("km/h");
+  const [speed, setSpeed] = useState("");
+  const [speedUnit, setSpeedUnit] = useState("km/h");
+  const [accuracy, setAccuracy] = useState("");
+  const [accuracyUnit, setAccuracyUnit] = useState("cm");
+  const [operatingTemperatureMin, setOperatingTemperatureMin] = useState("");
+  const [operatingTemperatureMax, setOperatingTemperatureMax] = useState("");
+  const [operatingTemperatureUnit, setOperatingTemperatureUnit] =
+    useState("°C");
+  const [chargingTime, setChargingTime] = useState("");
+  const [chargingTimeUnit, setChargingTimeUnit] = useState("h");
+  const [selectedColors, setSelectedColors] = useState([]);
+  const [colors, setColors] = useState([]);
+  const [materials, setMaterials] = useState([]);
+  const [selectedMaterials, setSelectedMaterials] = useState([]);
+  const [navigationType, setNavigationType] = useState([]);
+  const [selectedNavigationType, setSelectedNavigationType] = useState([]);
+  const [sensors, setSensors] = useState([]);
+  const [selectedSensor, setSelectedSensor] = useState([]);
+  const [selectedAISoftwareFeature, setSelectedAISoftwareFeature] = useState(
+    []
+  );
+  const [aiSoftwareFeatures, setAISoftwareFeatures] = useState([]);
+  const [primaryFunctions, setPrimaryFunctions] = useState([]);
+  const [primaryFunction, setPrimaryFunction] = useState([]);
+  const [selectedPrimaryFunction, setSelectedPrimaryFunction] = useState("");
+  const [operatingEnvironment, setOperatingEnvironment] = useState([]);
+  const [selectedOperatingEnvironment, setSelectedOperatingEnvironment] =
+    useState("");
+  const [terrainCapabilities, setTerrainCapabilities] = useState([]);
+  const [selectedTerrainCapability, setSelectedTerrainCapability] = useState(
+    []
+  );
+  const [communicationMethods, setCommunicationMethods] = useState([]);
+  const [selectedCommunicationMethod, setSelectedCommunicationMethod] =
+    useState([]);
+  const [autonomyLevel, setAutonomyLevel] = useState([]);
+  const [selectedAutonomyLevel, setSelectedAutonomyLevel] = useState("");
+  const [payloadTypes, setPayloadTypes] = useState([]);
+  const [selectedPayloadType, setSelectedPayloadType] = useState([]);
 
-const [locations, setLocations] = useState([]);
-const [selectedLocation, setSelectedLocation] = useState("");
+  const [categories, setCategories] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState("");
 
-const [categories, setCategories] = useState([]);
-const [selectedCategory, setSelectedCategory] = useState("");
+  const [subCategories, setSubCategories] = useState([]);
+  const [selectedSubCategory, setSelectedSubCategory] = useState("");
 
-const [propertytypes, setPropertytypes] = useState([]);
-const [selectedPropertytype, setSelectedPropertytype] = useState("");
+  const [manufacturers, setManufacturers] = useState([]);
+  const [selectedManufacturer, setSelectedManufacturer] = useState("");
 
-const [builders, setBuilders] = useState([]);
-const [selectedBuilder, setSelectedBuilder] = useState("");
-
-const [amenities, setAmenities] = useState([]);
-const [selectedAmenity, setSelectedAmenity] = useState("");
-const [status, setStatus] = useState("");
-const [adminapprove, setAdminApprove] = useState("");
-
-
-const [constructionstatus, setConstructionstatus] = useState([]);
-  const [selectedConstructionstatus, setSelectedConstructionstatus] = useState("");
-  const [furnishingstatus, setFurnishingstatus] = useState([]);
-  const [selectedFurnishingstatus, setSelectedFurnishingstatus] = useState("");
-
-  const [featuredproperties, setFeaturedProperties] = useState([]);
-  const [selectedFeaturedProperty, setSelectedFeaturedProperty] = useState(""); 
-  const [hotproperties, setHotProperties] = useState([]);
-  const [selectedHotProperty, setSelectedHotProperty] = useState(""); 
-
-  const [reraapproved, setReraApproved] = useState([]);
-  const [selectedReraApproved, setSelectedReraApproved] = useState("");
-  
-  const [propertyid , setPropertyid] = useState([]);
-  const [areasize, setAreasize] = useState([]);
-  const [sizeprefix, setSizePrefix] = useState([]);
-  const [bedrooms, setBedRooms] = useState([]);
-  const [bathrooms, setBathRooms] = useState([]);
-  const [garages, setGarages] = useState([]);
-  const [garagessize, setGaragesSize] = useState([]);
-  const [yearbuild, setYearBuild] = useState([]);
-
-  const [foodcourt, setFoodcourt] = useState([]);
-const [paymentplan, setPaymentPlan] = useState([]);
-const [multiplex, setMultiplex] = useState([]);
-
-  const [mapembedcode, setMapEmbedCode] = useState([]);
   const [videoembedcode, setVideoEmbedCode] = useState([]);
   const [nearby, setNearBy] = useState([]);
   const [specifications, setSpecifications] = useState([]);
-  
-  const [sellername, setSellerName] = useState([]);
-  const [selleremail, setSellerEmail] = useState([]);
-  const [sellerphone, setSellerPhone] = useState([]);
-  const [sellers, setSellers] = useState([]);
-  const [selectedSeller, setSelectedSeller] = useState("");
-
-  const [zipcode, setZipCode] = useState([]);
-  const [reranumber, setReraNumber] = useState([]);
 
   const [metatitle, setMetatitle] = useState([]);
   const [metadescription, setMetaDescription] = useState([]);
 
   const [featuredimage, setFeaturedImage] = useState(null);
-  const [featuredimageget, setFeaturedImageGet] = useState(null);
-  const [siteplan, setSitePlan] = useState(null);
-  const [siteplanget, setSitePlanGet] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [masterplan, setMasterPlan] = useState(null);
-  const [masterplanget, setMasterPlanGet] = useState(null);
-  const [roomtext, setRoomText] = useState("Bedrooms");
-  const [customBedroom, setCustomBedroom] = useState("");
 
   const handleBedroomChange = (e) => {
     setBedRooms(e.target.value);
@@ -134,512 +129,603 @@ const [multiplex, setMultiplex] = useState([]);
     }
   };
 
-  const [customBathrooms, setCustomBathrooms] = useState("");
-
-  const handleBathroomsChange = (e) => {
-    setBathRooms(e.target.value);
-
-    // Clear custom input if not "Custom"
-    if (e.target.value !== "Custom") {
-      setCustomBathrooms("");
-    }
-  };
-
-  const [customParking, setCustomParking] = useState("");
-
-  const handleParkingChange = (e) => {
-    setGarages(e.target.value);
-
-    // Clear custom input if not "Custom"
-    if (e.target.value !== "Custom") {
-      setCustomParking("");
-    }
-  };
   // upload profile
-  const uploadSitePlan = (e) => {
-    // alert("test")
-      setSitePlan(e.target.files[0]);
-      setSitePlanGet("")
-      // setSitePlanGet(e.target.files[0])
-  };
-const uploadMasterPlan = (e) => {
-    // alert("test")
-      setMasterPlan(e.target.files[0]);
-      setMasterPlanGet("")
-  };
   const uploadFeaturedImage = (e) => {
-    setFeaturedImageGet("")
     setFeaturedImage(e.target.files[0]);
-};
+  };
 
-  
+  const [robotSelectedImgs, setRobotSelectedImgs] = useState([]);
 
+  // multiple image select
+  const multipleImage = (e) => {
+    // checking is same file matched with old stored array
+    const isExist = robotSelectedImgs?.some((file1) =>
+      selectedFiles(e)?.some((file2) => file1.name === file2.name)
+    );
 
-  const [propertySelectedImgs, setPropertySelectedImgs] = useState([]);
-  const [propertySelectedImgsget, setPropertySelectedImgsGet] = useState([]);
-  
-  
-    // multiple image select
-    const multipleImage = (e) => {
-      // checking is same file matched with old stored array
-      const isExist = propertySelectedImgs?.some((file1) =>
-        selectedFiles(e)?.some((file2) => file1.name === file2.name)
-      );
-  
-      if (!isExist) {
-        setPropertySelectedImgs((old) => [...old, ...selectedFiles(e)]);
-      } else {
-        alert("You have selected one image already!");
-      }
-    };
-  
-    // delete image
-    const deleteImage = (name) => {
-      const deleted = propertySelectedImgs?.filter((file) => file.name !== name);
-      setPropertySelectedImgs(deleted);
-    };
-    
- const deleteImageSingle = async (propertyid,fieldname,imageurl) => {
-  const isConfirmed = window.confirm("Are you sure you want to delete this image?");
-      if (!isConfirmed) return;
-      if(fieldname=="featuredimageurl"){
-        setFeaturedImageGet('')
-      }
-      else if(fieldname=="siteplanurl"){
-        setSitePlanGet('')
-      }
-      else if(fieldname=="masterplanurl"){
-        setMasterPlanGet('')
-      }
-      try {
-         const payload = {"propertyid":propertyid,"fieldname":fieldname,"imageurl":imageurl}
-        const data = await deleteRobotSingleImagesAPI(payload); // 🔹 Call the API function
-        
-        const deleted = propertySelectedImgsget?.filter((file) => file._id !== _id);
-        setPropertySelectedImgsGet(deleted);
-        toast.success(data.message);
-        //setTitle(""); // ✅ Reset input after success
-      } catch (error) {
-        alert("Failed to delete property Image.");
-        //setError(error.message); // ❌ Show error if request fails
-      }
-    };
-    const deleteImageGet = async (_id) => {
-      const isConfirmed = window.confirm("Are you sure you want to delete this image?");
-      if (!isConfirmed) return;
-      
-      // const deletePropertyImages = async (id) => {
-        // const isConfirmed = window.confirm("Are you sure you want to delete this Blog?");
-        // if (!isConfirmed) return;
-    
-        try {
-          // alert("test")
-          // TODO: implement robot image deletion by id if backend supports it
-          // alert("test")
-          const deleted = propertySelectedImgsget?.filter((file) => file._id !== _id);
-          setPropertySelectedImgsGet(deleted);
-          toast.success(data.message);
-          //setTitle(""); // ✅ Reset input after success
-        } catch (error) {
-          alert("Failed to delete property Image.");
-          //setError(error.message); // ❌ Show error if request fails
-        }
-      // };
-      // deletePropertyImages(id)
-    };
-  
-// --- Fetch Initial Data ---
-useEffect(() => {
-   if (!id) return;  
-   
-        const fetchProperty = async () => {
-          // alert("ttt")    
-          try {
-            
-            setTitle(property.title)
-            setSlug(property.slug)
-            setDescription(property.description)
-            setPrice(property.totalPrice || property.price)
-            setPriceSqft(property.pricesqft)
-            setAddress(property.address)
-            setSelectedCountry(property.countryOfOrigin || property.countryid)
-            setSelectedState(property.stateid)
-            setSelectedCity(property.cityid)
-            setSelectedLocation(property.locationid)
-            setSelectedCategory(property.category || property.categoryid)
-            setSelectedPropertytype(property.propertytypeid)
-            setSelectedBuilder(property.builderid)
-            setSelectedSeller(property.sellerid)
-            setSelectedAmenity(property.amenityid)
-            setSelectedConstructionstatus(property.constructionstatus)
-            setSelectedFurnishingstatus(property.furnishingstatus)
-            setSelectedFeaturedProperty(property.featuredproperty)
-            setSelectedHotProperty(property.hotproperty)
-            setSelectedReraApproved(property.reraapproved)
-            setPropertyid(property.propertyid)
-            setAreasize(property.areasize)
-            setSizePrefix(property.sizeprefix)
-            setPaymentPlan(property.paymentplan)
-            
-            if (!predefinedOptions.includes(property.bedrooms) && property.bedrooms?.trim() !== "") {
-                setCustomBedroom(property.bedrooms);
-                setBedRooms("Custom"); // Mark dropdown as 'Custom'
-              }  else {
-                setBedRooms(property.bedrooms)
-              }
-
-              if (!predefinedOptionsbathroom.includes(property.bathrooms) && property.bathrooms?.trim() !== "") {
-                setCustomBathrooms(property.bathrooms);
-                setBathRooms("Custom"); // Mark dropdown as 'Custom'
-              }  else {
-                 setBathRooms(property.bathrooms)
-              }
-
-              
-           if (!predefinedOptionsparking.includes(property.garages) && property.garages?.trim() !== "") {
-                setCustomParking(property.garages);
-                setGarages("Custom"); // Mark dropdown as 'Custom'
-              }  else {
-                 setGarages(property.garages)
-              }
-            // setGarages(property.garages)
-            setGaragesSize(property.garagessize)
-            setYearBuild(property.yearbuild)
-            setMapEmbedCode(property.mapembedcode)
-            setVideoEmbedCode(property.videoembedcode)
-            setNearBy(property.nearby)
-            setSpecifications(property.specifications)
-            
-            setSellerName(property.sellername)
-            setSellerEmail(property.selleremail)
-            setSellerPhone(property.sellerphone)
-
-            setZipCode(property.zipcode)
-            setReraNumber(property.reranumber)
-            setMetatitle(property.metatitle)
-            setMetaDescription(property.metadescription)
-
-            setStatus(property.status)
-            setAdminApprove(property.admin_approve)
-            setFoodcourt(property.foodcourt)
-            setMultiplex(property.multiplex)
-
-            
-            if(property.brochurepdf) {
-              setGetPDFFile(process.env.NEXT_PUBLIC_API_URL+property.brochurepdf)
-            }
-
-            
-            if(property.featuredimageurl) {
-              // setFeaturedImageGet(process.env.NEXT_PUBLIC_API_URL+property.featuredimageurl)
-              setFeaturedImageGet(process.env.NEXT_PUBLIC_API_URL +(property.featuredimageurl?.url ? property.featuredimageurl.url : property.featuredimageurl));
-            }
-            if(property.siteplanurl) {
-              // setSitePlanGet(process.env.NEXT_PUBLIC_API_URL+property.siteplanurl)
-              setSitePlanGet(process.env.NEXT_PUBLIC_API_URL +(property.siteplanurl?.url ? property.siteplanurl.url : property.siteplanurl));
-            }
-             if(property.masterplanurl ) {
-              // setMasterPlanGet(process.env.NEXT_PUBLIC_API_URL+property.masterplanurl.url?property.masterplanurl.url:property.masterplanurl )
-              setMasterPlanGet(process.env.NEXT_PUBLIC_API_URL +(property.masterplanurl?.url ? property.masterplanurl.url : property.masterplanurl));
-            }
-            
-            // setPropertySelectedImgsGet(data.data.propertyimageurl)
-            setPropertySelectedImgsGet(property?.images)
-
-
-            // alert(property.countryid)
-            const statesRes = await getStateByCountryTableData(property.countryOfOrigin || property.countryid);
-            setStates(statesRes.data || []);
-            const cityRes = await getCityByStateTableData(property.stateid);
-            setCities(cityRes.data || []);
-            const locationRes = await getLocationByCityTableData(property.cityid);
-            setLocations(locationRes.data || []);
-
-            const propertytypeRes = await getPropertytypeByCategoryTableData(property.category || property.categoryid);
-            setPropertytypes(propertytypeRes.data || []);
-            
-          } catch (error) {
-            console.error("Error fetching Builder:", error);
-          } finally {
-            setLoading(false);
-          }
-        };
-    
-        fetchProperty();
-     
-  const fetchData = async () => {
-     const filter = {
-    limit: 1000,
-    page:  1
-  }
-    try {
-      const [countryRes, constRes, furnRes, catRes, amenityRes, builderRes,sellerRes] = await Promise.all([
-        getCountryTableData(),
-        getConstructionstatusTableData(),
-        getFurnishingstatusTableData(),
-        getCategoryTableData(filter),
-        getAmenityTableData(filter),
-        getBuilderTableData(filter),
-        getSellerTableData(),
-      ]);
-
-      setCountries(countryRes || []);
-      setConstructionstatus(constRes || []);
-      setFurnishingstatus(furnRes || []);
-      setCategories(catRes.items || []);
-      setAmenities(amenityRes.items || []);
-      setBuilders(builderRes.items || []);
-      setSellers(sellerRes.data || []);
-    } catch (err) {
-      console.error("Error loading initial data:", err);
+    if (!isExist) {
+      setRobotSelectedImgs((old) => [...old, ...selectedFiles(e)]);
+    } else {
+      alert("You have selected one image already!");
     }
   };
-  fetchData();
-}, [id,property]);
 
-// --- Handlers ---
+  // delete image
+  const deleteImage = (name) => {
+    const deleted = robotSelectedImgs?.filter((file) => file.name !== name);
+    setRobotSelectedImgs(deleted);
+  };
 
-const handleCountryChange = async (e) => {
-  const value = e.target.value;
-   
-  setSelectedCountry(value);
-  try {
-    const res = await getStateByCountryTableData(value);
-    setStates(res.data || []);
-  } catch (err) {
-    console.error("Error fetching states:", err);
-  }
-};
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const filter = {
+          limit: 1000,
+          page: 1,
+        };
 
-const handleStateChange = async (e) => {
-  const value = e.target.value;
-  setSelectedState(value);
-  try {
-    const res = await getCityByStateTableData(value);
-    setCities(res.data || []);
-  } catch (err) {
-    console.error("Error fetching cities:", err);
-  }
-};
+        const [
+          countryRes,
+          parentCats,
+          manufacturerRes,
+          powerRes,
+          colorRes,
+          materialRes,
+          navTypeRes,
+          sensorRes,
+          aiRes,
+          primaryFuncRes,
+          opEnvRes,
+          autonomyRes,
+          payloadRes,
+          terrainRes,
+          commMethodRes,
+        ] = await Promise.all([
+          getCountryTableData(),
+          getParentCategoriesAPI(),
+          getManufacturerTableData(filter),
+          getPowerSourceTableData(),
+          getColorTableData(),
+          getMaterialTableData(),
+          getNavigationTypeTableData(),
+          getSensorTableData(),
+          getAISoftwareFeatureTableData(),
+          getPrimaryFunctionTableData(),
+          getOperatingEnvironmentTableData(),
+          getAutonomyLevelTableData(),
+          getPayloadTypeTableData(),
+          getTerrainCapabilityTableData(),
+          getCommunicationMethodTableData(),
+        ]);
 
-const handleCityChange = async (e) => {
-  const value = e.target.value;
-  setSelectedCity(value);
-  try {
-    const res = await getLocationByCityTableData(value);
-    setLocations(res.data || []);
-  } catch (err) {
-    console.error("Error fetching locations:", err);
-  }
-};
-
-const handleCategoryChange = async (e) => {
-  const value = e.target.value;
-  if(value=="67ea48d17cfa562fe8eaafd0"){
-    setRoomText("Meeting rooms and cabins")
-
-  }
-  setSelectedCategory(value);
-  try {
-    const res = await getPropertytypeByCategoryTableData(value);
-    setPropertytypes(res.data || []);
-  } catch (err) {
-    console.error("Error fetching property types:", err);
-  }
-};
-
-const handleAmenityChange = (e) => {
-  const { value, checked } = e.target;
-
-  setSelectedAmenity((prev) => {
-    if (checked) {
-      return [...prev, value]; // add to selection
-    } else {
-      return prev.filter((id) => id !== value); // remove from selection
-    }
-  });
-};
-
-const handlePropertytypeChange = (e) => {
-  setSelectedPropertytype(e.target.value);
-};
-const handleBuilderChange = (e) => {
-  setSelectedBuilder(e.target.value);
-};
-const handleConstructionstatusChange = (e) => {
-  setSelectedConstructionstatus(e.target.value);
-};
-const handleFurnishingstatusChange = (e) => {
-  setSelectedFurnishingstatus(e.target.value);
-};
-const handleLocationChange = (e) => {
-  setSelectedLocation(e.target.value);
-};
-const handleAddressChange = (e) => {
-  setAddress(e.target.value);
-  if (e.target.value.trim() !== "") setError("");
-};
-// --- Submit ---
-const updateProperty = async (e) => {
-  e.preventDefault();
-  const newErrors = {};
-
-  const requiredFields = [
-    { key: "title", value: title, name: "Title" },
-    { key: "slug", value: slug, name: "Slug" },
-    { key: "description", value: description, name: "Description" },
-    { key: "price", value: price, name: "Price" },
-    { key: "pricesqft", value: pricesqft, name: "Price Sqft" },
-    { key: "address", value: address, name: "Address" },
-    { key: "country", value: selectedCountry, name: "Country" },
-    { key: "state", value: selectedState, name: "State" },
-    { key: "city", value: selectedCity, name: "City" },
-    { key: "location", value: selectedLocation, name: "Location" },
-    { key: "selectedCategory", value: selectedCategory, name: "Category" },
-    { key: "selectedPropertytype", value: selectedPropertytype, name: "Property Type" },
-    { key: "selectedBuilder", value: selectedBuilder, name: "Builder" },
-    { key: "selectedSeller", value: selectedSeller, name: "Seller" },
-    { key: "selectedConstructionstatus", value: selectedConstructionstatus, name: "Construction Status" },
-    { key: "selectedFurnishingstatus", value: selectedFurnishingstatus, name: "Furnishing Status" },
-    // { key: "selectedAmenity", value: selectedAmenity, name: "Amenity" },
-    { key: "selectedReraApproved", value: selectedReraApproved, name: "RERA Approved" },
-    { key: "selectedFeaturedProperty", value: selectedFeaturedProperty, name: "Featured Property" },
-    { key: "selectedHotProperty", value: selectedHotProperty, name: "Hot Property" },
-  ];
-
-  requiredFields.forEach(field => {
-    if (!field.value || (typeof field.value === "string" && !field.value.trim())) {
-      newErrors[field.key] = `${field.name} is required`;
-    }
-  });
-
-  if (Object.keys(newErrors).length > 0) {
-    return setError(newErrors);
-  }
-
-  try {
-    const payload = {
-      title, slug, description,highlights, price,pricesqft, address,
-      countryid: selectedCountry,
-      stateid: selectedState,
-      cityid: selectedCity,
-      locationid: selectedLocation,
-      categoryid: selectedCategory,
-      propertytypeid: selectedPropertytype,
-      builderid: selectedBuilder,
-      sellerid: selectedSeller,
-      constructionstatus: selectedConstructionstatus,
-      furnishingstatus: selectedFurnishingstatus,
-      amenityid: selectedAmenity,
-      reraapproved: selectedReraApproved,
-      featuredproperty: selectedFeaturedProperty,
-      hotproperty: selectedHotProperty,
-      propertyid, areasize, sizeprefix,
-      // bedrooms,
-      bedrooms: bedrooms === "Custom" ? customBedroom : bedrooms,
-      //  bathrooms,
-      //   garages,
-      bathrooms: bathrooms === "Custom" ? customBathrooms : bathrooms,
-      garages: garages === "Custom" ? customParking : garages,
-      garagessize,
-      yearbuild, mapembedcode, videoembedcode,
-      nearby,specifications, sellername, selleremail, sellerphone, 
-      reranumber, zipcode, metatitle, metadescription,featuredimage,siteplan,masterplan,status,
-      admin_approve:adminapprove,
-      pdffile,paymentplan,multiplex,foodcourt
-    };
-    
-    
-    const formData = new FormData();
-    
-    // Loop over each key-value pair in the payload
-    for (const key in payload) {
-      if (payload[key] !== undefined && payload[key] !== null) {
-        formData.append(key, payload[key]);
+        setCountries(countryRes || []);
+        setCategories(Array.isArray(parentCats) ? parentCats : []);
+        setManufacturers(
+          Array.isArray(manufacturerRes?.items)
+            ? manufacturerRes.items
+            : Array.isArray(manufacturerRes)
+              ? manufacturerRes
+              : []
+        );
+        setPower(Array.isArray(powerRes) ? powerRes : powerRes?.data || []);
+        setColors(Array.isArray(colorRes) ? colorRes : colorRes?.data || []);
+        setMaterials(
+          Array.isArray(materialRes) ? materialRes : materialRes?.data || []
+        );
+        setNavigationType(
+          Array.isArray(navTypeRes) ? navTypeRes : navTypeRes?.data || []
+        );
+        setSensors(
+          Array.isArray(sensorRes) ? sensorRes : sensorRes?.data || []
+        );
+        setAISoftwareFeatures(Array.isArray(aiRes) ? aiRes : aiRes?.data || []);
+        setPrimaryFunction(
+          Array.isArray(primaryFuncRes)
+            ? primaryFuncRes
+            : primaryFuncRes?.data || []
+        );
+        setOperatingEnvironment(
+          Array.isArray(opEnvRes) ? opEnvRes : opEnvRes?.data || []
+        );
+        setAutonomyLevel(
+          Array.isArray(autonomyRes) ? autonomyRes : autonomyRes?.data || []
+        );
+        setPayloadTypes(
+          Array.isArray(payloadRes) ? payloadRes : payloadRes?.data || []
+        );
+        setTerrainCapabilities(
+          Array.isArray(terrainRes) ? terrainRes : terrainRes?.data || []
+        );
+        setCommunicationMethods(
+          Array.isArray(commMethodRes)
+            ? commMethodRes
+            : commMethodRes?.data || []
+        );
+      } catch (err) {
+        console.error("Error loading initial data:", err);
       }
+    };
+
+    fetchData();
+  }, []);
+  useEffect(() => {
+    if (title) {
+      const generatedSlug = title
+        .toLowerCase()
+        .trim()
+        .replace(/[^a-z0-9\s-]/g, "") 
+        .replace(/\s+/g, "-"); 
+      setSlug(generatedSlug);
+    } else {
+      setSlug("");
     }
-    propertySelectedImgs.forEach((file) => {
-      formData.append("propertySelectedImgs", file); // Repeat key name for each file
+  }, [title]);
+
+  // --- Handlers ---
+
+  const handleCountryChange = async (e) => {
+    const value = e.target.value;
+    setSelectedCountry(value);
+    try {
+      const res = await getCountryTableData(value);
+      setStates(res.data || []);
+    } catch (err) {
+      console.error("Error fetching states:", err);
+    }
+  };
+
+  const handleCategoryChange = async (e) => {
+    const value = e.target.value;
+    setSelectedCategory(value);
+    setSelectedSubCategory("");
+    if (!value) {
+      setSubCategories([]);
+      return;
+    }
+    try {
+      const subs = await getSubCategoriesAPI(value);
+      setSubCategories(Array.isArray(subs) ? subs : []);
+    } catch (err) {
+      console.error("Error fetching subcategories:", err);
+      setSubCategories([]);
+    }
+  };
+
+  const handleSubCategoryChange = (e) => {
+    setSelectedSubCategory(e.target.value);
+  };
+
+  const handleManufacturerChange = (e) => {
+    setSelectedManufacturer(e.target.value);
+  };
+
+  const handlePowerChange = (e) => {
+    setSelectedPower(e.target.value);
+  };
+
+  const handlePrimaryFunctionChange = (e) => {
+    setSelectedPrimaryFunction(e.target.value);
+  };
+
+  const handleOperatingEnvironmentChange = (e) => {
+    setSelectedOperatingEnvironment(e.target.value);
+  };
+
+  const handleAutonomyLevelChange = (e) => {
+    setSelectedAutonomyLevel(e.target.value);
+  };
+
+  const handleColorChange = (e) => {
+    const values = Array.from(
+      e.target.selectedOptions,
+      (option) => option.value
+    );
+    setSelectedColors(values);
+  };
+
+  const handleNavigationTypeChange = (e) => {
+    const values = Array.from(
+      e.target.selectedOptions,
+      (option) => option.value
+    );
+    setSelectedNavigationType(values);
+  };
+
+  const handleSensorChange = (e) => {
+    const values = Array.from(
+      e.target.selectedOptions,
+      (option) => option.value
+    );
+    setSelectedSensor(values);
+  };
+
+  const handleAISoftwareFeatureChange = (e) => {
+    const values = Array.from(
+      e.target.selectedOptions,
+      (option) => option.value
+    );
+    setSelectedAISoftwareFeature(values);
+  };
+
+  const handleTerrainCapabilityChange = (e) => {
+    const values = Array.from(
+      e.target.selectedOptions,
+      (option) => option.value
+    );
+    setSelectedTerrainCapability(values);
+  };
+
+  const handleCommunicationMethodChange = (e) => {
+    const values = Array.from(
+      e.target.selectedOptions,
+      (option) => option.value
+    );
+    setSelectedCommunicationMethod(values);
+  };
+
+  const handlePayloadTypeChange = (e) => {
+    const values = Array.from(
+      e.target.selectedOptions,
+      (option) => option.value
+    );
+    setSelectedPayloadType(values);
+  };
+
+  const handleMaterialChange = (e) => {
+    const values = Array.from(
+      e.target.selectedOptions,
+      (option) => option.value
+    );
+    setSelectedMaterials(values);
+  };
+
+  // For unit dropdowns (hardcoded options)
+  const handleLengthUnitChange = (e) => {
+    setLengthUnit(e.target.value);
+  };
+
+  const handleWidthUnitChange = (e) => {
+    setWidthUnit(e.target.value);
+  };
+
+  const handleHeightUnitChange = (e) => {
+    setHeightUnit(e.target.value);
+  };
+
+  const handleWeightUnitChange = (e) => {
+    setWeightUnit(e.target.value);
+  };
+
+  // --- Submit ---
+  const addRobo = async (e) => {
+    e.preventDefault();
+    const newErrors = {};
+
+    // Validation list
+    const requiredFields = [
+      { key: "title", value: title, name: "Title" },
+      { key: "slug", value: slug, name: "Slug" },
+      { key: "description", value: description, name: "Description" },
+      { key: "price", value: price, name: "Total Price" },
+      { key: "countryid", value: selectedCountry, name: "Country of Origin" },
+      { key: "categoryid", value: selectedCategory, name: "Category" },
+      {
+        key: "subcategoryid",
+        value: selectedSubCategory,
+        name: "Sub Category",
+      },
+      {
+        key: "manufacturerid",
+        value: selectedManufacturer,
+        name: "Manufacturer",
+      },
+      { key: "launchYear", value: launchYear, name: "Launch Year" },
+      { key: "length", value: length, name: "Length" },
+      { key: "width", value: width, name: "Width" },
+      { key: "height", value: height, name: "Height" },
+      { key: "weight", value: weight, name: "Weight" },
+      {
+        key: "batteryCapacity",
+        value: batteryCapacity,
+        name: "Battery Capacity",
+      },
+      { key: "runtime", value: runtime, name: "Runtime" },
+      { key: "speed", value: speed, name: "Speed" },
+      { key: "accuracy", value: accuracy, name: "Accuracy" },
+      { key: "selectedPower", value: selectedPower, name: "Power Source" },
+      {
+        key: "videoembedcode",
+        value: videoembedcode,
+        name: "Video Embed Code",
+      },
+      {
+        key: "selectedPrimaryFunction",
+        value: selectedPrimaryFunction,
+        name: "Primary Function",
+      },
+      {
+        key: "selectedOperatingEnvironment",
+        value: selectedOperatingEnvironment,
+        name: "Operating Environment",
+      },
+      {
+        key: "selectedAutonomyLevel",
+        value: selectedAutonomyLevel,
+        name: "Autonomy Level",
+      },
+      {
+        key: "colors",
+        value: selectedColors.length > 0 ? selectedColors : null,
+        name: "Colors",
+      },
+      {
+        key: "materials",
+        value: selectedMaterials.length > 0 ? selectedMaterials : null,
+        name: "Materials",
+      },
+      {
+        key: "navigationTypes",
+        value:
+          selectedNavigationType.length > 0 ? selectedNavigationType : null,
+        name: "Navigation Types",
+      },
+      {
+        key: "sensors",
+        value: selectedSensor.length > 0 ? selectedSensor : null,
+        name: "Sensors",
+      },
+      {
+        key: "aiSoftwareFeatures",
+        value:
+          selectedAISoftwareFeature.length > 0
+            ? selectedAISoftwareFeature
+            : null,
+        name: "AI Software Features",
+      },
+      {
+        key: "terrainCapability",
+        value:
+          selectedTerrainCapability.length > 0
+            ? selectedTerrainCapability
+            : null,
+        name: "Terrain Capability",
+      },
+      {
+        key: "communicationMethod",
+        value:
+          selectedCommunicationMethod.length > 0
+            ? selectedCommunicationMethod
+            : null,
+        name: "Communication Method",
+      },
+      {
+        key: "payloadType",
+        value: selectedPayloadType.length > 0 ? selectedPayloadType : null,
+        name: "Payload Type",
+      },
+    ];
+
+    // Check for empty required fields
+    requiredFields.forEach((field) => {
+      if (
+        !field.value ||
+        (typeof field.value === "string" && !field.value.trim())
+      ) {
+        newErrors[field.key] = `${field.name} is required`;
+      }
     });
 
-    const res = await updateRobotAPI(id,formData);
-    toast.success(res.message || "Robot updated successfully");
-    setTimeout(() => {
-      router.push("/cmsroboticlife/my-robot");
-    }, 1000);
-    // router.push("/cmsroboticlife/my-properties");
+    if (Object.keys(newErrors).length > 0) {
+      return setError(newErrors);
+    }
 
-    // Reset fields and errors
-    setError({});
-    // (Reset other fields here if needed)
-  } catch (err) {
-    setError({ general: err.message || "Something went wrong" });
-  }
-};
+    try {
+      const userData = JSON.parse(localStorage.getItem("user"));
+      const token = userData?.token;
+      if (!token) {
+        toast.error("User not authenticated");
+        return;
+      }
 
+      const payload = {
+        title,
+        slug,
+        description,
+        totalPrice: price,
+        countryOfOrigin: selectedCountry,
+        category: selectedCategory,
+        subcategoryid: selectedSubCategory,
+        manufacturer: selectedManufacturer,
+        launchYear,
+        version,
+        length,
+        lengthUnit,
+        width,
+        widthUnit,
+        height,
+        heightUnit,
+        weight,
+        weightUnit,
+        batteryCapacity,
+        chargingTime,
+        loadCapacity,
+        runtime,
+        speed,
+        accuracy,
+        // operatingTemperature can be constructed on backend if needed
+        range,
+        rangeUnit,
+        powerSource: selectedPower,
+        videoembedcode,
+        primaryFunction: selectedPrimaryFunction,
+        operatingEnvironment: selectedOperatingEnvironment,
+        autonomyLevel: selectedAutonomyLevel,
+        metatitle,
+        metadescription,
+        featuredimage,
+      };
 
+      const formData = new FormData();
+
+      // Append normal fields
+      for (const key in payload) {
+        if (payload[key] !== undefined && payload[key] !== null) {
+          formData.append(key, payload[key]);
+        }
+      }
+
+      // Append multi-selects
+      selectedColors.forEach((color) => formData.append("color[]", color));
+      selectedMaterials.forEach((material) =>
+        formData.append("material[]", material)
+      );
+      selectedNavigationType.forEach((nav) =>
+        formData.append("navigationType[]", nav)
+      );
+      selectedSensor.forEach((s) => formData.append("sensors[]", s));
+      selectedAISoftwareFeature.forEach((a) =>
+        formData.append("aiSoftwareFeatures[]", a)
+      );
+      selectedTerrainCapability.forEach((t) =>
+        formData.append("terrainCapability[]", t)
+      );
+      selectedCommunicationMethod.forEach((c) =>
+        formData.append("communicationMethod[]", c)
+      );
+      selectedPayloadType.forEach((p) =>
+        formData.append("payloadTypesSupported[]", p)
+      );
+
+      // Append nested unit/value fields to match backend schema
+      if (length) formData.append("dimensions.length.value", String(length));
+      if (lengthUnit)
+        formData.append("dimensions.length.unit", String(lengthUnit));
+      if (width) formData.append("dimensions.width.value", String(width));
+      if (widthUnit)
+        formData.append("dimensions.width.unit", String(widthUnit));
+      if (height) formData.append("dimensions.height.value", String(height));
+      if (heightUnit)
+        formData.append("dimensions.height.unit", String(heightUnit));
+
+      if (weight) formData.append("weight.value", String(weight));
+      if (weightUnit) formData.append("weight.unit", String(weightUnit));
+
+      if (batteryCapacity)
+        formData.append("batteryCapacity.value", String(batteryCapacity));
+      if (batteryCapacityUnit)
+        formData.append("batteryCapacity.unit", String(batteryCapacityUnit));
+
+      if (loadCapacity)
+        formData.append("loadCapacity.value", String(loadCapacity));
+      if (loadCapacityUnit)
+        formData.append("loadCapacity.unit", String(loadCapacityUnit));
+
+      if (runtime) formData.append("runtime.value", String(runtime));
+      if (runtimeUnit) formData.append("runtime.unit", String(runtimeUnit));
+
+      if (speed) formData.append("speed.value", String(speed));
+      if (speedUnit) formData.append("speed.unit", String(speedUnit));
+
+      if (accuracy) formData.append("accuracy.value", String(accuracy));
+      if (accuracyUnit) formData.append("accuracy.unit", String(accuracyUnit));
+
+      if (range) formData.append("range.value", String(range));
+      if (rangeUnit) formData.append("range.unit", String(rangeUnit));
+
+      if (operatingTemperatureMin)
+        formData.append(
+          "operatingTemperature.min",
+          String(operatingTemperatureMin)
+        );
+      if (operatingTemperatureMax)
+        formData.append(
+          "operatingTemperature.max",
+          String(operatingTemperatureMax)
+        );
+      if (operatingTemperatureUnit)
+        formData.append(
+          "operatingTemperature.unit",
+          String(operatingTemperatureUnit)
+        );
+
+      // Append images
+      robotSelectedImgs.forEach((file) => {
+        formData.append("images", file);
+      });
+
+      // API call
+      const res = await createRobot(formData, token);
+
+      toast.success(res.message || "Robot created successfully!");
+        router.push("/cmsroboticlife/my-robot");
+      setError({});
+    } catch (err) {
+      console.error(err);
+      setError({ general: err.message || "Something went wrong" });
+    }
+  };
 
   return (
     <>
-    <form onSubmit={updateProperty} className="row">
-      <div className="col-lg-6">
-        <div className="my_profile_setting_input form-group">
-          <label htmlFor="propertyTitle">Property Title</label>
-          <input type="text" className="form-control"  id="propertyTitle" value={title} onChange={(e) => setTitle(e.target.value)}  placeholder="Enter property Title"/>
-          {error.title && <span className="text-danger">{error.title}</span>}
-
-        </div>
-      </div>
+      <form onSubmit={addRobo} className="row">
+        {/* robot title start */}
         <div className="col-lg-6">
           <div className="my_profile_setting_input form-group">
-            <label htmlFor="propertySlug">Property Slug (SEO URL)</label>
-            <input type="text" className="form-control"  id="propertySlug" value={slug} onChange={(e) => setSlug(e.target.value)}  placeholder="Enter property slug"/>
+            <label htmlFor="roboTitle">Robot Title</label>
+            <input
+              type="text"
+              className="form-control"
+              id="roboTitle"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              placeholder="Enter robot Title"
+            />
+            {error.title && <span className="text-danger">{error.title}</span>}
+          </div>
+        </div>
+        {/* robot title ends*/}
+
+        {/* robot slug start */}
+        <div className="col-lg-6">
+          <div className="my_profile_setting_input form-group">
+            <label htmlFor="roboSlug">Robot Slug</label>
+            <input
+              type="text"
+              className="form-control"
+              id="roboSlug"
+              value={slug}
+              placeholder="Auto-generated slug"
+              disabled
+            />
             {error.slug && <span className="text-danger">{error.slug}</span>}
           </div>
         </div>
-       
-        <div className="col-lg-6">
-        <div className="my_profile_setting_input form-group">
-          <label htmlFor="propertyPrice">Total Price</label>
-          <input type="text" className="form-control"  id="propertyPrice" value={price} onChange={(e) => setPrice(e.target.value)}  placeholder="Enter property price"/>
-          {error.price && <span className="text-danger">{error.price}</span>}
-         
-        </div>
-      </div>
-      <div className="col-lg-6">
-        <div className="my_profile_setting_input form-group">
-          <label htmlFor="propertyPriceSqft">Price/Sqft</label>
-          <input type="text" className="form-control"  id="propertyPriceSqft" value={pricesqft} onChange={(e) => setPriceSqft(e.target.value)}  placeholder="Enter property price Sqft"/>
-          {error.priceSqft && <span className="text-danger">{error.priceSqft}</span>}
-         
-        </div>
-      </div>
-      {/* End .col */}
+        {/* robot slug ends */}
+
+        {/* robot description start */}
         <div className="col-lg-12">
           <div className="my_profile_setting_textarea form-group">
-            <label htmlFor="propertyHighlights">Highlights</label>
-            <textarea id="propertyHighlights" className="form-control" rows="7"  value={highlights} onChange={(e) => setHighlights(e.target.value)}  placeholder="Enter property Highlights"></textarea>
-            {error.highlights && <span className="text-danger">{error.highlights}</span>}
+            <label htmlFor="roboDescription">Description</label>
+            <textarea
+              id="roboDescription"
+              className="form-control"
+              rows="7"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="Enter robo description"
+            ></textarea>
+            {error.description && (
+              <span className="text-danger">{error.description}</span>
+            )}
           </div>
-          
         </div>
-      {/* End .col */}
-        <div className="col-lg-12">
-          <div className="my_profile_setting_textarea form-group">
-            <label htmlFor="propertyDescription">Description</label>
-            <textarea id="propertyDescription" className="form-control" rows="7"  value={description} onChange={(e) => setDescription(e.target.value)}  placeholder="Enter property description"></textarea>
-            {error.description && <span className="text-danger">{error.description}</span>}
-          </div>
-          
-        </div>
-        
+        {/* robot description ends */}
 
-      {/* End .col */}
-
-      <div className="col-lg-6 col-xl-6">
-        <div className="my_profile_setting_input ui_kit_select_search form-group">
-          <label>Category</label>
-          <select
+        {/* robot category start */}
+        <div className="col-lg-6 col-xl-6">
+          <div className="my_profile_setting_input ui_kit_select_search form-group">
+            <label>Category</label>
+            <select
               id="categorySelect"
               className="selectpicker form-select"
               value={selectedCategory}
@@ -648,210 +734,76 @@ const updateProperty = async (e) => {
               data-width="100%"
             >
               <option value="">-- Select Category --</option>
-              {categories.map((category) => (
-                <option key={category._id} value={category._id}>
-                  {category.title}
+              {categories.map((cat) => (
+                <option key={cat._id} value={cat._id}>
+                  {cat.name || cat.title}
                 </option>
               ))}
             </select>
-            {error.selectedCategory && <span className="text-danger">{error.selectedCategory}</span>}
+            {error.selectedCategory && (
+              <span className="text-danger">{error.selectedCategory}</span>
+            )}
+          </div>
         </div>
-      </div>
-      <div className="col-lg-6 col-xl-6">
-        <div className="my_profile_setting_input ui_kit_select_search form-group">
-          <label>Property Type</label>
-          <select
-              id="propertytypeSelect"
-              className="selectpicker form-select"
-              value={selectedPropertytype}
-              onChange={handlePropertytypeChange}
-              data-live-search="true"
-              data-width="100%"
-            >
-              <option value="">-- Select Property type --</option>
-              {propertytypes.map((propertytype) => (
-                <option key={propertytype._id} value={propertytype._id}>
-                  {propertytype.title}
-                </option>
-              ))}
-            </select>
-            {error.selectedPropertytype && <span className="text-danger">{error.selectedPropertytype}</span>}
-        </div>
-      </div>
-      <div className="col-lg-6 col-xl-6">
-        <div className="my_profile_setting_input ui_kit_select_search form-group">
-          <label>Builder</label>
-          <select
-              id="builderSelect"
-              className="selectpicker form-select"
-              value={selectedBuilder}
-              onChange={handleBuilderChange}
-              data-live-search="true"
-              data-width="100%"
-            >
-              <option value="">-- Select Builder --</option>
-              {builders.map((builder) => (
-                <option key={builder._id} value={builder._id}>
-                  {builder.title}
-                </option>
-              ))}
-            </select>
-            {error.selectedBuilder && <span className="text-danger">{error.selectedBuilder}</span>}
-        </div>
-      </div>
-      {/* End .col */}
-      <div className="col-lg-6 col-xl-6">
-        <div className="my_profile_setting_input ui_kit_select_search form-group">
-          <label>Seller</label>
-          <select
-              id="sellerSelect"
-              className="selectpicker form-select"
-              value={selectedSeller}
-              // onChange={handleSellerChange}
-              onChange={(e) => setSelectedSeller(e.target.value)} 
-              data-live-search="true"
-              data-width="100%"
-            >
-              <option value="">-- Select Seller --</option>
-              {sellers.map((seller) => (
-                <option key={seller._id} value={seller._id}>
-                  {seller.title}
-                </option>
-              ))}
-            </select>
-            {error.selectedSeller && <span className="text-danger">{error.selectedSeller}</span>}
-        </div>
-      </div>
-      {/* End .col */}
+        {/* robot category ends */}
 
-      <div className="col-lg-6 col-xl-6">
-        <div className="my_profile_setting_input ui_kit_select_search form-group">
-          <label>Construction status</label>
-          <select
-              id="constructionstatusSelect"
-              className="selectpicker form-select"
-              value={selectedConstructionstatus}
-              onChange={handleConstructionstatusChange}
-              data-live-search="true"
-              data-width="100%"
-            >
-              <option value="">-- Select Construction status --</option>
-              {constructionstatus.map((constructionstatu) => (
-                <option key={constructionstatu._id} value={constructionstatu._id}>
-                  {constructionstatu.title}
-                </option>
-              ))}
-            </select>
-            {error.selectedConstructionstatus && <span className="text-danger">{error.selectedConstructionstatus}</span>}
-        </div>
-      </div>
-      <div className="col-lg-6 col-xl-6">
-        <div className="my_profile_setting_input ui_kit_select_search form-group">
-          <label>Furnishing status</label>
-          <select
-              id="furnishingstatusSelect"
-              className="selectpicker form-select"
-              value={selectedFurnishingstatus}
-              onChange={handleFurnishingstatusChange}
-              data-live-search="true"
-              data-width="100%"
-            >
-              <option value="">-- Select furnishing status --</option>
-              {furnishingstatus.map((furnishingstatu) => (
-                <option key={furnishingstatu._id} value={furnishingstatu._id}>
-                  {furnishingstatu.title}
-                </option>
-              ))}
-            </select>
-            {error.selectedFurnishingstatus && <span className="text-danger">{error.selectedFurnishingstatus}</span>}
-        </div>
-      </div>
-      <div className="col-lg-6 col-xl-6">
-        <div className="my_profile_setting_input ui_kit_select_search form-group">
-          <label>Featured Property</label>
-          <select
-        className="selectpicker form-select"
-        data-live-search="true"
-        data-width="100%"
-        value={selectedFeaturedProperty}
-        onChange={(e) =>
-          setSelectedFeaturedProperty(e.target.value)
-        }
-       
-      >
-        <option value="">-- Select Featured Property--</option>
-        <option value="yes">Yes</option>
-        <option value="no">No</option>
-      </select>
-      {error.selectedFeaturedProperty && <span className="text-danger">{error.selectedFeaturedProperty}</span>}
-        </div>
-      </div>
-
-      <div className="col-lg-6 col-xl-6">
-        <div className="my_profile_setting_input ui_kit_select_search form-group">
-          <label>Hot Property</label>
-          <select
-        className="selectpicker form-select"
-        data-live-search="true"
-        data-width="100%"
-        value={selectedHotProperty}
-        onChange={(e) =>
-          setSelectedHotProperty(e.target.value)
-        }>
-        <option value="">-- Select Hot Property--</option>
-        <option value="yes">Yes</option>
-        <option value="no">No</option>
-      </select>
-      {error.selectedHotProperty && <span className="text-danger">{error.selectedHotProperty}</span>}
-        </div>
-      </div>
-
-      <div className="col-lg-6 col-xl-6">
-        <div className="my_profile_setting_input ui_kit_select_search form-group">
-          <label>Rera Approved</label>
-          <select
-        className="selectpicker form-select"
-        data-live-search="true"
-        data-width="100%"
-        value={selectedReraApproved}
-        onChange={(e) =>
-          setSelectedReraApproved(e.target.value)
-        }
-      >
-        <option value="">-- Select Rera Approved--</option>
-        <option value="yes">Yes</option>
-        <option value="no">No</option>
-      </select>
-      {error.selectedReraApproved && <span className="text-danger">{error.selectedReraApproved}</span>}
-        </div>
-      </div>
-      
-      {/* End .col */}
-
-      <div className="col-lg-6">
-        <div className="my_profile_setting_input form-group">
-          <label htmlFor="propertyReraNumber">Rera Number</label>
-         
-          <input type="text"
-              className="form-control"
-              id="propertyReraNumber"
-              value={reranumber}
-              onChange={(e) => setReraNumber(e.target.value)}/>
-        </div>
-      </div>
-
-      
-
-     
-      
-                    <div className="row">
-                      <div className="col-lg-12">
-                        <h3 className="mb30">Location</h3>
-                      </div>
-
-                      <div className="col-lg-6 col-xl-6">
+        {/* Sub Category Field */}
+        <div className="col-lg-6 col-xl-6">
           <div className="my_profile_setting_input ui_kit_select_search form-group">
-            <label htmlFor="countrySelect">Select Country</label>
+            <label>Sub Category</label>
+            <select
+              id="subCategorySelect"
+              className="selectpicker form-select"
+              value={selectedSubCategory}
+              onChange={(e) => setSelectedSubCategory(e.target.value)}
+              data-live-search="true"
+              data-width="100%"
+              disabled={!selectedCategory || subCategories.length === 0} // Disable if no category is selected
+            >
+              <option value="">-- Select Sub Category --</option>
+              {subCategories.map((sub) => (
+                <option key={sub._id} value={sub._id}>
+                  {sub.name || sub.title}
+                </option>
+              ))}
+            </select>
+            {error.selectedSubCategory && (
+              <span className="text-danger">{error.selectedSubCategory}</span>
+            )}
+          </div>
+        </div>
+        {/* robot sub category ends */}
+
+        {/* robot manufacturer start */}
+        <div className="col-lg-6 col-xl-6">
+          <div className="my_profile_setting_input ui_kit_select_search form-group">
+            <label>Manufacturer</label>
+            <select
+              id="manufacturerSelect"
+              className="selectpicker form-select"
+              value={selectedManufacturer}
+              onChange={handleManufacturerChange}
+              data-live-search="true"
+              data-width="100%"
+            >
+              <option value="">-- Select Manufacturer --</option>
+              {manufacturers.map((manufacturer) => (
+                <option key={manufacturer._id} value={manufacturer._id}>
+                  {manufacturer.name || manufacturer.title}
+                </option>
+              ))}
+            </select>
+            {error.selectedManufacturer && (
+              <span className="text-danger">{error.selectedManufacturer}</span>
+            )}
+          </div>
+        </div>
+        {/* robot manufacturer ends */}
+
+        {/* robot country start */}
+        <div className="col-lg-6 col-xl-6">
+          <div className="my_profile_setting_input ui_kit_select_search form-group">
+            <label htmlFor="countrySelect">Country of Origin</label>
             <select
               id="countrySelect"
               className="selectpicker form-select"
@@ -869,765 +821,1714 @@ const updateProperty = async (e) => {
             </select>
           </div>
         </div>
-        <div className="col-lg-6 col-xl-6">
-          <div className="my_profile_setting_input ui_kit_select_search form-group">
-            <label htmlFor="stateSelect">Select State</label>
-            <select
-              id="stateSelect"
-              className="selectpicker form-select"
-              value={selectedState}
-              onChange={handleStateChange}
-              data-live-search="true"
-              data-width="100%"
-            >
-              <option value="">-- Select State --</option>
-              {states.map((state) => (
-                <option key={state._id} value={state._id}>
-                  {state.title}
-                </option>
-              ))}
-            </select>
-          </div>
-        </div>
-        <div className="col-lg-6 col-xl-6">
-          <div className="my_profile_setting_input ui_kit_select_search form-group">
-            <label htmlFor="citySelect">Select City</label>
-            <select
-              id="citySelect"
-              className="selectpicker form-select"
-              value={selectedCity}
-              onChange={handleCityChange}
-              data-live-search="true"
-              data-width="100%"
-            >
-              <option value="">-- Select City --</option>
-              {cities.map((city) => (
-                <option key={city._id} value={city._id}>
-                  {city.title}
-                </option>
-              ))}
-            </select>
-          </div>
-        </div>
-        <div className="col-lg-6 col-xl-6">
-          <div className="my_profile_setting_input ui_kit_select_search form-group">
-            <label htmlFor="locationSelect">Select Location</label>
-            <select
-              id="locationSelect"
-              className="selectpicker form-select"
-              value={selectedLocation}
-              onChange={handleLocationChange}
-              data-live-search="true"
-              data-width="100%"
-            >
-              <option value="">-- Select Location --</option>
-              {locations.map((location) => (
-                <option key={location._id} value={location._id}>
-                  {location.title}
-                </option>
-              ))}
-            </select>
-          </div>
-        </div>
+        {/* robot country ends */}
+
+        {/* robot launch year start */}
         <div className="col-lg-6">
-        <div className="my_profile_setting_input form-group">
-          <label htmlFor="propertyZipcode">Zip Code</label>
-         
-          <input type="text"
+          <div className="my_profile_setting_input form-group">
+            <label htmlFor="launchYear">Launch Year</label>
+            <select
+              id="launchYear"
               className="form-control"
-              id="propertyZipcode"
-              value={zipcode}
-              onChange={(e) => setZipCode(e.target.value)}/>
-        </div>
-      </div>
-        <div className="col-lg-12">
-        <div className="my_profile_setting_input form-group">
-          <label htmlFor="propertyzipcode">Address</label>
-         
-          <input type="text"
-              className="form-control"
-              id="propertyAddress"
-              value={address}
-              onChange={handleAddressChange}/>
-        </div>
-      </div>
-                    </div>
-                    <div className=" mt30 ">
-                    <div className="col-lg-12">
-                      <h3 className="mb30">Detailed Information</h3>
-                    </div>
-                    <div className="row">
-      <div className="col-lg-6 col-xl-4">
-        <div className="my_profile_setting_input form-group">
-          <label htmlFor="propertyId">Property ID</label>
-          <input type="text"
-              className="form-control"
-              id="propertyId"
-              value={propertyid}
-              onChange={(e) => setPropertyid(e.target.value)} />
-        </div>
-      </div>
-      {/* End .col */}
-
-      <div className="col-lg-6 col-xl-4">
-        <div className="my_profile_setting_input form-group">
-          <label htmlFor="propertyAreaSize">Property Area</label>
-          <input type="text"
-              className="form-control"
-              id="propertyAreaSize"
-              value={areasize}
-              onChange={(e) => setAreasize(e.target.value)} />
-        </div>
-      </div>
-      {/* End .col */}
-
-      <div className="col-lg-6 col-xl-4">
-        <div className="my_profile_setting_input form-group">
-          <label htmlFor="sizePrefix">Size Prefix</label>
-          <input type="text"
-              className="form-control"
-              id="sizePrefix"
-              value={sizeprefix}
-              onChange={(e) => setSizePrefix(e.target.value)} />
-        </div>
-      </div>
-      {/* End .col */}
-
-     
-
-      <div className="col-lg-6 col-xl-4">
-        <div className="my_profile_setting_input form-group">
-          <label htmlFor="bedRooms">{roomtext}</label>
-          {/* <input type="text"
-              className="form-control"
-              id="bedRooms"
-              value={bedrooms}
-              onChange={(e) => setBedRooms(e.target.value)} /> */}
-            {/* <select
-              id="bedRooms"
-              className="selectpicker form-select"
-              value={bedrooms}
-              onChange={(e) => setBedRooms(e.target.value)}
-              data-live-search="true"
-              data-width="100%"
+              value={launchYear}
+              onChange={(e) => setLaunchYear(e.target.value)}
             >
-              <option value="">-- Select Bedrooms --</option>              
-              <option key={1} value="1">1</option>
-              <option key={2} value="2">2</option>
-              <option key={3} value="3">3</option>
-              <option key={4} value="4">4</option>
-              <option key={5} value="5">5</option>
-            </select> */}
-            <select
-              id="bedRooms"
-              className="selectpicker form-select"
-              value={bedrooms}
-              // onChange={(e) => setBedRooms(e.target.value)}
-              onChange={handleBedroomChange}
-              data-live-search="true"
-              data-width="100%"
-            >
-              <option value="">-- Select Bedrooms --</option>              
-              {/* <option key={1} value="1">1</option>
-              <option key={2} value="2">2</option>
-              <option key={3} value="3">3</option>
-              <option key={4} value="4">4</option>
-              <option key={5} value="5">5</option> */}
-              {predefinedOptions.map((bedroom, index) => (
-                <option key={index} value={bedroom}>
-                  {bedroom}
-                </option>
-              ))}
+              <option value="">-- Select Year --</option>
+              {Array.from({ length: 101 }, (_, i) => {
+                const year = new Date().getFullYear() - i;
+                return (
+                  <option key={year} value={year}>
+                    {year}
+                  </option>
+                );
+              })}
             </select>
-            {bedrooms === "Custom" && (
-              <div className="mt-3">
-                <input
-                  className="form-control"
-                  placeholder="Enter custom bedroom"
-                  value={customBedroom}
-                  onChange={(e) => setCustomBedroom(e.target.value)}
-                />
-              </div>
-            )}
+          </div>
         </div>
-      </div>
-      {/* End .col */}
+        {/* robot launch year ends */}
 
-      <div className="col-lg-6 col-xl-4">
-        <div className="my_profile_setting_input form-group">
-          <label htmlFor="bathRooms">Bathrooms</label>
-          {/* <input type="text"
+        {/* robot price start */}
+        <div className="col-lg-6">
+          <div className="my_profile_setting_input form-group">
+            <label htmlFor="roboPrice">Total Price</label>
+            <input
+              type="text"
               className="form-control"
-              id="bathRooms"
-              value={bathrooms}
-              onChange={(e) => setBathRooms(e.target.value)} /> */}
-            {/* <select
-                id="bathRooms"
-                className="selectpicker form-select"
-                value={bathrooms}
-                onChange={(e) => setBathRooms(e.target.value)}
-                data-live-search="true"
-                data-width="100%"
-              >
-              <option value="">-- Select Bathrooms --</option>              
-              <option key={1} value="1">1</option>
-              <option key={2} value="2">2</option>
-              <option key={3} value="3">3</option>
-              <option key={4} value="4">4</option>
-              <option key={5} value="5">5</option>
-            </select> */}
-            <select
-                id="bathRooms"
-                className="selectpicker form-select"
-                value={bathrooms}
-                // onChange={(e) => setBathRooms(e.target.value)}
-                onChange={handleBathroomsChange}
-                data-live-search="true"
-                data-width="100%"
-              >
-              <option value="">-- Select Bathrooms --</option>              
-              {predefinedOptionsbathroom.map((bathroom, index) => (
-                <option key={index} value={bathroom}>
-                  {bathroom}
-                </option>
-              ))}
-            </select>
-            {bathrooms === "Custom" && (
-              <div className="mt-3">
-                <input
-                  className="form-control"
-                  placeholder="Enter custom Bathrooms"
-                  value={customBathrooms}
-                  onChange={(e) => setCustomBathrooms(e.target.value)}
-                />
-              </div>
-            )}
-        </div>
-      </div>
-      {/* End .col */}
-
-      <div className="col-lg-6 col-xl-4">
-        <div className="my_profile_setting_input form-group">
-          <label htmlFor="garages">Parkings</label>
-          {/* <input type="text"
-              className="form-control"
-              id="garages"
-              value={garages}
-              onChange={(e) => setGarages(e.target.value)} /> */}
-            {/* <select
-                id="garages"
-                className="selectpicker form-select"
-                value={garages}
-                onChange={(e) => setGarages(e.target.value)}
-                data-live-search="true"
-                data-width="100%"
-              >
-              <option value="">-- Select Parkings --</option>              
-              <option key={1} value="1">1</option>
-              <option key={2} value="2">2</option>
-              <option key={3} value="3">3</option>
-              <option key={4} value="4">4</option>
-              <option key={5} value="5">5</option>
-            </select> */}
-            <select
-                id="garages"
-                className="selectpicker form-select"
-                value={garages}
-                onChange={handleParkingChange}
-                // onChange={(e) => setGarages(e.target.value)}
-                data-live-search="true"
-                data-width="100%"
-              >
-              <option value="">-- Select Parkings --</option>              
-              <option key={1} value="1">1</option>
-              <option key={2} value="2">2</option>
-              <option key={3} value="3">3</option>
-              <option key={4} value="4">4</option>
-              <option key={5} value="5">5</option>
-              <option key={6} value="Custom">Custom</option>
-            </select>
-            {garages === "Custom" && (
-              <div className="mt-3">
-                <input
-                  className="form-control"
-                  placeholder="Enter custom parking"
-                  value={customParking}
-                  onChange={(e) => setCustomParking(e.target.value)}
-                />
-              </div>
-            )}
-        </div>
-      </div>
-      {/* End .col */}
-
-      <div className="col-lg-6 col-xl-4">
-        <div className="my_profile_setting_input form-group">
-          <label htmlFor="garagesSize">Parkings description</label>
-          <input type="text"
-              className="form-control"
-              id="garagesSize"
-              value={garagessize}
-              onChange={(e) => setGaragesSize(e.target.value)} />
-        </div>
-      </div>
-      {/* End .col */}
-
-      <div className="col-lg-6 col-xl-4">
-        <div className="my_profile_setting_input form-group">
-          <label htmlFor="yearBuild">Possession Year</label>
-          <input type="text"
-              className="form-control"
-              id="yearBuild"
-              value={yearbuild}
-              onChange={(e) => setYearBuild(e.target.value)} />
-        </div>
-      </div>
-      {/* End .col */}
-      <div className="col-lg-6 col-xl-4">
-        <div className="my_profile_setting_input form-group">
-          <label htmlFor="paymentPlan">Payment Plan</label>
-          <input type="text"
-              className="form-control"
-              id="paymentPlan"
-              value={paymentplan}
-              onChange={(e) => setPaymentPlan(e.target.value)} />
-        </div>
-      </div>
-      {/* End .col */}
-       <div className="col-lg-6 col-xl-4">
-        <div className="my_profile_setting_input form-group">
-          <label htmlFor="foodcourt">Food court/restaurant</label>
-          <input type="checkbox"
-              className="form-check-input"
-              id="foodcourt"
-              value={foodcourt}
-              checked={foodcourt === true}
-              onChange={(e) => setFoodcourt(e.target.checked)} />
-        </div>
-      </div>
-      {/* End .col */}
-       <div className="col-lg-6 col-xl-4">
-        <div className="my_profile_setting_input form-group">
-          <label htmlFor="multiplex">Multiplex</label>
-          <input type="checkbox"
-              className="form-check-input"
-              id="multiplex"
-              value={multiplex}
-              checked={multiplex === true}
-              onChange={(e) => setMultiplex(e.target.checked)} />
-        </div>
-      </div>
-      <div className="col-lg-12">
-        <div className="my_profile_setting_textarea">
-          <label htmlFor="mapEmbedCode">Map Embed code </label>
-          <textarea id="mapEmbedCode" className="form-control" rows="7"  value={mapembedcode} onChange={(e) => setMapEmbedCode(e.target.value)}  placeholder="Enter Map Embed code"></textarea>
-        </div>
-      </div>
-      {/* End .col */}
-      <div className="col-lg-12">
-        <div className="my_profile_setting_textarea">
-          <label htmlFor="videoEmbedCode">Video Embed code </label>
-          <textarea id="videoEmbedCode" className="form-control" rows="7"  value={videoembedcode} onChange={(e) => setVideoEmbedCode(e.target.value)}  placeholder="Enter Video Embed code"></textarea>
-        </div>
-      </div>
-      {/* End .col */}
-
-      <div className="col-lg-12">
-        <div className="my_profile_setting_textarea">
-          <label htmlFor="nearBy">Near By </label>
-          <textarea id="nearBy" className="form-control" rows="7"  value={nearby} onChange={(e) => setNearBy(e.target.value)}  placeholder="Enter Near By"></textarea>
-        </div>
-      </div>
-      <div className="col-lg-12">
-        <div className="my_profile_setting_textarea">
-          <label htmlFor="specifications">Specifications</label>
-          <textarea id="specifications" className="form-control" rows="7"  value={specifications} onChange={(e) => setSpecifications(e.target.value)}  placeholder="Enter Specifications"></textarea>
-        </div>
-      </div>
-      <div className="col-lg-6 col-xl-6">
-     <div className="my_profile_setting_input form-group">
-       {/* (getpdffile) */}
-      
-     <div htmlFor="pdffileget">Property Brochure (in PDF only)</div>
-     {getpdffile && (
-        <a
-        href={`${process.env.NEXT_PUBLIC_API_URL}${property.brochurepdf}`}
-        download
-        className="icon_box_area style2 d-flex align-items-center"
-        style={{ textDecoration: 'none' }}
-      >Download Property Brochure</a>
-        )}
-          <input
-              type="file"
-              accept="application/pdf"
-              onChange={(e) => setPDFFile(e.target.files[0])}
-              
+              id="roboPrice"
+              value={price}
+              onChange={(e) => setPrice(e.target.value)}
+              placeholder="Enter Robot Price"
             />
+            {error.price && <span className="text-danger">{error.price}</span>}
           </div>
-     
-   </div>
-
-      <div className="col-xl-12">
-        <h4 className="mb10">Amenities</h4>
-      </div>
-      <div className="col-xxs-12 col-sm col-lg col-xl">
-        <ul className="ui_kit_checkbox selectable-list row">
-        {amenities.map((amenity, index) => (
-  <li key={amenity._id} className="col-xxs-6 col-sm col-lg col-xl">
-    <div className="form-check custom-checkbox">
-    <input
-        type="checkbox"
-        className="form-check-input"
-        id={`customCheck_${amenity._id}`}
-        value={amenity._id}
-        checked={selectedAmenity?.includes(amenity._id)}
-        onChange={handleAmenityChange}
-      />
-      <label
-        className="form-check-label"
-        htmlFor={`customCheck_${amenity._id}`}
-      >
-        {amenity.title}
-      </label>
-    </div>
-  </li>
-))}
-
-          {/* End li */}
-
-          
-          {/* End li */}
-        </ul>
-      </div>
-      {/* End .col */}
-
-      {/* <div className=" mt30 ">
-      <div className="col-lg-12">
-        <h3 className="mb30">Seller Information</h3>
-      </div>
-      <div className="row">
-      <div className="col-lg-6 col-xl-4">
-        <div className="my_profile_setting_input form-group">
-          <label htmlFor="sellerName">Seller Name</label>
-          <input type="text"
-              className="form-control"
-              id="sellerName"
-              value={sellername}
-              onChange={(e) => setSellerName(e.target.value)} />
         </div>
-      </div>
-      <div className="col-lg-6 col-xl-4">
-        <div className="my_profile_setting_input form-group">
-          <label htmlFor="sellerEmail">Seller Email</label>
-          <input type="text"
-              className="form-control"
-              id="sellerEmail"
-              value={selleremail}
-              onChange={(e) => setSellerEmail(e.target.value)} />
-        </div>
-      </div>
-      <div className="col-lg-6 col-xl-4">
-        <div className="my_profile_setting_input form-group">
-          <label htmlFor="sellerPhone">Seller Phone Number</label>
-          <input type="text"
-              className="form-control"
-              id="sellerPhone"
-              value={sellerphone}
-              onChange={(e) => setSellerPhone(e.target.value)} />
-        </div>
-      </div>
-      </div>
-      </div> */}
-      <div className="row">
-        <div className="col-lg-12">
-          <h3 className="mb30">Property media</h3>
-        </div>
+        {/* robot price ends */}
+
+        {/* robot version start */}
         <div className="col-lg-6">
-        <div htmlFor="featuredimage">Featured Image</div>
-                <div className="wrap-custom-file">
-              
+          <div className="my_profile_setting_input form-group">
+            <label htmlFor="version">Version</label>
+            <input
+              type="text"
+              className="form-control"
+              id="version"
+              value={version}
+              onChange={(e) => setVersion(e.target.value)}
+              placeholder="Enter Version"
+            />
+            {error.version && (
+              <span className="text-danger">{error.version}</span>
+            )}
+          </div>
+        </div>
+        {/* robot version ends */}
+
+        {/* <div className="col-lg-6">
+          <div className="my_profile_setting_textarea">
+            <label htmlFor="patentNumber">Patent Number(s)</label>
+            <input
+              type="text"
+              className="form-control"
+              id="patentNumber"
+              value={patentNumber}
+              onChange={(e) => setPatentNumber(e.target.value)}
+              placeholder="Enter Patent Number"
+            />
+            {error.patentNumber && <span className="text-danger">{error.patentNumber}</span>}
+          </div>
+        </div> */}
+
+        {/* specifications start */}
+        <div className=" mt30 ">
+          <div className="col-lg-12">
+            <h3 className="mb30">Specifications</h3>
+          </div>
+          <div className="row">
+            {/* <div className="col-lg-12">
+              <div className="my_profile_setting_textarea">
+                <label htmlFor="nearBy">Near By </label>
+                <textarea
+                  id="nearBy"
+                  className="form-control"
+                  rows="7"
+                  value={nearby}
+                  onChange={(e) => setNearBy(e.target.value)}
+                  placeholder="Enter Near By"
+                ></textarea>
+              </div>
+            </div> */}
+            {/*------ Dimensions Start ------*/}
+            <div className="col-lg-12">
+              <div className="my_profile_setting_input form-group">
+                <label htmlFor="dimensions">Dimensions</label>
+                {/* dimension row start */}
+                <div className="row">
+                  {/* Length start */}
+                  <div className="col-lg-6 position-relative mb-2">
                     <input
-                        type="file"
-                        id="featuredimage"
-                        // accept="image/png, image/gif, image/jpeg"
-                         accept="image/png, image/gif, image/jpeg, image/svg+xml, image/svg, image/webp, image/avif"
-                        onChange={uploadFeaturedImage}
+                      type="number"
+                      className="form-control pe-5"
+                      placeholder="Enter Robot Length"
+                      value={length}
+                      onChange={(e) => setLength(e.target.value)}
                     />
-                   <label
-                      htmlFor="featuredimage"
-                      style={
-                        featuredimageget                          
-                        ? { backgroundImage: `url(${featuredimageget})` }
-                          : featuredimage
-                          ? { backgroundImage: `url(${URL.createObjectURL(featuredimage)})` }
-                          : undefined
-                      }
+                    {/* {error.title && <span className="text-danger">{error.title}</span>} */}
+                    <select
+                      className="form-select position-absolute end-0 border-0 bg-transparent"
+                      style={{
+                        width: "auto",
+                        height: "auto",
+                        top: "50%",
+                        transform: "translateY(-50%)",
+                        paddingRight: "30px",
+                        paddingLeft: "8px",
+                        appearance: "none",
+                        WebkitAppearance: "none",
+                        MozAppearance: "none",
+                      }}
+                      value={lengthUnit}
+                      onChange={(e) => setLengthUnit(e.target.value)}
                     >
-                        
-                        <span>
-                            <i className="flaticon-download"></i> Upload featured image{" "}
-                        </span>
-                      {featuredimageget && (
-                        <div
-                      className="edu_stats_list singleimage"
-                      data-bs-toggle="tooltip"
-                      data-bs-placement="top"
-                      title="Delete"
-                      data-original-title="Delete"
+                      <option value="cm">cm</option>
+                      <option value="mm">mm</option>
+                      <option value="inch">inch</option>
+                      <option value="ft">ft</option>
+                    </select>
+                  </div>
+                  {/* Length ends */}
+
+                  {/* Width start */}
+                  <div className="col-lg-6 position-relative mb-2">
+                    <input
+                      type="number"
+                      className="form-control pe-5"
+                      placeholder="Enter Robot Width"
+                      value={width}
+                      onChange={(e) => setWidth(e.target.value)}
+                    />
+                    {/* {error.width && <span className="text-danger">{error.width}</span>} */}
+                    <select
+                      className="form-select position-absolute end-0 border-0 bg-transparent"
+                      style={{
+                        width: "auto",
+                        height: "auto",
+                        top: "50%",
+                        transform: "translateY(-50%)",
+                        paddingRight: "30px",
+                        paddingLeft: "8px",
+                        appearance: "none",
+                        WebkitAppearance: "none",
+                        MozAppearance: "none",
+                      }}
+                      value={widthUnit}
+                      onChange={(e) => setWidthUnit(e.target.value)}
                     >
-                    <a onClick={() => deleteImageSingle(id,"featuredimageurl",featuredimageget)}>
-                      <span className="flaticon-garbage"></span>
-                    </a>
-                  </div> )}  
+                      <option value="cm">cm</option>
+                      <option value="mm">mm</option>
+                      <option value="inch">inch</option>
+                      <option value="ft">ft</option>
+                    </select>
+                  </div>
+                  {/* Width ends */}
+
+                  {/* Height start */}
+                  <div className="col-lg-6 position-relative mb-2">
+                    <input
+                      type="number"
+                      className="form-control pe-5"
+                      placeholder="Enter Robot Height"
+                      value={height}
+                      onChange={(e) => setHeight(e.target.value)}
+                    />
+                    {/* {error.height && <span className="text-danger">{error.height}</span>} */}
+                    <select
+                      className="form-select position-absolute end-0 border-0 bg-transparent"
+                      style={{
+                        width: "auto",
+                        height: "auto",
+                        top: "50%",
+                        transform: "translateY(-50%)",
+                        paddingRight: "30px",
+                        paddingLeft: "8px",
+                        appearance: "none",
+                        WebkitAppearance: "none",
+                        MozAppearance: "none",
+                      }}
+                      value={heightUnit}
+                      onChange={(e) => setHeightUnit(e.target.value)}
+                    >
+                      <option value="cm">cm</option>
+                      <option value="m">m</option>
+                      <option value="inch">inch</option>
+                      <option value="ft">ft</option>
+                    </select>
+                  </div>
+                  {/* Height ends */}
+                </div>
+                {/* dimension row ends */}
+
+                {/* another row starts */}
+                <div className="row">
+                  {/* Weight start */}
+                  <div className="col-lg-6 mb-2">
+                    <label htmlFor="weight">Weight</label>
+                    <div className="position-relative">
+                      <input
+                        type="number"
+                        className="form-control pe-5"
+                        placeholder="Enter Robot Weight"
+                        value={weight}
+                        onChange={(e) => setWeight(e.target.value)}
+                      />
+                      {/* {error.weight && <span className="text-danger">{error.weight}</span>} */}
+                      <select
+                        className="form-select position-absolute end-0 border-0 bg-transparent"
+                        style={{
+                          width: "auto",
+                          height: "auto",
+                          top: "50%",
+                          transform: "translateY(-50%)",
+                          paddingRight: "30px",
+                          paddingLeft: "8px",
+                          appearance: "none",
+                          WebkitAppearance: "none",
+                          MozAppearance: "none",
+                        }}
+                        value={weightUnit}
+                        onChange={(e) => setWeightUnit(e.target.value)}
+                      >
+                        <option value="g">g</option>
+                        <option value="kg">kg</option>
+                        <option value="lb">lb</option>
+                      </select>
+                    </div>
+                  </div>
+                  {/* Weight ends */}
+
+                  {/* Power Source start */}
+                  <div className="col-lg-6 col-xl-6">
+                    <div className="my_profile_setting_input ui_kit_select_search form-group">
+                      <label htmlFor="powerSelect">Power Source</label>
+                      <select
+                        id="powerSelect"
+                        className="selectpicker form-select"
+                        value={selectedPower}
+                        onChange={handlePowerChange}
+                        data-live-search="true"
+                        data-width="100%"
+                      >
+                        <option value="">-- Select Power Source --</option>
+                        {power.map((powerSource) => (
+                          <option key={powerSource._id} value={powerSource._id}>
+                            {powerSource.name || powerSource.title}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+                  {/* Power Source ends */}
+
+                  {/* Battery Capacity start */}
+                  <div className="col-lg-6 mb-2">
+                    <label htmlFor="batteryCapacity">Battery Capacity</label>
+                    <div className="position-relative">
+                      <input
+                        type="number"
+                        className="form-control pe-5"
+                        placeholder="Enter Battery Capacity"
+                        value={batteryCapacity}
+                        onChange={(e) => setBatteryCapacity(e.target.value)}
+                      />
+                      {/* {error.batteryCapacity && <span className="text-danger">{error.batteryCapacity}</span>} */}
+                      <select
+                        className="form-select position-absolute end-0 border-0 bg-transparent"
+                        style={{
+                          width: "auto",
+                          height: "auto",
+                          top: "50%",
+                          transform: "translateY(-50%)",
+                          paddingRight: "30px",
+                          paddingLeft: "8px",
+                          appearance: "none",
+                          WebkitAppearance: "none",
+                          MozAppearance: "none",
+                        }}
+                        value={batteryCapacityUnit}
+                        onChange={(e) => setBatteryCapacityUnit(e.target.value)}
+                      >
+                        <option value="cm">mAh</option>
+                        <option value="m">Ah</option>
+                        <option value="inch">Wh</option>
+                        {/* <option value="ft">ft</option> */}
+                      </select>
+                    </div>
+                  </div>
+                  {/* Battery Capacity ends */}
+
+                  {/* Battery Chargetime start */}
+                  <div className="col-lg-6 mb-2">
+                    <label htmlFor="chargingTime">Battery Charging Time</label>
+                    <div className="position-relative">
+                      <input
+                        type="number"
+                        className="form-control pe-5"
+                        placeholder="Enter Robot Battery Charging Time"
+                        value={chargingTime}
+                        onChange={(e) => setChargingTime(e.target.value)}
+                      />
+                      {/* {error.batteryCapacity && <span className="text-danger">{error.batteryCapacity}</span>} */}
+                      <select
+                        className="form-select position-absolute end-0 border-0 bg-transparent"
+                        style={{
+                          width: "auto",
+                          height: "auto",
+                          top: "50%",
+                          transform: "translateY(-50%)",
+                          paddingRight: "30px",
+                          paddingLeft: "8px",
+                          appearance: "none",
+                          WebkitAppearance: "none",
+                          MozAppearance: "none",
+                        }}
+                        value={chargingTimeUnit}
+                        onChange={(e) => setChargingTimeUnit(e.target.value)}
+                      >
+                        <option value="cm">h</option>
+                        <option value="m">min</option>
+                        {/* <option value="inch">Wh</option> */}
+                        {/* <option value="ft">ft</option> */}
+                      </select>
+                    </div>
+                  </div>
+                  {/* Battery Chargetime ends */}
+
+                  {/* Runtime start */}
+                  <div className="col-lg-6 mb-2">
+                    <label htmlFor="runtime">Runtime</label>
+                    <div className="position-relative">
+                      <input
+                        type="number"
+                        className="form-control pe-5"
+                        placeholder="Enter Robot Runtime"
+                        value={runtime}
+                        onChange={(e) => setRuntime(e.target.value)}
+                      />
+                      {/* {error.batteryCapacity && <span className="text-danger">{error.batteryCapacity}</span>} */}
+                      <select
+                        className="form-select position-absolute end-0 border-0 bg-transparent"
+                        style={{
+                          width: "auto",
+                          height: "auto",
+                          top: "50%",
+                          transform: "translateY(-50%)",
+                          paddingRight: "30px",
+                          paddingLeft: "8px",
+                          appearance: "none",
+                          WebkitAppearance: "none",
+                          MozAppearance: "none",
+                        }}
+                        value={runtimeUnit}
+                        onChange={(e) => setRuntimeUnit(e.target.value)}
+                      >
+                        <option value="cm">h</option>
+                        <option value="m">min</option>
+                        {/* <option value="inch">Wh</option> */}
+                        {/* <option value="ft">ft</option> */}
+                      </select>
+                    </div>
+                  </div>
+                  {/* Runtime start */}
+
+                  {/* Load Capacity start */}
+                  <div className="col-lg-6 position-relative mb-2">
+                    <label htmlFor="loadCapacity">Load Capacity</label>
+                    <div className="position-relative">
+                      <input
+                        type="number"
+                        className="form-control pe-5"
+                        placeholder="Enter Load Capacity"
+                        value={loadCapacity}
+                        onChange={(e) => setLoadCapacity(e.target.value)}
+                      />
+                      {/* {error.loadCapacity && <span className="text-danger">{error.loadCapacity}</span>} */}
+                      <select
+                        className="form-select position-absolute end-0 border-0 bg-transparent"
+                        style={{
+                          width: "auto",
+                          height: "auto",
+                          top: "50%",
+                          transform: "translateY(-50%)",
+                          paddingRight: "30px",
+                          paddingLeft: "8px",
+                          appearance: "none",
+                          WebkitAppearance: "none",
+                          MozAppearance: "none",
+                        }}
+                        value={loadCapacityUnit}
+                        onChange={(e) => setLoadCapacityUnit(e.target.value)}
+                      >
+                        <option value="cm">kg</option>
+                        <option value="m">g</option>
+                        <option value="inch">lb</option>
+                        <option value="ft">t</option>
+                      </select>
+                    </div>
+                  </div>
+                  {/* Load Capacity ends */}
+
+                  {/* Speed start */}
+                  <div className="col-lg-6 mb-2">
+                    <label htmlFor="speed">Speed</label>
+                    <div className="position-relative">
+                      <input
+                        type="number"
+                        className="form-control pe-5"
+                        placeholder="Enter Robot Speed"
+                        value={speed}
+                        onChange={(e) => setSpeed(e.target.value)}
+                      />
+                      {/* {error.batteryCapacity && <span className="text-danger">{error.batteryCapacity}</span>} */}
+                      <select
+                        className="form-select position-absolute end-0 border-0 bg-transparent"
+                        style={{
+                          width: "auto",
+                          height: "auto",
+                          top: "50%",
+                          transform: "translateY(-50%)",
+                          paddingRight: "30px",
+                          paddingLeft: "8px",
+                          appearance: "none",
+                          WebkitAppearance: "none",
+                          MozAppearance: "none",
+                        }}
+                        value={speedUnit}
+                        onChange={(e) => setSpeedUnit(e.target.value)}
+                      >
+                        <option value="cm">m/s</option>
+                        <option value="m">km/h</option>
+                        <option value="inch">mph</option>
+                        {/* <option value="ft">ft</option> */}
+                      </select>
+                    </div>
+                  </div>
+                  {/* Speed ends */}
+
+                  {/* Operating Temperature start */}
+                  {/* <div className="col-lg-6 mb-2">
+                    <label htmlFor="operatingTemperature">
+                      Operating Temperature
                     </label>
-                    
+                    <div className="position-relative">
+                      <input
+                        type="number"
+                        className="form-control pe-5"
+                        placeholder="Enter Operating Temperature"
+                        value={operatingTemperature}
+                        onChange={(e) =>
+                          setOperatingTemperature(e.target.value)
+                        }
+                      />
+                      <select
+                        className="form-select position-absolute end-0 border-0 bg-transparent"
+                        style={{
+                          width: "auto",
+                          height: "auto",
+                          top: "50%",
+                          transform: "translateY(-50%)",
+                          paddingRight: "30px",
+                          paddingLeft: "8px",
+                          appearance: "none",
+                          WebkitAppearance: "none",
+                          MozAppearance: "none",
+                        }}
+                        value={operatingTemperatureUnit}
+                        onChange={(e) =>
+                          setOperatingTemperatureUnit(e.target.value)
+                        }
+                      >
+                        <option value="cm">°C</option>
+                        <option value="m">°F</option>
+                        <option value="inch">K</option>
+                      </select>
+                    </div>
+                  </div> */}
+                  <div className="col-lg-6 mb-2">
+                    <label>Operating Temperature</label>
+                    <div className="d-flex gap-2">
+                      {/* Min Temperature */}
+                      <div className="position-relative flex-fill">
+                        <input
+                          type="number"
+                          className="form-control pe-5"
+                          placeholder="Min"
+                          value={operatingTemperatureMin}
+                          onChange={(e) =>
+                            setOperatingTemperatureMin(e.target.value)
+                          }
+                        />
+                      </div>
+
+                      {/* Max Temperature */}
+                      <div className="position-relative flex-fill">
+                        <input
+                          type="number"
+                          className="form-control pe-5"
+                          placeholder="Max"
+                          value={operatingTemperatureMax}
+                          onChange={(e) =>
+                            setOperatingTemperatureMax(e.target.value)
+                          }
+                        />
+                      </div>
+
+                      {/* Unit Selector */}
+                      <div
+                        className="position-relative"
+                        style={{ minWidth: "80px" }}
+                      >
+                        <select
+                          className="form-select border-0 bg-transparent"
+                          style={{
+                            height: "100%",
+                            appearance: "none",
+                            WebkitAppearance: "none",
+                            MozAppearance: "none",
+                          }}
+                          value={operatingTemperatureUnit}
+                          onChange={(e) =>
+                            setOperatingTemperatureUnit(e.target.value)
+                          }
+                        >
+                          <option value="C">°C</option>
+                          <option value="F">°F</option>
+                          <option value="K">K</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Operating Temperature ends */}
+
+                  {/* Accuracy start */}
+                  <div className="col-lg-6 mb-2">
+                    <label htmlFor="accuracy">Accuracy</label>
+                    <div className="position-relative">
+                      <input
+                        type="number"
+                        className="form-control pe-5"
+                        placeholder="Enter Robot Accuracy"
+                        value={accuracy}
+                        onChange={(e) => setAccuracy(e.target.value)}
+                      />
+                      {/* {error.batteryCapacity && <span className="text-danger">{error.batteryCapacity}</span>} */}
+                      <select
+                        className="form-select position-absolute end-0 border-0 bg-transparent"
+                        style={{
+                          width: "auto",
+                          height: "auto",
+                          top: "50%",
+                          transform: "translateY(-50%)",
+                          paddingRight: "30px",
+                          paddingLeft: "8px",
+                          appearance: "none",
+                          WebkitAppearance: "none",
+                          MozAppearance: "none",
+                        }}
+                        value={accuracyUnit}
+                        onChange={(e) => setAccuracyUnit(e.target.value)}
+                      >
+                        <option value="cm">mm</option>
+                        <option value="m">cm</option>
+                        {/* <option value="inch">mph</option> */}
+                        {/* <option value="ft">ft</option> */}
+                      </select>
+                    </div>
+                  </div>
+                  {/* Accuracy ends */}
+
+                  {/* Range start */}
+                  <div className="col-lg-6 mb-2">
+                    <label htmlFor="range">Range</label>
+                    <div className="position-relative">
+                      <input
+                        type="number"
+                        className="form-control pe-5"
+                        placeholder="Enter Robot Range"
+                        value={range}
+                        onChange={(e) => setRange(e.target.value)}
+                      />
+                      {/* {error.batteryCapacity && <span className="text-danger">{error.batteryCapacity}</span>} */}
+                      <select
+                        className="form-select position-absolute end-0 border-0 bg-transparent"
+                        style={{
+                          width: "auto",
+                          height: "auto",
+                          top: "50%",
+                          transform: "translateY(-50%)",
+                          paddingRight: "30px",
+                          paddingLeft: "8px",
+                          appearance: "none",
+                          WebkitAppearance: "none",
+                          MozAppearance: "none",
+                        }}
+                        value={rangeUnit}
+                        onChange={(e) => setRangeUnit(e.target.value)}
+                      >
+                        <option value="cm">m</option>
+                        <option value="m">km</option>
+                        <option value="inch">mi</option>
+                        {/* <option value="ft">ft</option> */}
+                      </select>
+                    </div>
+                  </div>
+                  {/* Range ends */}
+
+                  {/* Color start */}
+                  <div className="col-lg-6 col-xl-6">
+                    <div className="my_profile_setting_input ui_kit_select_search form-group">
+                      <label htmlFor="colorSelect">Color</label>
+
+                      <div className="position-relative">
+                        <select
+                          id="colorSelect"
+                          className="selectpicker form-select color-select"
+                          value="placeholder"
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            if (
+                              value !== "placeholder" &&
+                              !selectedColors.includes(value)
+                            ) {
+                              setSelectedColors([...selectedColors, value]);
+                            }
+                            e.target.blur(); // dropdown band ho jaye select ke baad
+                          }}
+                          data-live-search="true"
+                          data-width="100%"
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            height: "45px",
+                          }}
+                        >
+                          <option value="placeholder" disabled>
+                            &nbsp;
+                          </option>
+                          {colors.map((color) => (
+                            <option key={color._id} value={color._id}>
+                              {color.name}
+                            </option>
+                          ))}
+                        </select>
+
+                        {/* Overlay UI with scroll */}
+                        {/* Overlay UI */}
+                        <div
+                          className="form-control position-absolute top-0 start-0 h-100 w-100 d-flex align-items-center px-3 pe-5"
+                          style={{
+                            background: "transparent",
+                            pointerEvents: "none", // block all by default
+                          }}
+                        >
+                          <div
+                            className="d-flex align-items-center flex-nowrap"
+                            style={{
+                              gap: "0.25rem",
+                              overflowX: "auto",
+                              whiteSpace: "nowrap",
+                              scrollbarWidth: "thin",
+                              maxWidth: "100%",
+                              pointerEvents: "auto", // enable only here
+                            }}
+                            onMouseDown={(e) => e.stopPropagation()} // stop dropdown opening on scroll
+                          >
+                            {selectedColors.length === 0 ? (
+                              <span className="text-muted">
+                                -- Select Colors --
+                              </span>
+                            ) : (
+                              <>
+                                {colors
+                                  .filter((c) => selectedColors.includes(c._id))
+                                  .map((c) => (
+                                    <span
+                                      key={c._id}
+                                      className="badge bg-light text-dark border d-flex align-items-center"
+                                      style={{
+                                        pointerEvents: "auto",
+                                      }}
+                                    >
+                                      {c.name}
+                                      <button
+                                        type="button"
+                                        className="btn-close btn-sm ms-1"
+                                        aria-label="Remove"
+                                        style={{ fontSize: "0.65rem" }}
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          setSelectedColors(
+                                            selectedColors.filter(
+                                              (id) => id !== c._id
+                                            )
+                                          );
+                                        }}
+                                      />
+                                    </span>
+                                  ))}
+                              </>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  {/* Color ends */}
+
+                  {/* Material Select start */}
+                  <div className="col-lg-6 col-xl-6">
+                    <div className="my_profile_setting_input ui_kit_select_search form-group">
+                      <label htmlFor="materialSelect">Material</label>
+
+                      <div className="position-relative">
+                        <select
+                          id="materialSelect"
+                          className="selectpicker form-select material-select"
+                          value="placeholder"
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            if (
+                              value !== "placeholder" &&
+                              !selectedMaterials.includes(value)
+                            ) {
+                              setSelectedMaterials([
+                                ...selectedMaterials,
+                                value,
+                              ]);
+                            }
+                            e.target.blur(); // close dropdown after each select
+                          }}
+                          data-live-search="true"
+                          data-width="100%"
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            height: "45px",
+                          }}
+                        >
+                          <option value="placeholder" disabled>
+                            &nbsp;
+                          </option>
+                          {materials.map((material) => (
+                            <option key={material._id} value={material._id}>
+                              {material.name || material.title}
+                            </option>
+                          ))}
+                        </select>
+
+                        {/* Overlay UI */}
+                        <div
+                          className="form-control position-absolute top-0 start-0 h-100 w-100 d-flex align-items-center px-3 pe-5"
+                          style={{
+                            background: "transparent",
+                            pointerEvents: "none", // disable by default
+                          }}
+                        >
+                          <div
+                            className="d-flex align-items-center flex-nowrap"
+                            style={{
+                              gap: "0.25rem",
+                              overflowX: "auto",
+                              whiteSpace: "nowrap",
+                              scrollbarWidth: "thin",
+                              maxWidth: "100%",
+                              pointerEvents: "auto", // enable scroll here
+                            }}
+                            onMouseDown={(e) => e.stopPropagation()} // stop dropdown from opening while scroll
+                          >
+                            {selectedMaterials.length === 0 ? (
+                              <span className="text-muted">
+                                -- Select Materials --
+                              </span>
+                            ) : (
+                              <>
+                                {materials
+                                  .filter((m) =>
+                                    selectedMaterials.includes(m._id)
+                                  )
+                                  .map((m) => (
+                                    <span
+                                      key={m._id}
+                                      className="badge bg-light text-dark border d-flex align-items-center"
+                                      style={{
+                                        pointerEvents: "auto",
+                                      }}
+                                    >
+                                      {m.name || m.title}
+                                      <button
+                                        type="button"
+                                        className="btn-close btn-sm ms-1"
+                                        aria-label="Remove"
+                                        style={{ fontSize: "0.65rem" }}
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          setSelectedMaterials(
+                                            selectedMaterials.filter(
+                                              (id) => id !== m._id
+                                            )
+                                          );
+                                        }}
+                                      />
+                                    </span>
+                                  ))}
+                              </>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  {/* Material Select ends */}
+                </div>
+                {/* another row ends */}
+              </div>
+            </div>
+
+            <div className="row">
+              <div className="col-lg-12">
+                <h3 className="mb30">Capabilities</h3>
+              </div>
+              {/* Navigation Types start */}
+              <div className="col-lg-6 col-xl-6">
+                <div className="my_profile_setting_input ui_kit_select_search form-group">
+                  <label htmlFor="navigationTypeSelect">Navigation Type</label>
+
+                  <div className="position-relative">
+                    <select
+                      id="navigationTypeSelect"
+                      className="selectpicker form-select navigationType-select"
+                      value="placeholder"
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        if (
+                          value !== "placeholder" &&
+                          !selectedNavigationType.includes(value)
+                        ) {
+                          setSelectedNavigationType([
+                            ...selectedNavigationType,
+                            value,
+                          ]);
+                        }
+                        e.target.blur(); // close dropdown after each select
+                      }}
+                      data-live-search="true"
+                      data-width="100%"
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        height: "45px",
+                      }}
+                    >
+                      <option value="placeholder" disabled>
+                        &nbsp;
+                      </option>
+                      {navigationType.map((navigationType) => (
+                        <option
+                          key={navigationType._id}
+                          value={navigationType._id}
+                        >
+                          {navigationType.name || navigationType.title}
+                        </option>
+                      ))}
+                    </select>
+
+                    {/* Overlay UI */}
+                    <div
+                      className="form-control position-absolute top-0 start-0 h-100 w-100 d-flex align-items-center px-3 pe-5"
+                      style={{
+                        background: "transparent",
+                        pointerEvents: "none", // disable by default
+                      }}
+                    >
+                      <div
+                        className="d-flex align-items-center flex-nowrap"
+                        style={{
+                          gap: "0.25rem",
+                          overflowX: "auto",
+                          whiteSpace: "nowrap",
+                          scrollbarWidth: "thin",
+                          maxWidth: "100%",
+                          pointerEvents: "auto", // enable scroll here
+                        }}
+                        onMouseDown={(e) => e.stopPropagation()} // stop dropdown from opening while scroll
+                      >
+                        {selectedNavigationType.length === 0 ? (
+                          <span className="text-muted">
+                            -- Select Navigation Types --
+                          </span>
+                        ) : (
+                          <>
+                            {navigationType
+                              .filter((m) =>
+                                selectedNavigationType.includes(m._id)
+                              )
+                              .map((m) => (
+                                <span
+                                  key={m._id}
+                                  className="badge bg-light text-dark border d-flex align-items-center"
+                                  style={{
+                                    pointerEvents: "auto",
+                                  }}
+                                >
+                                  {m.name || m.title}
+                                  <button
+                                    type="button"
+                                    className="btn-close btn-sm ms-1"
+                                    aria-label="Remove"
+                                    style={{ fontSize: "0.65rem" }}
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      setSelectedNavigationType(
+                                        selectedNavigationType.filter(
+                                          (id) => id !== m._id
+                                        )
+                                      );
+                                    }}
+                                  />
+                                </span>
+                              ))}
+                          </>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              {/* Navigation Types ends */}
+
+              {/* Sensor start */}
+              <div className="col-lg-6 col-xl-6">
+                <div className="my_profile_setting_input ui_kit_select_search form-group">
+                  <label htmlFor="sensorSelect">Sensor</label>
+
+                  <div className="position-relative">
+                    <select
+                      id="sensorSelect"
+                      className="selectpicker form-select sensor  -select"
+                      value="placeholder"
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        if (
+                          value !== "placeholder" &&
+                          !selectedSensor.includes(value)
+                        ) {
+                          setSelectedSensor([...selectedSensor, value]);
+                        }
+                        e.target.blur(); // close dropdown after each select
+                      }}
+                      data-live-search="true"
+                      data-width="100%"
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        height: "45px",
+                      }}
+                    >
+                      <option value="placeholder" disabled>
+                        &nbsp;
+                      </option>
+                      {sensors.map((sensor) => (
+                        <option key={sensor._id} value={sensor._id}>
+                          {sensor.name || sensor.title}
+                        </option>
+                      ))}
+                    </select>
+
+                    {/* Overlay UI */}
+                    <div
+                      className="form-control position-absolute top-0 start-0 h-100 w-100 d-flex align-items-center px-3 pe-5"
+                      style={{
+                        background: "transparent",
+                        pointerEvents: "none",
+                      }}
+                    >
+                      <div
+                        className="d-flex align-items-center flex-nowrap"
+                        style={{
+                          gap: "0.25rem",
+                          overflowX: "auto",
+                          whiteSpace: "nowrap",
+                          scrollbarWidth: "thin",
+                          maxWidth: "100%",
+                          pointerEvents: "auto", // enable scroll here
+                        }}
+                        onMouseDown={(e) => e.stopPropagation()} // stop dropdown from opening while scroll
+                      >
+                        {selectedSensor.length === 0 ? (
+                          <span className="text-muted">
+                            -- Select Sensor --
+                          </span>
+                        ) : (
+                          <>
+                            {sensors
+                              .filter((m) => selectedSensor.includes(m._id))
+                              .map((m) => (
+                                <span
+                                  key={m._id}
+                                  className="badge bg-light text-dark border d-flex align-items-center"
+                                  style={{
+                                    pointerEvents: "auto",
+                                  }}
+                                >
+                                  {m.name || m.title}
+                                  <button
+                                    type="button"
+                                    className="btn-close btn-sm ms-1"
+                                    aria-label="Remove"
+                                    style={{ fontSize: "0.65rem" }}
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      setSelectedSensor(
+                                        selectedSensor.filter(
+                                          (id) => id !== m._id
+                                        )
+                                      );
+                                    }}
+                                  />
+                                </span>
+                              ))}
+                          </>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              {/* Sensor ends */}
+
+              {/* Ai Software Features start */}
+              <div className="col-lg-6 col-xl-6">
+                <div className="my_profile_setting_input ui_kit_select_search form-group">
+                  <label htmlFor="aiSoftwareFeatureSelect">
+                    AI/Software Feature Type
+                  </label>
+
+                  <div className="position-relative">
+                    <select
+                      id="aiSoftwareFeatureSelect"
+                      className="selectpicker form-select aiSoftwareFeature-select"
+                      value="placeholder"
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        if (
+                          value !== "placeholder" &&
+                          !selectedAISoftwareFeature.includes(value)
+                        ) {
+                          setSelectedAISoftwareFeature([
+                            ...selectedAISoftwareFeature,
+                            value,
+                          ]);
+                        }
+                        e.target.blur(); // close dropdown after each select
+                      }}
+                      data-live-search="true"
+                      data-width="100%"
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        height: "45px",
+                      }}
+                    >
+                      <option value="placeholder" disabled>
+                        &nbsp;
+                      </option>
+                      {aiSoftwareFeatures.map((aiSoftwareFeature) => (
+                        <option
+                          key={aiSoftwareFeature._id}
+                          value={aiSoftwareFeature._id}
+                        >
+                          {aiSoftwareFeature.name || aiSoftwareFeature.title}
+                        </option>
+                      ))}
+                    </select>
+
+                    {/* Overlay UI */}
+                    <div
+                      className="form-control position-absolute top-0 start-0 h-100 w-100 d-flex align-items-center px-3 pe-5"
+                      style={{
+                        background: "transparent",
+                        pointerEvents: "none", // disable by default
+                      }}
+                    >
+                      <div
+                        className="d-flex align-items-center flex-nowrap"
+                        style={{
+                          gap: "0.25rem",
+                          overflowX: "auto",
+                          whiteSpace: "nowrap",
+                          scrollbarWidth: "thin",
+                          maxWidth: "100%",
+                          pointerEvents: "auto", // enable scroll here
+                        }}
+                        onMouseDown={(e) => e.stopPropagation()} // stop dropdown from opening while scroll
+                      >
+                        {selectedAISoftwareFeature.length === 0 ? (
+                          <span className="text-muted">
+                            -- Select AI/Software Features --
+                          </span>
+                        ) : (
+                          <>
+                            {aiSoftwareFeatures
+                              .filter((m) =>
+                                selectedAISoftwareFeature.includes(m._id)
+                              )
+                              .map((m) => (
+                                <span
+                                  key={m._id}
+                                  className="badge bg-light text-dark border d-flex align-items-center"
+                                  style={{
+                                    pointerEvents: "auto",
+                                  }}
+                                >
+                                  {m.name || m.title}
+                                  <button
+                                    type="button"
+                                    className="btn-close btn-sm ms-1"
+                                    aria-label="Remove"
+                                    style={{ fontSize: "0.65rem" }}
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      setSelectedAISoftwareFeature(
+                                        selectedAISoftwareFeature.filter(
+                                          (id) => id !== m._id
+                                        )
+                                      );
+                                    }}
+                                  />
+                                </span>
+                              ))}
+                          </>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              {/* Ai Software Features ends */}
+
+              {/* Terrain Capability start */}
+              <div className="col-lg-6 col-xl-6">
+                <div className="my_profile_setting_input ui_kit_select_search form-group">
+                  <label htmlFor="terrainCapabilitySelect">
+                    Terrain Capability Type
+                  </label>
+
+                  <div className="position-relative">
+                    <select
+                      id="terrainCapabilitySelect"
+                      className="selectpicker form-select terrainCapability-select"
+                      value="placeholder"
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        if (
+                          value !== "placeholder" &&
+                          !selectedTerrainCapability.includes(value)
+                        ) {
+                          setSelectedTerrainCapability([
+                            ...selectedTerrainCapability,
+                            value,
+                          ]);
+                        }
+                        e.target.blur(); // close dropdown after each select
+                      }}
+                      data-live-search="true"
+                      data-width="100%"
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        height: "45px",
+                      }}
+                    >
+                      <option value="placeholder" disabled>
+                        &nbsp;
+                      </option>
+                      {terrainCapabilities.map((terrainCapability) => (
+                        <option
+                          key={terrainCapability._id}
+                          value={terrainCapability._id}
+                        >
+                          {terrainCapability.name || terrainCapability.title}
+                        </option>
+                      ))}
+                    </select>
+
+                    {/* Overlay UI */}
+                    <div
+                      className="form-control position-absolute top-0 start-0 h-100 w-100 d-flex align-items-center px-3 pe-5"
+                      style={{
+                        background: "transparent",
+                        pointerEvents: "none", // disable by default
+                      }}
+                    >
+                      <div
+                        className="d-flex align-items-center flex-nowrap"
+                        style={{
+                          gap: "0.25rem",
+                          overflowX: "auto",
+                          whiteSpace: "nowrap",
+                          scrollbarWidth: "thin",
+                          maxWidth: "100%",
+                          pointerEvents: "auto", // enable scroll here
+                        }}
+                        onMouseDown={(e) => e.stopPropagation()} // stop dropdown from opening while scroll
+                      >
+                        {selectedTerrainCapability.length === 0 ? (
+                          <span className="text-muted">
+                            -- Select Terrain Capabilities --
+                          </span>
+                        ) : (
+                          <>
+                            {terrainCapabilities
+                              .filter((m) =>
+                                selectedTerrainCapability.includes(m._id)
+                              )
+                              .map((m) => (
+                                <span
+                                  key={m._id}
+                                  className="badge bg-light text-dark border d-flex align-items-center"
+                                  style={{
+                                    pointerEvents: "auto",
+                                  }}
+                                >
+                                  {m.name || m.title}
+                                  <button
+                                    type="button"
+                                    className="btn-close btn-sm ms-1"
+                                    aria-label="Remove"
+                                    style={{ fontSize: "0.65rem" }}
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      setSelectedTerrainCapability(
+                                        selectedTerrainCapability.filter(
+                                          (id) => id !== m._id
+                                        )
+                                      );
+                                    }}
+                                  />
+                                </span>
+                              ))}
+                          </>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              {/* Terrain Capability ends */}
+
+              {/* Communication Method start */}
+              <div className="col-lg-6 col-xl-6">
+                <div className="my_profile_setting_input ui_kit_select_search form-group">
+                  <label htmlFor="communicationMethodSelect">
+                    Communication Method Type
+                  </label>
+
+                  <div className="position-relative">
+                    <select
+                      id="communicationMethodSelect"
+                      className="selectpicker form-select communicationMethod-select"
+                      value="placeholder"
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        if (
+                          value !== "placeholder" &&
+                          !selectedCommunicationMethod.includes(value)
+                        ) {
+                          setSelectedCommunicationMethod([
+                            ...selectedCommunicationMethod,
+                            value,
+                          ]);
+                        }
+                        e.target.blur(); // close dropdown after each select
+                      }}
+                      data-live-search="true"
+                      data-width="100%"
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        height: "45px",
+                      }}
+                    >
+                      <option value="placeholder" disabled>
+                        &nbsp;
+                      </option>
+                      {communicationMethods.map((communicationMethod) => (
+                        <option
+                          key={communicationMethod._id}
+                          value={communicationMethod._id}
+                        >
+                          {communicationMethod.name ||
+                            communicationMethod.title}
+                        </option>
+                      ))}
+                    </select>
+
+                    {/* Overlay UI */}
+                    <div
+                      className="form-control position-absolute top-0 start-0 h-100 w-100 d-flex align-items-center px-3 pe-5"
+                      style={{
+                        background: "transparent",
+                        pointerEvents: "none", // disable by default
+                      }}
+                    >
+                      <div
+                        className="d-flex align-items-center flex-nowrap"
+                        style={{
+                          gap: "0.25rem",
+                          overflowX: "auto",
+                          whiteSpace: "nowrap",
+                          scrollbarWidth: "thin",
+                          maxWidth: "100%",
+                          pointerEvents: "auto", // enable scroll here
+                        }}
+                        onMouseDown={(e) => e.stopPropagation()} // stop dropdown from opening while scroll
+                      >
+                        {selectedCommunicationMethod.length === 0 ? (
+                          <span className="text-muted">
+                            -- Select Communication Methods --
+                          </span>
+                        ) : (
+                          <>
+                            {communicationMethods
+                              .filter((m) =>
+                                selectedCommunicationMethod.includes(m._id)
+                              )
+                              .map((m) => (
+                                <span
+                                  key={m._id}
+                                  className="badge bg-light text-dark border d-flex align-items-center"
+                                  style={{
+                                    pointerEvents: "auto",
+                                  }}
+                                >
+                                  {m.name || m.title}
+                                  <button
+                                    type="button"
+                                    className="btn-close btn-sm ms-1"
+                                    aria-label="Remove"
+                                    style={{ fontSize: "0.65rem" }}
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      setSelectedCommunicationMethod(
+                                        selectedCommunicationMethod.filter(
+                                          (id) => id !== m._id
+                                        )
+                                      );
+                                    }}
+                                  />
+                                </span>
+                              ))}
+                          </>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              {/* Communication Method ends */}
+
+              {/* Payload Type start */}
+              <div className="col-lg-6 col-xl-6">
+                <div className="my_profile_setting_input ui_kit_select_search form-group">
+                  <label htmlFor="payloadTypeSelect">Payload Type</label>
+
+                  <div className="position-relative">
+                    <select
+                      id="payloadTypeSelect"
+                      className="selectpicker form-select payloadType-select"
+                      value="placeholder"
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        if (
+                          value !== "placeholder" &&
+                          !selectedPayloadType.includes(value)
+                        ) {
+                          setSelectedPayloadType([
+                            ...selectedPayloadType,
+                            value,
+                          ]);
+                        }
+                        e.target.blur(); // close dropdown after each select
+                      }}
+                      data-live-search="true"
+                      data-width="100%"
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        height: "45px",
+                      }}
+                    >
+                      <option value="placeholder" disabled>
+                        &nbsp;
+                      </option>
+                      {payloadTypes.map((payloadType) => (
+                        <option key={payloadType._id} value={payloadType._id}>
+                          {payloadType.name || payloadType.title}
+                        </option>
+                      ))}
+                    </select>
+
+                    {/* Overlay UI */}
+                    <div
+                      className="form-control position-absolute top-0 start-0 h-100 w-100 d-flex align-items-center px-3 pe-5"
+                      style={{
+                        background: "transparent",
+                        pointerEvents: "none", // disable by default
+                      }}
+                    >
+                      <div
+                        className="d-flex align-items-center flex-nowrap"
+                        style={{
+                          gap: "0.25rem",
+                          overflowX: "auto",
+                          whiteSpace: "nowrap",
+                          scrollbarWidth: "thin",
+                          maxWidth: "100%",
+                          pointerEvents: "auto", // enable scroll here
+                        }}
+                        onMouseDown={(e) => e.stopPropagation()} // stop dropdown from opening while scroll
+                      >
+                        {selectedPayloadType.length === 0 ? (
+                          <span className="text-muted">
+                            -- Select Payload Types --
+                          </span>
+                        ) : (
+                          <>
+                            {payloadTypes
+                              .filter((m) =>
+                                selectedPayloadType.includes(m._id)
+                              )
+                              .map((m) => (
+                                <span
+                                  key={m._id}
+                                  className="badge bg-light text-dark border d-flex align-items-center"
+                                  style={{
+                                    pointerEvents: "auto",
+                                  }}
+                                >
+                                  {m.name || m.title}
+                                  <button
+                                    type="button"
+                                    className="btn-close btn-sm ms-1"
+                                    aria-label="Remove"
+                                    style={{ fontSize: "0.65rem" }}
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      setSelectedPayloadType(
+                                        selectedPayloadType.filter(
+                                          (id) => id !== m._id
+                                        )
+                                      );
+                                    }}
+                                  />
+                                </span>
+                              ))}
+                          </>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              {/* Payload Type ends */}
+
+              {/* Primary Function start */}
+              <div className="col-lg-6 col-xl-6">
+                <div className="my_profile_setting_input ui_kit_select_search form-group">
+                  <label htmlFor="primaryFunction">Primary Function</label>
+                  <select
+                    id="primaryFunction"
+                    className="selectpicker form-select"
+                    value={selectedPrimaryFunction}
+                    onChange={handlePrimaryFunctionChange}
+                    data-live-search="true"
+                    data-width="100%"
+                  >
+                    <option value="">-- Select Primary Function --</option>
+                    {primaryFunction.map((func) => (
+                      <option key={func._id} value={func._id}>
+                        {func.name || func.title}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+              {/* Primary Function ends */}
+
+              {/* Operating Environment start */}
+              <div className="col-lg-6 col-xl-6">
+                <div className="my_profile_setting_input ui_kit_select_search form-group">
+                  <label htmlFor="operatingEnvironment">
+                    Operating Environment
+                  </label>
+                  <select
+                    id="operatingEnvironment"
+                    className="selectpicker form-select"
+                    value={selectedOperatingEnvironment}
+                    onChange={handleOperatingEnvironmentChange}
+                    data-live-search="true"
+                    data-width="100%"
+                  >
+                    <option value="">-- Select Operating Environment --</option>
+                    {operatingEnvironment.map((env) => (
+                      <option key={env._id} value={env._id}>
+                        {env.name || env.title}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+              {/* Operating Environment ends */}
+
+              {/* Autonomy Level start */}
+              <div className="col-lg-6 col-xl-6">
+                <div className="my_profile_setting_input ui_kit_select_search form-group">
+                  <label htmlFor="autonomyLevel">Autonomy Level</label>
+                  <select
+                    id="autonomyLevel"
+                    className="selectpicker form-select"
+                    value={selectedAutonomyLevel}
+                    onChange={handleAutonomyLevelChange}
+                    data-live-search="true"
+                    data-width="100%"
+                  >
+                    <option value="">-- Select Autonomy Level --</option>
+                    {autonomyLevel.map((level) => (
+                      <option key={level._id} value={level._id}>
+                        {level.name || level.title}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+              {/* Autonomy Level ends */}
+            </div>
+
+            <div className="row">
+              <div className="col-lg-12">
+                <h3 className="mb30">Property media</h3>
+              </div>
+              {/* End .col */}
+              <div className="col-lg-12">
+                <div className="my_profile_setting_textarea">
+                  <label htmlFor="videoEmbedCode">Video Embed code </label>
+                  <textarea
+                    id="videoEmbedCode"
+                    className="form-control"
+                    rows="7"
+                    value={videoembedcode}
+                    onChange={(e) => setVideoEmbedCode(e.target.value)}
+                    placeholder="Enter Video Embed code"
+                  ></textarea>
+                </div>
+              </div>
+              {/* End .col */}
+              <div className="col-lg-6">
+                <div htmlFor="featuredimage">Featured Image</div>
+                <div className="wrap-custom-file">
+                  <input
+                    type="file"
+                    id="featuredimage"
+                    // accept="image/png, image/gif, image/jpeg"
+                    accept="image/png, image/gif, image/jpeg, image/svg+xml, image/svg, image/webp, image/avif"
+                    onChange={uploadFeaturedImage}
+                  />
+                  <label
+                    style={
+                      featuredimage !== null
+                        ? {
+                          backgroundImage: `url(${URL.createObjectURL(
+                            featuredimage
+                          )})`,
+                        }
+                        : undefined
+                    }
+                    htmlFor="featuredimage"
+                  >
+                    <span>
+                      <i className="flaticon-download"></i> Upload featured
+                      image{" "}
+                    </span>
+                  </label>
                 </div>
                 <p>*minimum 260px x 260px</p>
-            </div>
-            <div className="col-lg-6">
-        <div htmlFor="SitePlan">Site Plan</div>
-                <div className="wrap-custom-file">
-              
-                    <input
-                        type="file"
-                        id="SitePlan"
-                        // accept="image/png, image/gif, image/jpeg"
-                         accept="image/png, image/gif, image/jpeg, image/svg+xml, image/svg, image/webp, image/avif"
-                        onChange={uploadSitePlan}
-                    />
-                   <label
-                      htmlFor="SitePlan"
-                      style={
-                        siteplanget                          
-                        ? { backgroundImage: `url(${siteplanget})` }
-                          : siteplan
-                          ? { backgroundImage: `url(${URL.createObjectURL(siteplan)})` }
-                          : undefined
-                      }
-                    >
-                        
-                        <span>
-                            <i className="flaticon-download"></i> Upload Site Plan{" "}
-                        </span>
-                    </label>
-                     { siteplanget && ( 
-                      <div
-                       className="edu_stats_list singleimage"
-                              data-bs-toggle="tooltip"
-                              data-bs-placement="top"
-                              title="Delete"
-                              data-original-title="Delete"
-                            >
-                            <a onClick={() => deleteImageSingle(id,"siteplanurl",siteplanget)}>
+              </div>
+              <div className="col-lg-12">
+                <ul className="mb-0">
+                  {robotSelectedImgs.length > 0
+                    ? robotSelectedImgs?.map((item, index) => (
+                      <li key={index} className="list-inline-item">
+                        <div className="portfolio_item">
+                          <Image
+                            width={200}
+                            height={200}
+                            className="img-fluid cover"
+                            src={URL.createObjectURL(item)}
+                            alt="fp1.jpg"
+                          />
+                          <div
+                            className="edu_stats_list"
+                            data-bs-toggle="tooltip"
+                            data-bs-placement="top"
+                            title="Delete"
+                            data-original-title="Delete"
+                          >
+                            <a onClick={() => deleteImage(item.name)}>
                               <span className="flaticon-garbage"></span>
                             </a>
                           </div>
-                        )}
+                        </div>
+                      </li>
+                    ))
+                    : undefined}
+                  {/* End li */}
+                </ul>
+              </div>
+              <div className="col-lg-12">
+                <div className="portfolio_upload">
+                  <input
+                    type="file"
+                    onChange={multipleImage}
+                    multiple
+                    // accept="image/png, image/gif, image/jpeg"
+                    accept="image/png, image/gif, image/jpeg, image/svg+xml, image/svg, image/webp, image/avif"
+                  />
+                  <div className="icon">
+                    <span className="flaticon-download"></span>
+                  </div>
+                  <p>Drag and drop images here</p>
                 </div>
-                <p>*minimum 260px x 260px</p>
+              </div>
+              {/* End .col */}
             </div>
-            <div className="col-lg-6">
-        <div htmlFor="MasterPlan">Master Plan/Layout</div>
-                <div className="wrap-custom-file">
-              
+            {/* End .col */}
+            <div className=" mt30 ">
+              <div className="col-lg-12">
+                <h3 className="mb30">Meta Information</h3>
+              </div>
+              <div className="row">
+                <div className="col-lg-12">
+                  <div className="my_profile_setting_input form-group">
+                    <label htmlFor="propertyMetatitle">Meta Title</label>
                     <input
-                        type="file"
-                        id="MasterPlan"
-                        // accept="image/png, image/gif, image/jpeg"
-                         accept="image/png, image/gif, image/jpeg, image/svg+xml, image/svg, image/webp, image/avif"
-                        onChange={uploadMasterPlan}
+                      type="text"
+                      className="form-control"
+                      id="propertyMetatitle"
+                      value={metatitle}
+                      onChange={(e) => setMetatitle(e.target.value)}
                     />
-                  <label
-                        // style={
-                        //   masterplan !== null
-                        //         ? {
-                        //               backgroundImage: `url(${URL.createObjectURL(
-                        //                 masterplan
-                        //               )})`,
-                        //           }
-                        //         : undefined
-                        // }
-                        style={
-                        masterplanget                          
-                        ? { backgroundImage: `url(${masterplanget})` }
-                          : masterplan
-                          ? { backgroundImage: `url(${URL.createObjectURL(masterplan)})` }
-                          : undefined
-                      }
-                        htmlFor="MasterPlan"
-                    >
-                        
-                        <span>
-                            <i className="flaticon-download"></i> Upload Master Plan{" "}
-                        </span>
-                    </label>
-                    { masterplanget && ( 
-                      <div
-                      className="edu_stats_list singleimage"
-                      data-bs-toggle="tooltip"
-                      data-bs-placement="top"
-                      title="Delete"
-                      data-original-title="Delete"
-                    >
-                    <a onClick={() => deleteImageSingle(id,"masterplanurl",masterplanget)}>
-                      <span className="flaticon-garbage"></span>
-                    </a>
                   </div>
-                    )}
                 </div>
-                <p>*minimum 260px x 260px</p>
+                <div className="col-lg-12">
+                  <div className="my_profile_setting_textarea form-group">
+                    <label htmlFor="propertyMetaDescription">
+                      Meta Description
+                    </label>
+                    <textarea
+                      id="propertyMetaDescription"
+                      className="form-control"
+                      rows="7"
+                      value={metadescription}
+                      onChange={(e) => setMetaDescription(e.target.value)}
+                      placeholder="Enter meta description"
+                    ></textarea>
+                    {error.metadescription && (
+                      <span className="text-danger">
+                        {error.metadescription}
+                      </span>
+                    )}
+                  </div>
+                </div>
+                {/* End .col */}
+              </div>
             </div>
-            <div className="col-lg-12">
-                    <ul className="mb-0">
-                      {propertySelectedImgsget?.length > 0
-                        ? propertySelectedImgsget?.map((item, index) => (
-                            <li key={index} className="list-inline-item">
-                              <div className="portfolio_item">
-                                <Image
-                                  width={200}
-                                  height={200}
-                                  className="img-fluid cover"
-                                  src={
-                                    item.image
-                                      ? `${process.env.NEXT_PUBLIC_API_URL}${item.image?.url?item.image?.url:item.image}`
-                                      : `${process.env.NEXT_PUBLIC_API_URL}public/assets/images/thumbnail.webp`
-                                  }
-                                  alt= {`${item.title}${item._id}`}
-                                  unoptimized
-                                />
-                                <div
-                                  className="edu_stats_list"
-                                  data-bs-toggle="tooltip"
-                                  data-bs-placement="top"
-                                  title="Delete"
-                                  data-original-title="Delete"
-                                >
-                                  <a onClick={() => deleteImageGet(item._id)}>
-                                    <span className="flaticon-garbage"></span>
-                                  </a>
-                                </div>
-                              </div>
-                            </li>
-                          ))
-                        : undefined}
-            
-                      {/* End li */}
-                       {propertySelectedImgs.length > 0
-                                  ? propertySelectedImgs?.map((item, index) => (
-                                      <li key={index} className="list-inline-item">
-                                        <div className="portfolio_item">
-                                          <Image
-                                            width={200}
-                                            height={200}
-                                            className="img-fluid cover"
-                                            src={URL.createObjectURL(item)}
-                                            alt="fp1.jpg"
-                                          />
-                                          <div
-                                            className="edu_stats_list"
-                                            data-bs-toggle="tooltip"
-                                            data-bs-placement="top"
-                                            title="Delete"
-                                            data-original-title="Delete"
-                                          >
-                                            <a onClick={() => deleteImage(item.name)}>
-                                              <span className="flaticon-garbage"></span>
-                                            </a>
-                                          </div>
-                                        </div>
-                                      </li>
-                                    ))
-                                  : undefined}
-                      
-                                {/* End li */}
-                    </ul>
-                  </div>
-                  <div className="col-lg-12">
-        <div className="portfolio_upload">
-          <input
-            type="file"
-            onChange={multipleImage}
-            multiple
-            // accept="image/png, image/gif, image/jpeg"
-             accept="image/png, image/gif, image/jpeg, image/svg+xml, image/svg, image/webp, image/avif"
-          />
-          <div className="icon">
-            <span className="flaticon-download"></span>
-          </div>
-          <p>Drag and drop images here</p>
-        </div>
-      </div>
-      {/* End .col */}
-      </div>
-      <div className=" mt30 ">
-                    <div className="col-lg-12">
-                      <h3 className="mb30">Meta Information</h3>
-                    </div>
-                    <div className="row">
-                    <div className="col-lg-12">
-        <div className="my_profile_setting_input form-group">
-          <label htmlFor="propertyMetatitle">Meta Title</label>
-         
-          <input type="text"
-              className="form-control"
-              id="propertyMetatitle"
-              value={metatitle}
-              onChange={(e) => setMetatitle(e.target.value)} />
-        </div>
-      </div>
-      <div className="col-lg-12">
-          <div className="my_profile_setting_textarea form-group">
-            <label htmlFor="propertyMetaDescription">Meta Description</label>
-            <textarea id="propertyMetaDescription" className="form-control" rows="7"  value={metadescription} onChange={(e) => setMetaDescription(e.target.value)}  placeholder="Enter meta description"></textarea>
-            {error.metadescription && <span className="text-danger">{error.metadescription}</span>}
-          </div>
-          
-        </div>
-        <div className="col-lg-6 col-xl-6">
-          <div className="my_profile_setting_input ui_kit_select_search form-group">
-            <label>Status</label>
-            <select
-                className="selectpicker form-select"
-                data-live-search="true"
-                data-width="100%"
-                value={status ? "active" : "deactive"}
-                onChange={(e) => setStatus(e.target.value === "active")}
-              >
-              <option value="active">Active</option>
-              <option value="deactive">Deactive</option>
-            </select>
           </div>
         </div>
-      {/* End .col */}
-      <div className="col-lg-6 col-xl-6">
-          <div className="my_profile_setting_input ui_kit_select_search form-group">
-            <label>Approve property for sale by user</label>
-            <select
-                className="selectpicker form-select"
-                data-live-search="true"
-                data-width="100%"
-                value={adminapprove ? "active" : "deactive"}
-                onChange={(e) => setAdminApprove(e.target.value === "active")}
-              >
-              <option value="active">Active</option>
-              <option value="deactive">Deactive</option>
-            </select>
-          </div>
-        </div>
-      {/* End .col */}
+        {/* specifications ends */}
 
-      {/* End .col */}
-      </div>
-      </div>
-      </div>
-                  </div>
-                  
-      <div className="col-xl-12">
-        <div className="my_profile_setting_input">
-          <button className="btn btn1 float-start" type="button" onClick={() => window.location.href = '/cmsroboticlife/my-properties'}>Back</button>
-          <button className="btn btn2 float-end" type="submit" >Submit</button>
+        <div className="col-xl-12">
+          <div className="my_profile_setting_input">
+            <button
+              className="btn btn1 float-start"
+              type="button"
+              onClick={() => (window.location.href = "/cmsroboticlife/my-robot")}
+            >
+              Back
+            </button>
+            <button className="btn btn2 float-end" type="submit">
+              Submit
+            </button>
+          </div>
         </div>
-      </div>
       </form>
     </>
   );

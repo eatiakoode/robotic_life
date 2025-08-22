@@ -1,149 +1,232 @@
-
-
-"use client"; // Add this at the top
+"use client";
 import Image from "next/image";
 import { deleteRobotAPI } from "@/api/robot";
 import { useRouter } from "next/navigation";
 import { toast } from 'react-toastify';
+import { useState, useCallback } from "react";
 
-const TableData = ({properties,setProperties}) => {
-  // const [propertyList, setPropertyList] = useState([]);
-      const router = useRouter();
+const TableData = ({ robots = [], setRobots }) => {
+  const router = useRouter();
+  const [deletingId, setDeletingId] = useState(null);
+
+  // Memoized delete function to prevent unnecessary re-renders
+  const deleteRobot = useCallback(async (id) => {
+    // Prevent multiple delete requests
+    if (deletingId) {
+      toast.warn("Please wait for the current operation to complete");
+      return;
+    }
+
+    const isConfirmed = window.confirm("Are you sure you want to delete this robot?");
+    if (!isConfirmed) return;
+
+    setDeletingId(id);
     
+    try {
+      const data = await deleteRobotAPI(id);
+      toast.success(data.message || 'Robot deleted successfully');
       
-      const deleteProperty = async (id) => {
-          const isConfirmed = window.confirm("Are you sure you want to delete this robot?");
-          if (!isConfirmed) return;
+      // Remove the deleted robot from the list optimistically
+      setRobots((prevRobots) => prevRobots.filter((robot) => robot._id !== id));
       
-          try {
-            const data = await deleteRobotAPI(id); // 🔹 Call the API function
-            toast.success(data.message);
-            // alert(data.message);
-            setProperties((properties) => properties.filter((property) => property._id !== id));
-            //setTitle(""); // ✅ Reset input after success
-            
-            return false
-          } catch (error) {
-            alert("Failed to delete Robot.");
-            //setError(error.message); // ❌ Show error if request fails
-          }
-        };
-  let theadConent = [
-    "Listing Title",
-    "Date published",
+    } catch (error) {
+      console.error('Delete error:', error);
+      toast.error(error.message || "Failed to delete Robot.");
+    } finally {
+      setDeletingId(null);
+    }
+  }, [deletingId, setRobots]);
+
+  // Memoized edit function
+  const editRobot = useCallback((id) => {
+    router.push(`/cmsroboticlife/edit-robot/${id}`);
+  }, [router]);
+
+  // Optimized image error handler
+  const handleImageError = useCallback((e) => {
+    e.target.src = `${process.env.NEXT_PUBLIC_API_URL}public/assets/images/thumbnail.webp`;
+  }, []);
+
+  // Get image URL with fallback
+  const getImageUrl = useCallback((item) => {
+    if (!item.Image) return `${process.env.NEXT_PUBLIC_API_URL}public/assets/images/thumbnail.webp`;
+    
+    const imageUrl = typeof item.Image === 'object' ? item.Image.url : item.Image;
+    return `${process.env.NEXT_PUBLIC_API_URL}${imageUrl}`;
+  }, []);
+
+  // Format date helper
+  const formatDate = useCallback((dateString) => {
+    if (!dateString) return 'N/A';
+    try {
+      return new Date(dateString).toLocaleDateString('en-US', {
+        month: 'short',
+        day: '2-digit',
+        year: 'numeric',
+      });
+    } catch {
+      return 'Invalid Date';
+    }
+  }, []);
+
+  // Get display name helper
+  const getDisplayName = useCallback((item, field) => {
+    return item[field]?.name || 'N/A';
+  }, []);
+
+  // Get price helper
+  const getPrice = useCallback((item) => {
+    return item.totalPrice || item.price || 0;
+  }, []);
+
+  const theadContent = [
+    "Robot Details",
+    "Date Published", 
     "Status",
-    // "View",
-    "Action",
+    "Actions",
   ];
-  let tbodyContent = properties?.map((item, index) => (
-    <tr key={item._id}>
-      <td scope="row">
-        <div className="feat_property list favorite_page style2">
-          <div className="thumb">
-          <Image
-              width={150}
-              height={220}
-              className="img-whp cover"
-              src={
-                item.Image
-                 ? `${process.env.NEXT_PUBLIC_API_URL}${item.Image?.url?item.Image?.url:item.Image}`
-                  : `${process.env.NEXT_PUBLIC_API_URL}public/assets/images/thumbnail.webp`
-              }
-              alt= {item.title}
-              unoptimized // Optional: disables Next.js image optimization (useful if external images)
-            />
-            <div className="thmb_cntnt">
-              <ul className="tag mb0">
-                <li className="list-inline-item">
-                  <a href="#">{item.category?.title || item.categoryid?.title}</a>
-                </li>
-              </ul>
-            </div>
-          </div>
-          <div className="details">
-            <div className="tc_content">
-              <h4>{item.title}</h4>
-              {item.manufacturer?.title || item.countryOfOrigin?.title ? (
-                <p>
-                  <span className="flaticon-placeholder"></span>
-                  {item.manufacturer?.title || item.countryOfOrigin?.title}
-                </p>
-              ) : null}
-              <a className="fp_price text-thm" href="#">
-                ${item.totalPrice || item.price}
-                {/* <small>/mo</small> */}
-              </a>
-            </div>
-          </div>
-        </div>
-      </td>
-      {/* End td */}
 
-      <td>{new Date(item.createdAt).toLocaleDateString('en-US', {
-    month: 'short',
-    day: '2-digit',
-    year: 'numeric',
-  })}</td>
-      {/* End td */}
+  // Handle empty robots array with loading state
+  if (!robots || robots.length === 0) {
+    return (
+      <div className="table-responsive">
+        <table className="table">
+          <thead className="thead-light">
+            <tr>
+              {theadContent.map((value, i) => (
+                <th scope="col" key={i}>
+                  {value}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td colSpan={theadContent.length} className="text-center p-4">
+                <div className="no-data-message">
+                  <i className="flaticon-robot mb-3" style={{fontSize: '48px', color: '#ccc'}}></i>
+                  <p className="mb-0">No robots available</p>
+                  <small className="text-muted">Add your first robot to get started</small>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    );
+  }
 
-      <td>
-      
-      <span className={`status_tag ${item.status ? 'badge2' : 'badge'}`}>{item.status ? "Active" : "Deactive"}</span>
-
-    </td>
-      {/* End td */}
-
-      {/* <td>2,345</td> */}
-      {/* End td */}
-
-      <td>
-        <ul className="view_edit_delete_list mb0">
-        <li
-            className="list-inline-item"
-            data-toggle="tooltip"
-            data-placement="top"
-            title="Edit"
-          >
-            <button  onClick={() => router.push(`/cmsroboticlife/edit-robot/${item._id}`)}>
-              <span className="flaticon-edit"></span>
-            </button>
-          </li>
-          {/* End li */}
-
-          <li className="list-inline-item"
-            data-toggle="tooltip"
-            data-placement="top"
-            title="Delete"
-          >
-            <a href="#"  onClick={() => deleteProperty(item._id)}>
-              <span className="flaticon-garbage"></span>
-            </a>
-          </li>
-        </ul>
-      </td>
-      {/* End td */}
-    </tr>
-  ));
-  // useEffect(() => {
-  //   fetchPropertyData();
-  // }, []);
   return (
-    <>
+    <div className="table-responsive">
       <table className="table">
         <thead className="thead-light">
           <tr>
-            {theadConent.map((value, i) => (
+            {theadContent.map((value, i) => (
               <th scope="col" key={i}>
                 {value}
               </th>
             ))}
           </tr>
         </thead>
-        {/* End theaad */}
+        <tbody>
+          {robots.map((item, index) => (
+            <tr key={item._id || index}>
+              <td scope="row">
+                <div className="feat_robot list favorite_page style2">
+                  <div className="thumb">
+                    <Image
+                      width={150}
+                      height={220}
+                      className="img-whp cover"
+                      src={getImageUrl(item)}
+                      alt={item.name || item.title || 'Robot Image'}
+                      unoptimized
+                      onError={handleImageError}
+                      priority={index < 5} // Prioritize first 5 images
+                    />
+                    <div className="thmb_cntnt">
+                      <ul className="tag mb0">
+                        <li className="list-inline-item">
+                          <a href="#" onClick={(e) => e.preventDefault()}>
+                            {getDisplayName(item, 'category') || getDisplayName(item, 'categoryid') || 'Uncategorized'}
+                          </a>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                  <div className="details">
+                    <div className="tc_content">
+                      <h4 title={item.name || item.title}>
+                        {item.name || item.title || 'Unnamed Robot'}
+                      </h4>
+                      {(getDisplayName(item, 'manufacturer') || getDisplayName(item, 'countryOfOrigin')) && (
+                        <p>
+                          <span className="flaticon-placeholder"></span>
+                          {getDisplayName(item, 'manufacturer') || getDisplayName(item, 'countryOfOrigin')}
+                        </p>
+                      )}
+                      <a className="fp_price text-thm" href="#" onClick={(e) => e.preventDefault()}>
+                        ${getPrice(item)}
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </td>
 
-        <tbody>{tbodyContent}</tbody>
+              <td>
+                {formatDate(item.createdAt)}
+              </td>
+
+              <td>
+                <span className={`status_tag ${item.status ? 'badge2' : 'badge'}`}>
+                  {item.status ? "Active" : "Inactive"}
+                </span>
+              </td>
+
+              <td>
+                <ul className="view_edit_delete_list mb0">
+                  <li
+                    className="list-inline-item"
+                    data-toggle="tooltip"
+                    data-placement="top"
+                    title="Edit"
+                  >
+                    <button 
+                      onClick={() => editRobot(item._id)}
+                      className="btn btn-link p-0"
+                      disabled={deletingId === item._id}
+                      aria-label={`Edit ${item.name || 'robot'}`}
+                    >
+                      <span className="flaticon-edit"></span>
+                    </button>
+                  </li>
+
+                  <li 
+                    className="list-inline-item"
+                    data-toggle="tooltip"
+                    data-placement="top"
+                    title="Delete"
+                  >
+                    <button 
+                      onClick={() => deleteRobot(item._id)}
+                      className="btn btn-link p-0 text-danger"
+                      disabled={deletingId === item._id}
+                      aria-label={`Delete ${item.name || 'robot'}`}
+                    >
+                      {deletingId === item._id ? (
+                        <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                      ) : (
+                        <span className="flaticon-garbage"></span>
+                      )}
+                    </button>
+                  </li>
+                </ul>
+              </td>
+            </tr>
+          ))}
+        </tbody>
       </table>
-    </>
+    </div>
   );
 };
 
