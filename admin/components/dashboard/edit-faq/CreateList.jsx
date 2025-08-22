@@ -61,6 +61,7 @@ const CreateList = () => {
       try {
         const formData = {
           "title": title,
+          "status": status,
           "description": description,
           "robotid":selectedRobot,};
         const data =await updateFaqAPI(id, formData);
