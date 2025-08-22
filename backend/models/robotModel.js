@@ -66,6 +66,10 @@ const RobotSchema = new mongoose.Schema(
     images: [{
       type: String,
     }],
+    videoEmbedCode: {
+      type: String,
+      trim: true
+    },
     dimensions: {
       length: unitValueSchema,
       width: unitValueSchema,
@@ -133,7 +137,7 @@ const RobotSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "PayloadType"
     }],
-    
+
   },
   { timestamps: true }
 );

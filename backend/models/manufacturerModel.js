@@ -40,13 +40,13 @@ var manufacturerSchema = new mongoose.Schema(
 );
 
 // Virtual populate to get all robots from this manufacturer
-manufacturerSchema.virtual("robotList", {
-  ref: "Robot",
-  localField: "_id",
-  foreignField: "manufacturer",
-});
+// manufacturerSchema.virtual("robotList", {
+//   ref: "Robot",
+//   localField: "_id",
+//   foreignField: "manufacturer",
+// });
 
-manufacturerSchema.set("toObject", { virtuals: true });
-manufacturerSchema.set("toJSON", { virtuals: true });
+// manufacturerSchema.set("toObject", { virtuals: true });
+// manufacturerSchema.set("toJSON", { virtuals: true });
 
 module.exports = mongoose.model("Manufacturer", manufacturerSchema);
