@@ -14,7 +14,13 @@ const createBlog = asyncHandler(async (req, res) => {
         req.body.logoimage = "public/images/blogs/" + processedImages[0];
       }
     }
-    req.body.slug = slugify(req.body.slug.toLowerCase());
+    if (req.body.slug) {
+      req.body.slug = slugify(req.body.slug.toLowerCase());
+    } else if (req.body.name) {
+      req.body.slug = slugify(req.body.name.toLowerCase());
+    } else {
+      req.body.slug = "";
+    }
     const newBlog = await Blog.create(req.body);
     const message = {
       "status": "success",
@@ -42,7 +48,11 @@ const updateBlog = asyncHandler(async (req, res) => {
         req.body.logoimage = "public/images/blogs/" + processedImages[0];
       }
     }
-    req.body.slug = slugify(req.body.slug.toLowerCase());
+    if (req.body.slug) {
+      req.body.slug = slugify(req.body.slug.toLowerCase());
+    } else if (req.body.name) {
+      req.body.slug = slugify(req.body.name.toLowerCase());
+    }
     const updatedBlog = await Blog.findByIdAndUpdate(id, req.body, {
       new: true,
     });
