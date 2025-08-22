@@ -197,7 +197,7 @@ const RobotIndex = ({
                     <ul className="mb0">
                       <li className="list-inline-item">
                         <div className="candidate_revew_search_box course fn-520">
-                          <SearchBox onSearch={handleSearch} />
+                          {/* <SearchBox onSearch={handleSearch} /> */}
                         </div>
                       </li>
                      {/* <li className="list-inline-item">
