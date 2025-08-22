@@ -112,9 +112,9 @@ const deleteImagePlanSingle = async (planid,getindex,imageurl) => {
       const res = await addPropertyPlanAPI(formData);
       toast.success(res.message);
       if (property?.id) {
-        router.push(`/cmswegrow/edit-property/${property.id}`);
+        router.push(`/cmsroboticlife/edit-property/${property.id}`);
         setInputs([])
-        // router.push(`/cmswegrow/edit-property/${property.id}`);
+        // router.push(`/cmsroboticlife/edit-property/${property.id}`);
       }
     } catch (err) {
       console.error('Error:', err);

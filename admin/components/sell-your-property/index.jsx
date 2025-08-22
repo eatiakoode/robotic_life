@@ -312,7 +312,7 @@ const index = () => {
   
   
       const res = await addPropertyAPI(formData);
-      // router.push("/cmswegrow/my-properties");
+      // router.push("/cmsroboticlife/my-properties");
       alert(res.message);
   
       // Reset fields and errors

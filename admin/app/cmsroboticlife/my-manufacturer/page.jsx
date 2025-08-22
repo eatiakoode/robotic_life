@@ -1,4 +1,4 @@
-// app/cmswegrow/my-manufacturer/page.jsx  (Server Component)
+// app/cmsroboticlife/my-manufacturer/page.jsx  (Server Component)
 
 import MyManufacturerWrapper from "./MyManufacturerWrapper";
 

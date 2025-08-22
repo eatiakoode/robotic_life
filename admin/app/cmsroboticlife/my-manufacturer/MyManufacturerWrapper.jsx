@@ -1,4 +1,4 @@
-// app/cmswegrow/my-manufacturer/MyManufacturerWrapper.jsx
+// app/cmsroboticlife/my-manufacturer/MyManufacturerWrapper.jsx
 "use client";
 
 import MyManufacturer from "@/components/dashboard/my-manufacturer";

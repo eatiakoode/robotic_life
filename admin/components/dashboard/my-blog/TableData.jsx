@@ -73,7 +73,7 @@ const TableData = () => {
             data-placement="top"
             title="Edit"
           >
-            <button  onClick={() => router.push(`/cmswegrow/edit-blog/${item._id}`)}>
+            <button  onClick={() => router.push(`/cmsroboticlife/edit-blog/${item._id}`)}>
               <span className="flaticon-edit"></span>
             </button>
           </li>

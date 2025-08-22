@@ -13,66 +13,66 @@ const SidebarMenu = () => {
   const pathname = usePathname()
 
   const myCountry = [
-    { id: 1, name: "Add Country", route: "/cmswegrow/add-country" },
-    { id: 2, name: "Country List", route: "/cmswegrow/my-country" }
+    { id: 1, name: "Add Country", route: "/cmsroboticlife/add-country" },
+    { id: 2, name: "Country List", route: "/cmsroboticlife/my-country" }
   ];
   const myState = [
-    { id: 1, name: "Add State", route: "/cmswegrow/add-state" },
-    { id: 2, name: "State List", route: "/cmswegrow/my-state" }
+    { id: 1, name: "Add State", route: "/cmsroboticlife/add-state" },
+    { id: 2, name: "State List", route: "/cmsroboticlife/my-state" }
   ];
   const myCity = [
-    { id: 1, name: "Add City", route: "/cmswegrow/add-city" },
-    { id: 2, name: "City List", route: "/cmswegrow/my-cities" }
+    { id: 1, name: "Add City", route: "/cmsroboticlife/add-city" },
+    { id: 2, name: "City List", route: "/cmsroboticlife/my-cities" }
   ];
  
   const myLocation = [
-    { id: 1, name: "Add Location", route: "/cmswegrow/add-location" },
-    { id: 2, name: "Location List", route: "/cmswegrow/my-location" }
+    { id: 1, name: "Add Location", route: "/cmsroboticlife/add-location" },
+    { id: 2, name: "Location List", route: "/cmsroboticlife/my-location" }
   ];
   const myAmenity = [
-    { id: 1, name: "Add Amenity", route: "/cmswegrow/add-amenities" },
-    { id: 2, name: "Amenity List", route: "/cmswegrow/my-amenities" }
+    { id: 1, name: "Add Amenity", route: "/cmsroboticlife/add-amenities" },
+    { id: 2, name: "Amenity List", route: "/cmsroboticlife/my-amenities" }
   ];
   const myPropertytype = [
-    { id: 1, name: "Add Property type", route: "/cmswegrow/add-propertytype" },
-    { id: 2, name: "Property type List", route: "/cmswegrow/my-propertytype" }
+    { id: 1, name: "Add Property type", route: "/cmsroboticlife/add-propertytype" },
+    { id: 2, name: "Property type List", route: "/cmsroboticlife/my-propertytype" }
   ];
   const myBuilder = [
-    { id: 1, name: "Add Builder", route: "/cmswegrow/add-builder" },
-    { id: 2, name: "Builder List", route: "/cmswegrow/my-builder" }
+    { id: 1, name: "Add Builder", route: "/cmsroboticlife/add-builder" },
+    { id: 2, name: "Builder List", route: "/cmsroboticlife/my-builder" }
   ];
   const myAgent = [
-    { id: 1, name: "Add Agent", route: "/cmswegrow/add-agent" },
-    { id: 2, name: "Agent List", route: "/cmswegrow/my-agent" }
+    { id: 1, name: "Add Agent", route: "/cmsroboticlife/add-agent" },
+    { id: 2, name: "Agent List", route: "/cmsroboticlife/my-agent" }
   ];
   
   const myProperties = [
-    { id: 1, name: "Add Property", route: "/cmswegrow/create-listing" },
-    { id: 2, name: "Property List", route: "/cmswegrow/my-properties" }
+    { id: 1, name: "Add Property", route: "/cmsroboticlife/create-listing" },
+    { id: 2, name: "Property List", route: "/cmsroboticlife/my-properties" }
   ];
   const myBlog = [
-    { id: 1, name: "Add Blog category", route: "/cmswegrow/add-blogcategory" },
-    { id: 2, name: "Blog category List", route: "/cmswegrow/my-blogcategory" },
-    { id: 3, name: "Add Blog", route: "/cmswegrow/add-blog" },
-    { id: 4, name: "Blog List", route: "/cmswegrow/my-blog" },
+    { id: 1, name: "Add Blog category", route: "/cmsroboticlife/add-blogcategory" },
+    { id: 2, name: "Blog category List", route: "/cmsroboticlife/my-blogcategory" },
+    { id: 3, name: "Add Blog", route: "/cmsroboticlife/add-blog" },
+    { id: 4, name: "Blog List", route: "/cmsroboticlife/my-blog" },
     
   ];
   const myPropertypage = [
-    { id: 1, name: "Add Property page", route: "/cmswegrow/add-propertypage" },
-    { id: 2, name: "Property page List", route: "/cmswegrow/my-propertypage" }
+    { id: 1, name: "Add Property page", route: "/cmsroboticlife/add-propertypage" },
+    { id: 2, name: "Property page List", route: "/cmsroboticlife/my-propertypage" }
   ];
   const myTestimonial = [
-    { id: 1, name: "Add Testimonial", route: "/cmswegrow/add-testimonial" },
-    { id: 2, name: "Testimonial List", route: "/cmswegrow/my-testimonial" }
+    { id: 1, name: "Add Testimonial", route: "/cmsroboticlife/add-testimonial" },
+    { id: 2, name: "Testimonial List", route: "/cmsroboticlife/my-testimonial" }
   ];
   
   const myFaq = [
-    { id: 1, name: "Add FAQ", route: "/cmswegrow/add-faq" },
-    { id: 2, name: "FAQ List", route: "/cmswegrow/my-faq" }
+    { id: 1, name: "Add FAQ", route: "/cmsroboticlife/add-faq" },
+    { id: 2, name: "FAQ List", route: "/cmsroboticlife/my-faq" }
   ];
   const reviews = [
-    { id: 1, name: "My Reviews", route: "/cmswegrow/my-review" },
-    { id: 2, name: "Visitor Reviews", route: "/cmswegrow/my-review" },
+    { id: 1, name: "My Reviews", route: "/cmsroboticlife/my-review" },
+    { id: 2, name: "Visitor Reviews", route: "/cmsroboticlife/my-review" },
   ];
   const manageAccount = [
     {
@@ -117,7 +117,7 @@ const SidebarMenu = () => {
                   : ""
               }`}
             >
-              <Link href="/cmswegrow/my-dashboard">
+              <Link href="/cmsroboticlife/my-dashboard">
                 <i className="flaticon-layers"></i>
                 <span> Dashboard</span>
               </Link>

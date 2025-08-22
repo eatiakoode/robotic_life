@@ -248,6 +248,18 @@ const CreateList = () => {
 
     fetchData();
   }, []);
+  useEffect(() => {
+    if (title) {
+      const generatedSlug = title
+        .toLowerCase()
+        .trim()
+        .replace(/[^a-z0-9\s-]/g, "") 
+        .replace(/\s+/g, "-"); 
+      setSlug(generatedSlug);
+    } else {
+      setSlug("");
+    }
+  }, [title]);
 
   // --- Handlers ---
 
@@ -255,7 +267,7 @@ const CreateList = () => {
     const value = e.target.value;
     setSelectedCountry(value);
     try {
-      const res = await getStateByCountryTableData(value);
+      const res = await getCountryTableData(value);
       setStates(res.data || []);
     } catch (err) {
       console.error("Error fetching states:", err);
@@ -638,16 +650,15 @@ const CreateList = () => {
 
       // Append images
       propertySelectedImgs.forEach((file) => {
-        formData.append("image", file);
+        formData.append("images", file);
       });
 
       // API call
       const res = await createRobot(formData, token);
 
       toast.success(res.message || "Robot created successfully!");
-      if (res.status === "success") {
-        router.push("/cmswegrow/my-properties");
-      }
+   
+        router.push("/cmsroboticlife/my-properties");
 
       setError({});
     } catch (err) {
@@ -685,8 +696,8 @@ const CreateList = () => {
               className="form-control"
               id="roboSlug"
               value={slug}
-              onChange={(e) => setSlug(e.target.value)}
-              placeholder="Enter robot slug"
+              placeholder="Auto-generated slug"
+              disabled
             />
             {error.slug && <span className="text-danger">{error.slug}</span>}
           </div>
@@ -1683,7 +1694,10 @@ const CreateList = () => {
                         &nbsp;
                       </option>
                       {navigationType.map((navigationType) => (
-                        <option key={navigationType._id} value={navigationType._id}>
+                        <option
+                          key={navigationType._id}
+                          value={navigationType._id}
+                        >
                           {navigationType.name || navigationType.title}
                         </option>
                       ))}
@@ -1754,114 +1768,111 @@ const CreateList = () => {
               {/* Navigation Types ends */}
 
               {/* Sensor start */}
-             <div className="col-lg-6 col-xl-6">
-                    <div className="my_profile_setting_input ui_kit_select_search form-group">
-                      <label htmlFor="sensorSelect">Sensor</label>
+              <div className="col-lg-6 col-xl-6">
+                <div className="my_profile_setting_input ui_kit_select_search form-group">
+                  <label htmlFor="sensorSelect">Sensor</label>
 
-                      <div className="position-relative">
-                        <select
-                          id="sensorSelect"
-                          className="selectpicker form-select sensor  -select"
-                          value="placeholder"
-                          onChange={(e) => {
-                            const value = e.target.value;
-                            if (
-                              value !== "placeholder" &&
-                              !selectedSensor.includes(value)
-                            ) {
-                              setSelectedSensor([
-                                ...selectedSensor,
-                                value,
-                              ]);
-                            }
-                            e.target.blur(); // close dropdown after each select
-                          }}
-                          data-live-search="true"
-                          data-width="100%"
-                          style={{
-                            display: "flex",
-                            alignItems: "center",
-                            height: "45px",
-                          }}
-                        >
-                          <option value="placeholder" disabled>
-                            &nbsp;
-                          </option>
-                          {sensors.map((sensor) => (
-                            <option key={sensor._id} value={sensor._id}>
-                              {sensor.name || sensor.title}
-                            </option>
-                          ))}
-                        </select>
+                  <div className="position-relative">
+                    <select
+                      id="sensorSelect"
+                      className="selectpicker form-select sensor  -select"
+                      value="placeholder"
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        if (
+                          value !== "placeholder" &&
+                          !selectedSensor.includes(value)
+                        ) {
+                          setSelectedSensor([...selectedSensor, value]);
+                        }
+                        e.target.blur(); // close dropdown after each select
+                      }}
+                      data-live-search="true"
+                      data-width="100%"
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        height: "45px",
+                      }}
+                    >
+                      <option value="placeholder" disabled>
+                        &nbsp;
+                      </option>
+                      {sensors.map((sensor) => (
+                        <option key={sensor._id} value={sensor._id}>
+                          {sensor.name || sensor.title}
+                        </option>
+                      ))}
+                    </select>
 
-                        {/* Overlay UI */}
-                        <div
-                          className="form-control position-absolute top-0 start-0 h-100 w-100 d-flex align-items-center px-3 pe-5"
-                          style={{
-                            background: "transparent",
-                            pointerEvents: "none", 
-                          }}
-                        >
-                          <div
-                            className="d-flex align-items-center flex-nowrap"
-                            style={{
-                              gap: "0.25rem",
-                              overflowX: "auto",
-                              whiteSpace: "nowrap",
-                              scrollbarWidth: "thin",
-                              maxWidth: "100%",
-                              pointerEvents: "auto", // enable scroll here
-                            }}
-                            onMouseDown={(e) => e.stopPropagation()} // stop dropdown from opening while scroll
-                          >
-                            {selectedSensor.length === 0 ? (
-                              <span className="text-muted">
-                                -- Select Sensor --
-                              </span>
-                            ) : (
-                              <>
-                                {sensors
-                                  .filter((m) =>
-                                    selectedSensor.includes(m._id)
-                                  )
-                                  .map((m) => (
-                                    <span
-                                      key={m._id}
-                                      className="badge bg-light text-dark border d-flex align-items-center"
-                                      style={{
-                                        pointerEvents: "auto",
-                                      }}
-                                    >
-                                      {m.name || m.title}
-                                      <button
-                                        type="button"
-                                        className="btn-close btn-sm ms-1"
-                                        aria-label="Remove"
-                                        style={{ fontSize: "0.65rem" }}
-                                        onClick={(e) => {
-                                          e.stopPropagation();
-                                          setSelectedSensor(
-                                            selectedSensor.filter(
-                                              (id) => id !== m._id
-                                            )
-                                          );
-                                        }}
-                                      />
-                                    </span>
-                                  ))}
-                              </>
-                            )}
-                          </div>
-                        </div>
+                    {/* Overlay UI */}
+                    <div
+                      className="form-control position-absolute top-0 start-0 h-100 w-100 d-flex align-items-center px-3 pe-5"
+                      style={{
+                        background: "transparent",
+                        pointerEvents: "none",
+                      }}
+                    >
+                      <div
+                        className="d-flex align-items-center flex-nowrap"
+                        style={{
+                          gap: "0.25rem",
+                          overflowX: "auto",
+                          whiteSpace: "nowrap",
+                          scrollbarWidth: "thin",
+                          maxWidth: "100%",
+                          pointerEvents: "auto", // enable scroll here
+                        }}
+                        onMouseDown={(e) => e.stopPropagation()} // stop dropdown from opening while scroll
+                      >
+                        {selectedSensor.length === 0 ? (
+                          <span className="text-muted">
+                            -- Select Sensor --
+                          </span>
+                        ) : (
+                          <>
+                            {sensors
+                              .filter((m) => selectedSensor.includes(m._id))
+                              .map((m) => (
+                                <span
+                                  key={m._id}
+                                  className="badge bg-light text-dark border d-flex align-items-center"
+                                  style={{
+                                    pointerEvents: "auto",
+                                  }}
+                                >
+                                  {m.name || m.title}
+                                  <button
+                                    type="button"
+                                    className="btn-close btn-sm ms-1"
+                                    aria-label="Remove"
+                                    style={{ fontSize: "0.65rem" }}
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      setSelectedSensor(
+                                        selectedSensor.filter(
+                                          (id) => id !== m._id
+                                        )
+                                      );
+                                    }}
+                                  />
+                                </span>
+                              ))}
+                          </>
+                        )}
                       </div>
                     </div>
                   </div>
+                </div>
+              </div>
               {/* Sensor ends */}
 
               {/* Ai Software Features start */}
               <div className="col-lg-6 col-xl-6">
                 <div className="my_profile_setting_input ui_kit_select_search form-group">
-                  <label htmlFor="aiSoftwareFeatureSelect">AI/Software Feature Type</label>
+                  <label htmlFor="aiSoftwareFeatureSelect">
+                    AI/Software Feature Type
+                  </label>
 
                   <div className="position-relative">
                     <select
@@ -1893,7 +1904,10 @@ const CreateList = () => {
                         &nbsp;
                       </option>
                       {aiSoftwareFeatures.map((aiSoftwareFeature) => (
-                        <option key={aiSoftwareFeature._id} value={aiSoftwareFeature._id}>
+                        <option
+                          key={aiSoftwareFeature._id}
+                          value={aiSoftwareFeature._id}
+                        >
                           {aiSoftwareFeature.name || aiSoftwareFeature.title}
                         </option>
                       ))}
@@ -1966,7 +1980,9 @@ const CreateList = () => {
               {/* Terrain Capability start */}
               <div className="col-lg-6 col-xl-6">
                 <div className="my_profile_setting_input ui_kit_select_search form-group">
-                  <label htmlFor="terrainCapabilitySelect">Terrain Capability Type</label>
+                  <label htmlFor="terrainCapabilitySelect">
+                    Terrain Capability Type
+                  </label>
 
                   <div className="position-relative">
                     <select
@@ -1998,7 +2014,10 @@ const CreateList = () => {
                         &nbsp;
                       </option>
                       {terrainCapabilities.map((terrainCapability) => (
-                        <option key={terrainCapability._id} value={terrainCapability._id}>
+                        <option
+                          key={terrainCapability._id}
+                          value={terrainCapability._id}
+                        >
                           {terrainCapability.name || terrainCapability.title}
                         </option>
                       ))}
@@ -2071,7 +2090,9 @@ const CreateList = () => {
               {/* Communication Method start */}
               <div className="col-lg-6 col-xl-6">
                 <div className="my_profile_setting_input ui_kit_select_search form-group">
-                  <label htmlFor="communicationMethodSelect">Communication Method Type</label>
+                  <label htmlFor="communicationMethodSelect">
+                    Communication Method Type
+                  </label>
 
                   <div className="position-relative">
                     <select
@@ -2103,8 +2124,12 @@ const CreateList = () => {
                         &nbsp;
                       </option>
                       {communicationMethods.map((communicationMethod) => (
-                        <option key={communicationMethod._id} value={communicationMethod._id}>
-                          {communicationMethod.name || communicationMethod.title}
+                        <option
+                          key={communicationMethod._id}
+                          value={communicationMethod._id}
+                        >
+                          {communicationMethod.name ||
+                            communicationMethod.title}
                         </option>
                       ))}
                     </select>
@@ -2497,7 +2522,7 @@ const CreateList = () => {
             <button
               className="btn btn1 float-start"
               type="button"
-              onClick={() => (window.location.href = "/cmswegrow/my-dashboard")}
+              onClick={() => (window.location.href = "/cmsroboticlife/my-dashboard")}
             >
               Back
             </button>

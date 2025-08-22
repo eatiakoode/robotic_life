@@ -13,128 +13,122 @@ const SidebarMenu = () => {
   const pathname = usePathname();
 
   const myRobots = [
-    { id: 1, name: "Add Robot", route: "/cmswegrow/create-listing" },
-    { id: 2, name: "Robot List", route: "/cmswegrow/my-robot" },
+    { id: 1, name: "Add Robot", route: "/cmsroboticlife/create-listing" },
+    { id: 2, name: "Robot List", route: "/cmsroboticlife/my-robot" },
   ];
   const RoboCategory = [
-    { id: 1, name: "Add Category", route: "/cmswegrow/add-category" },
-    { id: 2, name: "Category List", route: "/cmswegrow/my-category" },
+    { id: 1, name: "Add Category", route: "/cmsroboticlife/add-category" },
+    { id: 2, name: "Category List", route: "/cmsroboticlife/my-category" },
   ];
   const MasterData = [
-    { id: 1, name: "Add Country", route: "/cmswegrow/add-country" },
-    { id: 2, name: "Country List", route: "/cmswegrow/my-country" },
-    { id: 3, name: "Add Power Source", route: "/cmswegrow/add-powersource" },
-    { id: 4, name: "Power Source List", route: "/cmswegrow/my-powersource" },
-    { id: 5, name: "Add Color", route: "/cmswegrow/add-color" },
-    { id: 6, name: "Color List", route: "/cmswegrow/my-color" },
-    { id: 7, name: "Add Material", route: "/cmswegrow/add-material" },
-    { id: 8, name: "Material List", route: "/cmswegrow/my-material" },
+    { id: 1, name: "Add Country", route: "/cmsroboticlife/add-country" },
+    { id: 2, name: "Country List", route: "/cmsroboticlife/my-country" },
+    { id: 3, name: "Add Power Source", route: "/cmsroboticlife/add-powersource" },
+    { id: 4, name: "Power Source List", route: "/cmsroboticlife/my-powersource" },
+    { id: 5, name: "Add Color", route: "/cmsroboticlife/add-color" },
+    { id: 6, name: "Color List", route: "/cmsroboticlife/my-color" },
+    { id: 7, name: "Add Material", route: "/cmsroboticlife/add-material" },
+    { id: 8, name: "Material List", route: "/cmsroboticlife/my-material" },
     {
       id: 9,
       name: "Add Navigation Type",
-      route: "/cmswegrow/add-navigationtype",
+      route: "/cmsroboticlife/add-navigationtype",
     },
     {
       id: 10,
       name: "Navigation Type List",
-      route: "/cmswegrow/my-navigationtype",
+      route: "/cmsroboticlife/my-navigationtype",
     },
-    { id: 11, name: "Add Sensor", route: "/cmswegrow/add-sensor" },
-    { id: 12, name: "Sensor List", route: "/cmswegrow/my-sensor" },
+    { id: 11, name: "Add Sensor", route: "/cmsroboticlife/add-sensor" },
+    { id: 12, name: "Sensor List", route: "/cmsroboticlife/my-sensor" },
     {
       id: 13,
       name: "Add Primary Function",
-      route: "/cmswegrow/add-primaryfunction",
+      route: "/cmsroboticlife/add-primaryfunction",
     },
     {
       id: 14,
       name: "Primary Function List",
-      route: "/cmswegrow/my-primaryfunction",
+      route: "/cmsroboticlife/my-primaryfunction",
     },
     {
       id: 15,
       name: "Add AI/Software Feature",
-      route: "/cmswegrow/add-aisoftwarefeature",
+      route: "/cmsroboticlife/add-aisoftwarefeature",
     },
     {
       id: 16,
       name: "AI/Software Feature List",
-      route: "/cmswegrow/my-aisoftwarefeature",
+      route: "/cmsroboticlife/my-aisoftwarefeature",
     },
     {
       id: 17,
       name: "Add Operating Environment",
-      route: "/cmswegrow/add-operatingenvironment",
+      route: "/cmsroboticlife/add-operatingenvironment",
     },
     {
       id: 18,
       name: "Operating Environment List",
-      route: "/cmswegrow/my-operatingenvironment",
+      route: "/cmsroboticlife/my-operatingenvironment",
     },
     {
       id: 19,
       name: "Add Terrain Capability",
-      route: "/cmswegrow/add-terraincapability",
+      route: "/cmsroboticlife/add-terraincapability",
     },
     {
       id: 20,
       name: "Terrain Capability List",
-      route: "/cmswegrow/my-terraincapability",
+      route: "/cmsroboticlife/my-terraincapability",
     },
     {
       id: 21,
       name: "Add Autonomy Level",
-      route: "/cmswegrow/add-autonomylevel",
+      route: "/cmsroboticlife/add-autonomylevel",
     },
     {
       id: 22,
       name: "Autonomy Level List",
-      route: "/cmswegrow/my-autonomylevel",
+      route: "/cmsroboticlife/my-autonomylevel",
     },
     {
       id: 23,
       name: "Add Communication Method",
-      route: "/cmswegrow/add-communicationmethod",
+      route: "/cmsroboticlife/add-communicationmethod",
     },
     {
       id: 24,
       name: "Communication Method List",
-      route: "/cmswegrow/my-communicationmethod",
+      route: "/cmsroboticlife/my-communicationmethod",
     },
-    { id: 25, name: "Add Payload Type", route: "/cmswegrow/add-payloadtype" },
-    { id: 26, name: "Payload Type List", route: "/cmswegrow/my-payloadtype" },
-    // { id: 14, name: "Add Payload Capacity", route: "/cmswegrow/add-payloadcapacity" },
+    { id: 25, name: "Add Payload Type", route: "/cmsroboticlife/add-payloadtype" },
+    { id: 26, name: "Payload Type List", route: "/cmsroboticlife/my-payloadtype" },
   ];
 
   const RoboManufacturer = [
-    { id: 1, name: "Add Manufacturer", route: "/cmswegrow/add-manufacturer" },
-    { id: 2, name: "Manufacturer List", route: "/cmswegrow/my-manufacturer" },
+    { id: 1, name: "Add Manufacturer", route: "/cmsroboticlife/add-manufacturer" },
+    { id: 2, name: "Manufacturer List", route: "/cmsroboticlife/my-manufacturer" },
   ];
 
   const Blog = [
-    { id: 1, name: "Add Blog category", route: "/cmswegrow/add-blogcategory" },
-    { id: 2, name: "Blog category List", route: "/cmswegrow/my-blogcategory" },
-    { id: 3, name: "Add Blog", route: "/cmswegrow/add-blog" },
-    { id: 4, name: "Blog List", route: "/cmswegrow/my-blog" },
+    { id: 1, name: "Add Blog category", route: "/cmsroboticlife/add-blogcategory" },
+    { id: 2, name: "Blog category List", route: "/cmsroboticlife/my-blogcategory" },
+    { id: 3, name: "Add Blog", route: "/cmsroboticlife/add-blog" },
+    { id: 4, name: "Blog List", route: "/cmsroboticlife/my-blog" },
   ];
 
-  // const myTestimonial = [
-  //   { id: 1, name: "Add Testimonial", route: "/cmswegrow/add-testimonial" },
-  //   { id: 2, name: "Testimonial List", route: "/cmswegrow/my-testimonial" }
-  // ];
-
   const Faq = [
-    { id: 1, name: "Add FAQ", route: "/cmswegrow/add-faq" },
-    { id: 2, name: "FAQ List", route: "/cmswegrow/my-faq" },
+    { id: 1, name: "Add FAQ", route: "/cmsroboticlife/add-faq" },
+    { id: 2, name: "FAQ List", route: "/cmsroboticlife/my-faq" },
   ];
 
   const reviews = [
-    { id: 1, name: "My Reviews", route: "/cmswegrow/my-review" },
-    { id: 2, name: "Visitor Reviews", route: "/cmswegrow/my-review" },
+    { id: 1, name: "My Reviews", route: "/cmsroboticlife/my-review" },
+    { id: 2, name: "Visitor Reviews", route: "/cmsroboticlife/my-review" },
   ];
 
   const enquerylist = [
-    { id: 1, name: "My enquery list", route: "/cmswegrow/my-enquiry" },
+    { id: 1, name: "My enquery list", route: "/cmsroboticlife/my-enquiry" },
   ];
 
   const manageAccount = [
@@ -157,12 +151,12 @@ const SidebarMenu = () => {
     <>
       <ul className="sidebar-menu">
         <li className="sidebar_header header">
-          <Link href="/cmswegrow/my-dashboard">
+          <Link href="/cmsroboticlife/my-dashboard">
             <Image
               width={170}
               height={65}
-              src="/assets/images/robotic_logo1.svg"
-              // src={`${process.env.NEXT_PUBLIC_API_URL}public/assets/images/robotic_logo1.svg`}
+              // src="/assets/images/robotic_logo1.svg"
+              src={`${process.env.NEXT_PUBLIC_API_URL}public/assets/images/robo.svg`}
               alt="logo.svg"
             />
             {/* <span>WeGrow</span> */}
@@ -177,35 +171,11 @@ const SidebarMenu = () => {
               className={`treeview ${isSinglePageActive("/my-dashboard", pathname) ? "active" : ""
                 }`}
             >
-              <Link href="/cmswegrow/my-dashboard">
+              <Link href="/cmsroboticlife/my-dashboard">
                 <i className="flaticon-layers"></i>
                 <span> Dashboard</span>
               </Link>
             </li>
-            {/* <li
-              className={`treeview ${
-                isSinglePageActive("/create-listing", pathname)
-                  ? "active"
-                  : ""
-              }`}
-            >
-              <Link href="/create-listing">
-                <i className="flaticon-plus"></i>
-                <span> Create Listing</span>
-              </Link>
-            </li> */}
-            {/* <li
-              className={`treeview ${
-                isSinglePageActive("/my-message", pathname)
-                  ? "active"
-                  : ""
-              }`}
-            >
-              <Link href="/my-message">
-                <i className="flaticon-envelope"></i>
-                <span> Message</span>
-              </Link>
-            </li> */}
           </ul>
         </li>
         {/* End Main */}
@@ -360,27 +330,6 @@ const SidebarMenu = () => {
               </ul>
             </li>
             {/* Robot FAQs End */}
-
-            {/* Robot Testimonials Start */}
-            {/* <li
-              className={`treeview ${isParentPageActive(myTestimonial, pathname) ? "active" : ""
-                }`}
-            >
-              <a data-bs-toggle="collapse" href="#my-Testimonial">
-                <i className="flaticon-home"></i> <span>Testimonials</span>
-                <i className="fa fa-angle-down pull-right"></i>
-              </a>
-              <ul className="treeview-menu collapse" id="my-Testimonial">
-                {myTestimonial.map((item) => (
-                  <li key={item.id}>
-                    <Link href={item.route}>
-                      <i className="fa fa-circle"></i> {item.name}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </li> */}
-            {/* Robot Testimonials End */}
 
             {/* Robot Reviews Start */}
             <li
