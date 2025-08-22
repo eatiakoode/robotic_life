@@ -33,7 +33,7 @@ const TableData = ({faqList,setFaqList}) => {
   let tbodyContent =faqList?.slice(0, 10)?.map((item) => (
     <tr key={item._id}>
       <td scope="row">
-        <div className="feat_property list favorite_page style2">
+        <div className="feat_robot list favorite_page style2">
           <div className="details">
             <div className="tc_content">
               <h4>{item.title}</h4>

@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { getFaqById, updateFaqAPI } from "../../../api/faq";
-import { getPropertyTableData } from "../../../api/robot";
+import { getRobotTableData } from "../../../api/robot";
 import { toast } from 'react-toastify';
 
 const CreateList = () => {
@@ -17,7 +17,7 @@ const CreateList = () => {
     const [description, setDescription] = useState("");
     const [error, setError] = useState("");  
     const [properties, setProperties] = useState([]);
-    const [selectedProperty, setSelectedProperty] = useState("");
+    const [selectedRobot, setSelectedRobot] = useState("");
     useEffect(() => {
       if (!id) return;      
       const fetchFaq = async () => {
@@ -28,7 +28,7 @@ const CreateList = () => {
           setTitle(data.data.title)
           setStatus(data.data.status)
           setDescription(data.data.description)
-          setSelectedProperty(data.data.propertyid)
+          setSelectedRobot(data.data.robotid)
           
         } catch (error) {
           console.error("Error fetching Faq:", error);
@@ -44,12 +44,12 @@ const CreateList = () => {
     limit: 1000,
     page:  1
   }
-                const response = await getPropertyTableData(filter);
+                const response = await getRobotTableData(filter);
                 
         
                 setProperties(response?.items || []);
               } catch (err) {
-                console.error("Error fetching property:", err);
+                console.error("Error fetching robot:", err);
               }
             };
         
@@ -62,7 +62,7 @@ const CreateList = () => {
         const formData = {
           "title": title,
           "description": description,
-          "propertyid":selectedProperty};
+          "robotid":selectedRobot,};
         const data =await updateFaqAPI(id, formData);
         // alert("Faq updated successfully!");
         // router.push("/cmswegrow/my-faq");
@@ -102,19 +102,19 @@ const CreateList = () => {
       {/* End .col */}
       <div className="col-lg-6 col-xl-6">
           <div className="my_profile_setting_input ui_kit_select_search form-group">
-            <label htmlFor="propertySelect">Select Property</label>
+            <label htmlFor="robotSelect">Select Robot</label>
             <select
-              id="propertySelect"
+              id="robotSelect"
               className="selectpicker form-select"
-              value={selectedProperty}
-              onChange={(e) => setSelectedProperty(e.target.value)} 
+              value={selectedRobot}
+              onChange={(e) => setSelectedRobot(e.target.value)} 
               data-live-search="true"
               data-width="100%"
             >
-              <option value="">-- Select Property --</option>
-              {properties.map((property) => (
-                <option key={property._id} value={property._id}>
-                  {property.title}
+              <option value="">-- Select Robot --</option>
+              {robots.map((robot) => (
+                <option key={robot._id} value={robot._id}>
+                  {robot.title}
                 </option>
               ))}
             </select>
