@@ -47,11 +47,39 @@ const TableData = ({ robots = [], setRobots }) => {
     e.target.src = `${process.env.NEXT_PUBLIC_API_URL}public/assets/images/thumbnail.webp`;
   }, []);
 
-  // Get image URL with fallback
+  // FIXED: Get image URL with proper field handling
   const getImageUrl = useCallback((item) => {
-    if (!item.Image) return `${process.env.NEXT_PUBLIC_API_URL}public/assets/images/thumbnail.webp`;
+    const fallbackImage = `${process.env.NEXT_PUBLIC_API_URL}public/assets/images/thumbnail.webp`;
     
-    const imageUrl = typeof item.Image === 'object' ? item.Image.url : item.Image;
+    // Try multiple possible image fields based on your schema
+    let imageUrl = null;
+    
+    if (item.images && Array.isArray(item.images) && item.images.length > 0) {
+      // Use the first image from the images array
+      imageUrl = item.images[0];
+    } else if (item.Image) {
+      // Fallback to Image field (capital I) if it exists
+      imageUrl = typeof item.Image === 'object' ? item.Image.url : item.Image;
+    } else if (item.image) {
+      // Fallback to image field (lowercase) if it exists  
+      imageUrl = typeof item.image === 'object' ? item.image.url : item.image;
+    }
+    
+    if (!imageUrl) {
+      return fallbackImage;
+    }
+    
+    // Handle relative paths - add base URL if needed
+    if (imageUrl.startsWith('public/')) {
+      return `${process.env.NEXT_PUBLIC_API_URL}${imageUrl}`;
+    }
+    
+    // Handle absolute paths
+    if (imageUrl.startsWith('http')) {
+      return imageUrl;
+    }
+    
+    // Default case - prepend base URL
     return `${process.env.NEXT_PUBLIC_API_URL}${imageUrl}`;
   }, []);
 
@@ -71,7 +99,7 @@ const TableData = ({ robots = [], setRobots }) => {
 
   // Get display name helper
   const getDisplayName = useCallback((item, field) => {
-    return item[field]?.name || 'N/A';
+    return item[field]?.name || item[field]?.title || 'N/A';
   }, []);
 
   // Get price helper
@@ -129,101 +157,112 @@ const TableData = ({ robots = [], setRobots }) => {
           </tr>
         </thead>
         <tbody>
-          {robots.map((item, index) => (
-            <tr key={item._id || index}>
-              <td scope="row">
-                <div className="feat_robot list favorite_page style2">
-                  <div className="thumb">
-                    <Image
-                      width={150}
-                      height={220}
-                      className="img-whp cover"
-                      src={getImageUrl(item)}
-                      alt={item.name || item.title || 'Robot Image'}
-                      unoptimized
-                      onError={handleImageError}
-                      priority={index < 5} // Prioritize first 5 images
-                    />
-                    <div className="thmb_cntnt">
-                      <ul className="tag mb0">
-                        <li className="list-inline-item">
-                          <a href="#" onClick={(e) => e.preventDefault()}>
-                            {getDisplayName(item, 'category') || getDisplayName(item, 'categoryid') || 'Uncategorized'}
-                          </a>
-                        </li>
-                      </ul>
+          {robots.map((item, index) => {
+            // Debug logging - remove after fixing
+            // console.log('Robot item data:', {
+            //   id: item._id,
+            //   title: item.title,
+            //   images: item.images,
+            //   Image: item.Image,
+            //   imageUrl: getImageUrl(item)
+            // });
+            
+            return (
+              <tr key={item._id || index}>
+                <td scope="row">
+                  <div className="feat_robot list favorite_page style2">
+                    <div className="thumb">
+                      <Image
+                        width={150}
+                        height={220}
+                        className="img-whp cover"
+                        src={getImageUrl(item)}
+                        alt={item.name || item.title || 'Robot Image'}
+                        unoptimized
+                        onError={handleImageError}
+                        priority={index < 5} // Prioritize first 5 images
+                      />
+                      <div className="thmb_cntnt">
+                        <ul className="tag mb0">
+                          <li className="list-inline-item">
+                            <a href="#" onClick={(e) => e.preventDefault()}>
+                              {getDisplayName(item, 'category') || getDisplayName(item, 'categoryid') || 'Uncategorized'}
+                            </a>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                    <div className="details">
+                      <div className="tc_content">
+                        <h4 title={item.name || item.title}>
+                          {item.name || item.title || 'Unnamed Robot'}
+                        </h4>
+                        {(getDisplayName(item, 'manufacturer') || getDisplayName(item, 'countryOfOrigin')) && (
+                          <p>
+                            <span className="flaticon-placeholder"></span>
+                            {getDisplayName(item, 'manufacturer') || getDisplayName(item, 'countryOfOrigin')}
+                          </p>
+                        )}
+                        <a className="fp_price text-thm" href="#" onClick={(e) => e.preventDefault()}>
+                          ${getPrice(item)}
+                        </a>
+                      </div>
                     </div>
                   </div>
-                  <div className="details">
-                    <div className="tc_content">
-                      <h4 title={item.name || item.title}>
-                        {item.name || item.title || 'Unnamed Robot'}
-                      </h4>
-                      {(getDisplayName(item, 'manufacturer') || getDisplayName(item, 'countryOfOrigin')) && (
-                        <p>
-                          <span className="flaticon-placeholder"></span>
-                          {getDisplayName(item, 'manufacturer') || getDisplayName(item, 'countryOfOrigin')}
-                        </p>
-                      )}
-                      <a className="fp_price text-thm" href="#" onClick={(e) => e.preventDefault()}>
-                        ${getPrice(item)}
-                      </a>
-                    </div>
-                  </div>
-                </div>
-              </td>
+                </td>
 
-              <td>
-                {formatDate(item.createdAt)}
-              </td>
+                <td>
+                  {formatDate(item.createdAt)}
+                </td>
 
-              <td>
-                <span className={`status_tag ${item.status ? 'badge2' : 'badge'}`}>
-                  {item.status ? "Active" : "Inactive"}
-                </span>
-              </td>
+                <td>
+                  <span className={`status_tag ${item.status ? 'badge2' : 'badge'}`}>
+                    {item.status ? "Active" : "Inactive"}
+                  </span>
+                </td>
 
-              <td>
-                <ul className="view_edit_delete_list mb0">
-                  <li
-                    className="list-inline-item"
-                    data-toggle="tooltip"
-                    data-placement="top"
-                    title="Edit"
-                  >
-                    <button 
-                      onClick={() => editRobot(item._id)}
-                      className="btn btn-link p-0"
-                      disabled={deletingId === item._id}
-                      aria-label={`Edit ${item.name || 'robot'}`}
+                <td>
+                  <ul className="view_edit_delete_list mb0">
+                    <li
+                      className="list-inline-item"
+                      data-toggle="tooltip"
+                      data-placement="top"
+                      title="Edit"
                     >
-                      <span className="flaticon-edit"></span>
-                    </button>
-                  </li>
+                      <button 
+                        onClick={() => editRobot(item._id)}
+                        className="btn btn-link p-0"
+                        disabled={deletingId === item._id}
+                        aria-label={`Edit ${item.name || 'robot'}`}
+                      >
+                        <span className="flaticon-edit"></span>
+                      </button>
+                    </li>
 
-                  <li 
-                    className="list-inline-item"
-                    data-toggle="tooltip"
-                    data-placement="top"
-                    title="Delete"
-                  >
-                    <button 
-                      onClick={() => deleteRobot(item._id)}
-                      className="btn btn-link p-0 text-danger"
-                      disabled={deletingId === item._id}
-                      aria-label={`Delete ${item.name || 'robot'}`}
+                    <li 
+                      className="list-inline-item"
+                      data-toggle="tooltip"
+                      data-placement="top"
+                      title="Delete"
                     >
-                      {deletingId === item._id ? (
-                        <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                      ) : (
-                        <span className="flaticon-garbage"></span>
-                      )}
-                    </button>
-                  </li>
-                </ul>
-              </td>
-            </tr>
-          ))}
+                      <button 
+                        onClick={() => deleteRobot(item._id)}
+                        className="btn btn-link p-0 text-danger"
+                        disabled={deletingId === item._id}
+                        aria-label={`Delete ${item.name || 'robot'}`}
+                      >
+                        {deletingId === item._id ? (
+                          <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                        ) : (
+                          <span className="flaticon-garbage"></span>
+                        )}
+                      </button>
+                    </li>
+                  </ul>
+                </td>
+              </tr>
+            );
+          })}
         </tbody>
       </table>
     </div>
