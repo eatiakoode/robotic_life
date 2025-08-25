@@ -17,21 +17,21 @@ const AllStatistics = ({
     {
       id: 2,
       blockStyle: "style2",
-      icon: "flaticon-industry", // you can change this to a better manufacturer icon
+      icon: "flaticon-industry", 
       timer: manufacturer.length,
       name: "Total Manufacturers",
     },
     {
       id: 3,
       blockStyle: "style3",
-      icon: "flaticon-layers", // for materials
+      icon: "flaticon-layers", 
       timer: materials.length,
       name: "Total Materials",
     },
     {
       id: 4,
       blockStyle: "style4",
-      icon: "flaticon-chat", // for enquiries
+      icon: "flaticon-chat", 
       timer: enquery.length,
       name: "Total Enquiries",
     },

@@ -44,7 +44,8 @@ const token =userData.token
         headers: {
           Authorization: token ? `Bearer ${token}` : "",
         },
-      }); 
+      });
+      console.log("Manufacturer response:", response);
       if (!response.ok) {
         throw new Error("Failed to fetch products");
       }
