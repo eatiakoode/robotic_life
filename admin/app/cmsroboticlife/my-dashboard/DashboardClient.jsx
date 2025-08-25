@@ -3,8 +3,8 @@
 import { useEffect, useState } from "react";
 import MyDashboard from "@/components/dashboard/my-dashboard";
 import { getRobotTableData } from "@/api/robot";
-// import { getManufacturerTableData } from "@/api/manufacturer";
-// import { getMaterialTableData } from "@/api/material";
+import { getManufacturerTableData } from "@/api/manufacturer";
+import { getMaterialTableData } from "@/api/material";
 // import { getEnquiryTableData } from "@/api/enquiry";
 
 export default function DashboardClient() {
@@ -29,19 +29,19 @@ export default function DashboardClient() {
         const filter = { limit: 1000, page: 1 };
 
         // Run API calls in parallel (currently only robot)
-        const [robotRes /*, manufacturerRes, materialRes, enquiryRes */] =
+        const [robotRes, manufacturerRes, materialRes/*, enquiryRes */] =
           await Promise.all([
             getRobotTableData(filter, token),
-            // getManufacturerTableData(filter, token),
-            // getMaterialTableData(filter, token),
+            getManufacturerTableData(filter, token),
+            getMaterialTableData(filter, token),
             // getEnquiryTableData(filter, token),
           ]);
-
+          console.log("API responses:", {manufacturerRes});
         setData({
           robot: robotRes?.items || [],
-          manufacturer: [], // manufacturerRes?.items || [],
-          materials: [], // materialRes?.items || [],
-          enquery: [], // enquiryRes?.items || [],
+          manufacturer: manufacturerRes || [],
+          materials: materialRes?.items || [],
+           enquery: [], // enquiryRes?.items || [],
         });
       } catch (error) {
         console.error("Dashboard fetch error:", error);
