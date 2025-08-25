@@ -84,6 +84,7 @@ const terrainCapabilityRouter = require("./routes/terrainCapabilityRouter.js");
 const autonomyLevelRouter = require("./routes/autonomyLevelRouter.js");
 const communicationMethodRouter = require("./routes/communicationMethodRouter.js");
 const payloadTypesSupportedRouter = require("./routes/payloadTypesSupportedRouter.js");
+const sliderRouter = require("./routes/sliderRouter.js");
 
 
 const cookieParser = require("cookie-parser");
@@ -173,6 +174,7 @@ app.use("/admin/api/terraincapability", terrainCapabilityRouter);
 app.use("/admin/api/autonomylevel", autonomyLevelRouter);
 app.use("/admin/api/communicationmethod", communicationMethodRouter);
 app.use("/admin/api/payloadtype", payloadTypesSupportedRouter);
+app.use("/admin/api/slider", sliderRouter);
 
 const path = require("path");
 // app.use("/public", express.static(path.join(__dirname, "public")));
