@@ -22,12 +22,12 @@ export const addMaterialAPI = async (title: string) => {
   }
 
   const response = await axios.post(
-  API_BASE_URL,
-  { name: title },
-  {
-    headers: { Authorization: `Bearer ${token}` },
-  }
-);
+    API_BASE_URL,
+    { name: title },
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
   return response.data;
 };
 
@@ -36,13 +36,20 @@ export const getMaterialTableData = async () => {
   try {
     const userData = JSON.parse(localStorage.getItem("user") || "{}");
     const token = userData?.token;
+    
+    if (!token) {
+      throw new Error("User not authenticated!");
+    }
+
     const response = await axios.get(API_BASE_URL, {
-      headers: token ? { Authorization: `Bearer ${token}` } : {},
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     });
     return response.data;
   } catch (error) {
     console.error("Error fetching materials:", error);
-    throw error;
+    return [];
   }
 };
 

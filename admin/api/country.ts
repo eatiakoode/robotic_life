@@ -37,7 +37,18 @@ export const addCountryAPI = async (title: string) => {
 // Get all countries
 export const getCountryTableData = async () => {
   try {
-    const response = await axios.get(API_BASE_URL);
+    const userData = JSON.parse(localStorage.getItem("user") || "{}");
+    const token = userData?.token;
+    
+    if (!token) {
+      throw new Error("User not authenticated!");
+    }
+
+    const response = await axios.get(API_BASE_URL, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
     return response.data;
   } catch (error) {
     console.error("Error fetching countries:", error);

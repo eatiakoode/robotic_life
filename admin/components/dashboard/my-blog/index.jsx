@@ -1,13 +1,30 @@
+"use client";
+
 import Header from "../../common/header/dashboard/Header";
 import SidebarMenu from "../../common/header/dashboard/SidebarMenu";
 import MobileMenu from "../../common/header/MobileMenu";
 import TableData from "./TableData";
 import Filtering from "./Filtering";
 import Pagination from "./Pagination";
-import SearchBox from "./SearchBox";
+import SearchBox from "../../common/SearchBox";
 import CopyRight from "../../common/footer/CopyRight";
+import { useSearchAndPagination } from "../../../hooks/useSearchAndPagination";
+import { getBlogTableData } from "../../../api/blog";
 
 const index = () => {
+  // Use the custom hook for search and pagination
+  const {
+    currentData: currentFeatures,
+    loading,
+    error,
+    searchQuery,
+    handleSearch,
+    currentPage,
+    totalPages,
+    handlePageChange,
+    refreshData: handleRefresh,
+    searchInfo
+  } = useSearchAndPagination(getBlogTableData, 10, ['title', 'author', 'status']);
   return (
     <>
       {/* <!-- Main Header Nav --> */}
@@ -53,24 +70,34 @@ const index = () => {
 
                 <div className="col-lg-4 col-xl-4 mb10">
                   <div className="breadcrumb_content style2 mb30-991">
-                    <h2 className="breadcrumb_title">All Blog Posts</h2>
-                    <p>View, edit, and manage all published and draft blog articles on your platform.</p>
+                    <h2 className="breadcrumb_title">Blogs</h2>
+                    <p>View, search, and manage blog posts.</p>
+                    {searchInfo.hasSearchQuery && (
+                      <small className="text-muted">
+                        Showing {searchInfo.totalResults} of {searchInfo.totalItems} results
+                        {searchQuery && ` for "${searchQuery}"`}
+                      </small>
+                    )}
                   </div>
                 </div>
                 {/* End .col */}
+
                 <div className="col-lg-8 col-xl-8">
                   <div className="candidate_revew_select style2 text-end mb30-991">
                     <ul className="mb0">
-                      {/* <li className="list-inline-item">
+                      <li className="list-inline-item">
                         <div className="candidate_revew_search_box course fn-520">
-                          <SearchBox />
+                          <SearchBox 
+                            onSearch={handleSearch} 
+                            placeholder="Search AI features..." 
+                          />
                         </div>
-                      </li> */}
+                      </li>
                       {/* End li */}
 
-                      {/* <li className="list-inline-item">
+                      <li className="list-inline-item">
                         <Filtering />
-                      </li> */}
+                      </li>
                       {/* End li */}
                     </ul>
                   </div>
@@ -81,13 +108,26 @@ const index = () => {
                   <div className="my_dashboard_review mb40">
                     <div className="property_table">
                       <div className="table-responsive mt0">
-                        <TableData />
+                        <TableData 
+                          features={currentFeatures}
+                          loading={loading}
+                          error={error}
+                          onRefresh={handleRefresh}
+                        />
                       </div>
                       {/* End .table-responsive */}
 
-                      {/* <div className="mbp_pagination">
-                        <Pagination />
-                      </div> */}
+                      <div className="mbp_pagination">
+                        {!loading && !error && searchInfo.totalResults > 0 && (
+                          <Pagination 
+                            currentPage={currentPage}
+                            totalPages={totalPages}
+                            onPageChange={handlePageChange}
+                            totalItems={searchInfo.totalResults}
+                            itemsPerPage={searchInfo.itemsPerPage}
+                          />
+                        )}
+                      </div>
                       {/* End .mbp_pagination */}
                     </div>
                     {/* End .property_table */}

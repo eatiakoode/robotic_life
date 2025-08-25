@@ -1,18 +1,12 @@
 "use client";
-import Image from "next/image";
-import { getOperatingEnvironmentTableData, deleteOperatingEnvironmentAPI } from "../../../api/operatingenvironment";
-import { useState, useEffect } from "react";
+
+import { deleteOperatingEnvironmentAPI } from "../../../api/operatingenvironment";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from 'react-toastify';
 
-const TableData = () => {
-  const [operatingEnvironmentList, setOperatingEnvironmentList] = useState([]);
+const TableData = ({ operatingEnvironments = [], loading = false, error = null, onRefresh }) => {
   const router = useRouter();
-
-  const fetchOperatingEnvironmentData = async () => {
-    const data = await getOperatingEnvironmentTableData();
-    setOperatingEnvironmentList(data);
-  };
 
   const deleteOperatingEnvironment = async (id) => {
     const isConfirmed = window.confirm("Are you sure you want to delete this Operating Environment?");
@@ -21,31 +15,77 @@ const TableData = () => {
     try {
       const data = await deleteOperatingEnvironmentAPI(id);
       toast.success(data.message);
-      setOperatingEnvironmentList((prevOperatingEnvironmentList) => prevOperatingEnvironmentList.filter((operatingEnvironment) => operatingEnvironment._id !== id));
+      // Refresh the data after deletion
+      if (onRefresh) {
+        onRefresh();
+      }
     } catch (error) {
-      alert("Failed to delete Operating Environment.");
+      toast.error("Failed to delete Operating Environment.");
     }
   };
 
+  // Show loading state
+  if (loading) {
+    return (
+      <div className="text-center py-5">
+        <div className="spinner-border text-primary" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </div>
+        <p className="mt-2">Loading Operating Environments...</p>
+      </div>
+    );
+  }
+
+  // Show error state
+  if (error) {
+    return (
+      <div className="text-center py-5">
+        <div className="alert alert-danger" role="alert">
+          <i className="fas fa-exclamation-triangle me-2"></i>
+          {error}
+        </div>
+        <button 
+          className="btn btn-primary mt-3" 
+          onClick={onRefresh}
+        >
+          <i className="fas fa-redo me-2"></i>
+          Try Again
+        </button>
+      </div>
+    );
+  }
+
+  // Show empty state
+  if (!operatingEnvironments || operatingEnvironments.length === 0) {
+    return (
+      <div className="text-center py-5">
+        <div className="alert alert-info" role="alert">
+          <i className="fas fa-info-circle me-2"></i>
+          No Operating Environments found.
+        </div>
+      </div>
+    );
+  }
+
   let theadContent = ["Listing Title", "Date published", "Status", "Action"];
 
-  let tbodyContent = operatingEnvironmentList?.map((item) => (
-    <tr key={item._id}>
+  let tbodyContent = operatingEnvironments.map((item) => (
+    <tr key={item._id || Math.random()}>
       <td scope="row" className="align-middle text-center">
-        <h4 className="mb-0">{item.name}</h4>
+        <h4 className="mb-0">{item?.name || 'N/A'}</h4>
       </td>
 
       <td className="align-middle text-center">
-        {new Date(item.createdAt).toLocaleDateString('en-US', {
+        {item?.createdAt ? new Date(item.createdAt).toLocaleDateString('en-US', {
           month: 'short',
           day: '2-digit',
           year: 'numeric',
-        })}
+        }) : 'N/A'}
       </td>
 
       <td className="align-middle text-center">
-        <span className={`status_tag ${item.status ? 'badge2' : 'badge'}`}>
-          {item.status ? "Active" : "Deactive"}
+        <span className={`status_tag ${item?.status ? 'badge2' : 'badge'}`}>
+          {item?.status ? "Active" : "Deactive"}
         </span>
       </td>
 
@@ -65,10 +105,6 @@ const TableData = () => {
       </td>
     </tr>
   ));
-
-  useEffect(() => {
-    fetchOperatingEnvironmentData();
-  }, []);
 
   return (
     <>

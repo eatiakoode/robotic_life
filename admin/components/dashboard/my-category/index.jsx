@@ -5,7 +5,7 @@ import MobileMenu from "../../common/header/MobileMenu";
 import TableData from "./TableData";
 import Filtering from "./Filtering";
 import Pagination from "./Pagination";
-import SearchBox from "./SearchBox";
+import SearchBox from "../../common/SearchBox";
 import CopyRight from "../../common/footer/CopyRight";
 
 import { useState, useEffect } from "react";
@@ -88,14 +88,14 @@ const index = () => {
                     <ul className="mb0">
                       <li className="list-inline-item">
                         <div className="candidate_revew_search_box course fn-520">
-                          {/* <SearchBox /> */}
+                          <SearchBox onSearch={(query) => console.log('Search query:', query)} placeholder="Search categories..." />
                         </div>
                       </li>
                       {/* End li */}
 
-                      {/* <li className="list-inline-item">
+                      <li className="list-inline-item">
                         <Filtering />
-                      </li> */}
+                      </li>
                       {/* End li */}
                     </ul>
                   </div>

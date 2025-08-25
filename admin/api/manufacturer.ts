@@ -35,23 +35,52 @@ const token =userData.token
   
 
   export async function getManufacturerTableData(filter) {
+    // Provide default values if no filter is passed
+    const defaultFilter = {
+      limit: 10,
+      page: 1,
+      ...filter
+    };
+
     await new Promise((resolve) => setTimeout(resolve, 10));
     try {
       const userData = JSON.parse(localStorage.getItem("user"));
       const token = userData?.token;
-      const response = await fetch(process.env.NEXT_PUBLIC_ADMIN_API_URL+"api/manufacturer?limit="+filter.limit+"&skip="+filter.page, {
+      
+      if (!token) {
+        throw new Error("User not authenticated!");
+      }
+
+      const response = await fetch(process.env.NEXT_PUBLIC_ADMIN_API_URL+"api/manufacturer?limit="+defaultFilter.limit+"&skip="+defaultFilter.page, {
         method: "GET",
         headers: {
-          Authorization: token ? `Bearer ${token}` : "",
+          Authorization: `Bearer ${token}`,
         },
       });
+      
       console.log("Manufacturer response:", response);
       if (!response.ok) {
-        throw new Error("Failed to fetch products");
+        throw new Error("Failed to fetch manufacturers");
       }
-      return await response.json();
+      
+      const data = await response.json();
+      
+      // Handle different response formats
+      if (Array.isArray(data)) {
+        return data;
+      } else if (data && Array.isArray(data.items)) {
+        return data.items;
+      } else if (data && typeof data === 'object') {
+        // Try to find any array property
+        const arrayProps = Object.values(data).filter(val => Array.isArray(val));
+        if (arrayProps.length > 0) {
+          return arrayProps[0];
+        }
+      }
+      
+      return [];
     } catch (error) {
-      console.error("Error fetching products:", error);
+      console.error("Error fetching manufacturers:", error);
       return []; 
     }
   }

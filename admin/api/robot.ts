@@ -42,9 +42,16 @@ export const addRobotAPI = async (formData: FormData) => {
  * ✅ SSR safe (returns empty if no token on server-side)
  */
 export async function getRobotTableData(
-  filter: { limit: number; page: number },
+  filter?: { limit?: number; page?: number },
   passedToken?: string
 ) {
+  // Provide default values if no filter is passed
+  const defaultFilter = {
+    limit: 10,
+    page: 1,
+    ...filter
+  };
+
   let token = passedToken || getAuthToken();
 
   // 🚀 On server, return empty instead of throwing
@@ -52,7 +59,7 @@ export async function getRobotTableData(
     return {
       items: [],
       totalCount: 0,
-      currentPage: filter.page,
+      currentPage: defaultFilter.page,
       totalPages: 0,
       hasNextPage: false,
       hasPrevPage: false,
@@ -62,8 +69,8 @@ export async function getRobotTableData(
   if (!token) throw new Error("Authentication required. Please log in.");
 
   try {
-    const skip = Math.max(0, (filter.page - 1) * filter.limit);
-    const limit = Math.max(1, filter.limit);
+    const skip = Math.max(0, (defaultFilter.page - 1) * defaultFilter.limit);
+    const limit = Math.max(1, defaultFilter.limit);
 
     const url = `${process.env.NEXT_PUBLIC_ADMIN_API_URL}api/robot?limit=${limit}&skip=${skip}`;
 
@@ -108,10 +115,10 @@ export async function getRobotTableData(
     return {
       items,
       totalCount,
-      currentPage: filter.page,
+      currentPage: defaultFilter.page,
       totalPages: Math.ceil(totalCount / limit),
       hasNextPage: skip + limit < totalCount,
-      hasPrevPage: filter.page > 1,
+      hasPrevPage: defaultFilter.page > 1,
     };
   } catch (error: any) {
     console.error("getRobotTableData error:", error.message);
@@ -122,7 +129,7 @@ export async function getRobotTableData(
     return {
       items: [],
       totalCount: 0,
-      currentPage: 1,
+      currentPage: defaultFilter.page,
       totalPages: 0,
       hasNextPage: false,
       hasPrevPage: false,

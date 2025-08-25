@@ -1,18 +1,12 @@
 "use client";
-import Image from "next/image";
-import { getAutonomyLevelTableData, deleteAutonomyLevelAPI } from "../../../api/autonomylevel";
-import { useState, useEffect } from "react";
+
+import { deleteAutonomyLevelAPI } from "../../../api/autonomylevel";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from 'react-toastify';
 
-const TableData = () => {
-  const [autonomyLevelList, setAutonomyLevelList] = useState([]);
+const TableData = ({ features = [], loading = false, error = null, onRefresh }) => {
   const router = useRouter();
-
-  const fetchAutonomyLevelData = async () => {
-    const data = await getAutonomyLevelTableData();
-    setAutonomyLevelList(data);
-  };
 
   const deleteAutonomyLevel = async (id) => {
     const isConfirmed = window.confirm("Are you sure you want to delete this Autonomy Level?");
@@ -21,31 +15,77 @@ const TableData = () => {
     try {
       const data = await deleteAutonomyLevelAPI(id);
       toast.success(data.message);
-    setAutonomyLevelList((prevAutonomyLevelList) => prevAutonomyLevelList.filter((autonomyLevel) => autonomyLevel._id !== id));
+      // Refresh the data after deletion
+      if (onRefresh) {
+        onRefresh();
+      }
     } catch (error) {
-      alert("Failed to delete Autonomy Level.");
+      toast.error("Failed to delete AI/Software Feature.");
     }
   };
 
+  // Show loading state
+  if (loading) {
+    return (
+      <div className="text-center py-5">
+        <div className="spinner-border text-primary" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </div>
+        <p className="mt-2">Loading Autonomy Levels...</p>
+      </div>
+    );
+  }
+
+  // Show error state
+  if (error) {
+    return (
+      <div className="text-center py-5">
+        <div className="alert alert-danger" role="alert">
+          <i className="fas fa-exclamation-triangle me-2"></i>
+          {error}
+        </div>
+        <button 
+          className="btn btn-primary mt-3" 
+          onClick={onRefresh}
+        >
+          <i className="fas fa-redo me-2"></i>
+          Try Again
+        </button>
+      </div>
+    );
+  }
+
+  // Show empty state
+  if (!features || features.length === 0) {
+    return (
+      <div className="text-center py-5">
+        <div className="alert alert-info" role="alert">
+          <i className="fas fa-info-circle me-2"></i>
+          No Autonomy Levels found.
+        </div>
+      </div>
+    );
+  }
+
   let theadContent = ["Listing Title", "Date published", "Status", "Action"];
 
-  let tbodyContent = autonomyLevelList?.map((item) => (
-    <tr key={item._id}>
+  let tbodyContent = features.map((item) => (
+    <tr key={item._id || Math.random()}>
       <td scope="row" className="align-middle text-center">
-        <h4 className="mb-0">{item.name}</h4>
+        <h4 className="mb-0">{item?.name || 'N/A'}</h4>
       </td>
 
       <td className="align-middle text-center">
-        {new Date(item.createdAt).toLocaleDateString('en-US', {
+        {item?.createdAt ? new Date(item.createdAt).toLocaleDateString('en-US', {
           month: 'short',
           day: '2-digit',
           year: 'numeric',
-        })}
+        }) : 'N/A'}
       </td>
 
       <td className="align-middle text-center">
-        <span className={`status_tag ${item.status ? 'badge2' : 'badge'}`}>
-          {item.status ? "Active" : "Deactive"}
+        <span className={`status_tag ${item?.status ? 'badge2' : 'badge'}`}>
+          {item?.status ? "Active" : "Deactive"}
         </span>
       </td>
 
@@ -57,7 +97,7 @@ const TableData = () => {
             </button>
           </li>
           <li className="list-inline-item" title="Delete">
-            <a href="#" onClick={() => deleteAutonomyLevel(item._id)}>
+            <a href="#" onClick={() => deleteAutonomyLevelFeature(item._id)}>
               <span className="flaticon-garbage"></span>
             </a>
           </li>
@@ -65,10 +105,6 @@ const TableData = () => {
       </td>
     </tr>
   ));
-
-  useEffect(() => {
-    fetchAutonomyLevelData();
-  }, []);
 
   return (
     <>

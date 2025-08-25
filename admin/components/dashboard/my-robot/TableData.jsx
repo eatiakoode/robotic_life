@@ -1,11 +1,11 @@
 "use client";
 import Image from "next/image";
-import { deleteRobotAPI } from "@/api/robot";
+import { deleteRobotAPI } from "../../../api/robot";
 import { useRouter } from "next/navigation";
 import { toast } from 'react-toastify';
 import { useState, useCallback } from "react";
 
-const TableData = ({ robots = [], setRobots }) => {
+const TableData = ({ robots = [], loading = false, error = null, onRefresh }) => {
   const router = useRouter();
   const [deletingId, setDeletingId] = useState(null);
 
@@ -26,8 +26,10 @@ const TableData = ({ robots = [], setRobots }) => {
       const data = await deleteRobotAPI(id);
       toast.success(data.message || 'Robot deleted successfully');
       
-      // Remove the deleted robot from the list optimistically
-      setRobots((prevRobots) => prevRobots.filter((robot) => robot._id !== id));
+      // Refresh the data after deletion
+      if (onRefresh) {
+        onRefresh();
+      }
       
     } catch (error) {
       console.error('Delete error:', error);
@@ -35,7 +37,7 @@ const TableData = ({ robots = [], setRobots }) => {
     } finally {
       setDeletingId(null);
     }
-  }, [deletingId, setRobots]);
+  }, [deletingId, onRefresh]);
 
   // Memoized edit function
   const editRobot = useCallback((id) => {
@@ -98,8 +100,8 @@ const TableData = ({ robots = [], setRobots }) => {
   }, []);
 
   // Get display name helper
-  const getDisplayName = useCallback((item, field) => {
-    return item[field]?.name || item[field]?.title || 'N/A';
+  const getDisplayName = useCallback((item) => {
+    return item?.name || item?.title || item?.model || 'Unnamed Robot';
   }, []);
 
   // Get price helper
@@ -114,32 +116,45 @@ const TableData = ({ robots = [], setRobots }) => {
     "Actions",
   ];
 
-  // Handle empty robots array with loading state
+  // Show loading state
+  if (loading) {
+    return (
+      <div className="text-center py-5">
+        <div className="spinner-border text-primary" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </div>
+        <p className="mt-2">Loading robots...</p>
+      </div>
+    );
+  }
+
+  // Show error state
+  if (error) {
+    return (
+      <div className="text-center py-5">
+        <div className="alert alert-danger" role="alert">
+          <i className="fas fa-exclamation-triangle me-2"></i>
+          {error}
+        </div>
+        <button 
+          className="btn btn-primary mt-3" 
+          onClick={onRefresh}
+        >
+          <i className="fas fa-redo me-2"></i>
+          Try Again
+        </button>
+      </div>
+    );
+  }
+
+  // Show empty state
   if (!robots || robots.length === 0) {
     return (
-      <div className="table-responsive">
-        <table className="table">
-          <thead className="thead-light">
-            <tr>
-              {theadContent.map((value, i) => (
-                <th scope="col" key={i}>
-                  {value}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td colSpan={theadContent.length} className="text-center p-4">
-                <div className="no-data-message">
-                  <i className="flaticon-robot mb-3" style={{fontSize: '48px', color: '#ccc'}}></i>
-                  <p className="mb-0">No robots available</p>
-                  <small className="text-muted">Add your first robot to get started</small>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+      <div className="text-center py-5">
+        <div className="alert alert-info" role="alert">
+          <i className="fas fa-info-circle me-2"></i>
+          No robots found.
+        </div>
       </div>
     );
   }

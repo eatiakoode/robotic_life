@@ -24,7 +24,7 @@ export default function Topbar9() {
             </div>
           </div>
           <div className="col-xl-6 col-12 text-center">
-            <Swiper
+            {/* <Swiper
               dir="ltr"
               className="swiper tf-sw-top_bar"
               modules={[Autoplay]}
@@ -46,7 +46,7 @@ export default function Topbar9() {
                   Time Only.
                 </p>
               </SwiperSlide>
-            </Swiper>
+            </Swiper> */}
           </div>
           <div className="col-xl-3 d-none d-xl-block">
             <ul className="tf-social-icon style-fill style-fill-2 justify-content-end">
@@ -65,7 +65,7 @@ export default function Topbar9() {
                   <i className="icon icon-instagram" />
                 </a>
               </li>
-              <li>
+              {/* <li>
                 <a href="#" className="social-tiktok">
                   <i className="icon icon-tiktok" />
                 </a>
@@ -79,7 +79,7 @@ export default function Topbar9() {
                 <a href="#" className="social-pinterest">
                   <i className="icon icon-pinterest" />
                 </a>
-              </li>
+              </li> */}
             </ul>
           </div>
         </div>

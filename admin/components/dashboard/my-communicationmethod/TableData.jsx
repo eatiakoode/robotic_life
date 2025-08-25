@@ -1,19 +1,12 @@
 "use client";
 import Image from "next/image";
-import { getCommunicationMethodTableData, deleteCommunicationMethodAPI } from "@/api/communicationmethod";
-import { useState, useEffect } from "react";
+import { deleteCommunicationMethodAPI } from "../../../api/communicationmethod";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from 'react-toastify';
 
-const TableData = () => {
-  const [communicationMethodList, setCommunicationMethodList] = useState([]);
+const TableData = ({ communicationMethods = [], loading = false, error = null, onRefresh }) => {
   const router = useRouter();
-
-
-  const fetchCommunicationMethodData = async () => {
-    const data = await getCommunicationMethodTableData();
-    setCommunicationMethodList(data);
-  };
 
   const deleteCommunicationMethod = async (id) => {
     const isConfirmed = window.confirm("Are you sure you want to delete this Communication Method?");
@@ -22,31 +15,77 @@ const TableData = () => {
     try {
       const data = await deleteCommunicationMethodAPI(id);
       toast.success(data.message);
-      setCommunicationMethodList((prevCommunicationMethodList) => prevCommunicationMethodList.filter((communicationMethod) => communicationMethod._id !== id));
+      // Refresh the data after deletion
+      if (onRefresh) {
+        onRefresh();
+      }
     } catch (error) {
-      alert("Failed to delete Communication Method.");
+      toast.error("Failed to delete Communication Method.");
     }
   };
 
+  // Show loading state
+  if (loading) {
+    return (
+      <div className="text-center py-5">
+        <div className="spinner-border text-primary" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </div>
+        <p className="mt-2">Loading communication methods...</p>
+      </div>
+    );
+  }
+
+  // Show error state
+  if (error) {
+    return (
+      <div className="text-center py-5">
+        <div className="alert alert-danger" role="alert">
+          <i className="fas fa-exclamation-triangle me-2"></i>
+          {error}
+        </div>
+        <button 
+          className="btn btn-primary mt-3" 
+          onClick={onRefresh}
+        >
+          <i className="fas fa-redo me-2"></i>
+          Try Again
+        </button>
+      </div>
+    );
+  }
+
+  // Show empty state
+  if (!communicationMethods || communicationMethods.length === 0) {
+    return (
+      <div className="text-center py-5">
+        <div className="alert alert-info" role="alert">
+          <i className="fas fa-info-circle me-2"></i>
+          No communication methods found.
+        </div>
+      </div>
+    );
+  }
+
   let theadContent = ["Listing Title", "Date published", "Status", "Action"];
 
-  let tbodyContent = communicationMethodList?.map((item) => (
-    <tr key={item._id}>
+  let tbodyContent = communicationMethods.map((item) => (
+    <tr key={item._id || Math.random()}>
       <td scope="row" className="align-middle text-center">
-        <h4 className="mb-0">{item.name}</h4>
+        <h4 className="mb-0">{item?.name || 'N/A'}</h4>
       </td>
 
       <td className="align-middle text-center">
-        {new Date(item.createdAt).toLocaleDateString('en-US', {
+        {item?.createdAt ? new Date(item.createdAt).toLocaleDateString('en-US', {
           month: 'short',
           day: '2-digit',
           year: 'numeric',
-        })}
+        }) : 'N/A'}
       </td>
 
       <td className="align-middle text-center">
-        <span className={`status_tag ${item.status ? 'badge2' : 'badge'}`}>
-          {item.status ? "Active" : "Deactive"}
+        <span className={`status_tag ${item?.status ? 'badge2' : 'badge'}`}>
+          {item?.status ? "Active" : "Deactive"}
         </span>
       </td>
 
@@ -66,10 +105,6 @@ const TableData = () => {
       </td>
     </tr>
   ));
-
-  useEffect(() => {
-    fetchCommunicationMethodData();
-  }, []);
 
   return (
     <>

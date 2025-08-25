@@ -1,37 +1,30 @@
-"use client"; // Add this at the top
+"use client";
 import Header from "../../common/header/dashboard/Header";
 import SidebarMenu from "../../common/header/dashboard/SidebarMenu";
 import MobileMenu from "../../common/header/MobileMenu";
 import TableData from "./TableData";
 import Filtering from "./Filtering";
 import Pagination from "./Pagination";
-import SearchBox from "./SearchBox";
+import SearchBox from "../../common/SearchBox";
 import CopyRight from "../../common/footer/CopyRight";
-
-import { useState, useEffect } from "react";
-import { getManufacturerTableData } from "@/api/manufacturer";
+import { useSearchAndPagination } from "../../../hooks/useSearchAndPagination";
+import { getManufacturerTableData } from "../../../api/manufacturer";
 
 const index = () => {
-  const [currentPage, setCurrentPage] = useState(1);
-    const [manufacturerList, setManufacturerList] = useState([]);
-    const [totalCount, setTotalCount] = useState(0);
-    const [pageSize] = useState(10);
-  
-    useEffect(() => {
-      const fetchManufacturerData = async () => {
-        const filter = {
-          limit: pageSize,
-          page: currentPage,
-        };
-        const data = await getManufacturerTableData(filter);
-        // Backend currently returns an array (protected route). Fallback to array handling.
-        const list = Array.isArray(data) ? data : (data?.items || []);
-        const count = Array.isArray(data) ? data.length : (data?.totalCount || list.length);
-        setManufacturerList(list);
-        setTotalCount(count);
-      };
-      fetchManufacturerData();
-    }, [currentPage, pageSize]);
+  // Use the custom hook for search and pagination
+  const {
+    currentData: currentManufacturers,
+    loading,
+    error,
+    searchQuery,
+    handleSearch,
+    currentPage,
+    totalPages,
+    handlePageChange,
+    refreshData: handleRefresh,
+    searchInfo
+  } = useSearchAndPagination(getManufacturerTableData, 10, ['name', 'description', 'status']);
+
   return (
     <>
       {/* <!-- Main Header Nav --> */}
@@ -79,6 +72,12 @@ const index = () => {
                   <div className="breadcrumb_content style2 mb30-991">
                     <h2 className="breadcrumb_title">All Manufacturers</h2>
                     <p>View, search, and manage manufacturer profiles associated with the robot listings.</p>
+                    {searchInfo.hasSearchQuery && (
+                      <small className="text-muted">
+                        Showing {searchInfo.totalResults} of {searchInfo.totalItems} results
+                        {searchQuery && ` for "${searchQuery}"`}
+                      </small>
+                    )}
                   </div>
                 </div>
                 {/* End .col */}
@@ -88,14 +87,17 @@ const index = () => {
                     <ul className="mb0">
                       <li className="list-inline-item">
                         <div className="candidate_revew_search_box course fn-520">
-                          {/* <SearchBox /> */}
+                          <SearchBox 
+                            onSearch={handleSearch} 
+                            placeholder="Search manufacturers..." 
+                          />
                         </div>
                       </li>
                       {/* End li */}
 
-                      {/* <li className="list-inline-item">
+                      <li className="list-inline-item">
                         <Filtering />
-                      </li> */}
+                      </li>
                       {/* End li */}
                     </ul>
                   </div>
@@ -106,13 +108,26 @@ const index = () => {
                   <div className="my_dashboard_review mb40">
                     <div className="property_table">
                       <div className="table-responsive mt0">
-                        <TableData manufacturerList={manufacturerList} setManufacturerList={setManufacturerList}/>
+                        <TableData 
+                          manufacturers={currentManufacturers}
+                          loading={loading}
+                          error={error}
+                          onRefresh={handleRefresh}
+                        />
                       </div>
                       {/* End .table-responsive */}
 
-                      {/* <div className="mbp_pagination">
-                         <Pagination totalCount={totalCount} pageSize={pageSize} currentPage={currentPage} onPageChange={(page) => setCurrentPage(page)} />
-                      </div> */}
+                      {!loading && !error && searchInfo.totalResults > 0 && (
+                        <div className="mbp_pagination">
+                          <Pagination 
+                            currentPage={currentPage}
+                            totalPages={totalPages}
+                            onPageChange={handlePageChange}
+                            totalItems={searchInfo.totalResults}
+                            itemsPerPage={searchInfo.itemsPerPage}
+                          />
+                        </div>
+                      )}
                       {/* End .mbp_pagination */}
                     </div>
                     {/* End .property_table */}

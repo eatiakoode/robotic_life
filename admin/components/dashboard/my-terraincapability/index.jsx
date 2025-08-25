@@ -1,10 +1,12 @@
+"use client";
+
 import Header from "../../common/header/dashboard/Header";
 import SidebarMenu from "../../common/header/dashboard/SidebarMenu";
 import MobileMenu from "../../common/header/MobileMenu";
 import TableData from "./TableData";
 import Filtering from "./Filtering";
 import Pagination from "./Pagination";
-import SearchBox from "./SearchBox";
+import SearchBox from "../../common/SearchBox";
 import CopyRight from "../../common/footer/CopyRight";
 
 const index = () => {
@@ -54,7 +56,7 @@ const index = () => {
                 <div className="col-lg-4 col-xl-4 mb10">
                   <div className="breadcrumb_content style2 mb30-991">
                     <h2 className="breadcrumb_title">Terrain Capability List</h2>
-                    {/* <p>We are glad to see you again!</p> */}
+                    <p>View, search, and manage robot terrain capabilities and movement options.</p>
                   </div>
                 </div>
                 {/* End .col */}
@@ -64,14 +66,14 @@ const index = () => {
                     <ul className="mb0">
                       <li className="list-inline-item">
                         <div className="candidate_revew_search_box course fn-520">
-                          {/* <SearchBox /> */}
+                          <SearchBox onSearch={(query) => console.log('Search terrain capabilities:', query)} placeholder="Search terrain capabilities..." />
                         </div>
                       </li>
                       {/* End li */}
 
-                      {/* <li className="list-inline-item">
+                      <li className="list-inline-item">
                         <Filtering />
-                      </li> */}
+                      </li>
                       {/* End li */}
                     </ul>
                   </div>
@@ -86,9 +88,9 @@ const index = () => {
                       </div>
                       {/* End .table-responsive */}
 
-                      {/* <div className="mbp_pagination">
+                      <div className="mbp_pagination">
                         <Pagination />
-                      </div> */}
+                      </div>
                       {/* End .mbp_pagination */}
                     </div>
                     {/* End .property_table */}

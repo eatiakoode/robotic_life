@@ -1,18 +1,12 @@
 "use client";
 import Image from "next/image";
-import { getColorTableData, deleteColorAPI } from "../../../api/color";
-import { useState, useEffect } from "react";
+import { deleteColorAPI } from "../../../api/color";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from 'react-toastify';
 
-const TableData = () => {
-  const [colorList, setColorList] = useState([]);
+const TableData = ({ colors = [], loading = false, error = null, onRefresh }) => {
   const router = useRouter();
-
-  const fetchColorData = async () => {
-    const data = await getColorTableData();
-    setColorList(data);
-  };
 
   const deleteColor = async (id) => {
     const isConfirmed = window.confirm("Are you sure you want to delete this Color?");
@@ -21,31 +15,77 @@ const TableData = () => {
     try {
       const data = await deleteColorAPI(id);
       toast.success(data.message);
-      setColorList((prevColorList) => prevColorList.filter((color) => color._id !== id));
+      // Refresh the data after deletion
+      if (onRefresh) {
+        onRefresh();
+      }
     } catch (error) {
-      alert("Failed to delete Color.");
+      toast.error("Failed to delete Color.");
     }
   };
 
+  // Show loading state
+  if (loading) {
+    return (
+      <div className="text-center py-5">
+        <div className="spinner-border text-primary" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </div>
+        <p className="mt-2">Loading colors...</p>
+      </div>
+    );
+  }
+
+  // Show error state
+  if (error) {
+    return (
+      <div className="text-center py-5">
+        <div className="alert alert-danger" role="alert">
+          <i className="fas fa-exclamation-triangle me-2"></i>
+          {error}
+        </div>
+        <button 
+          className="btn btn-primary mt-3" 
+          onClick={onRefresh}
+        >
+          <i className="fas fa-redo me-2"></i>
+          Try Again
+        </button>
+      </div>
+    );
+  }
+
+  // Show empty state
+  if (!colors || colors.length === 0) {
+    return (
+      <div className="text-center py-5">
+        <div className="alert alert-info" role="alert">
+          <i className="fas fa-info-circle me-2"></i>
+          No colors found.
+        </div>
+      </div>
+    );
+  }
+
   let theadConent = ["Listing Title", "Date published", "Status", "Action"];
 
-  let tbodyContent = colorList?.map((item) => (
-    <tr key={item._id}>
+  let tbodyContent = colors.map((item) => (
+    <tr key={item._id || Math.random()}>
       <td scope="row" className="align-middle text-center">
-        <h4 className="mb-0">{item.name}</h4>
+        <h4 className="mb-0">{item?.name || 'N/A'}</h4>
       </td>
 
       <td className="align-middle text-center">
-        {new Date(item.createdAt).toLocaleDateString('en-US', {
+        {item?.createdAt ? new Date(item.createdAt).toLocaleDateString('en-US', {
           month: 'short',
           day: '2-digit',
           year: 'numeric',
-        })}
+        }) : 'N/A'}
       </td>
 
       <td className="align-middle text-center">
-        <span className={`status_tag ${item.status ? 'badge2' : 'badge'}`}>
-          {item.status ? "Active" : "Deactive"}
+        <span className={`status_tag ${item?.status ? 'badge2' : 'badge'}`}>
+          {item?.status ? "Active" : "Deactive"}
         </span>
       </td>
 
@@ -65,10 +105,6 @@ const TableData = () => {
       </td>
     </tr>
   ));
-
-  useEffect(() => {
-    fetchColorData();
-  }, []);
 
   return (
     <>

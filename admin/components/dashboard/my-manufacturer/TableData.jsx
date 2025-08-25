@@ -1,10 +1,10 @@
 "use client";
 import Image from "next/image";
-import { deleteManufacturerAPI } from "@/api/manufacturer";
+import { deleteManufacturerAPI } from "../../../api/manufacturer";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 
-const TableData = ({ manufacturerList, setManufacturerList }) => {
+const TableData = ({ manufacturers = [], loading = false, error = null, onRefresh }) => {
   const router = useRouter();
 
   const deleteManufacturer = async (id) => {
@@ -16,13 +16,57 @@ const TableData = ({ manufacturerList, setManufacturerList }) => {
     try {
       const data = await deleteManufacturerAPI(id);
       toast.success(data.message);
-      setManufacturerList((prevList) =>
-        prevList.filter((manufacturer) => manufacturer._id !== id)
-      );
+      // Refresh the data after deletion
+      if (onRefresh) {
+        onRefresh();
+      }
     } catch (error) {
-      alert("Failed to delete Manufacturer.");
+      toast.error("Failed to delete Manufacturer.");
     }
   };
+
+  // Show loading state
+  if (loading) {
+    return (
+      <div className="text-center py-5">
+        <div className="spinner-border text-primary" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </div>
+        <p className="mt-2">Loading manufacturers...</p>
+      </div>
+    );
+  }
+
+  // Show error state
+  if (error) {
+    return (
+      <div className="text-center py-5">
+        <div className="alert alert-danger" role="alert">
+          <i className="fas fa-exclamation-triangle me-2"></i>
+          {error}
+        </div>
+        <button 
+          className="btn btn-primary mt-3" 
+          onClick={onRefresh}
+        >
+          <i className="fas fa-redo me-2"></i>
+          Try Again
+        </button>
+      </div>
+    );
+  }
+
+  // Show empty state
+  if (!manufacturers || manufacturers.length === 0) {
+    return (
+      <div className="text-center py-5">
+        <div className="alert alert-info" role="alert">
+          <i className="fas fa-info-circle me-2"></i>
+          No manufacturers found.
+        </div>
+      </div>
+    );
+  }
 
   let theadConent = [
     "Image",
@@ -32,8 +76,8 @@ const TableData = ({ manufacturerList, setManufacturerList }) => {
     "Action",
   ];
 
-  let tbodyContent = manufacturerList?.map((item) => (
-    <tr key={item._id}>
+  let tbodyContent = manufacturers.map((item) => (
+    <tr key={item._id || Math.random()}>
       {/* Image */}
       <td className="align-middle text-center" style={{ width: 110 }}>
         <div
@@ -53,11 +97,11 @@ const TableData = ({ manufacturerList, setManufacturerList }) => {
             height={90}
             className="img-whp cover"
             src={
-              item.logoImage
+              item?.logoImage
                 ? `${process.env.NEXT_PUBLIC_API_URL}${item.logoImage}`
                 : `${process.env.NEXT_PUBLIC_API_URL}public/assets/images/thumbnail.webp`
             }
-            alt={`${item.name}`}
+            alt={`${item?.name || 'Manufacturer'}`}
             unoptimized
             style={{ width: "100%", height: "100%", objectFit: "contain" }}
           />
@@ -69,7 +113,7 @@ const TableData = ({ manufacturerList, setManufacturerList }) => {
         <div
           style={{ display: "flex", alignItems: "center", height: "100%", minHeight: "90px", justifyContent: "center" }}
         >
-          <h4 className="mb-0">{item.name}</h4>
+          <h4 className="mb-0">{item?.name || 'N/A'}</h4>
         </div>
       </td>
 
@@ -78,11 +122,11 @@ const TableData = ({ manufacturerList, setManufacturerList }) => {
         <div
           style={{ display: "flex", alignItems: "center", height: "100%", justifyContent: "center" }}
         >
-          {new Date(item.createdAt).toLocaleDateString("en-US", {
+          {item?.createdAt ? new Date(item.createdAt).toLocaleDateString("en-US", {
             month: "short",
             day: "2-digit",
             year: "numeric",
-          })}
+          }) : 'N/A'}
         </div>
       </td>
 
@@ -92,9 +136,9 @@ const TableData = ({ manufacturerList, setManufacturerList }) => {
           style={{ display: "flex", alignItems: "center", height: "100%", justifyContent: "center" }}
         >
           <span
-            className={`status_tag ${item.status ? "badge2" : "badge"}`}
+            className={`status_tag ${item?.status ? "badge2" : "badge"}`}
           >
-            {item.status ? "Active" : "Deactive"}
+            {item?.status ? "Active" : "Deactive"}
           </span>
         </div>
       </td>
@@ -102,37 +146,16 @@ const TableData = ({ manufacturerList, setManufacturerList }) => {
       {/* Action */}
       <td className="align-middle text-center">
         <div
-          style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "100%" }}
+          style={{ display: "flex", alignItems: "center", height: "100%", justifyContent: "center" }}
         >
-          <ul className="view_edit_delete_list mb0 d-flex">
-            <li
-              className="list-inline-item"
-              data-toggle="tooltip"
-              data-placement="top"
-              title="Edit"
-            >
-              <button
-                onClick={() =>
-                  router.push(`/cmsroboticlife/edit-manufacturer/${item._id}`)
-                }
-              >
+          <ul className="view_edit_delete_list mb0 d-flex justify-content-center">
+            <li className="list-inline-item" title="Edit">
+              <button onClick={() => router.push(`/cmsroboticlife/edit-manufacturer/${item._id}`)}>
                 <span className="flaticon-edit"></span>
               </button>
             </li>
-
-            <li
-              className="list-inline-item"
-              data-toggle="tooltip"
-              data-placement="top"
-              title="Delete"
-            >
-              <a
-                href="#"
-                onClick={(e) => {
-                  e.preventDefault();
-                  deleteManufacturer(item._id);
-                }}
-              >
+            <li className="list-inline-item" title="Delete">
+              <a href="#" onClick={() => deleteManufacturer(item._id)}>
                 <span className="flaticon-garbage"></span>
               </a>
             </li>

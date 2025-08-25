@@ -76,11 +76,11 @@ export default function Nav() {
                 </div>
               ))}
             </div>
-            <div className="text-center view-all-demo">
+            {/* <div className="text-center view-all-demo">
               <a href="#modalDemo" data-bs-toggle="modal" className="tf-btn">
                 <span className="text">View All Demos</span>
               </a>
-            </div>
+            </div> */}
           </div>
         </div>
       </li>
