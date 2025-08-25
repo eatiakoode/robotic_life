@@ -12,15 +12,15 @@ export default function Topbar9() {
         <div className="row align-items-center">
           <div className="col-xl-3 d-none d-xl-block">
             <div className="tf-cur">
-              <div className="tf-currencies">
+              {/* <div className="tf-currencies">
                 <CurrencySelect light topStart />
-              </div>
-              <div className="tf-languages">
+              </div> */}
+              {/* <div className="tf-languages">
                 <LanguageSelect
                   parentClassName="image-select center style-default type-languages color-white"
                   topStart
                 />
-              </div>
+              </div> */}
             </div>
           </div>
           <div className="col-xl-6 col-12 text-center">
@@ -50,7 +50,7 @@ export default function Topbar9() {
           </div>
           <div className="col-xl-3 d-none d-xl-block">
             <ul className="tf-social-icon style-fill style-fill-2 justify-content-end">
-              <li>
+              {/* <li>
                 <a href="#" className="social-facebook">
                   <i className="icon icon-fb" />
                 </a>
@@ -64,7 +64,7 @@ export default function Topbar9() {
                 <a href="#" className="social-instagram">
                   <i className="icon icon-instagram" />
                 </a>
-              </li>
+              </li> */}
               {/* <li>
                 <a href="#" className="social-tiktok">
                   <i className="icon icon-tiktok" />

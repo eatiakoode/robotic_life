@@ -1,9 +1,16 @@
 "use client";
 import { usePathname } from "next/navigation";
-import "../public/scss/main.scss";
-import "photoswipe/style.css";
-import "react-range-slider-input/dist/style.css";
+import "../public/fonts/fonts.css";
+import "../public/fonts/font-icons.css";
+import "../public/css/styles.css";
+import "../public/css/bootstrap.min.css";
+import "../public/css/swiper-bundle.min.css";
+import "../public/css/animate.css";
+import "../public/css/photoswipe.css";
 import "../public/css/image-compare-viewer.min.css";
+import "../public/css/custom-nav-fix.css";
+
+import "react-range-slider-input/dist/style.css";
 import { useEffect, useState } from "react";
 import ScrollTop from "@/components/common/ScrollTop";
 import Context from "@/context/Context";

@@ -1,0 +1,257 @@
+/* Custom Navigation Fix - Remove Underlines and Restore Original Design */
+/* This ensures the original design without underlines is preserved */
+
+/* Global fix for all navigation links - remove underlines */
+.box-navigation a,
+.box-nav-ul a,
+.nav a,
+.nav-link,
+.item-link,
+.menu-link-text,
+#header a,
+header a {
+  text-decoration: none !important;
+  text-decoration-line: none !important;
+  text-decoration-style: none !important;
+  text-decoration-color: none !important;
+}
+
+/* Specific fix for the main navigation items */
+.box-navigation .item-link,
+.box-nav-ul .item-link,
+.nav .item-link,
+#header .box-nav-ul .item-link {
+  text-decoration: none !important;
+  text-decoration-line: none !important;
+  text-decoration-style: none !important;
+  text-decoration-color: none !important;
+}
+
+/* Remove underlines from dropdown menu items */
+.sub-menu a,
+.submenu-default a,
+.mega-menu a {
+  text-decoration: none !important;
+}
+
+/* Ensure no underlines on hover for navigation */
+.box-navigation a:hover,
+.box-nav-ul a:hover,
+.nav a:hover,
+.nav-link:hover,
+.item-link:hover,
+.menu-link-text:hover,
+#header a:hover,
+header a:hover {
+  text-decoration: none !important;
+  text-decoration-line: none !important;
+  text-decoration-style: none !important;
+  text-decoration-color: none !important;
+}
+
+/* Remove underlines from active navigation states */
+.box-navigation .ui-active,
+.box-nav-ul .ui-active,
+.nav .ui-active,
+.item-link.ui-active,
+#header .ui-active {
+  text-decoration: none !important;
+}
+
+/* Specific fix for the main navigation */
+.box-navigation .box-nav-ul li a,
+.box-navigation .box-nav-ul li .item-link {
+  text-decoration: none !important;
+}
+
+/* Remove any inherited Bootstrap link underlines */
+.box-navigation a[href],
+.box-nav-ul a[href],
+.nav a[href],
+#header a[href] {
+  text-decoration: none !important;
+}
+
+/* Ensure proper navigation styling for the gaming theme */
+.box-navigation .item-link,
+#header .box-nav-ul .item-link {
+  color: #ffffff !important;
+  font-weight: 500;
+  transition: color 0.3s ease;
+  text-decoration: none !important;
+}
+
+/* Home link styling (red color as shown in the image) */
+.box-navigation .item-link[href="/"],
+#header .box-nav-ul .item-link[href="/"] {
+  color: #ff0000 !important;
+  text-decoration: none !important;
+}
+
+/* Robots, Blog, About Us, Contact Us links */
+.box-navigation .item-link:not([href="/"]),
+#header .box-nav-ul .item-link:not([href="/"]) {
+  color: #ffffff !important;
+  text-decoration: none !important;
+}
+
+/* Hover effects for navigation links */
+.box-navigation .item-link:hover,
+#header .box-nav-ul .item-link:hover {
+  color: #cccccc !important;
+  text-decoration: none !important;
+}
+
+/* Ensure no text decoration on any navigation element */
+.box-navigation *,
+.box-nav-ul *,
+.nav *,
+#header * {
+  text-decoration: none !important;
+}
+
+/* Override any Bootstrap link styles */
+.box-navigation a,
+.box-nav-ul a,
+.nav a,
+#header a {
+  text-decoration: none !important;
+  text-decoration-line: none !important;
+  text-decoration-style: none !important;
+  text-decoration-color: none !important;
+}
+
+/* Force remove underlines from all navigation links */
+.box-navigation .item-link,
+.box-nav-ul .item-link,
+.nav .item-link,
+#header .box-nav-ul .item-link {
+  text-decoration: none !important;
+  text-decoration-line: none !important;
+  text-decoration-style: none !important;
+  text-decoration-color: none !important;
+}
+
+/* Override any CSS that might add underlines */
+.box-navigation a::after,
+.box-nav-ul a::after,
+.nav a::after,
+#header a::after {
+  text-decoration: none !important;
+}
+
+/* Ensure no underlines in any state */
+.box-navigation a:link,
+.box-nav-ul a:link,
+.nav a:link,
+#header a:link,
+.box-navigation a:visited,
+.box-nav-ul a:visited,
+.nav a:visited,
+#header a:visited,
+.box-navigation a:active,
+.box-nav-ul a:active,
+.nav a:active,
+#header a:active {
+  text-decoration: none !important;
+}
+
+/* Target specific navigation structure */
+.box-navigation .box-nav-ul .menu-item .item-link,
+#header .box-nav-ul .menu-item .item-link {
+  text-decoration: none !important;
+  color: #ffffff !important;
+}
+
+/* Home menu item specific styling */
+.box-navigation .box-nav-ul .menu-item:first-child .item-link,
+#header .box-nav-ul .menu-item:first-child .item-link {
+  color: #ff0000 !important;
+  text-decoration: none !important;
+}
+
+/* Additional fixes for navigation appearance */
+.box-navigation .box-nav-ul {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.box-navigation .box-nav-ul .menu-item {
+  margin: 0;
+  padding: 0;
+}
+
+.box-navigation .box-nav-ul .menu-item .item-link {
+  padding: 0.5rem 1rem;
+  font-size: 16px;
+  font-weight: 500;
+  color: #ffffff;
+  text-decoration: none;
+  transition: color 0.3s ease;
+  position: relative;
+}
+
+/* Ensure proper spacing and alignment */
+.box-navigation .box-nav-ul .menu-item:first-child .item-link {
+  color: #ff0000 !important;
+}
+
+.box-navigation .box-nav-ul .menu-item:not(:first-child) .item-link {
+  color: #ffffff !important;
+}
+
+/* Remove any default link styling */
+.box-navigation a,
+.box-nav-ul a {
+  text-decoration: none !important;
+  outline: none !important;
+}
+
+/* Force override any inherited styles */
+.box-navigation .item-link,
+.box-nav-ul .item-link {
+  text-decoration: none !important;
+  text-decoration-line: none !important;
+  text-decoration-style: none !important;
+  text-decoration-color: none !important;
+  text-decoration-thickness: none !important;
+}
+
+/* Final comprehensive fix - target all possible sources */
+* {
+  text-decoration: none !important;
+}
+
+/* Specific navigation fix */
+.box-navigation,
+.box-nav-ul,
+.nav,
+#header {
+  text-decoration: none !important;
+}
+
+.box-navigation *,
+.box-nav-ul *,
+.nav *,
+#header * {
+  text-decoration: none !important;
+}
+
+/* Override any remaining styles */
+.box-navigation .item-link,
+.box-nav-ul .item-link,
+.nav .item-link,
+#header .box-nav-ul .item-link {
+  text-decoration: none !important;
+  text-decoration-line: none !important;
+  text-decoration-style: none !important;
+  text-decoration-color: none !important;
+  text-decoration-thickness: none !important;
+  text-underline-offset: none !important;
+  text-underline-position: none !important;
+}
