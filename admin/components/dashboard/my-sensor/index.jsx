@@ -8,8 +8,23 @@ import Filtering from "./Filtering";
 import Pagination from "./Pagination";
 import SearchBox from "../../common/SearchBox";
 import CopyRight from "../../common/footer/CopyRight";
+import { useSearchAndPagination } from "../../../hooks/useSearchAndPagination";
+import { getSensorTableData } from "../../../api/sensor";
 
 const index = () => {
+  // Use the custom hook for search and pagination
+  const {
+    currentData: currentSensors,
+    loading,
+    error,
+    searchQuery,
+    handleSearch,
+    currentPage,
+    totalPages,
+    handlePageChange,
+    refreshData: handleRefresh,
+    searchInfo
+  } = useSearchAndPagination(getSensorTableData, 10, ['name', 'description', 'status']);
   return (
     <>
       {/* <!-- Main Header Nav --> */}
@@ -56,7 +71,13 @@ const index = () => {
                 <div className="col-lg-4 col-xl-4 mb10">
                   <div className="breadcrumb_content style2 mb30-991">
                     <h2 className="breadcrumb_title">Sensor List</h2>
-                    <p>View, search, and manage robot sensors and detection capabilities.</p>
+                    <p>View, search, and manage sensors for robots.</p>
+                    {searchInfo.hasSearchQuery && (
+                      <small className="text-muted">
+                        Showing {searchInfo.totalResults} of {searchInfo.totalItems} results
+                        {searchQuery && ` for "${searchQuery}"`}
+                      </small>
+                    )}
                   </div>
                 </div>
                 {/* End .col */}
@@ -66,7 +87,10 @@ const index = () => {
                     <ul className="mb0">
                       <li className="list-inline-item">
                         <div className="candidate_revew_search_box course fn-520">
-                          <SearchBox onSearch={(query) => console.log('Search sensors:', query)} placeholder="Search sensors..." />
+                          <SearchBox 
+                            onSearch={handleSearch} 
+                            placeholder="Search Sensors..." 
+                          />
                         </div>
                       </li>
                       {/* End li */}
@@ -84,12 +108,25 @@ const index = () => {
                   <div className="my_dashboard_review mb40">
                     <div className="property_table">
                       <div className="table-responsive mt0">
-                        <TableData />
+                        <TableData 
+                          sensors={currentSensors}
+                          loading={loading}
+                          error={error}
+                          onRefresh={handleRefresh}
+                        />
                       </div>
                       {/* End .table-responsive */}
 
                       <div className="mbp_pagination">
-                        <Pagination />
+                        {!loading && !error && searchInfo.totalResults > 0 && (
+                          <Pagination 
+                            currentPage={currentPage}
+                            totalPages={totalPages}
+                            onPageChange={handlePageChange}
+                            totalItems={searchInfo.totalResults}
+                            itemsPerPage={searchInfo.itemsPerPage}
+                          />
+                        )}
                       </div>
                       {/* End .mbp_pagination */}
                     </div>

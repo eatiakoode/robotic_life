@@ -24,8 +24,8 @@ export default function Header7() {
                 alt="logo"
                 className="logo"
                 src="/images/logo/robo.svg"
-                width={117}
-                height={30}
+                width={170}
+                height={65}
               />
             </Link>
           </div>

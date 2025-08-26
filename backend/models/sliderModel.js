@@ -25,6 +25,16 @@ const sliderSchema = new mongoose.Schema(
             required: false,
             trim: true,
         },
+        metaTitle: {
+            type: String,
+            required: false,
+            trim: true,
+        },
+        metaDescription: {
+            type: String,
+            required: false,
+            trim: true,
+        },
         status: {
             type: Boolean,
             default: true,
