@@ -121,7 +121,7 @@ const CreateList = () => {
         {/* End .col */}
         <div className="col-lg-6 col-xl-6">
           <div className="my_profile_setting_input form-group">
-            <label htmlFor="sliderTitle">Slider Title hdhjd</label>
+            <label htmlFor="sliderTitle">Slider Title</label>
             <input
               type="text"
               className="form-control"
