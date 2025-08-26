@@ -37,7 +37,8 @@ const getFilteredRobotsByParentCategory = asyncHandler(async (req, res) => {
 
     const robots = await Robot.find({ category: { $in: categoryIds } })
         .select("title slug totalPrice images color")
-        .populate("color", "name");
+        .populate("color", "name")
+        .limit(4);
 
     res.status(200).json(robots);
 });
