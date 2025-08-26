@@ -58,6 +58,7 @@ const photoUploadMiddleware = uploadPhoto.fields([
   { name: 'siteplan', maxCount: 1 },
   { name: 'pdffile', maxCount: 1 },
   { name: 'robotSelectedImgs', maxCount: 10 },
+  { name: 'images', maxCount: 10 }, // Add support for slider images
   // ...dynamicFields
 
 
@@ -225,8 +226,12 @@ const robotImgResize = async (req) => {
   return processedFilenames;
 };
 
-const sliderImgResize = async (req) => {
-  if (!req.files || !Array.isArray(req.files)) return [];
+const sliderImgResize = async (files) => {
+  console.log("sliderImgResize called with:", files);
+  if (!files || !Array.isArray(files)) {
+    console.log("No files or not array, returning empty array");
+    return [];
+  }
 
   const processedFilenames = [];
 
@@ -235,23 +240,32 @@ const sliderImgResize = async (req) => {
     fs.mkdirSync(outputDir, { recursive: true });
   }
 
+  console.log("Processing", files.length, "files");
+
   await Promise.all(
-    req.files.map(async (file) => {
+    files.map(async (file) => {
+      console.log("Processing file:", file.originalname, "at path:", file.path);
       const filename = file.filename; // multer gives unique name
       const outputPath = path.join(outputDir, filename);
 
-      await sharp(file.path)
-        .resize(1920, 600) // 👈 typical banner ratio
-        .toFormat("jpeg")
-        .jpeg({ quality: 90 })
-        .toFile(outputPath);
+      try {
+        await sharp(file.path)
+          .resize(1920, 600) // 👈 typical banner ratio
+          .toFormat("jpeg")
+          .jpeg({ quality: 90 })
+          .toFile(outputPath);
 
-      fs.unlinkSync(file.path); // remove temp uploaded file
-
-      processedFilenames.push(filename);
+        fs.unlinkSync(file.path); // remove temp uploaded file
+        console.log("Successfully processed:", filename);
+        processedFilenames.push(filename);
+      } catch (error) {
+        console.error("Error processing file:", file.originalname, error);
+        // Don't add to processed files if there was an error
+      }
     })
   );
 
+  console.log("Final processed filenames:", processedFilenames);
   return processedFilenames;
 };
 
