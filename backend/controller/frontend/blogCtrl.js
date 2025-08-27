@@ -20,7 +20,7 @@ const getBlog = asyncHandler(async (req, res) => {
 });
 const getallBlog = asyncHandler(async (req, res) => {
   try {
-    const getallBlog = await Blog.find({"status":true}).populate("blogcategory").lean();
+    const getallBlog = await Blog.find({"status":true}).select("title createdAt logoimage").populate("blogcategory","title").lean().limit(2);
     res.json(getallBlog);
   } catch (error) {
     throw new Error(error);
