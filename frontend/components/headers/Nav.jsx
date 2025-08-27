@@ -32,11 +32,11 @@ export default function Nav() {
             : ""
         } `}
       >
-        <a href="/" className="item-link">
+        <a href="#" className="item-link">
           Home
-          {/* <i className="icon icon-arrow-down" /> */}
+          <i className="icon icon-arrow-down" />
         </a>
-        {/* <div className="sub-menu mega-menu">
+        <div className="sub-menu mega-menu">
           <div className="container">
             <div className="row-demo">
               {demoItems.slice(0, 12).map((item, index) => (
@@ -82,7 +82,7 @@ export default function Nav() {
               </a>
             </div>
           </div>
-        </div> */}
+        </div>
       </li>
       <li
         className={`menu-item ${
@@ -97,7 +97,7 @@ export default function Nav() {
         } `}
       >
         <a href="#" className="item-link">
-          Robots
+          Shop
           <i className="icon icon-arrow-down" />
         </a>
         <div className="sub-menu mega-menu">
@@ -105,7 +105,7 @@ export default function Nav() {
             <div className="row">
               <div className="col-lg-2">
                 <div className="mega-menu-item">
-                  <div className="menu-heading">Parent Category</div>
+                  <div className="menu-heading">Shop Layout</div>
                   <ul className="menu-list">
                     {shopLayout.map((link, index) => (
                       <li
@@ -126,7 +126,7 @@ export default function Nav() {
               </div>
               <div className="col-lg-2">
                 <div className="mega-menu-item">
-                  <div className="menu-heading">Parent Category</div>
+                  <div className="menu-heading">Shop Features</div>
                   <ul className="menu-list">
                     {shopFeatures.map((link, index) => (
                       <li
@@ -147,7 +147,7 @@ export default function Nav() {
               </div>
               <div className="col-lg-2">
                 <div className="mega-menu-item">
-                  <div className="menu-heading">Parent Category</div>
+                  <div className="menu-heading">Products Hover</div>
                   <ul className="menu-list">
                     {productStyles.map((style, index) => (
                       <li
@@ -168,7 +168,7 @@ export default function Nav() {
               </div>
               <div className="col-lg-2">
                 <div className="mega-menu-item">
-                  <div className="menu-heading">Parent Category</div>
+                  <div className="menu-heading">My Pages</div>
                   <ul className="menu-list">
                     {otherShopMenus.map((link, index) => (
                       <li
@@ -189,7 +189,7 @@ export default function Nav() {
               </div>
               <div className="col-lg-4">
                 <div className="wrapper-sub-shop">
-                  <div className="menu-heading">Recent Robots</div>
+                  <div className="menu-heading">Recent Products</div>
                   <Swiper
                     dir="ltr"
                     className="swiper tf-product-header"
@@ -214,7 +214,7 @@ export default function Nav() {
           </div>
         </div>
       </li>
-      {/* <li
+      <li
         className={`menu-item ${
           [...productLinks, ...swatchLinks, ...productFeatures].some(
             (elm) => elm.href.split("/")[1] == pathname.split("/")[1]
@@ -347,7 +347,7 @@ export default function Nav() {
             </div>
           </div>
         </div>
-      </li> */}
+      </li>
       <li
         className={`menu-item position-relative ${
           [...blogLinks].some(
@@ -359,9 +359,9 @@ export default function Nav() {
       >
         <a href="#" className="item-link">
           Blog
-          {/* <i className="icon icon-arrow-down" /> */}
+          <i className="icon icon-arrow-down" />
         </a>
-        {/* <div className="sub-menu submenu-default">
+        <div className="sub-menu submenu-default">
           <ul className="menu-list">
             {blogLinks.map((link, index) => (
               <li
@@ -378,22 +378,22 @@ export default function Nav() {
               </li>
             ))}
           </ul>
-        </div> */}
+        </div>
       </li>
       <li
-        // className={`menu-item position-relative ${
-        //   [...otherPageLinks].some(
-        //     (elm) => elm.href.split("/")[1] == pathname.split("/")[1]
-        //   )
-        //     ? "active"
-        //     : ""
-        // } `}
+        className={`menu-item position-relative ${
+          [...otherPageLinks].some(
+            (elm) => elm.href.split("/")[1] == pathname.split("/")[1]
+          )
+            ? "active"
+            : ""
+        } `}
       >
         <a href="#" className="item-link">
-          About Us
-          {/* <i className="icon icon-arrow-down" /> */}
+          Pages
+          <i className="icon icon-arrow-down" />
         </a>
-        {/* <div className="sub-menu submenu-default">
+        <div className="sub-menu submenu-default">
           <ul className="menu-list">
             {otherPageLinks.map((link, index) => (
               <li
@@ -410,45 +410,13 @@ export default function Nav() {
               </li>
             ))}
           </ul>
-        </div> */}
+        </div>
       </li>
-      <li
-        // className={`menu-item position-relative ${
-        //   [...otherPageLinks].some(
-        //     (elm) => elm.href.split("/")[1] == pathname.split("/")[1]
-        //   )
-        //     ? "active"
-        //     : ""
-        // } `}
-      >
-        <a href="#" className="item-link">
-          Contact Us
-          {/* <i className="icon icon-arrow-down" /> */}
-        </a>
-        {/* <div className="sub-menu submenu-default">
-          <ul className="menu-list">
-            {otherPageLinks.map((link, index) => (
-              <li
-                key={index}
-                className={`menu-item-li ${
-                  pathname.split("/")[1] == link.href.split("/")[1]
-                    ? "active"
-                    : ""
-                } `}
-              >
-                <Link href={link.href} className="menu-link-text">
-                  {link.name}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div> */}
-      </li>
-      {/* <li className="menu-item">
+      <li className="menu-item">
         <a href="https://themeforest.net/user/themesflat" className="item-link">
           Buy Theme
         </a>
-      </li> */}
+      </li>
     </>
   );
 }
