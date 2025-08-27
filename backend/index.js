@@ -87,6 +87,7 @@ const payloadTypesSupportedRouter = require("./routes/payloadTypesSupportedRoute
 const sliderRouter = require("./routes/sliderRouter.js");
 const sliderfrontendRouter = require("./routes/frontend/sliderFrntRouter.js");
 const categoryFrontendRouter = require("./routes/frontend/categoryFrntRouter.js");
+const robotFrontendRouter = require("./routes/frontend/robotFrntRouter.js");
 
 
 const cookieParser = require("cookie-parser");
@@ -179,6 +180,7 @@ app.use("/admin/api/payloadtype", payloadTypesSupportedRouter);
 app.use("/admin/api/slider", sliderRouter);
 app.use("/frontend/api/slider", sliderfrontendRouter);
 app.use("/frontend/api/category", categoryFrontendRouter);
+app.use("/frontend/api/robot", robotFrontendRouter);
 
 const path = require("path");
 // app.use("/public", express.static(path.join(__dirname, "public")));
