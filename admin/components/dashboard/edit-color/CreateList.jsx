@@ -42,7 +42,7 @@ const CreateList = () => {
 
       setTimeout(() => {
         router.push("/cmsroboticlife/my-color");
-      }, 1000);
+      }, 1500);
     } catch (error) {
       toast.error("Failed to update Color.");
       console.error(error);

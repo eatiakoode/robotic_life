@@ -21,8 +21,8 @@ const CreateList = () => {
       try {
         const data = await getAutonomyLevelById(id);
         setAutonomyLevel({
-          title: data.name,         
-          status: data.status ?? false, 
+          title: data.name,
+          status: data.status ?? false,
         });
       } catch (error) {
         console.error("Error fetching Autonomy Level:", error);
@@ -42,7 +42,7 @@ const CreateList = () => {
 
       setTimeout(() => {
         router.push("/cmsroboticlife/my-autonomylevel");
-      }, 1000);
+      }, 1500);
     } catch (error) {
       toast.error("Failed to update Autonomy Level.");
       console.error(error);

@@ -213,14 +213,14 @@ export default function Collections() {
     );
   }
 
-  // Display dynamic categories (first 2 categories)
-  const displayCategories = categories.slice(0, 2);
+  // Display dynamic categories (first 3 categories)
+  const displayCategories = categories.slice(0, 3);
 
   return (
     <section className="flat-spacing">
       <div className="container">
         <div className="tf-grid-layout md-col-2">
-          {displayCategories.map((category, index) => (
+          {displayCategories.slice(0, 2).map((category, index) => (
             <div
               key={category.id}
               className="collection-default abs-left-bottom type-xl radius-20 hover-img wow fadeInUp"
@@ -241,7 +241,6 @@ export default function Collections() {
               </a>
               <div className="content text-start">
                 <div className="box-title">
-                  <p className="tag text-btn-uppercase text-white">Category</p>
                   <h3 className="title">
                     <Link
                       href={`/shop-default-grid`}
@@ -266,50 +265,99 @@ export default function Collections() {
               </div>
             </div>
           ))}
-          <div
-            className="wd-load collection-default abs-left-center type-xl radius-20 hover-img wow fadeInUp"
-            data-wow-delay="0s"
-          >
-            <a className="img-style">
-              <Image
-                className="lazyload"
-                data-src="/images/collections/grid-cls/gaming-3.jpg"
-                alt="banner-cls"
-                src="/images/collections/grid-cls/gaming-3.jpg"
-                width={1290}
-                height={500}
-              />
-            </a>
-            <div className="content text-start">
-              <div className="box-title">
-                <p className="tag text-white body-text fw-semibold">
-                  ROG GAMING MOUSE
-                </p>
-                <h1 className="title">
+          {displayCategories[2] ? (
+            <div
+              key={displayCategories[2].id}
+              className="wd-load collection-default abs-left-center type-xl radius-20 hover-img wow fadeInUp"
+              data-wow-delay="0s"
+            >
+              <a className="img-style">
+                <Image
+                  className="lazyload"
+                  data-src={displayCategories[2].imageSrc}
+                  alt={displayCategories[2].title}
+                  src={displayCategories[2].imageSrc}
+                  width={1290}
+                  height={500}
+                  onError={(e) => {
+                    e.target.src = '/images/collections/grid-cls/gaming-3.jpg';
+                  }}
+                />
+              </a>
+              <div className="content text-start">
+                <div className="box-title">
+                  <p className="tag text-white body-text fw-semibold">
+                    {displayCategories[2].title}
+                  </p>
+                  <h1 className="title">
+                    <Link
+                      href={`/shop-default-grid`}
+                      className="link text-white fw-bold font-5"
+                    >
+                      {displayCategories[2].title}
+                    </Link>
+                  </h1>
+                  <p className="text-white body-text-1">
+                    {displayCategories[2].description}
+                  </p>
+                </div>
+                <div className="box-btn">
                   <Link
                     href={`/shop-default-grid`}
-                    className="link text-white fw-bold font-5"
+                    className="tf-btn btn-fill btn-white btn-md"
                   >
-                    Precision at Your <br />
-                    Fingertips
+                    <span className="text">Shop now</span>
+                    <i className="icon icon-arrowUpRight" />
                   </Link>
-                </h1>
-                <p className="text-white body-text-1">
-                  Unleash Speed, Accuracy, and Control for the <br />
-                  Ultimate Gaming Edge!
-                </p>
-              </div>
-              <div className="box-btn">
-                <Link
-                  href={`/shop-default-grid`}
-                  className="tf-btn btn-fill btn-white btn-md"
-                >
-                  <span className="text">Shop now</span>
-                  <i className="icon icon-arrowUpRight" />
-                </Link>
+                </div>
               </div>
             </div>
-          </div>
+          ) : (
+            <div
+              className="wd-load collection-default abs-left-center type-xl radius-20 hover-img wow fadeInUp"
+              data-wow-delay="0s"
+            >
+              <a className="img-style">
+                <Image
+                  className="lazyload"
+                  data-src="/images/collections/grid-cls/gaming-3.jpg"
+                  alt="banner-cls"
+                  src="/images/collections/grid-cls/gaming-3.jpg"
+                  width={1290}
+                  height={500}
+                />
+              </a>
+              <div className="content text-start">
+                <div className="box-title">
+                  <p className="tag text-white body-text fw-semibold">
+                    ROG GAMING MOUSE
+                  </p>
+                  <h1 className="title">
+                    <Link
+                      href={`/shop-default-grid`}
+                      className="link text-white fw-bold font-5"
+                    >
+                      Precision at Your <br />
+                      Fingertips
+                    </Link>
+                  </h1>
+                  <p className="text-white body-text-1">
+                    Unleash Speed, Accuracy, and Control for the <br />
+                    Ultimate Gaming Edge!
+                  </p>
+                </div>
+                <div className="box-btn">
+                  <Link
+                    href={`/shop-default-grid`}
+                    className="tf-btn btn-fill btn-white btn-md"
+                  >
+                    <span className="text">Shop now</span>
+                    <i className="icon icon-arrowUpRight" />
+                  </Link>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </section>
