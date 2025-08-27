@@ -1,0 +1,10 @@
+<svg width="300" height="300" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+  <rect width="300" height="300" fill="#f8f9fa"/>
+  <rect x="50" y="50" width="200" height="200" fill="#e9ecef" stroke="#dee2e6" stroke-width="2"/>
+  <circle cx="100" cy="100" r="15" fill="#6c757d"/>
+  <circle cx="200" cy="100" r="15" fill="#6c757d"/>
+  <rect x="75" y="130" width="150" height="20" fill="#6c757d" rx="10"/>
+  <rect x="90" y="170" width="120" height="15" fill="#6c757d" rx="7.5"/>
+  <rect x="110" y="200" width="80" height="30" fill="#6c757d" rx="15"/>
+  <text x="150" y="250" text-anchor="middle" fill="#6c757d" font-family="Arial, sans-serif" font-size="16">Robot Image</text>
+</svg>
