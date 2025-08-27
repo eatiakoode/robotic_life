@@ -114,42 +114,56 @@ export default function ProductCard1({
         
         {product.colors && product.colors.length > 0 && (
           <ul className="list-color-product">
-            {product.colors.map((color, index) => (
-              <li
-                key={index}
-                className={`list-color-item color-swatch ${
-                  currentImage == color.imgSrc ? "active" : ""
-                } ${color.bgColor == "bg-white" ? "line" : ""}`}
-                onMouseOver={() => setCurrentImage(color.imgSrc)}
-              >
-                <span 
-                  className="swatch-value" 
-                  style={{ 
-                    backgroundColor: color.bgColor.startsWith('#') ? color.bgColor : undefined,
-                    width: '20px',
-                    height: '20px',
-                    borderRadius: '50%',
-                    display: 'inline-block'
-                  }}
-                />
-                {color.imgSrc ? (
-                  <Image
-                    className="lazyload"
-                    src={color.imgSrc}
-                    alt="color variant"
-                    width={600}
-                    height={800}
+            {product.colors.map((color, index) => {
+              console.log(`Product "${product.title}" color ${index}:`, color); // Debug each color
+              return (
+                <li
+                  key={index}
+                  className={`list-color-item color-swatch ${
+                    currentImage == color.imgSrc ? "active" : ""
+                  } ${color.bgColor == "bg-white" ? "line" : ""}`}
+                  onMouseOver={() => setCurrentImage(color.imgSrc)}
+                >
+                  <span 
+                    className={`swatch-value ${color.bgColor}`}
+                    style={{ 
+                      width: '20px',
+                      height: '20px',
+                      borderRadius: '50%',
+                      display: 'inline-block'
+                    }}
                   />
-                ) : (
-                  <div className="color-placeholder" style={{
-                    width: '20px',
-                    height: '20px',
-                    backgroundColor: color.bgColor.startsWith('#') ? color.bgColor : '#007bff',
-                    borderRadius: '50%'
-                  }} />
-                )}
-              </li>
-            ))}
+                  {color.imgSrc ? (
+                    <Image
+                      className="lazyload"
+                      src={color.imgSrc}
+                      alt="color variant"
+                      width={600}
+                      height={800}
+                    />
+                  ) : (
+                    <div className="color-placeholder" style={{
+                      width: '20px',
+                      height: '20px',
+                      backgroundColor: color.bgColor === 'bg-primary' ? '#007bff' : 
+                                   color.bgColor === 'bg-red' ? '#dc3545' :
+                                   color.bgColor === 'bg-blue' ? '#0d6efd' :
+                                   color.bgColor === 'bg-green' ? '#198754' :
+                                   color.bgColor === 'bg-yellow' ? '#ffc107' :
+                                   color.bgColor === 'bg-orange' ? '#fd7e14' :
+                                   color.bgColor === 'bg-purple' ? '#6f42c1' :
+                                   color.bgColor === 'bg-pink' ? '#e83e8c' :
+                                   color.bgColor === 'bg-brown' ? '#795548' :
+                                   color.bgColor === 'bg-grey' ? '#6c757d' :
+                                   color.bgColor === 'bg-black' ? '#000000' :
+                                   color.bgColor === 'bg-white' ? '#ffffff' :
+                                   color.bgColor === 'bg-beige' ? '#f5f5dc' : '#6c757d',
+                      borderRadius: '50%'
+                    }} />
+                  )}
+                </li>
+              );
+            })}
           </ul>
         )}
       </div>

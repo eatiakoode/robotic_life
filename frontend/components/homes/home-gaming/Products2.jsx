@@ -9,6 +9,35 @@ import Link from "next/link";
 export default function Products2() {
   const { robots, loading, error } = useRobots();
 
+  // Helper function to map color names to CSS classes
+  const getColorClass = (colorName) => {
+    if (!colorName) return 'bg-primary';
+    
+    const colorMap = {
+      'red': 'bg-red',
+      'blue': 'bg-blue', 
+      'green': 'bg-success',
+      'yellow': 'bg-yellow',
+      'orange': 'bg-orange',
+      'purple': 'bg-purple',
+      'pink': 'bg-pink',
+      'brown': 'bg-brown',
+      'grey': 'bg-grey',
+      'gray': 'bg-grey',
+      'black': 'bg-black',
+      'white': 'bg-white',
+      'beige': 'bg-beige',
+      'light blue': 'bg-light-blue',
+      'light green': 'bg-light-green',
+      'light pink': 'bg-light-pink',
+      'dark blue': 'bg-dark-blue',
+      'dark grey': 'bg-dark-grey'
+    };
+    
+    const normalizedName = colorName.toLowerCase().trim();
+    return colorMap[normalizedName] || `bg-${normalizedName.replace(/\s+/g, '-')}`;
+  };
+
   // Transform robot data to match ProductCard1 expected format
   const transformedRobots = robots.map(robot => ({
     id: robot._id,
@@ -29,14 +58,20 @@ export default function Products2() {
             : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}${robot.images[0].startsWith('/') ? robot.images[0] : `/${robot.images[0]}`}`)
         : '/images/placeholder-robot.svg',
     colors: robot.color && robot.color.length > 0 ? robot.color.map(color => ({
-      bgColor: color.hexCode ? `#${color.hexCode}` : 'bg-primary',
+      bgColor: getColorClass(color.name),
       colorName: color.name || 'Unknown',
       imgSrc: robot.images && robot.images.length > 0 
         ? (robot.images[0].startsWith('http') 
             ? robot.images[0] 
             : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}${robot.images[0].startsWith('/') ? robot.images[0] : `/${robot.images[0]}`}`)
         : '/images/placeholder-robot.svg'
-    })) : [],
+    })) : (robot.images && robot.images.length > 0 ? [{
+      bgColor: 'bg-primary',
+      colorName: 'Default',
+      imgSrc: robot.images[0].startsWith('http')
+        ? robot.images[0]
+        : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}${robot.images[0].startsWith('/') ? robot.images[0] : `/${robot.images[0]}`}`
+    }] : []),
     slug: robot.slug,
     isOnSale: false,
     salePercentage: 0,
