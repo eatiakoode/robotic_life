@@ -5,6 +5,7 @@ const Robot = require("../../models/robotModel");
 const getRecentRobots = asyncHandler(async (req, res) => {
   const robots = await Robot.find() 
     .select("title slug images totalPrice color") 
+    .populate("color", "name hexCode") // Populate color data with name and hexCode
     .sort({ createdAt: -1 }) 
     .limit(3); 
 
