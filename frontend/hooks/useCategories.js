@@ -9,20 +9,29 @@ const useCategories = () => {
     const fetchCategories = async () => {
       try {
         setLoading(true);
+        setError(null);
         
         // Use the same approach as the working slider implementation
         const backendUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
         const apiUrl = `${backendUrl}/frontend/api/category`;
         
-        console.log('Fetching categories from:', apiUrl);
+        console.log('🔍 Fetching categories from:', apiUrl);
+        console.log('🔍 Backend URL:', backendUrl);
+        console.log('🔍 Environment variable:', process.env.NEXT_PUBLIC_API_URL);
         
         const response = await fetch(apiUrl);
         
+        console.log('🔍 Response status:', response.status);
+        console.log('🔍 Response ok:', response.ok);
+        
         if (!response.ok) {
+          const errorText = await response.text();
+          console.error('🔍 Error response text:', errorText);
           throw new Error(`Failed to fetch categories: ${response.status} ${response.statusText}`);
         }
         
         const data = await response.json();
+        console.log('🔍 Raw response data:', data);
         
         if (data.success && data.data) {
           // Transform the data to match the expected format
@@ -34,12 +43,14 @@ const useCategories = () => {
             slug: category.slug || 'category'
           }));
           
+          console.log('🔍 Transformed categories:', transformedCategories);
           setCategories(transformedCategories);
         } else {
+          console.log('🔍 No data or success false:', data);
           setCategories([]);
         }
       } catch (err) {
-        console.error('Error fetching categories:', err);
+        console.error('❌ Error fetching categories:', err);
         setError(err.message);
         setCategories([]);
       } finally {

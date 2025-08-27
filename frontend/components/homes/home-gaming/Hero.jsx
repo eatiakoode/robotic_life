@@ -54,29 +54,44 @@ export default function Hero() {
         dir="ltr"
         className="swiper tf-sw-slideshow"
         loop
+        slidesPerView={1}
+        spaceBetween={0}
         modules={[Autoplay, Pagination]}
         autoplay={{
           delay: 2000,
+          disableOnInteraction: false,
         }}
         speed={2000}
         pagination={{
           clickable: true,
           el: ".spd24",
         }}
+        effect="fade"
+        fadeEffect={{
+          crossFade: true
+        }}
       >
         {sliders.map((slide, index) => (
           <SwiperSlide className="swiper-slide" key={slide.id}>
-                         <div className="wrap-slider">
-               <Image
-                 src={slide.imageSrc}
-                 alt={slide.alt}
-                 className="lazyload"
-                 width={1920}
-                 height={756}
-                 onError={(e) => handleImageError(e, "/images/slider/slider-gaming-1.jpg")}
-                 onLoad={(e) => handleImageLoad(e, slide.imageSrc)}
-                 priority={index === 0}
-               />
+            <div className="wrap-slider">
+              <div className="image-container" style={{ position: 'relative', width: '100%', height: '100%' }}>
+                <Image
+                  src={slide.imageSrc}
+                  alt={slide.alt}
+                  className="lazyload"
+                  width={1920}
+                  height={756}
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'contain',
+                    objectPosition: 'center'
+                  }}
+                  onError={(e) => handleImageError(e, "/images/slider/slider-gaming-1.jpg")}
+                  onLoad={(e) => handleImageLoad(e, slide.imageSrc)}
+                  priority={index === 0}
+                />
+              </div>
               <div className="box-content type-2 type-3">
                 <div className="content-slider">
                   <div className="box-title-slider">
@@ -102,11 +117,7 @@ export default function Hero() {
           </SwiperSlide>
         ))}
       </Swiper>
-      <div className="wrap-pagination stype-space-3">
-        <div className="container">
-          <div className="sw-dots sw-pagination-slider type-circle white-circle justify-content-center spd24" />
-        </div>
-      </div>
+      <div className="sw-pagination-categories sw-dots type-circle justify-content-center spd24"></div>
     </div>
   );
 }

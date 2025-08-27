@@ -39,22 +39,30 @@ export default function ProductCard1({
           isNotImageRatio ? "aspect-ratio-0" : ""
         } ${radiusClass} `}
       >
-        <Link href={`/product-detail/${product.id}`} className="product-img">
+        <Link href={`/product-detail/${product.id}`} className="product-img" style={{ position: 'relative', display: 'block', width: '100%', height: '300px' }}>
           <Image
             className="lazyload img-product"
             src={currentImage}
             alt={product.title}
-            width={600}
-            height={800}
+            fill
+            style={{
+              objectFit: 'contain',
+              objectPosition: 'center'
+            }}
           />
 
-          <Image
-            className="lazyload img-hover"
-            src={product.imgHover}
-            alt={product.title}
-            width={600}
-            height={800}
-          />
+          {product.imgHover && product.imgHover.trim() !== '' && (
+            <Image
+              className="lazyload img-hover"
+              src={product.imgHover}
+              alt={product.title}
+              fill
+              style={{
+                objectFit: 'contain',
+                objectPosition: 'center'
+              }}
+            />
+          )}
         </Link>
         {product.hotSale && (
           <div className="marquee-product bg-main">
@@ -185,61 +193,17 @@ export default function ProductCard1({
           ""
         )}
         <div className="list-product-btn">
-          <a
-            onClick={() => addToWishlist(product.id)}
-            className="box-icon wishlist btn-icon-action"
-          >
-            <span className="icon icon-heart" />
-            <span className="tooltip">
-              {isAddedtoWishlist(product.id)
-                ? "Already Wishlished"
-                : "Wishlist"}
-            </span>
-          </a>
-          <a
-            href="#compare"
-            data-bs-toggle="offcanvas"
-            aria-controls="compare"
-            onClick={() => addToCompareItem(product.id)}
-            className="box-icon compare btn-icon-action"
-          >
-            <span className="icon icon-gitDiff" />
-            <span className="tooltip">
-              {isAddedtoCompareItem(product.id)
-                ? "Already compared"
-                : "Compare"}
-            </span>
-          </a>
-          <a
-            href="#quickView"
-            onClick={() => setQuickViewItem(product)}
-            data-bs-toggle="modal"
-            className="box-icon quickview tf-btn-loading"
-          >
-            <span className="icon icon-eye" />
-            <span className="tooltip">Quick View</span>
-          </a>
+          {/* Removed the 3 interactive icons (wishlist, compare, quick view) */}
         </div>
         <div className="list-btn-main">
-          {product.addToCart == "Quick Add" ? (
-            <a
-              className="btn-main-product"
-              href="#quickAdd"
-              onClick={() => setQuickAddItem(product.id)}
-              data-bs-toggle="modal"
-            >
-              Quick Add
-            </a>
-          ) : (
-            <a
-              className="btn-main-product"
-              onClick={() => addProductToCart(product.id)}
-            >
-              {isAddedToCartProducts(product.id)
-                ? "Already Added"
-                : "ADD TO CART"}
-            </a>
-          )}
+          <a
+            className="btn-main-product"
+            onClick={() => addToCompareItem(product.id)}
+          >
+            {isAddedtoCompareItem(product.id)
+              ? "Already Compared"
+              : "ADD TO COMPARE"}
+          </a>
         </div>
       </div>
       <div className="card-product-info">

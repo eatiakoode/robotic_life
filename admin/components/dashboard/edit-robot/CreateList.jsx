@@ -504,7 +504,7 @@ const EditList = () => {
       { key: "price", value: price, name: "Total Price" },
       { key: "countryid", value: selectedCountry, name: "Country of Origin" },
       { key: "categoryid", value: selectedCategory, name: "Category" },
-      { key: "subcategoryid", value: selectedSubCategory, name: "Sub Category" },
+      // { key: "subcategoryid", value: selectedSubCategory, name: "Sub Category" },
       { key: "manufacturerid", value: selectedManufacturer, name: "Manufacturer" },
       { key: "launchYear", value: launchYear, name: "Launch Year" },
       { key: "length", value: length, name: "Length" },

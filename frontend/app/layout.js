@@ -140,7 +140,7 @@ export default function RootLayout({ children }) {
           <Compare />
           <MobileMenu />
 
-          <NewsLetterModal />
+          {/* <NewsLetterModal /> */}
           <SearchModal />
           <SizeGuide />
           <Wishlist />
