@@ -1,20 +1,20 @@
 export const addLandingEnquiryAPI = async (title: string) => {
   // const token = localStorage.getItem("token"); // 🔹 Retrieve token
-// console.log("token")
+  // console.log("token")
   // const token =process.env.NEXT_PUBLIC_TOKEN;
   const userData = JSON.parse(localStorage.getItem("user"));
-console.log(userData.name);
-// const token = localStorage.getItem("token"); // 🔹 Retrieve token
-// // console.log("token")
-//     const token =process.env.NEXT_PUBLIC_TOKEN;
-const token =userData.token
+  console.log(userData.name);
+  // const token = localStorage.getItem("token"); // 🔹 Retrieve token
+  // // console.log("token")
+  //     const token =process.env.NEXT_PUBLIC_TOKEN;
+  const token = userData.token
 
 
   if (!token) {
     throw new Error("User not authenticated!");
   }
 
-  const response = await fetch(process.env.NEXT_PUBLIC_ADMIN_API_URL+"api/landingenquiry", {
+  const response = await fetch(process.env.NEXT_PUBLIC_ADMIN_API_URL + "api/landingenquiry", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -32,17 +32,14 @@ const token =userData.token
 };
 
 
-export async function getLandingEnquiryTableData(filter = {}) {
-
-  const limit = filter.limit ?? 10; // default to 10 if not provided
-  const page = filter.page ?? 0;    // default to 0 if not provided
+export async function getLandingEnquiryTableData(filter) {
   // Fake delay
   await new Promise((resolve) => setTimeout(resolve, 10));
-  
+
 
   try {
    const response = await fetch(
-        `${process.env.NEXT_PUBLIC_ADMIN_API_URL}api/landingenquiry?limit=${limit}&skip=${page}`,
+        process.env.NEXT_PUBLIC_ADMIN_API_URL + "api/landingenquiry?limit="+filter.limit+"&skip="+filter.page,
         {
           next: { revalidate: 60 }
         }
@@ -65,16 +62,16 @@ export const deleteLandingEnquiryAPI = async (id: string) => {
 
   // const token =process.env.NEXT_PUBLIC_TOKEN;
   const userData = JSON.parse(localStorage.getItem("user"));
-console.log(userData.name);
-// const token = localStorage.getItem("token"); // 🔹 Retrieve token
-// // console.log("token")
-//     const token =process.env.NEXT_PUBLIC_TOKEN;
-const token =userData.token
+  console.log(userData.name);
+  // const token = localStorage.getItem("token"); // 🔹 Retrieve token
+  // // console.log("token")
+  //     const token =process.env.NEXT_PUBLIC_TOKEN;
+  const token = userData.token
   if (!token) {
     throw new Error("User not authenticated!");
   }
 
-  const response = await fetch(process.env.NEXT_PUBLIC_ADMIN_API_URL+`api/landingenquiry/${id}`, {
+  const response = await fetch(process.env.NEXT_PUBLIC_ADMIN_API_URL + `api/landingenquiry/${id}`, {
     method: "DELETE",
     headers: {
       "Content-Type": "application/json",
@@ -101,16 +98,16 @@ export const getLandingEnquiryById = async (id: string) => {
 
   // const token =process.env.NEXT_PUBLIC_TOKEN;
   const userData = JSON.parse(localStorage.getItem("user"));
-console.log(userData.name);
-// const token = localStorage.getItem("token"); // 🔹 Retrieve token
-// // console.log("token")
-//     const token =process.env.NEXT_PUBLIC_TOKEN;
-const token =userData.token
+  console.log(userData.name);
+  // const token = localStorage.getItem("token"); // 🔹 Retrieve token
+  // // console.log("token")
+  //     const token =process.env.NEXT_PUBLIC_TOKEN;
+  const token = userData.token
   if (!token) {
     throw new Error("User not authenticated!");
   }
 
-  const response = await fetch(process.env.NEXT_PUBLIC_ADMIN_API_URL+`api/landingenquiry/${id}`, {
+  const response = await fetch(process.env.NEXT_PUBLIC_ADMIN_API_URL + `api/landingenquiry/${id}`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -128,23 +125,23 @@ const token =userData.token
 };
 
 
-export const updateLandingEnquiryAPI = async (id,landingenquiry) => {
+export const updateLandingEnquiryAPI = async (id, landingenquiry) => {
   // const token = localStorage.getItem("token"); // 🔹 Retrieve token
 
   // const token =process.env.NEXT_PUBLIC_TOKEN;
   const userData = JSON.parse(localStorage.getItem("user"));
-console.log(userData.name);
-// const token = localStorage.getItem("token"); // 🔹 Retrieve token
-// // console.log("token")
-//     const token =process.env.NEXT_PUBLIC_TOKEN;
-const token =userData.token
+  console.log(userData.name);
+  // const token = localStorage.getItem("token"); // 🔹 Retrieve token
+  // // console.log("token")
+  //     const token =process.env.NEXT_PUBLIC_TOKEN;
+  const token = userData.token
 
 
   if (!token) {
     throw new Error("User not authenticated!");
   }
 
-  const response = await fetch(process.env.NEXT_PUBLIC_ADMIN_API_URL+`api/landingenquiry/${id}`, {
+  const response = await fetch(process.env.NEXT_PUBLIC_ADMIN_API_URL + `api/landingenquiry/${id}`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",

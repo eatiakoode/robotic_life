@@ -1,146 +1,115 @@
+// src/api/country.ts
+import axios from "axios";
+
+// Normalize base so it always ends with /admin/
+const normalizeAdminBase = (base: string) => {
+  let normalized = (base || "").trim();
+  if (!normalized) return "/admin/";
+  if (!normalized.endsWith("/")) normalized += "/";
+  if (!/\/admin\/$/.test(normalized)) normalized += "admin/";
+  return normalized;
+};
+
+const ADMIN_BASE = normalizeAdminBase(process.env.NEXT_PUBLIC_ADMIN_API_URL as string);
+const API_BASE_URL = ADMIN_BASE + "api/country";
+
+// Add a new country (Admin only)
 export const addCountryAPI = async (title: string) => {
-  const userData = JSON.parse(localStorage.getItem("user"));
-const token =userData.token
+  const userData = JSON.parse(localStorage.getItem("user") || "{}");
+  const token = userData?.token;
 
-  
-    if (!token) {
-      throw new Error("User not authenticated!");
-    }
-  
-    const response = await fetch(process.env.NEXT_PUBLIC_ADMIN_API_URL+"api/country", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({ title }),
-    });
-  
-    if (!response.status) {
-      const errorData = await response.json();
-      throw new Error(errorData.message || "Failed to add Country");
-    }
-  
-    return response.json();
-  };
-  
-
-  export async function getCountryTableData() {
-    // Fake delay
-    await new Promise((resolve) => setTimeout(resolve, 10));
-    
-  
-    try {
-      const response = await fetch(process.env.NEXT_PUBLIC_ADMIN_API_URL+"api/country"); // Replace with actual API endpoint
-      if (!response.ok) {
-        throw new Error("Failed to fetch products");
-      }
-      return await response.json();
-    } catch (error) {
-      console.error("Error fetching products:", error);
-      return []; // Return an empty array in case of an error
-    }
+  if (!token) {
+    throw new Error("User not authenticated!");
   }
 
+  const response = await axios.post(
+    API_BASE_URL,
+    { title },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+  return response.data;
+};
 
-  export const deleteCountryAPI = async (id: string) => {
-    // const token = localStorage.getItem("token"); // 🔹 Retrieve token
-
-
-    // const token =process.env.NEXT_PUBLIC_TOKEN;
-    const userData = JSON.parse(localStorage.getItem("user"));
-console.log(userData.name);
-// const token = localStorage.getItem("token"); // 🔹 Retrieve token
-// // console.log("token")
-//     const token =process.env.NEXT_PUBLIC_TOKEN;
-const token =userData.token
+// Get all countries
+export const getCountryTableData = async () => {
+  try {
+    const userData = JSON.parse(localStorage.getItem("user") || "{}");
+    const token = userData?.token;
+    
     if (!token) {
       throw new Error("User not authenticated!");
     }
-  
-    const response = await fetch(process.env.NEXT_PUBLIC_ADMIN_API_URL+`api/country/${id}`, {
-      method: "DELETE",
+
+    const response = await axios.get(API_BASE_URL, {
       headers: {
-        "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({ id }),
     });
-  
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.message || "Failed to delete Country");
-    }
-  
-    return response.json();
-  };
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching countries:", error);
+    return [];
+  }
+};
 
+// Delete a country (Admin only)
+export const deleteCountryAPI = async (id: string) => {
+  const userData = JSON.parse(localStorage.getItem("user") || "{}");
+  const token = userData?.token;
 
-  
-  
+  if (!token) {
+    throw new Error("User not authenticated!");
+  }
 
-  export const getCountryById = async (id: string) => {
-    // const token = localStorage.getItem("token"); // 🔹 Retrieve token
+  const response = await axios.delete(`${API_BASE_URL}/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
 
+  return response.data;
+};
 
-    // const token =process.env.NEXT_PUBLIC_TOKEN;
-    const userData = JSON.parse(localStorage.getItem("user"));
-console.log(userData.name);
-// const token = localStorage.getItem("token"); // 🔹 Retrieve token
-// // console.log("token")
-//     const token =process.env.NEXT_PUBLIC_TOKEN;
-const token =userData.token
-    if (!token) {
-      throw new Error("User not authenticated!");
-    }
-  
-    const response = await fetch(process.env.NEXT_PUBLIC_ADMIN_API_URL+`api/country/${id}`, {
-      method: "GET",
+// Get a single country by ID
+export const getCountryById = async (id: string) => {
+  const userData = JSON.parse(localStorage.getItem("user") || "{}");
+  const token = userData?.token;
+
+  if (!token) {
+    throw new Error("User not authenticated!");
+  }
+
+  const response = await axios.get(`${API_BASE_URL}/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  return response.data;
+};
+
+// Update a country (Admin only)
+export const updateCountryAPI = async (id: string, country: { title: string }) => {
+  const userData = JSON.parse(localStorage.getItem("user") || "{}");
+  const token = userData?.token;
+
+  if (!token) {
+    throw new Error("User not authenticated!");
+  }
+
+  const response = await axios.put(
+    `${API_BASE_URL}/${id}`,
+    country,
+    {
       headers: {
-        "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
-      // body: JSON.stringify({ id }),
-    });
-  
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.message || "Failed to get Country");
     }
-  
-    return response.json();
-  };
+  );
 
-
-  export const updateCountryAPI = async (id,country) => {
-    // const token = localStorage.getItem("token"); // 🔹 Retrieve token
-
-    // const token =process.env.NEXT_PUBLIC_TOKEN;
-    const userData = JSON.parse(localStorage.getItem("user"));
-console.log(userData.name);
-// const token = localStorage.getItem("token"); // 🔹 Retrieve token
-// // console.log("token")
-//     const token =process.env.NEXT_PUBLIC_TOKEN;
-const token =userData.token
-
-  
-    if (!token) {
-      throw new Error("User not authenticated!");
-    }
-  
-    const response = await fetch(process.env.NEXT_PUBLIC_ADMIN_API_URL+`api/country/${id}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify(country),
-    });
-  
-    if (!response.status) {
-      const errorData = await response.json();
-      throw new Error(errorData.message || "Failed to add Country");
-    }
-  
-    return response.json();
-  };
+  return response.data;
+};

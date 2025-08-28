@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import Link from "next/link";
 
@@ -10,87 +10,164 @@ import { SafeImage } from "../../../../utils/imageUtils";
 import { usePathname } from "next/navigation";
 
 const SidebarMenu = () => {
-  const pathname = usePathname()
+  const pathname = usePathname();
 
   const myRobots = [
-    { id: 1, name: "Add Robot", route: "/cmswegrow/create-listing" },
-    { id: 2, name: "Robot List", route: "/cmswegrow/my-properties" }
+    { id: 1, name: "Add Robot", route: "/cmsroboticlife/create-listing" },
+    { id: 2, name: "Robot List", route: "/cmsroboticlife/my-robot" },
   ];
   const RoboCategory = [
-    { id: 1, name: "Add Category", route: "/cmswegrow/add-category" },
-    { id: 2, name: "Category List", route: "/cmswegrow/my-category" }
+    { id: 1, name: "Add Category", route: "/cmsroboticlife/add-category" },
+    { id: 2, name: "Category List", route: "/cmsroboticlife/my-category" },
   ];
-  const myCountry = [
-    { id: 1, name: "Add Country", route: "/cmswegrow/add-country" },
-    { id: 2, name: "Country List", route: "/cmswegrow/my-country" }
+  const MasterData = [
+    { id: 1, name: "Add Country", route: "/cmsroboticlife/add-country" },
+    { id: 2, name: "Country List", route: "/cmsroboticlife/my-country" },
+    {
+      id: 3,
+      name: "Add Power Source",
+      route: "/cmsroboticlife/add-powersource",
+    },
+    {
+      id: 4,
+      name: "Power Source List",
+      route: "/cmsroboticlife/my-powersource",
+    },
+    { id: 5, name: "Add Color", route: "/cmsroboticlife/add-color" },
+    { id: 6, name: "Color List", route: "/cmsroboticlife/my-color" },
+    { id: 7, name: "Add Material", route: "/cmsroboticlife/add-material" },
+    { id: 8, name: "Material List", route: "/cmsroboticlife/my-material" },
+    {
+      id: 9,
+      name: "Add Navigation Type",
+      route: "/cmsroboticlife/add-navigationtype",
+    },
+    {
+      id: 10,
+      name: "Navigation Type List",
+      route: "/cmsroboticlife/my-navigationtype",
+    },
+    { id: 11, name: "Add Sensor", route: "/cmsroboticlife/add-sensor" },
+    { id: 12, name: "Sensor List", route: "/cmsroboticlife/my-sensor" },
+    {
+      id: 13,
+      name: "Add Primary Function",
+      route: "/cmsroboticlife/add-primaryfunction",
+    },
+    {
+      id: 14,
+      name: "Primary Function List",
+      route: "/cmsroboticlife/my-primaryfunction",
+    },
+    {
+      id: 15,
+      name: "Add AI/Software Feature",
+      route: "/cmsroboticlife/add-aisoftwarefeature",
+    },
+    {
+      id: 16,
+      name: "AI/Software Feature List",
+      route: "/cmsroboticlife/my-aisoftwarefeature",
+    },
+    {
+      id: 17,
+      name: "Add Operating Environment",
+      route: "/cmsroboticlife/add-operatingenvironment",
+    },
+    {
+      id: 18,
+      name: "Operating Environment List",
+      route: "/cmsroboticlife/my-operatingenvironment",
+    },
+    {
+      id: 19,
+      name: "Add Terrain Capability",
+      route: "/cmsroboticlife/add-terraincapability",
+    },
+    {
+      id: 20,
+      name: "Terrain Capability List",
+      route: "/cmsroboticlife/my-terraincapability",
+    },
+    {
+      id: 21,
+      name: "Add Autonomy Level",
+      route: "/cmsroboticlife/add-autonomylevel",
+    },
+    {
+      id: 22,
+      name: "Autonomy Level List",
+      route: "/cmsroboticlife/my-autonomylevel",
+    },
+    {
+      id: 23,
+      name: "Add Communication Method",
+      route: "/cmsroboticlife/add-communicationmethod",
+    },
+    {
+      id: 24,
+      name: "Communication Method List",
+      route: "/cmsroboticlife/my-communicationmethod",
+    },
+    {
+      id: 25,
+      name: "Add Payload Type",
+      route: "/cmsroboticlife/add-payloadtype",
+    },
+    {
+      id: 26,
+      name: "Payload Type List",
+      route: "/cmsroboticlife/my-payloadtype",
+    },
   ];
-  const myState = [
-    { id: 1, name: "Add State", route: "/cmswegrow/add-state" },
-    { id: 2, name: "State List", route: "/cmswegrow/my-state" }
+
+  const RoboManufacturer = [
+    {
+      id: 1,
+      name: "Add Manufacturer",
+      route: "/cmsroboticlife/add-manufacturer",
+    },
+    {
+      id: 2,
+      name: "Manufacturer List",
+      route: "/cmsroboticlife/my-manufacturer",
+    },
   ];
-  const myCity = [
-    { id: 1, name: "Add City", route: "/cmswegrow/add-city" },
-    { id: 2, name: "City List", route: "/cmswegrow/my-cities" }
+
+  const Slider = [
+    { id: 1, name: "Add Slider", route: "/cmsroboticlife/add-slider" },
+    { id: 2, name: "Slider List", route: "/cmsroboticlife/my-slider" },
   ];
-  const myLocation = [
-    { id: 1, name: "Add Location", route: "/cmswegrow/add-location" },
-    { id: 2, name: "Location List", route: "/cmswegrow/my-location" }
+
+  const Blog = [
+    {
+      id: 1,
+      name: "Add Blog category",
+      route: "/cmsroboticlife/add-blogcategory",
+    },
+    {
+      id: 2,
+      name: "Blog category List",
+      route: "/cmsroboticlife/my-blogcategory",
+    },
+    { id: 3, name: "Add Blog", route: "/cmsroboticlife/add-blog" },
+    { id: 4, name: "Blog List", route: "/cmsroboticlife/my-blog" },
   ];
-  const myAmenity = [
-    { id: 1, name: "Add Amenity", route: "/cmswegrow/add-amenities" },
-    { id: 2, name: "Amenity List", route: "/cmswegrow/my-amenities" }
+
+  const Faq = [
+    { id: 1, name: "Add FAQ", route: "/cmsroboticlife/add-faq" },
+    { id: 2, name: "FAQ List", route: "/cmsroboticlife/my-faq" },
   ];
-  const myPropertytype = [
-    { id: 1, name: "Add Property type", route: "/cmswegrow/add-propertytype" },
-    { id: 2, name: "Property type List", route: "/cmswegrow/my-propertytype" }
-  ];
-  const myBuilder = [
-    { id: 1, name: "Add Builder", route: "/cmswegrow/add-builder" },
-    { id: 2, name: "Builder List", route: "/cmswegrow/my-builder" }
-  ];
-  const myAgent = [
-    { id: 1, name: "Add Agent", route: "/cmswegrow/add-agent" },
-    { id: 2, name: "Agent List", route: "/cmswegrow/my-agent" }
-  ];
-  const mySeller = [
-    { id: 1, name: "Add Seller", route: "/cmswegrow/add-seller" },
-    { id: 2, name: "Seller List", route: "/cmswegrow/my-seller" }
-  ];
-  const myBlog = [
-    { id: 1, name: "Add Blog category", route: "/cmswegrow/add-blogcategory" },
-    { id: 2, name: "Blog category List", route: "/cmswegrow/my-blogcategory" },
-    { id: 3, name: "Add Blog", route: "/cmswegrow/add-blog" },
-    { id: 4, name: "Blog List", route: "/cmswegrow/my-blog" },
-    
-  ];
-  const myPropertypage = [
-    { id: 1, name: "Add Property page", route: "/cmswegrow/add-propertypage" },
-    { id: 2, name: "Property page List", route: "/cmswegrow/my-propertypage" }
-  ];
-  const myTestimonial = [
-    { id: 1, name: "Add Testimonial", route: "/cmswegrow/add-testimonial" },
-    { id: 2, name: "Testimonial List", route: "/cmswegrow/my-testimonial" }
-  ];
-  
-  const myFaq = [
-    { id: 1, name: "Add FAQ", route: "/cmswegrow/add-faq" },
-    { id: 2, name: "FAQ List", route: "/cmswegrow/my-faq" }
-  ];
-  const myLandingpage = [
-    { id: 1, name: "Add Landing page", route: "/cmswegrow/add-landing" },
-    { id: 2, name: "Landing page List", route: "/cmswegrow/my-landing" }
-  ];
+
   const reviews = [
-    { id: 1, name: "My Reviews", route: "/cmswegrow/my-review" },
-    { id: 2, name: "Visitor Reviews", route: "/cmswegrow/my-review" },
+    { id: 1, name: "My Reviews", route: "/cmsroboticlife/my-review" },
+    { id: 2, name: "Visitor Reviews", route: "/cmsroboticlife/my-review" },
   ];
+
   const enquerylist = [
-    { id: 1, name: "My enquery list", route: "/cmswegrow/my-enquiry" },
-    // { id: 2, name: "My property enquery list", route: "/cmswegrow/my-propertyenquiry" },
-    // { id: 3, name: "My landing enquery list", route: "/cmswegrow/my-landingenquiry" },
-    // { id: 4, name: "My Subscribe enquery list", route: "/cmswegrow/my-subscribeenquiry" },
-    // { id: 5, name: "My brochure enquery list", route: "/cmswegrow/my-brochureenquiry" },
+    { id: 1, name: "My enquery list", route: "/cmsroboticlife/my-enquiry" },
   ];
+
   const manageAccount = [
     {
       id: 1,
@@ -112,6 +189,7 @@ const SidebarMenu = () => {
       <ul className="sidebar-menu">
         <li className="sidebar_header header">
 <<<<<<< HEAD
+<<<<<<< HEAD
            <Link href="/cmswegrow/my-dashboard">
             <Image
               width={170}
@@ -125,6 +203,14 @@ const SidebarMenu = () => {
               height={65}
               src="/assets/images/robo.svg"
 >>>>>>> ea24ee4 (Home page & admin panel fixed)
+=======
+          <Link href="/cmsroboticlife/my-dashboard">
+            <Image
+              width={170}
+              height={65}
+              // src="/assets/images/robotic_logo1.svg"
+              src={`${process.env.NEXT_PUBLIC_BACKEND_API_URL}public/assets/images/robo.svg`}
+>>>>>>> 3c0733c34d124af768c936ac3903a1a50f4723cf
               alt="logo.svg"
             />
             {/* <span>WeGrow</span> */}
@@ -137,78 +223,34 @@ const SidebarMenu = () => {
           <ul>
             <li
               className={`treeview ${
-                isSinglePageActive("/my-dashboard", pathname)
-                  ? "active"
-                  : ""
+                isSinglePageActive("/my-dashboard", pathname) ? "active" : ""
               }`}
             >
-              <Link href="/cmswegrow/my-dashboard">
+              <Link href="/cmsroboticlife/my-dashboard">
                 <i className="flaticon-layers"></i>
                 <span> Dashboard</span>
               </Link>
             </li>
-            {/* <li
-              className={`treeview ${
-                isSinglePageActive("/create-listing", pathname)
-                  ? "active"
-                  : ""
-              }`}
-            >
-              <Link href="/create-listing">
-                <i className="flaticon-plus"></i>
-                <span> Create Listing</span>
-              </Link>
-            </li> */}
-            {/* <li
-              className={`treeview ${
-                isSinglePageActive("/my-message", pathname)
-                  ? "active"
-                  : ""
-              }`}
-            >
-              <Link href="/my-message">
-                <i className="flaticon-envelope"></i>
-                <span> Message</span>
-              </Link>
-            </li> */}
           </ul>
         </li>
         {/* End Main */}
 
+        {/* Robot Robot Manage Listing Start */}
         <li className="title">
           <span>Manage Listings</span>
           <ul>
-         
-            {/* <li
+            {/* Robot Master Data Start */}
+            <li
               className={`treeview ${
-                isParentPageActive(myCountry, pathname) ? "active" : ""
+                isParentPageActive(MasterData, pathname) ? "active" : ""
               }`}
             >
-              <a data-bs-toggle="collapse" href="#my-country">
-                <i className="flaticon-home"></i> <span>My Country</span>
+              <a data-bs-toggle="collapse" href="#MasterData">
+                <i className="flaticon-home"></i> <span>Master Data</span>
                 <i className="fa fa-angle-down pull-right"></i>
               </a>
-              <ul className="treeview-menu collapse" id="my-country">
-                {myCountry.map((item) => (
-                  <li key={item.id}>
-                    <Link href={item.route}>
-                      <i className="fa fa-circle"></i> {item.name}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </li> */}
-           {/* <li
-              className={`treeview ${
-                isParentPageActive(myState, pathname) ? "active" : ""
-              }`}
-            >
-              <a data-bs-toggle="collapse" href="#my-state">
-                <i className="flaticon-home"></i> <span>My State</span>
-                <i className="fa fa-angle-down pull-right"></i>
-              </a>
-              <ul className="treeview-menu collapse" id="my-state">
-                {myState.map((item) => (
+              <ul className="treeview-menu collapse" id="MasterData">
+                {MasterData.map((item) => (
                   <li key={item.id}>
                     <Link href={item.route}>
                       <i className="fa fa-circle"></i> {item.name}
@@ -217,17 +259,20 @@ const SidebarMenu = () => {
                 ))}
               </ul>
             </li>
+            {/* Robot Master Data End */}
+
+            {/* Robot Manufacturer Start */}
             <li
               className={`treeview ${
-                isParentPageActive(myCity, pathname) ? "active" : ""
+                isParentPageActive(RoboManufacturer, pathname) ? "active" : ""
               }`}
             >
-              <a data-bs-toggle="collapse" href="#my-city">
-                <i className="flaticon-home"></i> <span>My Cities</span>
+              <a data-bs-toggle="collapse" href="#roboManufacturer">
+                <i className="flaticon-home"></i> <span>Manufacturer</span>
                 <i className="fa fa-angle-down pull-right"></i>
               </a>
-              <ul className="treeview-menu collapse" id="my-city">
-                {myCity.map((item) => (
+              <ul className="treeview-menu collapse" id="roboManufacturer">
+                {RoboManufacturer.map((item) => (
                   <li key={item.id}>
                     <Link href={item.route}>
                       <i className="fa fa-circle"></i> {item.name}
@@ -236,45 +281,9 @@ const SidebarMenu = () => {
                 ))}
               </ul>
             </li>
-            <li
-              className={`treeview ${
-                isParentPageActive(myLocation, pathname) ? "active" : ""
-              }`}
-            >
-               <a data-bs-toggle="collapse" href="#my-location">
-                <i className="flaticon-home"></i> <span>My Location</span>
-                <i className="fa fa-angle-down pull-right"></i>
-              </a>
-              <ul className="treeview-menu collapse" id="my-location">
-                {myLocation.map((item) => (
-                  <li key={item.id}>
-                    <Link href={item.route}>
-                      <i className="fa fa-circle"></i> {item.name}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </li>
-            <li
-              className={`treeview ${
-                isParentPageActive(myAmenity, pathname) ? "active" : ""
-              }`}
-            >
-              <a data-bs-toggle="collapse" href="#my-Amenity">
-                <i className="flaticon-home"></i> <span>My Amenity</span>
-                <i className="fa fa-angle-down pull-right"></i>
-              </a>
-              <ul className="treeview-menu collapse" id="my-Amenity">
-                {myAmenity.map((item) => (
-                  <li key={item.id}>
-                    <Link href={item.route}>
-                      <i className="fa fa-circle"></i> {item.name}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </li> */}
-            
+            {/* Robot Manufacturer End */}
+
+            {/* Robot Category Start */}
             <li
               className={`treeview ${
                 isParentPageActive(RoboCategory, pathname) ? "active" : ""
@@ -294,83 +303,9 @@ const SidebarMenu = () => {
                 ))}
               </ul>
             </li>
-            {/* <li
-              className={`treeview ${
-                isParentPageActive(myPropertytype, pathname) ? "active" : ""
-              }`}
-            >
-              <a data-bs-toggle="collapse" href="#my-propertytype">
-                <i className="flaticon-home"></i> <span>My Robot type</span>
-                <i className="fa fa-angle-down pull-right"></i>
-              </a>
-              <ul className="treeview-menu collapse" id="my-propertytype">
-                {myPropertytype.map((item) => (
-                  <li key={item.id}>
-                    <Link href={item.route}>
-                      <i className="fa fa-circle"></i> {item.name}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </li> */}
-            {/* <li
-              className={`treeview ${
-                isParentPageActive(myBuilder, pathname) ? "active" : ""
-              }`}
-            >
-              <a data-bs-toggle="collapse" href="#my-builder">
-                <i className="flaticon-home"></i> <span>My Builder</span>
-                <i className="fa fa-angle-down pull-right"></i>
-              </a>
-              <ul className="treeview-menu collapse" id="my-builder">
-                {myBuilder.map((item) => (
-                  <li key={item.id}>
-                    <Link href={item.route}>
-                      <i className="fa fa-circle"></i> {item.name}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </li> */}
-            {/* <li
-              className={`treeview ${
-                isParentPageActive(myAgent, pathname) ? "active" : ""
-              }`}
-            >
-              <a data-bs-toggle="collapse" href="#my-agent">
-                <i className="flaticon-home"></i> <span>My Agent</span>
-                <i className="fa fa-angle-down pull-right"></i>
-              </a>
-              <ul className="treeview-menu collapse" id="my-agent">
-                {myAgent.map((item) => (
-                  <li key={item.id}>
-                    <Link href={item.route}>
-                      <i className="fa fa-circle"></i> {item.name}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </li> */}
-            {/* <li
-              className={`treeview ${
-                isParentPageActive(mySeller, pathname) ? "active" : ""
-              }`}
-            >
-              <a data-bs-toggle="collapse" href="#my-agent">
-                <i className="flaticon-home"></i> <span>My Seller</span>
-                <i className="fa fa-angle-down pull-right"></i>
-              </a>
-              <ul className="treeview-menu collapse" id="my-agent">
-                {mySeller.map((item) => (
-                  <li key={item.id}>
-                    <Link href={item.route}>
-                      <i className="fa fa-circle"></i> {item.name}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </li> */}
-            {/* end properties */}
+            {/* Robot Category Start */}
+
+            {/* Robot Listing Start */}
             <li
               className={`treeview ${
                 isParentPageActive(myRobots, pathname) ? "active" : ""
@@ -390,19 +325,42 @@ const SidebarMenu = () => {
                 ))}
               </ul>
             </li>
-            {/* end properties */}
+            {/* Robot Listing End */}
 
+            {/* Slider Start */}
             <li
               className={`treeview ${
-                isParentPageActive(myBlog, pathname) ? "active" : ""
+                isParentPageActive(Slider, pathname) ? "active" : ""
               }`}
             >
-              <a data-bs-toggle="collapse" href="#my-blog">
+              <a data-bs-toggle="collapse" href="#slider">
+                <i className="flaticon-home"></i> <span>Slider</span>
+                <i className="fa fa-angle-down pull-right"></i>
+              </a>
+              <ul className="treeview-menu collapse" id="slider">
+                {Slider.map((item) => (
+                  <li key={item.id}>
+                    <Link href={item.route}>
+                      <i className="fa fa-circle"></i> {item.name}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </li>
+            {/* Robot Slider End */}
+
+            {/* Robot Blog Start */}
+            <li
+              className={`treeview ${
+                isParentPageActive(Blog, pathname) ? "active" : ""
+              }`}
+            >
+              <a data-bs-toggle="collapse" href="#blog">
                 <i className="flaticon-home"></i> <span>Blogs</span>
                 <i className="fa fa-angle-down pull-right"></i>
               </a>
-              <ul className="treeview-menu collapse" id="my-blog">
-                {myBlog.map((item) => (
+              <ul className="treeview-menu collapse" id="blog">
+                {Blog.map((item) => (
                   <li key={item.id}>
                     <Link href={item.route}>
                       <i className="fa fa-circle"></i> {item.name}
@@ -411,88 +369,9 @@ const SidebarMenu = () => {
                 ))}
               </ul>
             </li>
-            {/* end blog */}
-            <li
-              className={`treeview ${
-                isParentPageActive(myTestimonial, pathname) ? "active" : ""
-              }`}
-            >
-              <a data-bs-toggle="collapse" href="#my-Testimonial">
-                <i className="flaticon-home"></i> <span>Testimonials</span>
-                <i className="fa fa-angle-down pull-right"></i>
-              </a>
-              <ul className="treeview-menu collapse" id="my-Testimonial">
-                {myTestimonial.map((item) => (
-                  <li key={item.id}>
-                    <Link href={item.route}>
-                      <i className="fa fa-circle"></i> {item.name}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </li>
-            {/* end Testimonial */}
+            {/* Robot Blog End */}
 
-            {/* <li
-              className={`treeview ${
-                isParentPageActive(myPropertypage, pathname) ? "active" : ""
-              }`}
-            >
-              <a data-bs-toggle="collapse" href="#my-Propertypage">
-                <i className="flaticon-home"></i> <span>My Property page</span>
-                <i className="fa fa-angle-down pull-right"></i>
-              </a>
-              <ul className="treeview-menu collapse" id="my-Propertypage">
-                {myPropertypage.map((item) => (
-                  <li key={item.id}>
-                    <Link href={item.route}>
-                      <i className="fa fa-circle"></i> {item.name}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </li> */}
-            {/* end Propertypage */}
-            <li
-              className={`treeview ${
-                isParentPageActive(myFaq, pathname) ? "active" : ""
-              }`}
-            >
-              <a data-bs-toggle="collapse" href="#my-faq">
-                <i className="flaticon-home"></i> <span>FAQs</span>
-                <i className="fa fa-angle-down pull-right"></i>
-              </a>
-              <ul className="treeview-menu collapse" id="my-faq">
-                {myFaq.map((item) => (
-                  <li key={item.id}>
-                    <Link href={item.route}>
-                      <i className="fa fa-circle"></i> {item.name}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </li>
-            {/* end Propertypage */}
-            {/* end Propertypage */}
-            {/* <li
-              className={`treeview ${
-                isParentPageActive(myLandingpage, pathname) ? "active" : ""
-              }`}
-            >
-              <a data-bs-toggle="collapse" href="#my-myLandingpage">
-                <i className="flaticon-home"></i> <span>My Landing page</span>
-                <i className="fa fa-angle-down pull-right"></i>
-              </a>
-              <ul className="treeview-menu collapse" id="my-myLandingpage">
-                {myLandingpage.map((item) => (
-                  <li key={item.id}>
-                    <Link href={item.route}>
-                      <i className="fa fa-circle"></i> {item.name}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </li> */}
+            {/* Robot Enqueries Start */}
             <li
               className={`treeview ${
                 isParentPageActive(enquerylist, pathname) ? "active" : ""
@@ -512,10 +391,31 @@ const SidebarMenu = () => {
                 ))}
               </ul>
             </li>
-            
+            {/* Robot Enqueries End */}
 
-            
+            {/* Robot FAQs Start */}
+            <li
+              className={`treeview ${
+                isParentPageActive(Faq, pathname) ? "active" : ""
+              }`}
+            >
+              <a data-bs-toggle="collapse" href="#faq">
+                <i className="flaticon-home"></i> <span>FAQs</span>
+                <i className="fa fa-angle-down pull-right"></i>
+              </a>
+              <ul className="treeview-menu collapse" id="faq">
+                {Faq.map((item) => (
+                  <li key={item.id}>
+                    <Link href={item.route}>
+                      <i className="fa fa-circle"></i> {item.name}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </li>
+            {/* Robot FAQs End */}
 
+            {/* Robot Reviews Start */}
             <li
               className={`treeview ${
                 isParentPageActive(reviews, pathname) ? "active" : ""
@@ -536,53 +436,10 @@ const SidebarMenu = () => {
                 ))}
               </ul>
             </li>
-            {/* End Review */} 
-
-            {/* <li
-              className={`treeview ${
-                isSinglePageActive("/my-favourites", pathname)
-                  ? "active"
-                  : ""
-              }`}
-            >
-              <Link href="/my-favourites">
-                <i className="flaticon-magnifying-glass"></i>
-                <span> My Favorites</span>
-              </Link>
-            </li> */}
-            {/* <li
-              className={`treeview ${
-                isSinglePageActive("/my-saved-search", pathname)
-                  ? "active"
-                  : ""
-              }`}
-            >
-              <Link href="/my-saved-search">
-                <i className="flaticon-magnifying-glass"></i>
-                <span> Saved Search</span>
-              </Link>
-            </li> */}
+            {/* Robot Reviews End */}
           </ul>
         </li>
-        {/* End manage listing */}
-
-        {/* <li className="title">
-          <span>Manage Account</span>
-          <ul>
-            {manageAccount.map((item) => (
-              <li
-                className={
-                  isSinglePageActive(item.route, pathname) ? "active" : ""
-                }
-                key={item.id}
-              >
-                <Link href={item.route}>
-                  <i className={item.icon}></i> <span>{item.name}</span>
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </li> */}
+        {/* Robot Manage Listing End */}
       </ul>
     </>
   );

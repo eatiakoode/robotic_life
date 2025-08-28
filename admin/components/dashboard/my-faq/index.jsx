@@ -5,7 +5,7 @@ import MobileMenu from "../../common/header/MobileMenu";
 import TableData from "./TableData";
 import Filtering from "./Filtering";
 import Pagination from "./Pagination";
-import SearchBox from "./SearchBox";
+import SearchBox from "../../common/SearchBox";
 import CopyRight from "../../common/footer/CopyRight";
 
 import { useState, useEffect } from "react";
@@ -84,7 +84,7 @@ const index = () => {
                 <div className="col-lg-4 col-xl-4 mb10">
                   <div className="breadcrumb_content style2 mb30-991">
                     <h2 className="breadcrumb_title">All FAQs</h2>
-                    <p>View, organize, and manage all the FAQs displayed across your website.</p>
+                    <p>View, search, organize, and manage all the FAQs displayed across your website.</p>
                   </div>
                 </div>
                 {/* End .col */}
@@ -92,16 +92,16 @@ const index = () => {
                 <div className="col-lg-8 col-xl-8">
                   <div className="candidate_revew_select style2 text-end mb30-991">
                     <ul className="mb0">
-                      {/* <li className="list-inline-item">
+                      <li className="list-inline-item">
                         <div className="candidate_revew_search_box course fn-520">
-                          <SearchBox />
+                          <SearchBox onSearch={(query) => console.log('Search FAQs:', query)} placeholder="Search FAQs..." />
                         </div>
-                      </li> */}
+                      </li>
                       {/* End li */}
 
-                      {/* <li className="list-inline-item">
+                      <li className="list-inline-item">
                         <Filtering />
-                      </li> */}
+                      </li>
                       {/* End li */}
                     </ul>
                   </div>
@@ -110,7 +110,7 @@ const index = () => {
 
                 <div className="col-lg-12">
                   <div className="my_dashboard_review mb40">
-                    <div className="property_table">
+                    <div className="robot_table">
                       <div className="table-responsive mt0">
                         <TableData faqList={faqList} setFaqList={setFaqList}/>
                      

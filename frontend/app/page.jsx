@@ -1,36 +1,36 @@
 import Footer1 from "@/components/footers/Footer1";
-import Header1 from "@/components/headers/Header1";
-import Topbar from "@/components/headers/Topbar";
-import BannerCollection from "@/components/homes/home-1/BannerCollection";
-import BannerCountdown from "@/components/homes/home-1/BannerCountdown";
-import Blogs from "@/components/common/Blogs";
-import Collections from "@/components/homes/home-1/Collections";
-import Features from "@/components/common/Features";
-import Hero from "@/components/homes/home-1/Hero";
-import Products from "@/components/common/Products3";
-import ShopGram from "@/components/common/ShopGram";
-import Testimonials from "@/components/common/Testimonials";
+import Header15 from "@/components/headers/Header15";
+import Topbar9 from "@/components/headers/Topbar9";
+import Blogs from "@/components/homes/home-gaming/Blogs";
+import Collections from "@/components/homes/home-gaming/Collections";
+import Collections2 from "@/components/homes/home-gaming/Collections2";
+import Features from "@/components/homes/home-gaming/Features";
+import Hero from "@/components/homes/home-gaming/Hero";
+import Lookbook from "@/components/homes/home-gaming/Lookbook";
+import Products from "@/components/homes/home-gaming/Products";
+import Products2 from "@/components/homes/home-gaming/Products2";
+import Testimonials from "@/components/homes/home-gaming/Testimonials";
 
 export const metadata = {
-  title: "Home || Modave - Multipurpose React Nextjs eCommerce Template",
+  title: "Home Gaming || Modave - Multipurpose React Nextjs eCommerce Template",
   description: "Modave - Multipurpose React Nextjs eCommerce Template",
 };
 
 export default function HomePage() {
   return (
     <>
-      <Topbar />
-      <Header1 />
+      <Topbar9 />
+      <Header15 />
       <Hero />
       <Collections />
       <Products />
-      <BannerCollection />
-      <BannerCountdown />
+      <Collections2 />
+      <Lookbook />
+      <Products2 />
       <Testimonials />
       <Blogs />
-      <ShopGram />
       <Features />
-      <Footer1 />
+      <Footer1 dark />
     </>
   );
 }

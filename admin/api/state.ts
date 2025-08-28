@@ -155,7 +155,7 @@ const token =userData.token
     return response.json();
   };
 
-  export const  getStateByCountryTableData = async (id: string) => {
+  export const  getCountryTableData = async (id: string) => {
     // Fake delay
     await new Promise((resolve) => setTimeout(resolve, 10));
   

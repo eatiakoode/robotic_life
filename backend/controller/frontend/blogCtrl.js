@@ -20,8 +20,22 @@ const getBlog = asyncHandler(async (req, res) => {
 });
 const getallBlog = asyncHandler(async (req, res) => {
   try {
-    const getallBlog = await Blog.find({"status":true}).populate("blogcategory").lean();
-    res.json(getallBlog);
+    const getallBlog = await Blog.find({"status":true}).select("title createdAt logoimage").populate("blogcategory","title").lean().limit(2);
+    
+    // Transform the data to extract only filename from logoimage path
+    const transformedBlogs = getallBlog.map(blog => {
+      if (blog.logoimage) {
+        // Extract filename from path like "public/images/blogs/upload-1756280684139.png"
+        const filename = blog.logoimage.split('/').pop();
+        return {
+          ...blog,
+          logoimage: filename
+        };
+      }
+      return blog;
+    });
+    
+    res.json(transformedBlogs);
   } catch (error) {
     throw new Error(error);
   }

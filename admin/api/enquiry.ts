@@ -25,28 +25,26 @@ export const addEnquiryAPI = async (title: string) => {
 };
 
 
-export async function getEnquiryTableData(filter: { limit?: number; page?: number } = {}) {
-
-  const limit = filter.limit ?? 10; // default to 10
-  const page = filter.page ?? 0;    // default to 0
-  // Fake delay
-  await new Promise((resolve) => setTimeout(resolve, 10));
-
-
-  try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_ADMIN_API_URL}api/enquiry?limit=${limit}&skip=${page}`,
+  export async function getEnquiryTableData(filter) {
+    // Fake delay
+    await new Promise((resolve) => setTimeout(resolve, 10));
+    
+  
+    try {
+      const response = await fetch(process.env.NEXT_PUBLIC_ADMIN_API_URL+"api/enquiry?limit="+filter.limit+"&skip="+filter.page,
         {
-      next: { revalidate: 60 }
-    }); // Replace with actual API endpoint
-    if (!response.ok) {
-      throw new Error("Failed to fetch products");
+          next: { revalidate: 60 }
+        }); // Replace with actual API endpoint
+      if (!response.ok) {
+        throw new Error("Failed to fetch products");
+      }
+      return await response.json();
+    } catch (error) {
+      console.error("Error fetching products:", error);
+      return []; // Return an empty array in case of an error
     }
-    return await response.json();
-  } catch (error) {
-    console.error("Error fetching products:", error);
-    return []; // Return an empty array in case of an error
   }
-}
+
 
 
 export const deleteEnquiryAPI = async (id: string) => {

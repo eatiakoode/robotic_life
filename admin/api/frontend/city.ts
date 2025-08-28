@@ -62,21 +62,28 @@
   };
 
   export async function countPropertiesByCity() {
-    // Fake delay
-    await new Promise((resolve) => setTimeout(resolve, 10));
-    
-  
     try {
-      const response = await fetch(process.env.NEXT_PUBLIC_FRONTEND_API_URL+"api/city/listwithpropertcount",
-        {next: { revalidate: 60 }}
+      // Fallback URL if environment variable is not set
+      const baseUrl = process.env.NEXT_PUBLIC_FRONTEND_API_URL || 'http://localhost:3000/';
+      
+      const response = await fetch(
+        baseUrl + "api/city/countpropertiesbycity",
+        {
+          next: { revalidate: 60 },
+        }
       ); // Replace with actual API endpoint
       if (!response.ok) {
-        throw new Error("Failed to fetch products");
+        throw new Error("Failed to fetch city property count data");
       }
       return await response.json();
     } catch (error) {
-      console.error("Error fetching products:", error);
-      return []; // Return an empty array in case of an error
+      console.error("Error fetching city property count data:", error);
+      // Return mock data for development
+      return [
+        { city: "Sample City 1", count: 25 },
+        { city: "Sample City 2", count: 18 },
+        { city: "Sample City 3", count: 32 }
+      ];
     }
   }
 
@@ -97,19 +104,25 @@
     }
   }
   export async function getCityWithPropertyPage() {
-    // Fake delay
-    await new Promise((resolve) => setTimeout(resolve, 10));
-    
-  
     try {
-      const response = await fetch(process.env.NEXT_PUBLIC_FRONTEND_API_URL+"api/city/citywithpropertypage",{next: { revalidate: 60 }}); // Replace with actual API endpoint
+      // Fallback URL if environment variable is not set
+      const baseUrl = process.env.NEXT_PUBLIC_FRONTEND_API_URL || 'http://localhost:3000/';
+      
+      const response = await fetch(baseUrl + "api/city/citywithpropertypage", {
+        next: { revalidate: 60 }
+      }); // Replace with actual API endpoint
       if (!response.ok) {
-        throw new Error("Failed to fetch products");
+        throw new Error("Failed to fetch city with property page data");
       }
       return await response.json();
     } catch (error) {
-      console.error("Error fetching products:", error);
-      return []; // Return an empty array in case of an error
+      console.error("Error fetching city with property page data:", error);
+      // Return mock data for development
+      return [
+        { id: 1, name: "Sample City 1", propertyCount: 25, image: "/images/city1.jpg" },
+        { id: 2, name: "Sample City 2", propertyCount: 18, image: "/images/city2.jpg" },
+        { id: 3, name: "Sample City 3", propertyCount: 32, image: "/images/city3.jpg" }
+      ];
     }
   }
 export const getCityTableglimpseData = async (id: string) => {

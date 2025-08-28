@@ -1,128 +1,164 @@
 const Category = require("../models/categoryModel");
-const asyncHandler = require("express-async-handler");
-const validateMongoDbId = require("../utils/validateMongodbId.js");
-const slugify = require("slugify");
 const { uploadPhoto, categoryImgResize } = require("../middlewares/uploadImage");
+const slugify = require("slugify");
+const asyncHandler = require("express-async-handler");
 
+// Create Category
 const createCategory = asyncHandler(async (req, res) => {
   try {
-   if(req.files){
-      const processedImages  =await categoryImgResize(req);
-      // console.log("newBuilderimage")
-      // console.log(processedImages)
+    if (req.files && req.files.length > 0) {
+      const processedImages = await categoryImgResize(req);
       if (processedImages.length > 0) {
-        // ✅ Append logo filename to req.body
-        req.body.logoimage = "public/images/category/"+processedImages[0];
+        const path = "public/images/category/" + processedImages[0];
+        req.body.logoimage = path;
+        req.body.logoImage = path; // mirror manufacturer field naming for frontend compatibility
       }
     }
-    req.body.slug  = slugify(req.body.slug.toLowerCase());
-    const newCategory = await Category.create(req.body);
-    const message={
-      "status":"success",
-      "message":"Data Add sucessfully",
-      "data":newCategory
-    }
-    res.json(message);
-    // const newCategory = await Category.create(req.body);
-    // res.json(newCategory);
-  } catch (error) {
-    throw new Error(error);
-  }
-});
-const updateCategory = asyncHandler(async (req, res) => {
-  const { id } = req.params;
-  validateMongoDbId(id);
-  try {
-    if(req.files){
-      const processedImages  =await categoryImgResize(req);
-      if (processedImages.length > 0) {
-        req.body.logoimage = "public/images/category/"+processedImages[0];
-      }
-    }
-    req.body.slug  = slugify(req.body.slug.toLowerCase());
-    
-    const updatedCategory = await Category.findByIdAndUpdate(id, req.body, {
-      new: true,
-    });
-    // res.json(updatedCategory);
-     const message={
-      "status":"success",
-      "message":"Data updated sucessfully",
-      "data":updatedCategory
-    }
-    res.json(message);
-  } catch (error) {
-    throw new Error(error);
-  }
-});
-const deleteCategory = asyncHandler(async (req, res) => {
-  const { id } = req.params;
-  validateMongoDbId(id);
-  try {
-    const deletedCategory = await Category.findByIdAndDelete(id);
-    // res.json(deletedCategory);
-    const message={
-      "status":"success",
-      "message":"Data deleted sucessfully",
-      "data":deletedCategory
-    }
-    res.json(message);
-  } catch (error) {
-    throw new Error(error);
-  }
-});
-const getCategory = asyncHandler(async (req, res) => {
-  const { id } = req.params;
-  validateMongoDbId(id);
-  try {
-    const getaCategory = await Category.findById(id);
-    // res.json(getaCategory);
-    const message={
-      "status":"success",
-      "message":"Data deleted sucessfully",
-      "data":getaCategory
-    }
-    res.json(message);
-  } catch (error) {
-    throw new Error(error);
-  }
-});
-const getallCategory = asyncHandler(async (req, res) => {
-  try {
-    let limit=100;
-    let skip=1;
-    
 
-    if (req.query.limit ) {
-      limit=req.query.limit;
-      skip=req.query.skip;     
-  }
-    
-    const [getallCategory, totalCount] = await Promise.all([
-            Category.find()
-              .sort({ _id: -1})
-              .skip((skip - 1) * limit)
-              .limit(limit)
-              .lean(),
-          
-            Category.countDocuments() // total matching without skip/limit
-          ]);
-            res.status(200).json({
-          items: getallCategory,
-          totalCount: totalCount,
-          currentPage: skip,
-          totalPages: Math.ceil(totalCount / limit)
-        });
-    // const getallCategory = await Category.find();
-    // res.json(getallCategory);
+    // if (!req.body.name && req.body.title) {
+    //   req.body.name = req.body.title;
+    // }
+
+    if (!('parent' in req.body) || req.body.parent === '' || req.body.parent === 'null' || req.body.parent === undefined) {
+      req.body.parent = null;
+    }
+
+    if (req.body.slug) {
+      req.body.slug = slugify(req.body.slug.toLowerCase());
+    } else if (req.body.name) {
+      req.body.slug = slugify(req.body.name.toLowerCase());
+    } else {
+      req.body.slug = "";
+    }
+
+    const newCategory = await Category.create(req.body);
+
+    const created = newCategory.toObject();
+    created.logoImage = created.logoImage || created.logoimage || null;
+    res.json({
+      status: "success",
+      message: "Category created successfully",
+      data: created,
+    });
   } catch (error) {
     throw new Error(error);
   }
 });
+
+// Get all categories
+const getCategories = async (req, res) => {
+  try {
+    const categories = await Category.find()
+      .populate("parent", "name")
+      .sort({ createdAt: -1 });
+    const output = categories.map((doc) => {
+      const obj = doc.toObject();
+      obj.logoImage = obj.logoImage || obj.logoimage || null;
+      return obj;
+    });
+    res.json(output);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// Get single category by ID
+const getCategoryById = async (req, res) => {
+  try {
+    const category = await Category.findById(req.params.id).populate("parent", "name");
+    if (!category) {
+      return res.status(404).json({ error: "Category not found" });
+    }
+    const obj = category.toObject();
+    obj.logoImage = obj.logoImage || obj.logoimage || null;
+    res.json(obj);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// Get parent categories
+const getParentCategories = async (req, res) => {
+  try {
+    const parents = await Category.find({ parent: null });
+    res.status(200).json(parents);
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching parent categories", error });
+  }
+};
+
+// Get subcategories
+const getSubCategories = async (req, res) => {
+  try {
+    const { parentId } = req.params;
+    const subcategories = await Category.find({ parent: parentId });
+    res.status(200).json(subcategories);
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching subcategories", error });
+  }
+};
+
+// Update category
+const updateCategory = asyncHandler(async (req, res) => {
+  try {
+    if (req.files && req.files.length > 0) {
+      const processedImages = await categoryImgResize(req);
+      if (processedImages.length > 0) {
+        const path = "public/images/category/" + processedImages[0];
+        req.body.logoimage = path;
+        req.body.logoImage = path; // mirror manufacturer field naming
+      }
+    }
+
+    if (!("parent" in req.body) || req.body.parent === "" || req.body.parent === "null" || req.body.parent === undefined) {
+      req.body.parent = null;
+    }
+
+    if (req.body.slug) {
+      req.body.slug = slugify(req.body.slug.toLowerCase());
+    } else if (req.body.name) {
+      req.body.slug = slugify(req.body.name.toLowerCase());
+    }
+
+    const updatedCategory = await Category.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true, runValidators: true }
+    );
+
+    if (!updatedCategory) {
+      return res.status(404).json({ status: "error", message: "Category not found" });
+    }
+
+    res.json({
+      status: "success",
+      message: "Category updated successfully",
+      data: updatedCategory,
+    });
+  } catch (error) {
+    res.status(400).json({ status: "error", message: error.message });
+  }
+});
+
+// Delete category
+const deleteCategory = async (req, res) => {
+  try {
+    const category = await Category.findByIdAndDelete(req.params.id);
+    if (!category) {
+      return res.status(404).json({ error: "Category not found" });
+    }
+    res.json({ message: "Category deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
 module.exports = {
   createCategory,
+  getCategories,
+  getCategoryById,
   updateCategory,
   deleteCategory,
-  getCategory,
-  getallCategory,
+  getParentCategories,
+  getSubCategories
 };

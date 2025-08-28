@@ -1,13 +1,13 @@
 import Header from "../../common/header/dashboard/Header";
 import SidebarMenu from "../../common/header/dashboard/SidebarMenu";
 import MobileMenu from "../../common/header/MobileMenu";
-import Activities from "./Activities";
+import Activities from "./Activities"; 
 import AllStatistics from "./AllStatistics";
 import StatisticsChart from "./StatisticsChart";
 import CopyRight from "../../common/footer/CopyRight";
 
-const index = ({properties,enqueryProperty,enqueryLanding,enquery}) => {
-  return ( 
+const MyDashboard = ({ robot, manufacturer, materials, enquery }) => {
+  return (
     <>
       {/* <!-- Main Header Nav --> */}
       <Header />
@@ -27,7 +27,7 @@ const index = ({properties,enqueryProperty,enqueryLanding,enquery}) => {
       </div>
       {/* End sidebar_menu */}
 
-      {/* <!-- Our Dashbord --> */}
+      {/* <!-- Our Dashboard --> */}
       <section className="our-dashbord dashbord bgc-f7 pb50">
         <div className="container-fluid ovh">
           <div className="row">
@@ -53,46 +53,41 @@ const index = ({properties,enqueryProperty,enqueryLanding,enquery}) => {
                 <div className="col-lg-12 mb10">
                   <div className="breadcrumb_content style2">
                     <h2 className="breadcrumb_title">Your Dashboard Overview</h2>
-                    <p>Track properties, manage leads, and stay updated in one place.</p>
+                    <p>Track robots, manufacturers, materials, and enquiries in one place.</p>
                   </div>
                 </div>
               </div>
               {/* End .row */}
 
+              {/* 🔹 Updated: pass new props to AllStatistics */}
               <div className="row">
-                <AllStatistics properties={properties} enqueryProperty={enqueryProperty} enqueryLanding={enqueryLanding} enquery={enquery}/>
+                <AllStatistics
+                  robot={robot}
+                  manufacturer={manufacturer}
+                  materials={materials}
+                  enquery={enquery}
+                />
               </div>
               {/* End .row Dashboard top statistics */}
 
+              {/* Keep these commented until you need charts or activity */}
               <div className="row">
-                {/* <div className="col-xl-7">
+                <div className="col-xl-7">
                   <div className="application_statics">
                     <h4 className="mb-4">View Statistics</h4>
                     <StatisticsChart />
                   </div>
-                </div> */}
-                {/* End statistics chart */}
-
-                {/* <div className="col-xl-5">
+                </div>
+                <div className="col-xl-5">
                   <div className="recent_job_activity">
                     <h4 className="title mb-4">Recent Activities</h4>
-                    <Activities />
-                  </div>
-                </div> */}
-              </div>
-              {/* End .row  */}
-<CopyRight/>
-              {/* <div className="row mt50">
-                <div className="col-lg-12">
-                  <div className="copyright-widget text-center">
-                    <p>© 2020 Find House. Made with love.</p>
+                    {/* <Activities /> */}
                   </div>
                 </div>
-              </div> */}
-              
-              {/* End .row */}
+              </div>
+
+              <CopyRight />
             </div>
-            {/* End .col */}
           </div>
         </div>
       </section>
@@ -100,4 +95,4 @@ const index = ({properties,enqueryProperty,enqueryLanding,enquery}) => {
   );
 };
 
-export default index;
+export default MyDashboard;

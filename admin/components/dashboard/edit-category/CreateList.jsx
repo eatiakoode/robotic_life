@@ -2,45 +2,48 @@
 
 import { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
-import { getCategoryById, updateCategoryAPI } from "@/api/category";
+import { getCategoryById, updateCategoryAPI, getParentCategoriesAPI } from "@/api/category";
 import { toast } from 'react-toastify';
 
 const CreateList = () => {
   const params = useParams();  
-    const id = params?.id;  
-    const router = useRouter();
-    const [category, setCategory] = useState({ title: "", status: false,description: "", });
-    const [title, setTitle] = useState("");
-    const [h1title, setH1Title] = useState("");
-   const [slug, setSlug] = useState("");
-   const [metatitle, setMetatitle] = useState([]);
-     const [metadescription, setMetaDescription] = useState([]);
-    const [status, setStatus] = useState("");
-    const [loading, setLoading] = useState(true);
-    const [description, setDescription] = useState("");
-    const [error, setError] = useState("");  
-    const [logo, setLogo] = useState(null);
-    const [logoimage, setLogoImage] = useState(null);
-    const uploadLogo = (e) => {
-      setLogo(e.target.files[0]);
-      setLogoImage("")
-
+  const id = params?.id;  
+  const router = useRouter();
+  const [name, setName] = useState("");
+  const [parentCategory, setParentCategory] = useState("");
+  const [parentCategories, setParentCategories] = useState([]);
+  const [slug, setSlug] = useState("");
+  const [metatitle, setMetatitle] = useState("");
+  const [metadescription, setMetaDescription] = useState("");
+  const [status, setStatus] = useState(true);
+  const [loading, setLoading] = useState(true);
+  const [description, setDescription] = useState("");
+  const [error, setError] = useState("");  
+  const [logo, setLogo] = useState(null);
+  const [logoimage, setLogoImage] = useState(null);
+  const uploadLogo = (e) => {
+    setLogo(e.target.files[0]);
+    setLogoImage("");
   };
     useEffect(() => {
       if (!id) return;      
       const fetchCategory = async () => {
         try {
-          const data = await getCategoryById(id);
-          // setCategory({ title: data.data.title, status: data.data.status, description: data.data.description });
-          setTitle(data.data.title)
-          setSlug(data.data.slug)
-          setStatus(data.data.status)
-          setDescription(data.data.description)
-          setH1Title(data.data.h1title)
-          setMetatitle(data.data.metatitle)
-          setMetaDescription(data.data.metadescription)
-          if(data.data.logoimage) {
-          setLogoImage(process.env.NEXT_PUBLIC_API_URL+data.data.logoimage)
+          const [cat, parents] = await Promise.all([
+            getCategoryById(id),
+            getParentCategoriesAPI(),
+          ]);
+          setName(cat.name || cat.title || "");
+          setSlug(cat.slug || "");
+          setStatus(Boolean(cat.status));
+          setDescription(cat.description || "");
+          setParentCategory((cat.parent && (cat.parent._id || cat.parent)) || "");
+          setMetatitle(cat.metatitle || "");
+          setMetaDescription(cat.metadescription || "");
+          setParentCategories(Array.isArray(parents) ? parents : []);
+          const imgPath = cat.logoImage || cat.logoimage;
+          if (imgPath) {
+            setLogoImage((process.env.NEXT_PUBLIC_API_URL || "") + imgPath);
           }
         } catch (error) {
           console.error("Error fetching Category:", error);
@@ -48,7 +51,7 @@ const CreateList = () => {
           setLoading(false);
         }
       };
-  
+
       fetchCategory();
     }, [id]);
   
@@ -56,25 +59,24 @@ const CreateList = () => {
       e.preventDefault();
       try {
         const formData = new FormData();
-        formData.append("title", title);
+        formData.append("name", name);
+        formData.append("title", name);
         formData.append("slug", slug);
         formData.append("description", description);
-        formData.append("h1title", h1title);
-         formData.append("metatitle", metatitle);
+        formData.append("parent", parentCategory || "");
+        formData.append("metatitle", metatitle);
         formData.append("metadescription", metadescription);
-        formData.append("status", status);
+        formData.append("status", status ? "true" : "false");
         if (logo) {
           formData.append("logo", logo);
         }
-        const data =await updateCategoryAPI(id, formData);
-        // alert("Category updated successfully!");
-        // router.push("/cmswegrow/my-category");
+        const data = await updateCategoryAPI(id, formData);
         toast.success(data.message);
-        if(data.status=="success"){
-            setTimeout(() => {
-            router.push("/cmswegrow/my-category");
-            }, 1500); 
-          }
+        if (data.status == "success") {
+          setTimeout(() => {
+            router.push("/cmsroboticlife/my-category");
+          }, 1500);
+        }
       } catch (error) {
         alert("Failed to update Category.");
         console.error(error);
@@ -102,13 +104,16 @@ const CreateList = () => {
                         onChange={uploadLogo}
                     />
                     <label
-                        style={
-                        logoimage                          
-                        ? { backgroundImage: `url(${logoimage})` }
-                          : logo
-                          ? { backgroundImage: `url(${URL.createObjectURL(logo)})` }
-                          : undefined
-                      }
+                        style={{
+                          ...(logoimage
+                            ? { backgroundImage: `url(${logoimage})` }
+                            : logo
+                            ? { backgroundImage: `url(${URL.createObjectURL(logo)})` }
+                            : {}),
+                          backgroundSize: "contain",
+                          backgroundPosition: "center",
+                          backgroundRepeat: "no-repeat",
+                        }}
                         htmlFor="image1"
                     >
                         <span>
@@ -122,7 +127,7 @@ const CreateList = () => {
       <div className="col-lg-6 col-xl-6">
         <div className="my_profile_setting_input form-group">
           <label htmlFor="categoryTitle">Category Title</label>
-          <input type="text" className="form-control" id="categoryTitle" value={title} onChange={(e) => setTitle(e.target.value)} />
+          <input type="text" className="form-control" id="categoryTitle" value={name} onChange={(e) => setName(e.target.value)} />
           {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
         </div>
       </div>
@@ -136,9 +141,20 @@ const CreateList = () => {
       {/* End .col */}
        <div className="col-lg-6 col-xl-6">
         <div className="my_profile_setting_input form-group">
-          <label htmlFor="categoryH1Title">Category H1 Title</label>
-          <input type="text" className="form-control" id="categoryH1Title" value={h1title} onChange={(e) => setH1Title(e.target.value)}/>
-          
+          <label htmlFor="categoryParent">Parent Category</label>
+          <select
+            id="categoryParent"
+            className="form-control"
+            value={parentCategory || ""}
+            onChange={(e) => setParentCategory(e.target.value)}
+          >
+            <option value="">-- No Parent --</option>
+            {parentCategories.map((cat) => (
+              <option key={cat._id} value={cat._id}>
+                {cat.name || cat.title}
+              </option>
+            ))}
+          </select>
         </div>
       </div>
       <div className="col-lg-12">
@@ -159,9 +175,11 @@ const CreateList = () => {
             className="selectpicker form-select"
             data-live-search="true"
             data-width="100%"
+            value={status ? "true" : "false"}
+            onChange={(e) => setStatus(e.target.value === "true")}
           >
-            <option data-tokens="1">Active</option>
-            <option data-tokens="2">Deactive</option>
+            <option value="true">Active</option>
+            <option value="false">Deactive</option>
           </select>
         </div>
       </div>
@@ -201,7 +219,7 @@ const CreateList = () => {
 
       <div className="col-xl-12">
         <div className="my_profile_setting_input">
-          <button className="btn btn1 float-start" type="button" onClick={() => window.location.href = '/cmswegrow/my-dashboard'}>Back</button>
+          <button className="btn btn1 float-start" type="button" onClick={() => window.location.href = '/cmsroboticlife/my-dashboard'}>Back</button>
           <button type="submit" className="btn btn2 float-end" >Submit</button>
         </div>
       </div>

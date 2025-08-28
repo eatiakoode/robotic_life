@@ -1,13 +1,17 @@
 "use client";
 
-import { collections17 } from "@/data/collections";
 import { Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import Link from "next/link";
 import Image from "next/image";
+import useCategories from "@/hooks/useCategories";
+
 export default function Collections2() {
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> 3c0733c34d124af768c936ac3903a1a50f4723cf
   const { categories, loading, error } = useCategories();
 
   // Fallback data if API fails
@@ -107,7 +111,11 @@ export default function Collections2() {
                     <div className="box-title">
                       <h5 className="title">
                         <Link
+<<<<<<< HEAD
                           href={`/shop-filter-canvas`}
+=======
+                          href={`/shop-default-grid`}
+>>>>>>> 3c0733c34d124af768c936ac3903a1a50f4723cf
                           className="link text-white fw-bold"
                         >
                           Loading...
@@ -119,7 +127,11 @@ export default function Collections2() {
                     </div>
                     <div className="box-btn">
                       <Link
+<<<<<<< HEAD
                         href={`/shop-filter-canvas`}
+=======
+                        href={`/shop-default-grid`}
+>>>>>>> 3c0733c34d124af768c936ac3903a1a50f4723cf
                         className="tf-btn btn-fill btn-white btn-md"
                       >
                         <span className="text">Shop now</span>
@@ -137,7 +149,10 @@ export default function Collections2() {
     );
   }
 
+<<<<<<< HEAD
 >>>>>>> ea24ee4 (Home page & admin panel fixed)
+=======
+>>>>>>> 3c0733c34d124af768c936ac3903a1a50f4723cf
   return (
     <section className="flat-spacing">
       <div className="container">
@@ -165,20 +180,23 @@ export default function Collections2() {
             el: ".spd26",
           }}
         >
-          {collections17.map((collection) => (
-            <SwiperSlide className="swiper-slide" key={collection.id}>
+          {displayCategories.map((category, index) => (
+            <SwiperSlide className="swiper-slide" key={category._id || `category-${index}`}>
               <div
                 className="collection-default hover-button abs-left-bottom type-2 hover-img wow fadeInUp"
-                data-wow-delay={collection.delay}
+                data-wow-delay={`${index * 0.1}s`}
               >
                 <a className="img-style">
                   <Image
                     className="lazyload"
-                    data-src={collection.imageSrc}
-                    alt={collection.alt}
-                    src={collection.imageSrc}
+                    data-src={getImageUrl(category.logoimage)}
+                    alt={category.name || 'Category'}
+                    src={getImageUrl(category.logoimage)}
                     width={410}
                     height={546}
+                    onError={(e) => {
+                      e.target.src = '/images/collections/list-cls/gaming-1.jpg';
+                    }}
                   />
                 </a>
                 <div className="content text-start">
@@ -188,11 +206,11 @@ export default function Collections2() {
                         href={`/shop-filter-canvas`}
                         className="link text-white fw-bold"
                       >
-                        {collection.title}
+                        {category.name || 'Category'}
                       </Link>
                     </h5>
                     <p className="text-white body-text">
-                      {collection.description}
+                      {category.description || 'No description available'}
                     </p>
                   </div>
                   <div className="box-btn">

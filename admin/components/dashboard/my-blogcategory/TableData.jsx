@@ -1,116 +1,123 @@
-"use client"; // Add this at the top
-import Image from "next/image";
-import { getBlogcategoryTableData,deleteBlogcategoryAPI } from "../../../api/blogcategory";
-import { useState, useEffect } from "react";
+"use client";
+
+import { deleteBlogcategoryAPI } from "../../../api/blogcategory";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
-// import moment from 'moment';
 import { toast } from 'react-toastify';
 
-const TableData = () => {
-   const [blogcategoryList, setBlogcategoryList] = useState([]);
-    const router = useRouter();
-  
-    const fetchBlogcategoryData = async () => {
-      const data = await getBlogcategoryTableData();
-      setBlogcategoryList(data);
-    };
-    const deleteBlogcategory = async (id) => {
-        const isConfirmed = window.confirm("Are you sure you want to delete this Blogcategory?");
-        if (!isConfirmed) return;
-    
-        try {
-          const data = await deleteBlogcategoryAPI(id); // 🔹 Call the API function
-          
-          toast.success(data.message);
-          setBlogcategoryList((prevBlogcategoryList) => prevBlogcategoryList.filter((blogcategory) => blogcategory._id !== id));
-          //setTitle(""); // ✅ Reset input after success
-        } catch (error) {
-          alert("Failed to delete Blogcategory.");
-          //setError(error.message); // ❌ Show error if request fails
-        }
-      };
-  let theadConent = [
-    "Listing Title",
-    "Date published",
-    "Status",
-    "Action",
-  ];
-  let tbodyContent = blogcategoryList?.map((item) => (
-    <tr key={item._id}>
-      <td scope="row">
-        <div className="feat_property list favorite_page style2">
-          <div className="details">
-            <div className="tc_content">
-              <h4>{item.title}</h4>
-              
-            </div>
-          </div>
+const TableData = ({ categories = [], loading = false, error = null, onRefresh }) => {
+  const router = useRouter();
+
+  const deleteBlogCategory = async (id) => {
+    const isConfirmed = window.confirm("Are you sure you want to delete this Blog Category?");
+    if (!isConfirmed) return;
+
+    try {
+      const data = await deleteBlogcategoryAPI(id);
+      toast.success(data.message);
+      // Refresh the data after deletion
+      if (onRefresh) {
+        onRefresh();
+      }
+    } catch (error) {
+      toast.error("Failed to delete Blog Category.");
+    }
+  };
+
+  // Show loading state
+  if (loading) {
+    return (
+      <div className="text-center py-5">
+        <div className="spinner-border text-primary" role="status">
+          <span className="visually-hidden">Loading...</span>
         </div>
+        <p className="mt-2">Loading Blog Categories...</p>
+      </div>
+    );
+  }
+
+  // Show error state
+  if (error) {
+    return (
+      <div className="text-center py-5">
+        <div className="alert alert-danger" role="alert">
+          <i className="fas fa-exclamation-triangle me-2"></i>
+          {error}
+        </div>
+        <button 
+          className="btn btn-primary mt-3" 
+          onClick={onRefresh}
+        >
+          <i className="fas fa-redo me-2"></i>
+          Try Again
+        </button>
+      </div>
+    );
+  }
+
+  // Show empty state
+  if (!categories || categories.length === 0) {
+    return (
+      <div className="text-center py-5">
+        <div className="alert alert-info" role="alert">
+          <i className="fas fa-info-circle me-2"></i>
+          No Blog Categories found.
+        </div>
+      </div>
+    );
+  }
+
+  let theadContent = ["Listing Title", "Date published", "Status", "Action"];
+
+  let tbodyContent = categories.map((item) => (
+    <tr key={item._id || Math.random()}>
+      <td scope="row" className="align-middle text-center">
+        <h4 className="mb-0">{item?.title || item?.name || 'N/A'}</h4>
       </td>
-      {/* End td */}
 
-      <td>{new Date(item.createdAt).toLocaleDateString('en-US', {
-    month: 'short',
-    day: '2-digit',
-    year: 'numeric',
-  })}</td>
-      {/* End td */}
-
-      <td>
-      
-        <span className={`status_tag ${item.status ? 'badge2' : 'badge'}`}>{item.status ? "Active" : "Deactive"}</span>
-
+      <td className="align-middle text-center">
+        {item?.createdAt ? new Date(item.createdAt).toLocaleDateString('en-US', {
+          month: 'short',
+          day: '2-digit',
+          year: 'numeric',
+        }) : 'N/A'}
       </td>
-      {/* End td */}
 
-     
+      <td className="align-middle text-center">
+        <span className={`status_tag ${item?.status ? 'badge2' : 'badge'}`}>
+          {item?.status ? "Active" : "Deactive"}
+        </span>
+      </td>
 
-      <td>
-        <ul className="view_edit_delete_list mb0">
-          <li
-            className="list-inline-item"
-            data-toggle="tooltip"
-            data-placement="top"
-            title="Edit"
-          >
-            <button  onClick={() => router.push(`/cmswegrow/edit-blogcategory/${item._id}`)}>
+      <td className="align-middle text-center">
+        <ul className="view_edit_delete_list mb0 d-flex justify-content-center">
+          <li className="list-inline-item" title="Edit">
+            <button onClick={() => router.push(`/cmsroboticlife/edit-blogcategory/${item._id}`)}>
               <span className="flaticon-edit"></span>
             </button>
           </li>
-          {/* End li */}
-
-          <li
-            className="list-inline-item"
-            data-toggle="tooltip"
-            data-placement="top"
-            title="Delete"
-          >
-            <a href="#"  onClick={() => deleteBlogcategory(item._id)}>
+          <li className="list-inline-item" title="Delete">
+            <a href="#" onClick={() => deleteBlogCategory(item._id)}>
               <span className="flaticon-garbage"></span>
             </a>
           </li>
         </ul>
       </td>
-      {/* End td */}
     </tr>
   ));
-useEffect(() => {
-    fetchBlogcategoryData();
-  }, []); 
+
   return (
     <>
       <table className="table">
         <thead className="thead-light">
           <tr>
-            {theadConent.map((value, i) => (
-              <th scope="col" key={i}>
+            {theadContent.map((value, i) => (
+              <th scope="col" key={i} className="text-center">
                 {value}
               </th>
             ))}
           </tr>
         </thead>
-        {/* End theaad */}
-
         <tbody>{tbodyContent}</tbody>
       </table>
     </>

@@ -1,29 +1,30 @@
-import { buildApiUrl, getAuthHeaders } from './config';
+export const addSliderAPI = async (formData) => {
+  console.log("Sending request to:", process.env.NEXT_PUBLIC_ADMIN_API_URL+"admin/api/slider");
+  const userData = JSON.parse(localStorage.getItem("user"));
+  const token = userData?.token;
 
-  export const addSliderAPI = async (formData) => {
-    const apiUrl = buildApiUrl("api/slider");
-    console.log("Sending request to:", apiUrl);
-    
-    const headers = getAuthHeaders();
-    // Remove Content-Type for FormData to let browser set it with boundary
-    delete headers["Content-Type"];
+  if (!token) {
+    throw new Error("User not authenticated!");
+  }
 
-    const response = await fetch(apiUrl, {
-      method: "POST",
-      headers,
-      body: formData
-    });
+  const response = await fetch(process.env.NEXT_PUBLIC_ADMIN_API_URL+"admin/api/slider", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    body: formData
+  });
 
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.message || "Failed to add Slider");
-    }
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.message || "Failed to add Slider");
+  }
 
-    return response.json();
-  };
+  return response.json();
+};
   
 
-  export async function getSliderTableData(filter = {}) {
+  export async function getSliderTableData(filter) {
     // Provide default values if no filter is passed
     const defaultFilter = {
       limit: 10,
@@ -33,12 +34,18 @@ import { buildApiUrl, getAuthHeaders } from './config';
 
     await new Promise((resolve) => setTimeout(resolve, 10));
     try {
-      const headers = getAuthHeaders();
-      const apiUrl = buildApiUrl(`api/slider?limit=${defaultFilter.limit}&skip=${defaultFilter.page}`);
+      const userData = JSON.parse(localStorage.getItem("user"));
+      const token = userData?.token;
+      
+      if (!token) {
+        throw new Error("User not authenticated!");
+      }
 
-      const response = await fetch(apiUrl, {
+      const response = await fetch(process.env.NEXT_PUBLIC_ADMIN_API_URL+"admin/api/slider?limit="+defaultFilter.limit+"&skip="+defaultFilter.page, {
         method: "GET",
-        headers,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       });
       
       console.log("Slider response:", response);
@@ -73,12 +80,18 @@ import { buildApiUrl, getAuthHeaders } from './config';
 
 
   export const deleteSliderAPI = async (id: string) => {
-    const headers = getAuthHeaders();
-    const apiUrl = buildApiUrl(`api/slider/${id}`);
+    const userData = JSON.parse(localStorage.getItem("user"));
+    const token = userData.token;
+    if (!token) {
+      throw new Error("User not authenticated!");
+    }
 
-    const response = await fetch(apiUrl, {
+    const response = await fetch(process.env.NEXT_PUBLIC_ADMIN_API_URL+`admin/api/slider/${id}`, {
       method: "DELETE",
-      headers,
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
       body: JSON.stringify({ id }),
     });
   
@@ -91,12 +104,18 @@ import { buildApiUrl, getAuthHeaders } from './config';
   };
 
   export const getSliderById = async (id: string) => {
-    const headers = getAuthHeaders();
-    const apiUrl = buildApiUrl(`api/slider/${id}`);
+    const userData = JSON.parse(localStorage.getItem("user"));
+    const token = userData.token;
+    if (!token) {
+      throw new Error("User not authenticated!");
+    }
 
-    const response = await fetch(apiUrl, {
+    const response = await fetch(process.env.NEXT_PUBLIC_ADMIN_API_URL+`admin/api/slider/${id}`, {
       method: "GET",
-      headers,
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
     });
   
     if (!response.ok) {
@@ -104,22 +123,27 @@ import { buildApiUrl, getAuthHeaders } from './config';
       throw new Error(errorData.message || "Failed to get Slider");
     }
   
-    return response.json();
+    const data = await response.json();
+    console.log("Slider by ID response:", data);
+    return data;
   };
 
 
   export const updateSliderAPI = async (id, slider) => {
-    const headers = getAuthHeaders();
-    const apiUrl = buildApiUrl(`api/slider/${id}`);
+    const userData = JSON.parse(localStorage.getItem("user"));
+    const token = userData.token;
 
-    // Remove Content-Type for FormData to let browser set it with boundary
-    if (slider instanceof FormData) {
-      delete headers["Content-Type"];
+    if (!token) {
+      throw new Error("User not authenticated!");
     }
 
-    const response = await fetch(apiUrl, {
+
+    const response = await fetch(process.env.NEXT_PUBLIC_ADMIN_API_URL+`admin/api/slider/${id}`, {
       method: "PUT",
-      headers,
+      headers: {
+        // "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
       body: slider,
     });
   

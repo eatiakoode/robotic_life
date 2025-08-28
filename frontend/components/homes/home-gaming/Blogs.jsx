@@ -1,13 +1,17 @@
 "use client";
-import { blogPosts7 } from "@/data/blogs";
 import React from "react";
 import { Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import Link from "next/link";
 import Image from "next/image";
+import { useBlogs } from "@/hooks/useBlogs";
+
 export default function Blogs() {
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> 3c0733c34d124af768c936ac3903a1a50f4723cf
   const { blogs, loading, error } = useBlogs();
 
 
@@ -57,7 +61,11 @@ export default function Blogs() {
         <div className="container">
           <div className="heading-section-2 align-items-center type-2 wow fadeInUp">
             <h3 className="heading font-5 fw-bold">News &amp; Reviews</h3>
+<<<<<<< HEAD
             <Link href={`/shop-filter-canvas`} className="btn-line">
+=======
+            <Link href={`/shop-collection`} className="btn-line">
+>>>>>>> 3c0733c34d124af768c936ac3903a1a50f4723cf
               View All
             </Link>
           </div>
@@ -97,7 +105,11 @@ export default function Blogs() {
         <div className="container">
           <div className="heading-section-2 align-items-center type-2 wow fadeInUp">
             <h3 className="heading font-5 fw-bold">News &amp; Reviews</h3>
+<<<<<<< HEAD
             <Link href={`/shop-filter-canvas`} className="btn-line">
+=======
+            <Link href={`/shop-collection`} className="btn-line">
+>>>>>>> 3c0733c34d124af768c936ac3903a1a50f4723cf
               View All
             </Link>
           </div>
@@ -168,7 +180,10 @@ export default function Blogs() {
     );
   }
 
+<<<<<<< HEAD
 >>>>>>> ea24ee4 (Home page & admin panel fixed)
+=======
+>>>>>>> 3c0733c34d124af768c936ac3903a1a50f4723cf
   return (
     <section>
       <div className="container">
@@ -178,6 +193,8 @@ export default function Blogs() {
             View All
           </Link>
         </div>
+        
+
         <Swiper
           className="swiper tf-sw-partner"
           spaceBetween={15}
@@ -198,20 +215,27 @@ export default function Blogs() {
           }}
           dir="ltr"
         >
-          {blogPosts7.map((post) => (
+          {transformedBlogs.map((post) => (
             <SwiperSlide className="swiper-slide" key={post.id}>
               <div
                 className="wg-blog style-abs hover-image wow fadeInUp"
                 data-wow-delay={post.delay}
               >
                 <Link href={`/blog-detail/${post.id}`} className="image">
-                  <Image
+                  <img
                     className="lazyload"
                     data-src={post.imageSrc}
                     alt={post.alt}
                     src={post.imageSrc}
                     width={630}
                     height={472}
+                    onError={(e) => {
+                      console.log('Image failed to load:', post.imageSrc);
+                      e.target.src = "/images/blog/gaming-1.jpg"; // Fallback image
+                    }}
+                    onLoad={() => {
+                      console.log('Image loaded successfully:', post.imageSrc);
+                    }}
                   />
                 </Link>
                 <div className="content">
