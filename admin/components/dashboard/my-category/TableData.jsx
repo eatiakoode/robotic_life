@@ -1,5 +1,5 @@
 "use client";
-import Image from "next/image";
+import { SafeImage } from "../../../utils/imageUtils";
 import { deleteCategoryAPI } from "@/api/category";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
@@ -50,17 +50,12 @@ const TableData = ({ categoryList, setCategoryList }) => {
             borderRadius: "4px"
           }}
         >
-          <Image
+          <SafeImage
             width={100}
             height={100}
             className="img-whp"
-            src={
-              item.logoImage
-                ? `${process.env.NEXT_PUBLIC_API_URL}${item.logoImage}`
-                : `${process.env.NEXT_PUBLIC_API_URL}public/assets/images/thumbnail.webp`
-            }
+            src={item.logoImage}
             alt={`${item.name}`}
-            unoptimized
             style={{ 
               width: "100%",
               height: "100%",

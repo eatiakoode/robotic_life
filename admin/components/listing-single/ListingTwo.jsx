@@ -2,7 +2,7 @@
 'use client'
 
 import { Gallery, Item } from "react-photoswipe-gallery";
-import Image from "next/image";
+import { SafeImage } from "../../utils/imageUtils";
 
 export default function ListingTwo({property}) {
   return (
@@ -32,10 +32,9 @@ export default function ListingTwo({property}) {
                                 View Photos
                               </div>
                             </div>
-                            <Image
+                            <SafeImage
                               width={951}
                               height={569}
-                              priority
                               className="img-fluid w100 cover lds-2"
                               src={property.img}
                               alt={property.img}
@@ -62,7 +61,7 @@ export default function ListingTwo({property}) {
                         >
                           {({ ref, open }) => (
                             <div role="button" ref={ref} onClick={open}>
-                              <Image
+                              <SafeImage
                                 width={476}
                                 height={285}
                                 className="img-fluid w100 cover"

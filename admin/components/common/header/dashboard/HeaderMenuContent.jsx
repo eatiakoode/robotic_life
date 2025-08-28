@@ -4,7 +4,7 @@
 import Link from "next/link";
 
 import MyAccount from "./MyAccount";
-import Image from "next/image";
+import { SafeImage } from "../../../../utils/imageUtils";
 import { usePathname } from "next/navigation";
 
 const HeaderMenuContent = ({ float = "" }) => {
@@ -470,7 +470,7 @@ const HeaderMenuContent = ({ float = "" }) => {
       <li className="user_setting">
         <div className="dropdown">
           <a className="btn dropdown-toggle" href="#" data-bs-toggle="dropdown">
-            <Image
+            <SafeImage
               width={45}
               height={45}
               className="rounded-circle"

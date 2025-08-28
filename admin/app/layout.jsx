@@ -42,7 +42,7 @@ export default function RootLayout({ children }) {
         {/* Favicon with proper sizing */}
         <link 
           rel="icon"
-          href={`${process.env.NEXT_PUBLIC_BACKEND_API_URL}public/assets/images/favicon.png`}
+          href="/assets/images/favicon.png"
         />
         
         {/* Meta tags for SEO and performance */}

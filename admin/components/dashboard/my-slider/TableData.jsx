@@ -1,5 +1,5 @@
 "use client";
-import Image from "next/image";
+import { SafeImage } from "../../../utils/imageUtils";
 import { deleteSliderAPI } from "../../../api/slider";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
@@ -92,17 +92,12 @@ const TableData = ({ sliders = [], loading = false, error = null, onRefresh }) =
             margin: "0 auto",
           }}
         >
-          <Image
+          <SafeImage
             width={90}
             height={90}
             className="img-whp cover"
-            src={
-              item?.images && item.images.length > 0
-                ? `${process.env.NEXT_PUBLIC_API_URL}${item.images[0]}`
-                : `${process.env.NEXT_PUBLIC_API_URL}public/assets/images/thumbnail.webp`
-            }
+            src={item?.images && item.images.length > 0 ? item.images[0] : null}
             alt={`${item?.title || 'Slider'}`}
-            unoptimized
             style={{ width: "100%", height: "100%", objectFit: "contain" }}
           />
         </div>

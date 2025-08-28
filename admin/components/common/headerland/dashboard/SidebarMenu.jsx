@@ -99,7 +99,7 @@ const SidebarMenu = () => {
               width={170}
               height={65}
               // src="/assets/images/logo.svg"
-              src={`${process.env.NEXT_PUBLIC_BACKEND_API_URL}public/assets/images/logo.svg`}
+              src="/assets/images/logo.svg"
               alt="logo.svg"
             />
             {/* <span>WeGrow</span> */}

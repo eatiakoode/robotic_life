@@ -6,7 +6,7 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addLength } from "@/features/properties/propertiesSlice";
 // import properties from "@/data/properties";
-import Image from "next/image";
+import { SafeImage } from "../../utils/imageUtils";
 
 const FeaturedItem = ({setPropertySelectedComp,setShowBox,properties}) => {
   const dispatch = useDispatch();
@@ -42,17 +42,12 @@ const FeaturedItem = ({setPropertySelectedComp,setShowBox,properties}) => {
         }`}
       >
         <div className="thumb">
-            <Image
+            <SafeImage
               width={343}
               height={220}
               className="img-whp w-100 h-100 cover"
-              src={
-                item.featuredimageurl
-                 ? `${process.env.NEXT_PUBLIC_API_URL}${item.featuredimageurl.url?item.featuredimageurl.url:item.featuredimageurl}`
-                  : `${process.env.NEXT_PUBLIC_API_URL}public/assets/images/thumbnail.webp`
-              }
-              alt= {`${item.featuredimageurl?.name?item.featuredimageurl?.name:item.title}`}
-              unoptimized // Optional: disables Next.js image optimization (useful if external images)
+              src={item.featuredimageurl?.url || item.featuredimageurl}
+              alt={`${item.featuredimageurl?.name || item.title}`}
             />
           <div className="thmb_cntnt">
             <ul className="tag mb0">

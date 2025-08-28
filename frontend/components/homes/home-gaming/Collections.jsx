@@ -152,7 +152,7 @@ export default function Collections() {
                     </p>
                     <h3 className="title">
                       <Link
-                        href={`/shop-default-grid`}
+                        href={`/shop-filter-canvas`}
                         className="link text-white fw-bold font-5"
                       >
                         {category.description?.split(' ').slice(0, 3).join(' ') || "Ultimate Audio"} <br />
@@ -165,7 +165,7 @@ export default function Collections() {
                   </div>
                   <div className="box-btn">
                     <Link
-                      href={`/shop-default-grid`}
+                      href={`/shop-filter-canvas`}
                       className="btn-line style-white has-icon"
                     >
                       Shop Now
@@ -211,7 +211,7 @@ export default function Collections() {
                   </p>
                   <h3 className="title">
                     <Link
-                      href={`/shop-default-grid`}
+                      href={`/shop-filter-canvas`}
                       className="link text-white fw-bold font-5"
                     >
                       {displayCategories[2].description?.split(' ').slice(0, 3).join(' ') || "Precision at Your"} <br />
@@ -224,7 +224,7 @@ export default function Collections() {
                 </div>
                 <div className="box-btn">
                   <Link
-                    href={`/shop-default-grid`}
+                    href={`/shop-filter-canvas`}
                     className="btn-line style-white has-icon"
                   >
                     Shop Now

@@ -332,7 +332,7 @@ const MobileMenuContent = () => {
               width={100}
               height={38}
               className="nav_logo_img img-fluid mt20"
-              src={`${process.env.NEXT_PUBLIC_BACKEND_API_URL}public/assets/images/header-logo2.png`}
+              src="/assets/images/header-logo2.png"
               alt="header-logo.png"
             />
             {/* <span className="brand-text">WeGrow</span> */}
