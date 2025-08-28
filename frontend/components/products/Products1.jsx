@@ -11,7 +11,7 @@ import { productMain } from "@/data/products";
 import FilterMeta from "./FilterMeta";
 
 export default function Products1({ parentClass = "flat-spacing" }) {
-  const [activeLayout, setActiveLayout] = useState(1);
+  const [activeLayout, setActiveLayout] = useState(4);
   const [state, dispatch] = useReducer(reducer, initialState);
   const {
     price,
@@ -191,7 +191,7 @@ export default function Products1({ parentClass = "flat-spacing" }) {
                 className={`tf-grid-layout wrapper-shop tf-col-${activeLayout}`}
                 id="gridLayout"
               >
-                {/* <GridView products={sorted} /> */}
+                <GridView products={sorted} />
               </div>
             )}
           </div>

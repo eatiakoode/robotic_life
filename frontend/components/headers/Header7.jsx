@@ -23,9 +23,9 @@ export default function Header7() {
               <Image
                 alt="logo"
                 className="logo"
-                src="/images/logo/robo.svg"
-                width={170}
-                height={65}
+                src="/images/logo/logo-white.svg"
+                width={127}
+                height={24}
               />
             </Link>
           </div>
@@ -69,7 +69,7 @@ export default function Header7() {
                   </svg>
                 </a>
               </li>
-              {/* <li className="nav-account">
+              <li className="nav-account">
                 <a href="#" className="nav-icon-item">
                   <svg
                     className="icon"
@@ -156,7 +156,7 @@ export default function Header7() {
                     <CartLength />
                   </span>
                 </a>
-              </li> */}
+              </li>
             </ul>
           </div>
         </div>

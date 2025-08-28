@@ -34,7 +34,7 @@ const Header = () => {
             width={170}
             height={65}
             className="logo1 contain"
-            src={`${process.env.NEXT_PUBLIC_API_URL}public/assets/images/logo.svg`}
+            src={`${process.env.NEXT_PUBLIC_BACKEND_API_URL}public/assets/images/logo.svg`}
             alt="logo.svg"
           />
 
@@ -42,7 +42,7 @@ const Header = () => {
             width={170}
             height={65}
             className="logo2 contain"
-            src="/assets/images/logo2.png"
+            src={`${process.env.NEXT_PUBLIC_BACKEND_API_URL}public/assets/images/logo2.png`}
             alt="logo2.png"
           />
           {/* <span>WeGrow</span> */}

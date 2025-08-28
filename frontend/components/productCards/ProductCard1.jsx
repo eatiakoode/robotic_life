@@ -3,8 +3,7 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import CountdownTimer from "../common/Countdown";
-// import { useContextElement } from "@/context/Context"; // Commented out e-commerce context
-
+import { useContextElement } from "@/context/Context";
 export default function ProductCard1({
   product,
   gridClass = "",
@@ -12,12 +11,21 @@ export default function ProductCard1({
   isNotImageRatio = false,
   radiusClass = "",
 }) {
-  const [currentImage, setCurrentImage] = useState(product.imgSrc || '/images/placeholder-robot.svg');
+  const [currentImage, setCurrentImage] = useState(product.imgSrc);
 
-  // Commented out e-commerce functionality but keeping the design structure
+  const {
+    setQuickAddItem,
+    addToWishlist,
+    isAddedtoWishlist,
+    addToCompareItem,
+    isAddedtoCompareItem,
+    setQuickViewItem,
+    addProductToCart,
+    isAddedToCartProducts,
+  } = useContextElement();
 
   useEffect(() => {
-    setCurrentImage(product.imgSrc || '/images/placeholder-robot.svg');
+    setCurrentImage(product.imgSrc);
   }, [product]);
 
   return (
@@ -31,139 +39,239 @@ export default function ProductCard1({
           isNotImageRatio ? "aspect-ratio-0" : ""
         } ${radiusClass} `}
       >
-        <Link href={`/product-detail/${product.id}`} className="product-img" style={{ position: 'relative', display: 'block', width: '100%', height: '300px' }}>
-          {currentImage && currentImage !== 'undefined' && currentImage !== 'null' && currentImage !== '' ? (
-            <Image
-              className="lazyload img-product"
-              src={currentImage}
-              alt={product.title || 'Product Image'}
-              fill
-              style={{
-                objectFit: 'contain',
-                objectPosition: 'center'
-              }}
-              onError={(e) => {
-                // Fallback to placeholder if image fails to load
-                e.target.src = '/images/placeholder-robot.svg';
-              }}
-            />
-          ) : (
-            <div className="placeholder-image" style={{
-              width: '100%',
-              height: '100%',
-              backgroundColor: '#f8f9fa',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: '#6c757d'
-            }}>
-              <span>No Image</span>
-            </div>
-          )}
+        <Link href={`/product-detail/${product.id}`} className="product-img">
+          <Image
+            className="lazyload img-product"
+            src={currentImage}
+            alt={product.title}
+            width={600}
+            height={800}
+          />
 
-          {product.imgHover && product.imgHover.trim() !== '' && product.imgHover !== 'undefined' && product.imgHover !== 'null' && (
-            <Image
-              className="lazyload img-hover"
-              src={product.imgHover}
-              alt={product.title || 'Product Hover Image'}
-              fill
-              style={{
-                objectFit: 'contain',
-                objectPosition: 'center'
-              }}
-              onError={(e) => {
-                // Fallback to placeholder if hover image fails to load
-                e.target.src = '/images/placeholder-robot.svg';
-              }}
-            />
-          )}
+          <Image
+            className="lazyload img-hover"
+            src={product.imgHover}
+            alt={product.title}
+            width={600}
+            height={800}
+          />
         </Link>
-
-        {/* Commented out e-commerce hot sale marquee but keeping design structure */}
-        {/* Commented out e-commerce sale percentage but keeping design structure */}
-        {/* Commented out e-commerce sizes display but keeping design structure */}
-        {/* Commented out e-commerce countdown timer but keeping design structure */}
-        {/* Commented out e-commerce old price display but keeping design structure */}
-        
+        {product.hotSale && (
+          <div className="marquee-product bg-main">
+            <div className="marquee-wrapper">
+              <div className="initial-child-container">
+                <div className="marquee-child-item">
+                  <p className="font-2 text-btn-uppercase fw-6 text-white">
+                    Hot Sale 25% OFF
+                  </p>
+                </div>
+                <div className="marquee-child-item">
+                  <span className="icon icon-lightning text-critical" />
+                </div>
+                <div className="marquee-child-item">
+                  <p className="font-2 text-btn-uppercase fw-6 text-white">
+                    Hot Sale 25% OFF
+                  </p>
+                </div>
+                <div className="marquee-child-item">
+                  <span className="icon icon-lightning text-critical" />
+                </div>
+                <div className="marquee-child-item">
+                  <p className="font-2 text-btn-uppercase fw-6 text-white">
+                    Hot Sale 25% OFF
+                  </p>
+                </div>
+                <div className="marquee-child-item">
+                  <span className="icon icon-lightning text-critical" />
+                </div>
+                <div className="marquee-child-item">
+                  <p className="font-2 text-btn-uppercase fw-6 text-white">
+                    Hot Sale 25% OFF
+                  </p>
+                </div>
+                <div className="marquee-child-item">
+                  <span className="icon icon-lightning text-critical" />
+                </div>
+                <div className="marquee-child-item">
+                  <p className="font-2 text-btn-uppercase fw-6 text-white">
+                    Hot Sale 25% OFF
+                  </p>
+                </div>
+                <div className="marquee-child-item">
+                  <span className="icon icon-lightning text-critical" />
+                </div>
+              </div>
+            </div>
+            <div className="marquee-wrapper">
+              <div className="initial-child-container">
+                <div className="marquee-child-item">
+                  <p className="font-2 text-btn-uppercase fw-6 text-white">
+                    Hot Sale 25% OFF
+                  </p>
+                </div>
+                <div className="marquee-child-item">
+                  <span className="icon icon-lightning text-critical" />
+                </div>
+                <div className="marquee-child-item">
+                  <p className="font-2 text-btn-uppercase fw-6 text-white">
+                    Hot Sale 25% OFF
+                  </p>
+                </div>
+                <div className="marquee-child-item">
+                  <span className="icon icon-lightning text-critical" />
+                </div>
+                <div className="marquee-child-item">
+                  <p className="font-2 text-btn-uppercase fw-6 text-white">
+                    Hot Sale 25% OFF
+                  </p>
+                </div>
+                <div className="marquee-child-item">
+                  <span className="icon icon-lightning text-critical" />
+                </div>
+                <div className="marquee-child-item">
+                  <p className="font-2 text-btn-uppercase fw-6 text-white">
+                    Hot Sale 25% OFF
+                  </p>
+                </div>
+                <div className="marquee-child-item">
+                  <span className="icon icon-lightning text-critical" />
+                </div>
+                <div className="marquee-child-item">
+                  <p className="font-2 text-btn-uppercase fw-6 text-white">
+                    Hot Sale 25% OFF
+                  </p>
+                </div>
+                <div className="marquee-child-item">
+                  <span className="icon icon-lightning text-critical" />
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+        {product.isOnSale && (
+          <div className="on-sale-wrap">
+            <span className="on-sale-item">-{product.salePercentage}</span>
+          </div>
+        )}
+        {product.sizes && (
+          <div className="variant-wrap size-list">
+            <ul className="variant-box">
+              {product.sizes.map((size) => (
+                <li key={size} className="size-item">
+                  {size}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+        {product.countdown && (
+          <div className="variant-wrap countdown-wrap">
+            <div className="variant-box">
+              <div
+                className="js-countdown"
+                data-timer={product.countdown}
+                data-labels="D :,H :,M :,S"
+              >
+                <CountdownTimer />
+              </div>
+            </div>
+          </div>
+        )}
+        {product.oldPrice ? (
+          <div className="on-sale-wrap">
+            <span className="on-sale-item">-25%</span>
+          </div>
+        ) : (
+          ""
+        )}
         <div className="list-product-btn">
-          {/* Removed the 3 interactive icons (wishlist, compare, quick view) */}
-        </div>
-        
-        <div className="list-btn-main">
           <a
-            className="btn-main-product"
-            onClick={() => {
-              // Commented out e-commerce functionality
-              // addToCompareItem(product.id)
-            }}
+            onClick={() => addToWishlist(product.id)}
+            className="box-icon wishlist btn-icon-action"
           >
-            {/* Commented out e-commerce functionality */}
-            ADD TO COMPARE
+            <span className="icon icon-heart" />
+            <span className="tooltip">
+              {isAddedtoWishlist(product.id)
+                ? "Already Wishlished"
+                : "Wishlist"}
+            </span>
+          </a>
+          <a
+            href="#compare"
+            data-bs-toggle="offcanvas"
+            aria-controls="compare"
+            onClick={() => addToCompareItem(product.id)}
+            className="box-icon compare btn-icon-action"
+          >
+            <span className="icon icon-gitDiff" />
+            <span className="tooltip">
+              {isAddedtoCompareItem(product.id)
+                ? "Already compared"
+                : "Compare"}
+            </span>
+          </a>
+          <a
+            href="#quickView"
+            onClick={() => setQuickViewItem(product)}
+            data-bs-toggle="modal"
+            className="box-icon quickview tf-btn-loading"
+          >
+            <span className="icon icon-eye" />
+            <span className="tooltip">Quick View</span>
           </a>
         </div>
+        <div className="list-btn-main">
+          {product.addToCart == "Quick Add" ? (
+            <a
+              className="btn-main-product"
+              href="#quickAdd"
+              onClick={() => setQuickAddItem(product.id)}
+              data-bs-toggle="modal"
+            >
+              Quick Add
+            </a>
+          ) : (
+            <a
+              className="btn-main-product"
+              onClick={() => addProductToCart(product.id)}
+            >
+              {isAddedToCartProducts(product.id)
+                ? "Already Added"
+                : "ADD TO CART"}
+            </a>
+          )}
+        </div>
       </div>
-      
       <div className="card-product-info">
         <Link href={`/product-detail/${product.id}`} className="title link">
-          {product.title || 'Untitled Product'}
+          {product.title}
         </Link>
-        
         <span className="price">
-          ${(product.price || 0).toFixed(2)}
+          {product.oldPrice && (
+            <span className="old-price">${product.oldPrice.toFixed(2)}</span>
+          )}{" "}
+          ${product.price?.toFixed(2)}
         </span>
-        
-        {product.colors && product.colors.length > 0 && (
+        {product.colors && (
           <ul className="list-color-product">
-            {product.colors.map((color, index) => {
-              console.log(`Product "${product.title}" color ${index}:`, color); // Debug each color
-              return (
-                <li
-                  key={index}
-                  className={`list-color-item color-swatch ${
-                    currentImage == color.imgSrc ? "active" : ""
-                  } ${color.bgColor == "bg-white" ? "line" : ""}`}
-                  onMouseOver={() => setCurrentImage(color.imgSrc)}
-                >
-                  <span 
-                    className={`swatch-value ${color.bgColor}`}
-                    style={{ 
-                      width: '20px',
-                      height: '20px',
-                      borderRadius: '50%',
-                      display: 'inline-block'
-                    }}
-                  />
-                  {color.imgSrc ? (
-                    <Image
-                      className="lazyload"
-                      src={color.imgSrc}
-                      alt="color variant"
-                      width={600}
-                      height={800}
-                    />
-                  ) : (
-                    <div className="color-placeholder" style={{
-                      width: '20px',
-                      height: '20px',
-                      backgroundColor: color.bgColor === 'bg-primary' ? '#007bff' : 
-                                   color.bgColor === 'bg-red' ? '#dc3545' :
-                                   color.bgColor === 'bg-blue' ? '#0d6efd' :
-                                   color.bgColor === 'bg-green' ? '#198754' :
-                                   color.bgColor === 'bg-yellow' ? '#ffc107' :
-                                   color.bgColor === 'bg-orange' ? '#fd7e14' :
-                                   color.bgColor === 'bg-purple' ? '#6f42c1' :
-                                   color.bgColor === 'bg-pink' ? '#e83e8c' :
-                                   color.bgColor === 'bg-brown' ? '#795548' :
-                                   color.bgColor === 'bg-grey' ? '#6c757d' :
-                                   color.bgColor === 'bg-black' ? '#000000' :
-                                   color.bgColor === 'bg-white' ? '#ffffff' :
-                                   color.bgColor === 'bg-beige' ? '#f5f5dc' : '#6c757d',
-                      borderRadius: '50%'
-                    }} />
-                  )}
-                </li>
-              );
-            })}
+            {product.colors.map((color, index) => (
+              <li
+                key={index}
+                className={`list-color-item color-swatch ${
+                  currentImage == color.imgSrc ? "active" : ""
+                } ${color.bgColor == "bg-white" ? "line" : ""}`}
+                onMouseOver={() => setCurrentImage(color.imgSrc)}
+              >
+                <span className={`swatch-value ${color.bgColor}`} />
+                <Image
+                  className="lazyload"
+                  src={color.imgSrc}
+                  alt="color variant"
+                  width={600}
+                  height={800}
+                />
+              </li>
+            ))}
           </ul>
         )}
       </div>

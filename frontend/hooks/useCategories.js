@@ -11,35 +11,50 @@ const useCategories = () => {
         setLoading(true);
         setError(null);
         
-        // Use the same approach as the working slider implementation
-        const backendUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
-        const apiUrl = `${backendUrl}/frontend/api/category`;
+        // Try multiple backend URLs for robustness
+        const backendUrls = [
+          'http://localhost:5000',
+          'http://localhost:3001',
+          'http://localhost:8000',
+          process.env.NEXT_PUBLIC_API_URL
+        ].filter(Boolean);
         
-        console.log('🔍 Fetching categories from:', apiUrl);
-        console.log('🔍 Backend URL:', backendUrl);
-        console.log('🔍 Environment variable:', process.env.NEXT_PUBLIC_API_URL);
+        let response = null;
+        let lastError = null;
         
-        const response = await fetch(apiUrl);
+        for (const backendUrl of backendUrls) {
+          try {
+            const apiUrl = `${backendUrl}/frontend/api/category`;
+            console.log('🔍 Trying to fetch categories from:', apiUrl);
+            
+            response = await fetch(apiUrl);
+            console.log('🔍 Response status:', response.status);
+            
+            if (response.ok) {
+              console.log('🔍 Successfully connected to:', backendUrl);
+              break;
+            }
+          } catch (err) {
+            console.log('🔍 Failed to fetch from', backendUrl, ':', err.message);
+            lastError = err;
+            continue;
+          }
+        }
         
-        console.log('🔍 Response status:', response.status);
-        console.log('🔍 Response ok:', response.ok);
-        
-        if (!response.ok) {
-          const errorText = await response.text();
-          console.error('🔍 Error response text:', errorText);
-          throw new Error(`Failed to fetch categories: ${response.status} ${response.statusText}`);
+        if (!response || !response.ok) {
+          throw new Error(lastError?.message || 'Failed to fetch categories from any backend URL');
         }
         
         const data = await response.json();
         console.log('🔍 Raw response data:', data);
         
-        if (data.success && data.data) {
+        if (data.success && data.data && Array.isArray(data.data)) {
           // Transform the data to match the expected format
           const transformedCategories = data.data.map((category, index) => ({
-            id: category._id || index + 1,
-            imageSrc: category.logoimage ? `${backendUrl}/${category.logoimage}` : '/images/collections/grid-cls/gaming-1.jpg',
-            title: category.name || 'Category',
+            _id: category._id || `category-${index + 1}`,
+            name: category.name || 'Category',
             description: category.description || 'No description available',
+            logoimage: category.logoimage || null,
             slug: category.slug || 'category'
           }));
           
