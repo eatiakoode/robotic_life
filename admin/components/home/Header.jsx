@@ -34,7 +34,11 @@ const Header = () => {
             width={170}
             height={65}
             className="logo1 contain"
+<<<<<<< HEAD
             src={`${process.env.NEXT_PUBLIC_API_URL}public/assets/images/logo.svg`}
+=======
+                          src="/assets/images/logo.svg"
+>>>>>>> ea24ee4 (Home page & admin panel fixed)
             alt="logo.svg"
           />
 
@@ -42,7 +46,11 @@ const Header = () => {
             width={170}
             height={65}
             className="logo2 contain"
+<<<<<<< HEAD
             src="/assets/images/logo2.png"
+=======
+                          src="/assets/images/logo2.png"
+>>>>>>> ea24ee4 (Home page & admin panel fixed)
             alt="logo2.png"
           />
           {/* <span>WeGrow</span> */}

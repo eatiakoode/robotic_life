@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import selectedFiles from "../../../utils/selectedFiles";
-import Image from "next/image";
+import { SafeImage } from "../../../utils/imageUtils";
 
 const PropertyMediaUploader = () => {
   const [propertySelectedImgs, setPropertySelectedImgs] = useState([]);
@@ -35,7 +35,7 @@ const PropertyMediaUploader = () => {
             ? propertySelectedImgs?.map((item, index) => (
                 <li key={index} className="list-inline-item">
                   <div className="portfolio_item">
-                    <Image
+                    <SafeImage
                       width={200}
                       height={200}
                       className="img-fluid cover"

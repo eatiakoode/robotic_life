@@ -99,7 +99,11 @@ const SidebarMenu = () => {
               width={170}
               height={65}
               // src="/assets/images/logo.svg"
+<<<<<<< HEAD
               src={`${process.env.NEXT_PUBLIC_API_URL}public/assets/images/logo.svg`}
+=======
+              src="/assets/images/logo.svg"
+>>>>>>> ea24ee4 (Home page & admin panel fixed)
               alt="logo.svg"
             />
             {/* <span>WeGrow</span> */}

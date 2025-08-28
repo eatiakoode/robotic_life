@@ -5,6 +5,39 @@ import { Autoplay, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import Link from "next/link";
 import Image from "next/image";
+<<<<<<< HEAD
+=======
+import styles from "./Hero.module.css";
+
+// Fallback static data in case API fails
+const fallbackSlides = [
+  {
+    _id: "fallback-1",
+    title: "Powerful Sound",
+    description: "Fill any space with immersive, high-quality audio.",
+    buttonText: "Shop now",
+    buttonLink: "/shop-filter-canvas",
+    images: ["/images/slider/slider-gaming-1.jpg"]
+  },
+  {
+    _id: "fallback-2", 
+    title: "Seamless Listening",
+    description: "Enjoy effortless connectivity and crystal-clear audio on the go.",
+    buttonText: "Explore Collection",
+    buttonLink: "/shop-filter-canvas",
+    images: ["/images/slider/slider-gaming-2.jpg"]
+  },
+  {
+    _id: "fallback-3",
+    title: "Immerse Yourself", 
+    description: "Experience rich, high-fidelity sound for music, gaming, and calls.",
+    buttonText: "Explore Collection",
+    buttonLink: "/shop-filter-canvas",
+    images: ["/images/slider/slider-gaming-3.jpg"]
+  }
+];
+
+>>>>>>> ea24ee4 (Home page & admin panel fixed)
 export default function Hero() {
   return (
     <div className="tf-slideshow slider-default slider-effect-fade">
@@ -44,7 +77,11 @@ export default function Hero() {
                   </div>
                   <div className="fade-item fade-item-3 box-btn-slider">
                     <Link
+<<<<<<< HEAD
                       href={`/shop-default-grid`}
+=======
+                      href={slide.buttonLink || "/shop-filter-canvas"}
+>>>>>>> ea24ee4 (Home page & admin panel fixed)
                       className="tf-btn btn-fill btn-white"
                     >
                       <span className="text">{slide.buttonText}</span>

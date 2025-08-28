@@ -33,15 +33,24 @@ const Header = () => {
             width={170}
             height={75}
             className="logo1 img-fluid"
+<<<<<<< HEAD
             // src="/assets/images/logo.svg"
             src={`${process.env.NEXT_PUBLIC_API_URL}public/assets/images/logo.svg`}
             alt="header-logo2.png"
+=======
+            src="/assets/images/logo.svg"
+            alt="logo.svg"
+>>>>>>> ea24ee4 (Home page & admin panel fixed)
           />
           <Image
             width={40}
             height={45}
             className="logo2 img-fluid"
+<<<<<<< HEAD
             src="/assets/images/header-logo2.png"
+=======
+                          src="/assets/images/header-logo2.png"
+>>>>>>> ea24ee4 (Home page & admin panel fixed)
             alt="header-logo2.png"
           />
           {/* <span>WeGrow</span> */}

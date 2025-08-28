@@ -28,7 +28,11 @@ const Header = () => {
             width={170}
             height={65}
             className="logo1 img-fluid"
+<<<<<<< HEAD
             src="/assets/images/header-logo2.png"
+=======
+                          src="/assets/images/header-logo2.png"
+>>>>>>> ea24ee4 (Home page & admin panel fixed)
             alt="header logo"
           />
         </a>

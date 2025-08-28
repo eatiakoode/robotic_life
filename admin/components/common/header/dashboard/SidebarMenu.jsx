@@ -6,7 +6,7 @@ import {
   isParentPageActive,
   isSinglePageActive,
 } from "../../../../utils/daynamicNavigation";
-import Image from "next/image";
+import { SafeImage } from "../../../../utils/imageUtils";
 import { usePathname } from "next/navigation";
 
 const SidebarMenu = () => {
@@ -111,12 +111,20 @@ const SidebarMenu = () => {
     <>
       <ul className="sidebar-menu">
         <li className="sidebar_header header">
+<<<<<<< HEAD
            <Link href="/cmswegrow/my-dashboard">
             <Image
               width={170}
               height={65}
               // src="/assets/images/logo.svg"
               src={`${process.env.NEXT_PUBLIC_API_URL}public/assets/images/logo.svg`}
+=======
+          <Link href="/cmsroboticlife/my-dashboard">
+            <SafeImage
+              width={170}
+              height={65}
+              src="/assets/images/robo.svg"
+>>>>>>> ea24ee4 (Home page & admin panel fixed)
               alt="logo.svg"
             />
             {/* <span>WeGrow</span> */}

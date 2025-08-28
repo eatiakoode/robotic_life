@@ -1,7 +1,13 @@
+<<<<<<< HEAD
 "use client"; // Add this at the top
 import Image from "next/image";
 import { getCategoryTableData,deleteCategoryAPI } from "@/api/category";
 import { useState, useEffect } from "react";
+=======
+"use client";
+import { SafeImage } from "../../../utils/imageUtils";
+import { deleteCategoryAPI } from "@/api/category";
+>>>>>>> ea24ee4 (Home page & admin panel fixed)
 import { useRouter } from "next/navigation";
 // import moment from 'moment';
 import { toast } from 'react-toastify';
@@ -31,6 +37,7 @@ const TableData = ({categoryList,setCategoryList}) => {
   ];
   let tbodyContent = categoryList?.map((item) => (
     <tr key={item._id}>
+<<<<<<< HEAD
       <td scope="row">
         <div className="feat_property list favorite_page style2">
           <div className="details">
@@ -39,6 +46,37 @@ const TableData = ({categoryList,setCategoryList}) => {
               
             </div>
           </div>
+=======
+      {/* Image */}
+      <td className="align-middle text-center" style={{ width: 130 }}>
+        <div
+          className="thumb"
+          style={{
+            width: 100,
+            height: 100,
+            overflow: "hidden",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            margin: "0 auto",
+            border: "1px solid #e5e5e5",
+            borderRadius: "4px"
+          }}
+        >
+          <SafeImage
+            width={100}
+            height={100}
+            className="img-whp"
+            src={item.logoImage}
+            alt={`${item.name}`}
+            style={{ 
+              width: "100%",
+              height: "100%",
+              objectFit: "contain",
+              objectPosition: "center"
+            }}
+          />
+>>>>>>> ea24ee4 (Home page & admin panel fixed)
         </div>
       </td>
       {/* End td */}
