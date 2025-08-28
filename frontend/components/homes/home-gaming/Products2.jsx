@@ -86,7 +86,7 @@ export default function Products2() {
         <div className="container">
           <div className="heading-section-2 type-2 wow fadeInUp">
             <h3 className="heading font-5 fw-bold">Features Product</h3>
-            <Link href={`/shop-collection`} className="btn-line">
+            <Link href={`/shop-filter-canvas`} className="btn-line">
               View All Products
             </Link>
           </div>
@@ -106,7 +106,7 @@ export default function Products2() {
         <div className="container">
           <div className="heading-section-2 type-2 wow fadeInUp">
             <h3 className="heading font-5 fw-bold">Features Product</h3>
-            <Link href={`/shop-collection`} className="btn-line">
+            <Link href={`/shop-filter-canvas`} className="btn-line">
               View All Products
             </Link>
           </div>
@@ -129,7 +129,7 @@ export default function Products2() {
       <div className="container">
         <div className="heading-section-2 type-2 wow fadeInUp">
           <h3 className="heading font-5 fw-bold">Features Product</h3>
-          <Link href={`/shop-collection`} className="btn-line">
+          <Link href={`/shop-filter-canvas`} className="btn-line">
             View All Products
           </Link>
         </div>

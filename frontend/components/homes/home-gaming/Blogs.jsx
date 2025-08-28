@@ -132,8 +132,8 @@ export default function Blogs() {
                       data-src={post.imageSrc}
                       alt={post.alt}
                       src={post.imageSrc}
-                      width={630}
-                      height={472}
+                      width={430}
+                      height={372}
                       onError={(e) => {
                         console.log('Image failed to load:', post.imageSrc);
                         e.target.src = "/images/blog/gaming-1.jpg"; // Fallback image
@@ -210,8 +210,8 @@ export default function Blogs() {
                     data-src={post.imageSrc}
                     alt={post.alt}
                     src={post.imageSrc}
-                    width={630}
-                    height={472}
+                      width={430}
+                      height={372}
                     onError={(e) => {
                       console.log('Image failed to load:', post.imageSrc);
                       e.target.src = "/images/blog/gaming-1.jpg"; // Fallback image

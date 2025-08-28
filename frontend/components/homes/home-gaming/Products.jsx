@@ -12,16 +12,9 @@ export default function Products() {
   const [robots, setRobots] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Debug logging
-  console.log('🔍 Products component - categories:', categories);
-  console.log('🔍 Products component - categoriesLoading:', categoriesLoading);
-  console.log('🔍 Products component - categoriesError:', categoriesError);
-  console.log('🔍 Products component - activeCategory:', activeCategory);
-
-  // Set first category as active when categories are loaded
   useEffect(() => {
     if (categories.length > 0 && !activeCategory) {
-      console.log('🔍 Setting first category as active:', categories[0]);
+      // console.log('🔍 Setting first category as active:', categories[0]);
       setActiveCategory(categories[0]);
     }
   }, [categories, activeCategory]);
@@ -29,7 +22,7 @@ export default function Products() {
   // Fetch robots when active category changes
   useEffect(() => {
     if (activeCategory) {
-      console.log('🔍 Fetching robots for category:', activeCategory);
+      // console.log('🔍 Fetching robots for category:', activeCategory);
       fetchRobotsByCategory(activeCategory.slug);
     }
   }, [activeCategory]);
@@ -40,18 +33,18 @@ export default function Products() {
       const backendUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
       const apiUrl = `${backendUrl}/frontend/api/category/filter/${categorySlug}`;
       
-      console.log('🔍 Fetching robots from:', apiUrl);
+      // console.log('🔍 Fetching robots from:', apiUrl);
       
       const response = await fetch(apiUrl);
       
-      console.log('🔍 Robots response status:', response.status);
-      console.log('🔍 Robots response ok:', response.ok);
+      // console.log('🔍 Robots response status:', response.status);
+      // console.log('🔍 Robots response ok:', response.ok);
       
       if (response.ok) {
         const data = await response.json();
-        console.log('🔍 Robots data received:', data);
-        console.log('🔍 Robots data type:', typeof data);
-        console.log('🔍 Robots data length:', Array.isArray(data) ? data.length : 'Not an array');
+        // console.log('🔍 Robots data received:', data);
+        // console.log('🔍 Robots data type:', typeof data);
+        // console.log('🔍 Robots data length:', Array.isArray(data) ? data.length : 'Not an array');
         
         if (Array.isArray(data)) {
           setRobots(data);
@@ -73,7 +66,7 @@ export default function Products() {
   };
 
   const handleCategoryClick = (category) => {
-    console.log('🔍 Category clicked:', category);
+    // console.log('🔍 Category clicked:', category);
     setActiveCategory(category);
   };
 
@@ -136,7 +129,7 @@ export default function Products() {
                 <p className="text-danger">Error loading categories: {categoriesError}</p>
               </div>
             </div>
-            <Link href={`/shop-collection`} className="btn-line">
+            <Link href={`/shop-filter-canvas`} className="btn-line">
               View All Products
             </Link>
           </div>
@@ -157,7 +150,7 @@ export default function Products() {
                 <p>No categories available.</p>
               </div>
             </div>
-            <Link href={`/shop-collection`} className="btn-line">
+            <Link href={`/shop-filter-canvas`} className="btn-line">
               View All Products
             </Link>
           </div>
@@ -197,7 +190,7 @@ export default function Products() {
               ))}
             </ul>
           </div>
-          <Link href={`/shop-collection`} className="btn-line">
+          <Link href={`/shop-filter-canvas`} className="btn-line">
             View All Products
           </Link>
         </div>
@@ -226,17 +219,17 @@ export default function Products() {
                     const imageSrc = robot.images && robot.images.length > 0 ? `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/${robot.images[0]}` : '/images/products/product-1.jpg';
                     
                     // Debug: Log the robot color data
-                    console.log('🔍 Robot:', robot.title);
-                    console.log('🔍 Color field:', robot.color);
-                    console.log('🔍 Color type:', typeof robot.color);
-                    console.log('🔍 Color isArray:', Array.isArray(robot.color));
-                    console.log('🔍 Color keys:', robot.color ? Object.keys(robot.color) : 'No color data');
+                    // console.log('🔍 Robot:', robot.title);
+                    // console.log('🔍 Color field:', robot.color);
+                    // console.log('🔍 Color type:', typeof robot.color);
+                    // console.log('🔍 Color isArray:', Array.isArray(robot.color));
+                    // console.log('🔍 Color keys:', robot.color ? Object.keys(robot.color) : 'No color data');
                     
                     // Construct proper colors array from robot data
                     let colors = [];
                     if (robot.color && Array.isArray(robot.color) && robot.color.length > 0) {
                       // If color is an array of objects with color data
-                      console.log('🔍 Processing color as array');
+                      // console.log('🔍 Processing color as array');
                       colors = robot.color.map(colorItem => ({
                         imgSrc: imageSrc,
                         bgColor: colorItem.name ? `bg-${colorItem.name.toLowerCase().replace(/\s+/g, '-')}` : 'bg-primary',
@@ -244,7 +237,7 @@ export default function Products() {
                       }));
                     } else if (robot.color && typeof robot.color === 'object' && robot.color.name) {
                       // If color is a single object
-                      console.log('🔍 Processing color as single object');
+                      // console.log('🔍 Processing color as single object');
                       colors = [{
                         imgSrc: imageSrc,
                         bgColor: `bg-${robot.color.name.toLowerCase().replace(/\s+/g, '-')}`,
@@ -252,19 +245,19 @@ export default function Products() {
                       }];
                     } else if (robot.color && typeof robot.color === 'string' && robot.color.trim() !== '') {
                       // If color is a string
-                      console.log('🔍 Processing color as string');
+                      // console.log('🔍 Processing color as string');
                       colors = [{
                         imgSrc: imageSrc,
                         bgColor: `bg-${robot.color.toLowerCase().replace(/\s+/g, '-')}`,
                         name: robot.color
                       }];
                     } else {
-                      console.log('🔍 No valid color data found, using default');
+                      // console.log('🔍 No valid color data found, using default');
                     }
                     
                     // If no colors found, provide a default but make it clear it's a fallback
                     if (colors.length === 0) {
-                      console.log('🔍 Using fallback color for', robot.title);
+                      // console.log('🔍 Using fallback color for', robot.title);
                       colors = [{
                         imgSrc: imageSrc,
                         bgColor: 'bg-secondary', // Use different color to indicate it's a fallback

@@ -44,10 +44,6 @@ export default function Hero() {
     console.warn("Slider API error, using fallback data:", error);
   }
 
-  // Debug: Log current sliders
-  console.log('Current sliders in Hero component:', sliders);
-  console.log(`Rendering ${sliders.length} slides in the slider`);
-
   return (
     <div className="tf-slideshow slider-default slider-effect-fade">
       <Swiper
