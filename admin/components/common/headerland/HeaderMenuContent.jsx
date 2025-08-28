@@ -28,7 +28,7 @@ const Header = () => {
             width={170}
             height={65}
             className="logo1 img-fluid"
-            src="/assets/images/header-logo2.png"
+            src={`${process.env.NEXT_PUBLIC_BACKEND_API_URL}public/assets/images/header-logo2.png`}
             alt="header logo"
           />
         </a>

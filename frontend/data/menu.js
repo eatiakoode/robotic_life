@@ -1,12 +1,5 @@
 export const demoItems = [
   {
-    href: "/home-gaming",
-    src: "/images/demo/home-gaming-accessory.jpg",
-    alt: "home-gaming-accessory",
-    name: "Gaming Accessory",
-    label: ["New", "Default"],
-  },
-  {
     href: "/",
     src: "/images/demo/home-fashion-womenswear.jpg",
     alt: "home-fashion-womenswear",
@@ -230,7 +223,13 @@ export const demoItems = [
     name: "Sneaker",
     label: ["New"],
   },
-
+  {
+    href: "/home-gaming",
+    src: "/images/demo/home-gaming-accessory.jpg",
+    alt: "home-gaming-accessory",
+    name: "Gaming Accessory",
+    label: ["New"],
+  },
 ];
 
 export const shopLayout = [

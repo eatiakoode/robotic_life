@@ -12,15 +12,15 @@ import Products2 from "@/components/homes/home-gaming/Products2";
 import Testimonials from "@/components/homes/home-gaming/Testimonials";
 
 export const metadata = {
-  title: "Robotic Life || A complete guide to robots",
-  description: "Robotic Life - A complete guide to robots",
+  title: "Home Gaming || Modave - Multipurpose React Nextjs eCommerce Template",
+  description: "Modave - Multipurpose React Nextjs eCommerce Template",
 };
 
 export default function HomePage() {
   return (
     <>
       <Topbar9 />
-      <Header15/>
+      <Header15 />
       <Hero />
       <Collections />
       <Products />

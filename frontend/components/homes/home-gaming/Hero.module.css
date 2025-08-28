@@ -1,0 +1,80 @@
+/* Custom styles for slider images to fix zooming and cropping */
+.sliderImage {
+  object-fit: cover !important;
+  object-position: center center !important;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: 100% !important;
+  max-height: 100% !important;
+}
+
+.wrapSlider {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+  min-height: 756px; /* Match the original image height */
+}
+
+.imageContainer {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 756px; /* Match the original image height */
+  overflow: hidden;
+}
+
+/* Multiple images container */
+.multipleImagesContainer {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 756px;
+  display: flex;
+  overflow: hidden;
+}
+
+/* Individual image partition */
+.imagePartition {
+  position: relative;
+  height: 100%;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+/* Image within partition */
+.partitionImage {
+  object-fit: cover !important;
+  object-position: center center !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* Ensure the image fills the container properly */
+.imageContainer img {
+  object-fit: cover !important;
+  object-position: center center !important;
+  width: 100% !important;
+  height: 100% !important;
+  transition: transform 0.3s ease;
+}
+
+/* Optional: Add a subtle zoom effect on hover */
+.imageContainer:hover img {
+  transform: scale(1.05);
+}
+
+/* Fix for Next.js Image component with fill property */
+.wrapSlider {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 756px;
+}
+
+.imageContainer {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 756px;
+}
