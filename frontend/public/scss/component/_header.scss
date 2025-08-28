@@ -32,10 +32,10 @@
   }
   .wrapper-slider-topbar {
     position: relative;
-    .tf-sw-top_bar {
-      margin-left: 40px;
-      margin-right: 40px;
-    }
+          .tf-sw-top_bar {
+        margin-left: 40px;
+        margin-right: 40px;
+      }
   }
   .navigation-topbar {
     position: absolute;
@@ -347,6 +347,8 @@
       gap: 4px;
       @include mixin.transition3;
       position: relative;
+      color: var(--main) !important;
+      text-shadow: none;
 
       .icon {
         font-size: 12px;

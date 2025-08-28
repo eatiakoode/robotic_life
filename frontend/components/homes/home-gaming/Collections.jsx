@@ -100,7 +100,7 @@ export default function Collections() {
                   <p className="tag text-btn-uppercase text-white">Accessories</p>
                   <h3 className="title">
                     <Link
-                      href={`/shop-default-grid`}
+                      href={`/shop-filter-canvas`}
                       className="link text-white fw-bold font-5"
                     >
                       Ultimate Audio <br />
@@ -113,7 +113,7 @@ export default function Collections() {
                 </div>
                 <div className="box-btn">
                   <Link
-                    href={`/shop-default-grid`}
+                    href={`/shop-filter-canvas`}
                     className="btn-line style-white has-icon"
                   >
                     Shop Now
@@ -141,7 +141,7 @@ export default function Collections() {
                   <p className="tag text-btn-uppercase text-white">Accessories</p>
                   <h3 className="title">
                     <Link
-                      href={`/shop-default-grid`}
+                      href={`/shop-filter-canvas`}
                       className="link text-white fw-bold font-5"
                     >
                       Essential Style <br />
@@ -154,7 +154,7 @@ export default function Collections() {
                 </div>
                 <div className="box-btn">
                   <Link
-                    href={`/shop-default-grid`}
+                    href={`/shop-filter-canvas`}
                     className="btn-line style-white has-icon"
                   >
                     Shop Now
@@ -184,7 +184,7 @@ export default function Collections() {
                   </p>
                   <h1 className="title">
                     <Link
-                      href={`/shop-default-grid`}
+                      href={`/shop-filter-canvas`}
                       className="link text-white fw-bold font-5"
                     >
                       Precision at Your <br />
@@ -198,7 +198,7 @@ export default function Collections() {
                 </div>
                 <div className="box-btn">
                   <Link
-                    href={`/shop-default-grid`}
+                    href={`/shop-filter-canvas`}
                     className="tf-btn btn-fill btn-white btn-md"
                   >
                     <span className="text">Shop now</span>
@@ -243,7 +243,7 @@ export default function Collections() {
                 <div className="box-title">
                   <h3 className="title">
                     <Link
-                      href={`/shop-default-grid`}
+                      href={`/shop-filter-canvas`}
                       className="link text-white fw-bold font-5"
                     >
                       {category.title}
@@ -255,7 +255,7 @@ export default function Collections() {
                 </div>
                 <div className="box-btn">
                   <Link
-                    href={`/shop-default-grid`}
+                    href={`/shop-filter-canvas`}
                     className="btn-line style-white has-icon"
                   >
                     Shop Now
@@ -291,7 +291,7 @@ export default function Collections() {
                   </p>
                   <h1 className="title">
                     <Link
-                      href={`/shop-default-grid`}
+                      href={`/shop-filter-canvas`}
                       className="link text-white fw-bold font-5"
                     >
                       {displayCategories[2].title}
@@ -303,7 +303,7 @@ export default function Collections() {
                 </div>
                 <div className="box-btn">
                   <Link
-                    href={`/shop-default-grid`}
+                    href={`/shop-filter-canvas`}
                     className="tf-btn btn-fill btn-white btn-md"
                   >
                     <span className="text">Shop now</span>
@@ -334,7 +334,7 @@ export default function Collections() {
                   </p>
                   <h1 className="title">
                     <Link
-                      href={`/shop-default-grid`}
+                      href={`/shop-filter-canvas`}
                       className="link text-white fw-bold font-5"
                     >
                       Precision at Your <br />
@@ -348,7 +348,7 @@ export default function Collections() {
                 </div>
                 <div className="box-btn">
                   <Link
-                    href={`/shop-default-grid`}
+                    href={`/shop-filter-canvas`}
                     className="tf-btn btn-fill btn-white btn-md"
                   >
                     <span className="text">Shop now</span>

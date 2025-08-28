@@ -58,7 +58,7 @@ export default function Collections2() {
                     <div className="box-title">
                       <h5 className="title">
                         <Link
-                          href={`/shop-default-grid`}
+                          href={`/shop-filter-canvas`}
                           className="link text-white fw-bold"
                         >
                           Loading...
@@ -70,7 +70,7 @@ export default function Collections2() {
                     </div>
                     <div className="box-btn">
                       <Link
-                        href={`/shop-default-grid`}
+                        href={`/shop-filter-canvas`}
                         className="tf-btn btn-fill btn-white btn-md"
                       >
                         <span className="text">Shop now</span>
@@ -141,7 +141,7 @@ export default function Collections2() {
                   <div className="box-title">
                     <h5 className="title">
                       <Link
-                        href={`/shop-default-grid`}
+                        href={`/shop-filter-canvas`}
                         className="link text-white fw-bold"
                       >
                         {category.title}
@@ -153,7 +153,7 @@ export default function Collections2() {
                   </div>
                   <div className="box-btn">
                     <Link
-                      href={`/shop-default-grid`}
+                      href={`/shop-filter-canvas`}
                       className="tf-btn btn-fill btn-white btn-md"
                     >
                       <span className="text">Shop now</span>

@@ -7,7 +7,7 @@ export default function Header1({ fullWidth = false }) {
   return (
     <header
       id="header"
-      className={`header-default ${fullWidth ? "header-fullwidth" : ""} `}
+      className={`header-default header-bg ${fullWidth ? "header-fullwidth" : ""} `}
     >
       <div className={fullWidth ? "" : "container"}>
         <div className="row wrapper-header align-items-center">
