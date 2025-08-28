@@ -7,11 +7,6 @@ import Image from "next/image";
 import useCategories from "@/hooks/useCategories";
 
 export default function Collections2() {
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-=======
->>>>>>> 3c0733c34d124af768c936ac3903a1a50f4723cf
   const { categories, loading, error } = useCategories();
 
   // Fallback data if API fails
@@ -111,11 +106,7 @@ export default function Collections2() {
                     <div className="box-title">
                       <h5 className="title">
                         <Link
-<<<<<<< HEAD
-                          href={`/shop-filter-canvas`}
-=======
                           href={`/shop-default-grid`}
->>>>>>> 3c0733c34d124af768c936ac3903a1a50f4723cf
                           className="link text-white fw-bold"
                         >
                           Loading...
@@ -127,11 +118,7 @@ export default function Collections2() {
                     </div>
                     <div className="box-btn">
                       <Link
-<<<<<<< HEAD
-                        href={`/shop-filter-canvas`}
-=======
                         href={`/shop-default-grid`}
->>>>>>> 3c0733c34d124af768c936ac3903a1a50f4723cf
                         className="tf-btn btn-fill btn-white btn-md"
                       >
                         <span className="text">Shop now</span>
@@ -149,10 +136,6 @@ export default function Collections2() {
     );
   }
 
-<<<<<<< HEAD
->>>>>>> ea24ee4 (Home page & admin panel fixed)
-=======
->>>>>>> 3c0733c34d124af768c936ac3903a1a50f4723cf
   return (
     <section className="flat-spacing">
       <div className="container">
@@ -203,7 +186,7 @@ export default function Collections2() {
                   <div className="box-title">
                     <h5 className="title">
                       <Link
-                        href={`/shop-filter-canvas`}
+                        href={`/shop-default-grid`}
                         className="link text-white fw-bold"
                       >
                         {category.name || 'Category'}
@@ -215,7 +198,7 @@ export default function Collections2() {
                   </div>
                   <div className="box-btn">
                     <Link
-                      href={`/shop-filter-canvas`}
+                      href={`/shop-default-grid`}
                       className="tf-btn btn-fill btn-white btn-md"
                     >
                       <span className="text">Shop now</span>

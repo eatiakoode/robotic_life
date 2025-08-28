@@ -7,11 +7,6 @@ import Image from "next/image";
 import { useBlogs } from "@/hooks/useBlogs";
 
 export default function Blogs() {
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-=======
->>>>>>> 3c0733c34d124af768c936ac3903a1a50f4723cf
   const { blogs, loading, error } = useBlogs();
 
 
@@ -61,11 +56,7 @@ export default function Blogs() {
         <div className="container">
           <div className="heading-section-2 align-items-center type-2 wow fadeInUp">
             <h3 className="heading font-5 fw-bold">News &amp; Reviews</h3>
-<<<<<<< HEAD
-            <Link href={`/shop-filter-canvas`} className="btn-line">
-=======
             <Link href={`/shop-collection`} className="btn-line">
->>>>>>> 3c0733c34d124af768c936ac3903a1a50f4723cf
               View All
             </Link>
           </div>
@@ -105,11 +96,7 @@ export default function Blogs() {
         <div className="container">
           <div className="heading-section-2 align-items-center type-2 wow fadeInUp">
             <h3 className="heading font-5 fw-bold">News &amp; Reviews</h3>
-<<<<<<< HEAD
-            <Link href={`/shop-filter-canvas`} className="btn-line">
-=======
             <Link href={`/shop-collection`} className="btn-line">
->>>>>>> 3c0733c34d124af768c936ac3903a1a50f4723cf
               View All
             </Link>
           </div>
@@ -180,16 +167,12 @@ export default function Blogs() {
     );
   }
 
-<<<<<<< HEAD
->>>>>>> ea24ee4 (Home page & admin panel fixed)
-=======
->>>>>>> 3c0733c34d124af768c936ac3903a1a50f4723cf
   return (
     <section>
       <div className="container">
         <div className="heading-section-2 align-items-center type-2 wow fadeInUp">
           <h3 className="heading font-5 fw-bold">News &amp; Reviews</h3>
-          <Link href={`/shop-filter-canvas`} className="btn-line">
+          <Link href={`/shop-collection`} className="btn-line">
             View All
           </Link>
         </div>

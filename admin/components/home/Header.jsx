@@ -34,15 +34,7 @@ const Header = () => {
             width={170}
             height={65}
             className="logo1 contain"
-<<<<<<< HEAD
-<<<<<<< HEAD
-            src={`${process.env.NEXT_PUBLIC_API_URL}public/assets/images/logo.svg`}
-=======
                           src="/assets/images/logo.svg"
->>>>>>> ea24ee4 (Home page & admin panel fixed)
-=======
-            src={`${process.env.NEXT_PUBLIC_BACKEND_API_URL}public/assets/images/logo.svg`}
->>>>>>> 3c0733c34d124af768c936ac3903a1a50f4723cf
             alt="logo.svg"
           />
 
@@ -50,15 +42,7 @@ const Header = () => {
             width={170}
             height={65}
             className="logo2 contain"
-<<<<<<< HEAD
-<<<<<<< HEAD
-            src="/assets/images/logo2.png"
-=======
                           src="/assets/images/logo2.png"
->>>>>>> ea24ee4 (Home page & admin panel fixed)
-=======
-            src={`${process.env.NEXT_PUBLIC_BACKEND_API_URL}public/assets/images/logo2.png`}
->>>>>>> 3c0733c34d124af768c936ac3903a1a50f4723cf
             alt="logo2.png"
           />
           {/* <span>WeGrow</span> */}

@@ -32,11 +32,11 @@ export default function Nav() {
             : ""
         } `}
       >
-        <a href="/" className="item-link">
+        <a href="#" className="item-link">
           Home
-          {/* <i className="icon icon-arrow-down" /> */}
+          <i className="icon icon-arrow-down" />
         </a>
-        {/* <div className="sub-menu mega-menu">
+        <div className="sub-menu mega-menu">
           <div className="container">
             <div className="row-demo">
               {demoItems.slice(0, 12).map((item, index) => (
@@ -82,7 +82,7 @@ export default function Nav() {
               </a>
             </div>
           </div>
-        </div> */}
+        </div>
       </li>
       <li
         className={`menu-item ${
@@ -97,7 +97,7 @@ export default function Nav() {
         } `}
       >
         <a href="#" className="item-link">
-          Robot
+          Shop
           <i className="icon icon-arrow-down" />
         </a>
         <div className="sub-menu mega-menu">
@@ -225,9 +225,9 @@ export default function Nav() {
       >
         <a href="#" className="item-link">
           Products
-          {/* <i className="icon icon-arrow-down" /> */}
+          <i className="icon icon-arrow-down" />
         </a>
-        {/* <div className="sub-menu mega-menu">
+        <div className="sub-menu mega-menu">
           <div className="container">
             <div className="row">
               <div className="col-lg-3">
@@ -346,7 +346,7 @@ export default function Nav() {
               </div>
             </div>
           </div>
-        </div> */}
+        </div>
       </li>
       <li
         className={`menu-item position-relative ${

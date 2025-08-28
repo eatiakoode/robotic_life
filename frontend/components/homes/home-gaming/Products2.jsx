@@ -7,11 +7,6 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import Link from "next/link";
 
 export default function Products2() {
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-=======
->>>>>>> 3c0733c34d124af768c936ac3903a1a50f4723cf
   const { robots, loading, error } = useRobots();
 
   // Helper function to map color names to CSS classes
@@ -91,11 +86,7 @@ export default function Products2() {
         <div className="container">
           <div className="heading-section-2 type-2 wow fadeInUp">
             <h3 className="heading font-5 fw-bold">Features Product</h3>
-<<<<<<< HEAD
-            <Link href={`/shop-filter-canvas`} className="btn-line">
-=======
             <Link href={`/shop-collection`} className="btn-line">
->>>>>>> 3c0733c34d124af768c936ac3903a1a50f4723cf
               View All Products
             </Link>
           </div>
@@ -115,11 +106,7 @@ export default function Products2() {
         <div className="container">
           <div className="heading-section-2 type-2 wow fadeInUp">
             <h3 className="heading font-5 fw-bold">Features Product</h3>
-<<<<<<< HEAD
-            <Link href={`/shop-filter-canvas`} className="btn-line">
-=======
             <Link href={`/shop-collection`} className="btn-line">
->>>>>>> 3c0733c34d124af768c936ac3903a1a50f4723cf
               View All Products
             </Link>
           </div>
@@ -137,16 +124,12 @@ export default function Products2() {
     );
   }
 
-<<<<<<< HEAD
->>>>>>> ea24ee4 (Home page & admin panel fixed)
-=======
->>>>>>> 3c0733c34d124af768c936ac3903a1a50f4723cf
   return (
     <section className="flat-spacing">
       <div className="container">
         <div className="heading-section-2 type-2 wow fadeInUp">
           <h3 className="heading font-5 fw-bold">Features Product</h3>
-          <Link href={`/shop-filter-canvas`} className="btn-line">
+          <Link href={`/shop-collection`} className="btn-line">
             View All Products
           </Link>
         </div>

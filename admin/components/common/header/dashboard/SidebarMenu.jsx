@@ -188,29 +188,11 @@ const SidebarMenu = () => {
     <>
       <ul className="sidebar-menu">
         <li className="sidebar_header header">
-<<<<<<< HEAD
-<<<<<<< HEAD
-           <Link href="/cmswegrow/my-dashboard">
-            <Image
-              width={170}
-              height={65}
-              // src="/assets/images/logo.svg"
-              src={`${process.env.NEXT_PUBLIC_API_URL}public/assets/images/logo.svg`}
-=======
           <Link href="/cmsroboticlife/my-dashboard">
             <SafeImage
               width={170}
               height={65}
               src="/assets/images/robo.svg"
->>>>>>> ea24ee4 (Home page & admin panel fixed)
-=======
-          <Link href="/cmsroboticlife/my-dashboard">
-            <Image
-              width={170}
-              height={65}
-              // src="/assets/images/robotic_logo1.svg"
-              src={`${process.env.NEXT_PUBLIC_BACKEND_API_URL}public/assets/images/robo.svg`}
->>>>>>> 3c0733c34d124af768c936ac3903a1a50f4723cf
               alt="logo.svg"
             />
             {/* <span>WeGrow</span> */}

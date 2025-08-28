@@ -20,19 +20,6 @@ export default function Products() {
 
   // Set first category as active when categories are loaded
   useEffect(() => {
-<<<<<<< HEAD
-<<<<<<< HEAD
-    document.getElementById("newArrivals2").classList.remove("filtered");
-    setTimeout(() => {
-      setSelectedItems(
-        products52.filter((elm) => elm.tabFilterOptions.includes(activeItem))
-      );
-      document.getElementById("newArrivals2").classList.add("filtered");
-    }, 300);
-  }, [activeItem]);
-=======
-=======
->>>>>>> 3c0733c34d124af768c936ac3903a1a50f4723cf
     if (categories.length > 0 && !activeCategory) {
       console.log('🔍 Setting first category as active:', categories[0]);
       setActiveCategory(categories[0]);
@@ -111,11 +98,7 @@ export default function Products() {
                 ))}
               </ul>
             </div>
-<<<<<<< HEAD
-            <Link href={`/shop-filter-canvas`} className="btn-line">
-=======
             <Link href={`/shop-collection`} className="btn-line">
->>>>>>> 3c0733c34d124af768c936ac3903a1a50f4723cf
               View All Products
             </Link>
           </div>
@@ -153,11 +136,7 @@ export default function Products() {
                 <p className="text-danger">Error loading categories: {categoriesError}</p>
               </div>
             </div>
-<<<<<<< HEAD
-            <Link href={`/shop-filter-canvas`} className="btn-line">
-=======
             <Link href={`/shop-collection`} className="btn-line">
->>>>>>> 3c0733c34d124af768c936ac3903a1a50f4723cf
               View All Products
             </Link>
           </div>
@@ -178,11 +157,7 @@ export default function Products() {
                 <p>No categories available.</p>
               </div>
             </div>
-<<<<<<< HEAD
-            <Link href={`/shop-filter-canvas`} className="btn-line">
-=======
             <Link href={`/shop-collection`} className="btn-line">
->>>>>>> 3c0733c34d124af768c936ac3903a1a50f4723cf
               View All Products
             </Link>
           </div>
@@ -191,10 +166,6 @@ export default function Products() {
     );
   }
 
-<<<<<<< HEAD
->>>>>>> ea24ee4 (Home page & admin panel fixed)
-=======
->>>>>>> 3c0733c34d124af768c936ac3903a1a50f4723cf
   return (
     <section>
       <div className="container">
@@ -226,7 +197,7 @@ export default function Products() {
               ))}
             </ul>
           </div>
-          <Link href={`/shop-filter-canvas`} className="btn-line">
+          <Link href={`/shop-collection`} className="btn-line">
             View All Products
           </Link>
         </div>

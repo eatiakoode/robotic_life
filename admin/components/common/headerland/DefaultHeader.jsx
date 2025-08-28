@@ -31,14 +31,14 @@ const Header = () => {
             width={170}
             height={65}
             className="logo1 contain"
-            src={`${process.env.NEXT_PUBLIC_BACKEND_API_URL}public/assets/images/logo2.png`}
+            src="/assets/images/logo2.png"
             alt="logo"
           />
           <Image
             width={170}
             height={65}
             className="logo2 contain"
-            src={`${process.env.NEXT_PUBLIC_BACKEND_API_URL}public/assets/images/logo2.png`}
+            src="/assets/images/logo2.png"
             alt="logo2"
           />
         </a>

@@ -23,11 +23,6 @@ export default function RootLayout({ children }) {
           href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" 
           as="style"
         />
-<<<<<<< HEAD
-<<<<<<< HEAD
-      </noscript>
-=======
-=======
         <link 
           rel="preload" 
           href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Display&display=swap" 
@@ -39,7 +34,6 @@ export default function RootLayout({ children }) {
           href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" 
           rel="stylesheet"
         />
->>>>>>> 3c0733c34d124af768c936ac3903a1a50f4723cf
         <link 
           href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Display&display=swap" 
           rel="stylesheet"
@@ -48,11 +42,7 @@ export default function RootLayout({ children }) {
         {/* Favicon with proper sizing */}
         <link 
           rel="icon"
-<<<<<<< HEAD
           href="/assets/images/favicon.png"
-=======
-          href={`${process.env.NEXT_PUBLIC_BACKEND_API_URL}public/assets/images/favicon.png`}
->>>>>>> 3c0733c34d124af768c936ac3903a1a50f4723cf
         />
         
         {/* Meta tags for SEO and performance */}
@@ -92,10 +82,6 @@ export default function RootLayout({ children }) {
             src="https://www.facebook.com/tr?id=1764659244930934&ev=PageView&noscript=1"
           />
         </noscript>
-<<<<<<< HEAD
->>>>>>> ea24ee4 (Home page & admin panel fixed)
-=======
->>>>>>> 3c0733c34d124af768c936ac3903a1a50f4723cf
       </head>
       <body>
         <Provider store={store}>

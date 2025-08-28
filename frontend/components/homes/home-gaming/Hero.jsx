@@ -5,11 +5,6 @@ import { Autoplay, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import Link from "next/link";
 import Image from "next/image";
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-=======
->>>>>>> 3c0733c34d124af768c936ac3903a1a50f4723cf
 import styles from "./Hero.module.css";
 
 // Fallback static data in case API fails
@@ -19,11 +14,7 @@ const fallbackSlides = [
     title: "Powerful Sound",
     description: "Fill any space with immersive, high-quality audio.",
     buttonText: "Shop now",
-<<<<<<< HEAD
-    buttonLink: "/shop-filter-canvas",
-=======
     buttonLink: "/shop-default-grid",
->>>>>>> 3c0733c34d124af768c936ac3903a1a50f4723cf
     images: ["/images/slider/slider-gaming-1.jpg"]
   },
   {
@@ -31,11 +22,7 @@ const fallbackSlides = [
     title: "Seamless Listening",
     description: "Enjoy effortless connectivity and crystal-clear audio on the go.",
     buttonText: "Explore Collection",
-<<<<<<< HEAD
-    buttonLink: "/shop-filter-canvas",
-=======
     buttonLink: "/shop-default-grid",
->>>>>>> 3c0733c34d124af768c936ac3903a1a50f4723cf
     images: ["/images/slider/slider-gaming-2.jpg"]
   },
   {
@@ -43,19 +30,11 @@ const fallbackSlides = [
     title: "Immerse Yourself", 
     description: "Experience rich, high-fidelity sound for music, gaming, and calls.",
     buttonText: "Explore Collection",
-<<<<<<< HEAD
-    buttonLink: "/shop-filter-canvas",
-=======
     buttonLink: "/shop-default-grid",
->>>>>>> 3c0733c34d124af768c936ac3903a1a50f4723cf
     images: ["/images/slider/slider-gaming-3.jpg"]
   }
 ];
 
-<<<<<<< HEAD
->>>>>>> ea24ee4 (Home page & admin panel fixed)
-=======
->>>>>>> 3c0733c34d124af768c936ac3903a1a50f4723cf
 export default function Hero() {
   const { sliders, loading, error } = useSlider();
   const [displaySlides, setDisplaySlides] = useState(fallbackSlides);
@@ -197,15 +176,7 @@ export default function Hero() {
                   </div>
                   <div className="fade-item fade-item-3 box-btn-slider">
                     <Link
-<<<<<<< HEAD
-<<<<<<< HEAD
-                      href={`/shop-default-grid`}
-=======
-                      href={slide.buttonLink || "/shop-filter-canvas"}
->>>>>>> ea24ee4 (Home page & admin panel fixed)
-=======
                       href={slide.buttonLink || "/shop-default-grid"}
->>>>>>> 3c0733c34d124af768c936ac3903a1a50f4723cf
                       className="tf-btn btn-fill btn-white"
                     >
                       <span className="text">{slide.buttonText || "Shop now"}</span>

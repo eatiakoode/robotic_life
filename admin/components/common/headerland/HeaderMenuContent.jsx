@@ -28,15 +28,7 @@ const Header = () => {
             width={170}
             height={65}
             className="logo1 img-fluid"
-<<<<<<< HEAD
-<<<<<<< HEAD
-            src="/assets/images/header-logo2.png"
-=======
                           src="/assets/images/header-logo2.png"
->>>>>>> ea24ee4 (Home page & admin panel fixed)
-=======
-            src={`${process.env.NEXT_PUBLIC_BACKEND_API_URL}public/assets/images/header-logo2.png`}
->>>>>>> 3c0733c34d124af768c936ac3903a1a50f4723cf
             alt="header logo"
           />
         </a>

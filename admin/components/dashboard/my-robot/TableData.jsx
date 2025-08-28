@@ -1,9 +1,5 @@
 "use client";
-<<<<<<< HEAD
 import { SafeImage } from "../../../utils/imageUtils";
-=======
-import Image from "next/image";
->>>>>>> 3c0733c34d124af768c936ac3903a1a50f4723cf
 import { deleteRobotAPI } from "../../../api/robot";
 import { useRouter } from "next/navigation";
 import { toast } from 'react-toastify';
@@ -191,24 +187,12 @@ const TableData = ({ robots = [], loading = false, error = null, onRefresh }) =>
                 <td scope="row">
                   <div className="feat_robot list favorite_page style2">
                     <div className="thumb">
-<<<<<<< HEAD
                       <SafeImage
                         width={150}
                         height={220}
                         className="img-whp cover"
                         src={item.images?.[0] || item.images?.url || item.images}
                         alt={item.name || item.title || 'Robot Image'}
-=======
-                      <Image
-                        width={150}
-                        height={220}
-                        className="img-whp cover"
-                        src={getImageUrl(item)}
-                        alt={item.name || item.title || 'Robot Image'}
-                        unoptimized
-                        onError={handleImageError}
-                        priority={index < 5} // Prioritize first 5 images
->>>>>>> 3c0733c34d124af768c936ac3903a1a50f4723cf
                       />
                       <div className="thmb_cntnt">
                         <ul className="tag mb0">

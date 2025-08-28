@@ -21,7 +21,7 @@ const PropertyLocation = ({property}) => {
               width={40}
               height={45}
               className="map_img_icon"
-              src={`${process.env.NEXT_PUBLIC_BACKEND_API_URL}public/assets/images/header-logo.png`}
+              src="/assets/images/header-logo.png"
               alt="header-logo.png"
             />
           </a>
