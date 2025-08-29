@@ -1,39 +1,5 @@
 const asyncHandler = require("express-async-handler");
-const Robot = require("../../models/robotModel");
-const Category = require("../../models/categoryModel");
-
-// Weight unit conversion utility
-const convertWeight = (value, fromUnit, toUnit) => {
-  if (fromUnit === toUnit) return value;
-  
-  // First convert to grams (base unit)
-  let grams;
-  switch (fromUnit) {
-    case 'g':
-      grams = value;
-      break;
-    case 'kg':
-      grams = value * 1000;
-      break;
-    case 'lb':
-      grams = value * 453.592;
-      break;
-    default:
-      return value;
-  }
-  
-  // Then convert from grams to target unit
-  switch (toUnit) {
-    case 'g':
-      return Math.round(grams);
-    case 'kg':
-      return Math.round(grams / 1000 * 100) / 100;
-    case 'lb':
-      return Math.round(grams / 453.592 * 100) / 100;
-    default:
-      return grams;
-  }
-};
+const Robot = require("../../models/robotModel"); 
 
 // Get Most Recent Robots
 const getRecentRobots = asyncHandler(async (req, res) => {
@@ -75,7 +41,6 @@ const filterRobots = async (req, res) => {
       maxPrice, 
       minWeight, 
       maxWeight, 
-      weightUnit = 'kg', // Default weight unit
       colors, 
       manufacturers,
       category
