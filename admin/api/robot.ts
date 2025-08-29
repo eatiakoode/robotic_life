@@ -238,7 +238,7 @@ export const deleteRobotSingleImagesAPI = async (payload: {
   if (!token) throw new Error("User not authenticated!");
 
   const response = await fetch(
-      `${process.env.NEXT_PUBLIC_ADMIN_API_URL}admin/api/robot/image`,
+      `${process.env.NEXT_PUBLIC_ADMIN_API_URL}api/robot/image`,
     {
       method: "POST",
       headers: {

@@ -14,7 +14,7 @@ const createSlider = asyncHandler(async (req, res) => {
             console.log("Processed images:", processedImages);
             if (processedImages.length > 0) {
                 req.body.images = processedImages.map(
-                    (img) => "public/images/slider/" + img
+                    (img) => "images/slider/" + img
                 );
                 console.log("Final images array:", req.body.images);
             }
@@ -67,7 +67,7 @@ const updateSlider = asyncHandler(async (req, res) => {
             console.log("Processed update images:", processedImages);
             if (processedImages.length > 0) {
                 req.body.images = processedImages.map(
-                    (img) => "public/images/slider/" + img
+                    (img) => "images/slider/" + img
                 );
                 console.log("Final update images array:", req.body.images);
             }

@@ -98,7 +98,7 @@ export default function Products() {
                 ))}
               </ul>
             </div>
-            <Link href={`/shop-collection`} className="btn-line">
+            <Link href={`/shop-filter-canvas`} className="btn-line">
               View All Products
             </Link>
           </div>
@@ -136,7 +136,7 @@ export default function Products() {
                 <p className="text-danger">Error loading categories: {categoriesError}</p>
               </div>
             </div>
-            <Link href={`/shop-collection`} className="btn-line">
+            <Link href={`/shop-filter-canvas`} className="btn-line">
               View All Products
             </Link>
           </div>
@@ -157,7 +157,7 @@ export default function Products() {
                 <p>No categories available.</p>
               </div>
             </div>
-            <Link href={`/shop-collection`} className="btn-line">
+            <Link href={`/shop-filter-canvas`} className="btn-line">
               View All Products
             </Link>
           </div>
@@ -197,7 +197,7 @@ export default function Products() {
               ))}
             </ul>
           </div>
-          <Link href={`/shop-collection`} className="btn-line">
+          <Link href={`/shop-filter-canvas`} className="btn-line">
             View All Products
           </Link>
         </div>

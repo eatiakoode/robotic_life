@@ -1,7 +1,7 @@
 import { productMain } from "@/data/products";
 
 export const initialState = {
-  price: [20, 300],
+  price: [0, 100000], // Wider range to show all products initially
 
   availability: "All",
 
@@ -9,11 +9,13 @@ export const initialState = {
   size: "All",
   activeFilterOnSale: false,
   brands: [],
-  filtered: productMain,
+  selectedParentCategory: null,
+  selectedSubCategory: null,
+  filtered: [], // Start with empty array, will be populated by API
   sortingOption: "Sort by (Default)",
-  sorted: productMain,
+  sorted: [], // Start with empty array, will be populated by API
   currentPage: 1,
-  itemPerPage: 6,
+  itemPerPage: 10, // Show 10 robots per page
 };
 
 export function reducer(state, action) {
@@ -29,6 +31,10 @@ export function reducer(state, action) {
       return { ...state, availability: action.payload };
     case "SET_BRANDS":
       return { ...state, brands: action.payload };
+    case "SET_PARENT_CATEGORY":
+      return { ...state, selectedParentCategory: action.payload, selectedSubCategory: null };
+    case "SET_SUB_CATEGORY":
+      return { ...state, selectedSubCategory: action.payload };
     case "SET_FILTERED":
       return { ...state, filtered: [...action.payload] };
     case "SET_SORTING_OPTION":
@@ -44,7 +50,7 @@ export function reducer(state, action) {
     case "CLEAR_FILTER":
       return {
         ...state,
-        price: [20, 300],
+        price: [0, 100000], // Wider range to show all products
 
         availability: "All",
 
@@ -53,6 +59,9 @@ export function reducer(state, action) {
 
         brands: [],
         activeFilterOnSale: false,
+        selectedParentCategory: null,
+        selectedSubCategory: null,
+        currentPage: 1, // Reset to first page when clearing filters
       };
     default:
       return state;

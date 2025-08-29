@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { getSliderById, updateSliderAPI } from "@/api/slider";
 import { toast } from 'react-toastify';
+import { SafeImage } from "../../../utils/imageUtils";
 
 const CreateList = () => {
   const params = useParams();
@@ -107,11 +108,13 @@ const CreateList = () => {
               <p className="text-muted">Current images:</p>
               <div className="d-flex gap-2">
                 {existingImages.map((img, index) => (
-                  <img
+                  <SafeImage
                     key={index}
-                    src={`${process.env.NEXT_PUBLIC_API_URL}${img}`}
+                    src={img}
                     alt={`Slider image ${index + 1}`}
-                    style={{ width: '60px', height: '60px', objectFit: 'cover' }}
+                    width={60}
+                    height={60}
+                    style={{ objectFit: 'cover' }}
                   />
                 ))}
               </div>

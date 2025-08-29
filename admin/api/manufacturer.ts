@@ -93,7 +93,7 @@ const token =userData.token
       throw new Error("User not authenticated!");
     }
 
-    const response = await fetch(process.env.NEXT_PUBLIC_ADMIN_API_URL+`admin/api/manufacturer/${id}`, {
+    const response = await fetch(process.env.NEXT_PUBLIC_ADMIN_API_URL+`api/manufacturer/${id}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -149,7 +149,7 @@ const token =userData.token
     }
 
 
-    const response = await fetch(process.env.NEXT_PUBLIC_ADMIN_API_URL+`admin/api/manufacturer/${id}`, {
+    const response = await fetch(process.env.NEXT_PUBLIC_ADMIN_API_URL+`api/manufacturer/${id}`, {
       method: "PUT",
       headers: {
         // "Content-Type": "application/json",

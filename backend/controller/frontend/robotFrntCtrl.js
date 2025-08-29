@@ -15,8 +15,19 @@ const getRecentRobots = asyncHandler(async (req, res) => {
 // get all robots
 const getallRobots = asyncHandler(async (req, res) => {
   try {
-    const getallRobots = await Robot.find().select("title description totalPrice images").lean().limit(10);
-    res.json(getallRobots);
+    const getallRobots = await Robot.find()
+      .populate("category", "name slug")
+      .populate("manufacturer", "name")
+      .populate("color", "name")
+      .populate("powerSource", "name")
+      .populate("material", "name")
+      .lean();
+    
+    res.json({
+      success: true,
+      count: getallRobots.length,
+      data: getallRobots
+    });
   } catch (error) {
     throw new Error(error);
   }
@@ -31,7 +42,8 @@ const filterRobots = async (req, res) => {
       minWeight, 
       maxWeight, 
       colors, 
-      manufacturers 
+      manufacturers,
+      category 
     } = req.query;
 
     let filter = {};
@@ -56,10 +68,18 @@ const filterRobots = async (req, res) => {
       filter.manufacturer = { $in: manufacturers.split(",") };
     }
 
+    // Add category filtering
+    if (category) {
+      filter.category = category;
+    }
+
     const robots = await Robot.find(filter)
-      .populate("category")
-      .populate("manufacturer")
-      .populate("color");
+      .populate("category", "name slug")
+      .populate("manufacturer", "name")
+      .populate("color", "name")
+      .populate("powerSource", "name")
+      .populate("material", "name")
+      .lean();
 
     res.status(200).json({
       success: true,
