@@ -3,11 +3,11 @@ const Robot = require("../../models/robotModel");
 
 // Get Most Recent Robots
 const getRecentRobots = asyncHandler(async (req, res) => {
-  const robots = await Robot.find()
-    .select("title slug images totalPrice color")
+  const robots = await Robot.find() 
+    .select("title slug images totalPrice color") 
     .populate("color", "name status")
-    .sort({ createdAt: -1 })
-    .limit(3);
+    .sort({ createdAt: -1 }) 
+    .limit(3); 
 
   res.status(200).json(robots);
 });
@@ -22,7 +22,7 @@ const getallRobots = asyncHandler(async (req, res) => {
       .populate("powerSource", "name")
       .populate("material", "name")
       .lean();
-
+    
     res.json({
       success: true,
       count: getallRobots.length,
@@ -43,7 +43,7 @@ const filterRobots = async (req, res) => {
       maxWeight, 
       colors, 
       manufacturers,
-      category
+      category 
     } = req.query;
 
     let filter = {};
@@ -55,51 +55,9 @@ const filterRobots = async (req, res) => {
     }
 
     if (minWeight || maxWeight) {
-      // For weight filtering, we need to handle different units
-      // We'll use MongoDB's aggregation pipeline to convert weights to the target unit
-      const pipeline = [
-        {
-          $addFields: {
-            normalizedWeight: {
-              $switch: {
-                branches: [
-                  {
-                    case: { $eq: ["$weight.unit", "g"] },
-                    then: { $divide: ["$weight.value", 1000] } // Convert g to kg
-                  },
-                  {
-                    case: { $eq: ["$weight.unit", "lb"] },
-                    then: { $multiply: ["$weight.value", 0.453592] } // Convert lb to kg
-                  }
-                ],
-                default: "$weight.value" // kg stays as kg
-              }
-            }
-          }
-        },
-        {
-          $match: {
-            $and: [
-              { normalizedWeight: { $exists: true, $ne: null } },
-              ...(minWeight ? [{ normalizedWeight: { $gte: Number(minWeight) } }] : []),
-              ...(maxWeight ? [{ normalizedWeight: { $lte: Number(maxWeight) } }] : [])
-            ]
-          }
-        },
-        {
-          $project: {
-            normalizedWeight: 0 // Remove the temporary field
-          }
-        }
-      ];
-
-      // If we have weight filtering, use aggregation pipeline
-      if (minWeight || maxWeight) {
-        // For weight filtering, we need to use aggregation
-        // This is more complex, so we'll handle it in the frontend for now
-        // and keep the simple filtering for other cases
-        console.log('Weight filtering requested:', { minWeight, maxWeight, weightUnit });
-      }
+      filter["weight.value"] = {};
+      if (minWeight) filter["weight.value"].$gte = Number(minWeight);
+      if (maxWeight) filter["weight.value"].$lte = Number(maxWeight);
     }
 
     if (colors) {
@@ -111,16 +69,8 @@ const filterRobots = async (req, res) => {
     }
 
     // Add category filtering
-    // if (category) {
-    //   filter.category = category;
-    // }
     if (category) {
-      const categoryDoc = await Category.findOne({ slug: category });
-      if (categoryDoc) {
-        filter.category = categoryDoc._id;
-      } else {
-        filter.category = category;
-      }
+      filter.category = category;
     }
 
     const robots = await Robot.find(filter)
@@ -131,30 +81,10 @@ const filterRobots = async (req, res) => {
       .populate("material", "name")
       .lean();
 
-    // Apply weight filtering in memory if needed (for now)
-    let filteredRobots = robots;
-    if (minWeight || maxWeight) {
-      filteredRobots = robots.filter(robot => {
-        if (!robot.weight || !robot.weight.value || !robot.weight.unit) return false;
-        
-        // Convert robot weight to the target unit for comparison
-        const robotWeightInTargetUnit = convertWeight(
-          robot.weight.value, 
-          robot.weight.unit, 
-          weightUnit
-        );
-        
-        const min = minWeight ? Number(minWeight) : 0;
-        const max = maxWeight ? Number(maxWeight) : Number.MAX_SAFE_INTEGER;
-        
-        return robotWeightInTargetUnit >= min && robotWeightInTargetUnit <= max;
-      });
-    }
-
     res.status(200).json({
       success: true,
-      count: filteredRobots.length,
-      data: filteredRobots
+      count: robots.length,
+      data: robots
     });
 
   } catch (err) {

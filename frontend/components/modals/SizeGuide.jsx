@@ -89,11 +89,11 @@ export default function SizeGuide() {
                     </div>
                     <div className="widget-size">
                       <div className="box-title-size">
-                        <div className="title-size">Weight</div>
+                        <div className="title-size">Size</div>
                         <div className="number-size">
                           <span className="max-size">{rangeValue2}</span>
                           <span className="text-caption-1 text-secondary">
-                            Kg
+                            cm
                           </span>
                         </div>
                       </div>
