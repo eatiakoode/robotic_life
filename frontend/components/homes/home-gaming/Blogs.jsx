@@ -56,7 +56,7 @@ export default function Blogs() {
         <div className="container">
           <div className="heading-section-2 align-items-center type-2 wow fadeInUp">
             <h3 className="heading font-5 fw-bold">News &amp; Reviews</h3>
-            <Link href={`/shop-collection`} className="btn-line">
+            <Link href={`/shop-filter-canvas`} className="btn-line">
               View All
             </Link>
           </div>
@@ -96,7 +96,7 @@ export default function Blogs() {
         <div className="container">
           <div className="heading-section-2 align-items-center type-2 wow fadeInUp">
             <h3 className="heading font-5 fw-bold">News &amp; Reviews</h3>
-            <Link href={`/shop-collection`} className="btn-line">
+            <Link href={`/shop-filter-canvas`} className="btn-line">
               View All
             </Link>
           </div>
@@ -172,7 +172,7 @@ export default function Blogs() {
       <div className="container">
         <div className="heading-section-2 align-items-center type-2 wow fadeInUp">
           <h3 className="heading font-5 fw-bold">News &amp; Reviews</h3>
-          <Link href={`/shop-collection`} className="btn-line">
+          <Link href={`/shop-filter-canvas`} className="btn-line">
             View All
           </Link>
         </div>

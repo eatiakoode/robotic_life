@@ -14,7 +14,7 @@ const fallbackSlides = [
     title: "Powerful Sound",
     description: "Fill any space with immersive, high-quality audio.",
     buttonText: "Shop now",
-    buttonLink: "/shop-default-grid",
+    buttonLink: "/shop-filter-canvas",
     images: ["/images/slider/slider-gaming-1.jpg"]
   },
   {
@@ -22,7 +22,7 @@ const fallbackSlides = [
     title: "Seamless Listening",
     description: "Enjoy effortless connectivity and crystal-clear audio on the go.",
     buttonText: "Explore Collection",
-    buttonLink: "/shop-default-grid",
+    buttonLink: "/shop-filter-canvas",
     images: ["/images/slider/slider-gaming-2.jpg"]
   },
   {
@@ -30,7 +30,7 @@ const fallbackSlides = [
     title: "Immerse Yourself", 
     description: "Experience rich, high-fidelity sound for music, gaming, and calls.",
     buttonText: "Explore Collection",
-    buttonLink: "/shop-default-grid",
+    buttonLink: "/shop-filter-canvas",
     images: ["/images/slider/slider-gaming-3.jpg"]
   }
 ];
@@ -55,7 +55,7 @@ export default function Hero() {
     
     // If it's just a filename, construct the backend URL
     if (!imagePath.includes('/')) {
-      return `http://localhost:5000/public/images/slider/${imagePath}`;
+      return `http://localhost:5000/images/slider/${imagePath}`;
     }
     
     // For other cases, try to construct the backend URL
@@ -176,7 +176,7 @@ export default function Hero() {
                   </div>
                   <div className="fade-item fade-item-3 box-btn-slider">
                     <Link
-                      href={slide.buttonLink || "/shop-default-grid"}
+                      href={slide.buttonLink || "/shop-filter-canvas"}
                       className="tf-btn btn-fill btn-white"
                     >
                       <span className="text">{slide.buttonText || "Shop now"}</span>

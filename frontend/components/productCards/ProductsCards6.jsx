@@ -7,6 +7,8 @@ import CountdownTimer from "../common/Countdown";
 import { useContextElement } from "@/context/Context";
 export default function ProductsCards6({ product }) {
   const [currentImage, setCurrentImage] = useState(product.imgSrc);
+  
+
 
   const {
     setQuickAddItem,
@@ -36,13 +38,16 @@ export default function ProductsCards6({ product }) {
             alt={product.title}
             width={600}
             height={800}
+            style={{ position: 'relative', zIndex: 0 }}
           />
+          {/* Hover image - will be the same as main image if no second image exists */}
           <Image
             className="lazyload img-hover"
             src={product.imgHover}
             alt={product.title}
             width={600}
             height={800}
+            style={{ position: 'absolute', inset: 0, zIndex: 1 }}
           />
         </Link>
         {product.isOnSale && (
@@ -62,10 +67,9 @@ export default function ProductsCards6({ product }) {
           ${product.price?.toFixed(2)}
         </span>
         <p className="description text-secondary text-line-clamp-2">
-          The garments labelled as Committed are products that have been
-          produced using sustainable fibres or processes, reducing their
-          environmental impact.
+          {product.description || 'No description available'}
         </p>
+
         <div className="variant-wrap-list">
           {product.colors && (
             <ul className="list-color-product">

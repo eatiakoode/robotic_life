@@ -1,5 +1,5 @@
 "use client";
-import Image from "next/image";
+import { SafeImage } from "../../../utils/imageUtils";
 import { deleteManufacturerAPI } from "../../../api/manufacturer";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
@@ -92,17 +92,12 @@ const TableData = ({ manufacturers = [], loading = false, error = null, onRefres
             margin: "0 auto",
           }}
         >
-          <Image
+          <SafeImage
             width={90}
             height={90}
             className="img-whp cover"
-            src={
-              item?.logoImage
-                ? `${process.env.NEXT_PUBLIC_API_URL}${item.logoImage}`
-                : `${process.env.NEXT_PUBLIC_API_URL}public/assets/images/thumbnail.webp`
-            }
+            src={item?.logoImage}
             alt={`${item?.name || 'Manufacturer'}`}
-            unoptimized
             style={{ width: "100%", height: "100%", objectFit: "contain" }}
           />
         </div>

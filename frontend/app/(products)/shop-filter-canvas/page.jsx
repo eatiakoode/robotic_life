@@ -8,7 +8,7 @@ import React from "react";
 export default function ShopFilterCanvasPage() {
   return (
     <>
-      <Topbar6 bgColor="bg-main" />
+      {/* <Topbar6 bgColor="bg-main" /> */}
       <Header1 />
       <div
         className="page-title"
@@ -17,7 +17,7 @@ export default function ShopFilterCanvasPage() {
         <div className="container-full">
           <div className="row">
             <div className="col-12">
-              <h3 className="heading text-center">Women</h3>
+              <h3 className="heading text-center">Robots</h3>
               <ul className="breadcrumbs d-flex align-items-center justify-content-center">
                 <li>
                   <Link className="link" href={`/`}>
@@ -27,7 +27,7 @@ export default function ShopFilterCanvasPage() {
                 <li>
                   <i className="icon-arrRight" />
                 </li>
-                <li>Women</li>
+                <li>Robots</li>
               </ul>
             </div>
           </div>
