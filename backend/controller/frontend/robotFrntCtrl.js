@@ -1,13 +1,14 @@
 const asyncHandler = require("express-async-handler");
-const Robot = require("../../models/robotModel"); 
+const Robot = require("../../models/robotModel");
+const Category = require("../../models/categoryModel");
 
 // Get Most Recent Robots
 const getRecentRobots = asyncHandler(async (req, res) => {
-  const robots = await Robot.find() 
-    .select("title slug images totalPrice color") 
+  const robots = await Robot.find()
+    .select("title slug images totalPrice color")
     .populate("color", "name status")
-    .sort({ createdAt: -1 }) 
-    .limit(3); 
+    .sort({ createdAt: -1 })
+    .limit(3);
 
   res.status(200).json(robots);
 });
@@ -22,7 +23,7 @@ const getallRobots = asyncHandler(async (req, res) => {
       .populate("powerSource", "name")
       .populate("material", "name")
       .lean();
-    
+
     res.json({
       success: true,
       count: getallRobots.length,
@@ -36,14 +37,14 @@ const getallRobots = asyncHandler(async (req, res) => {
 // Filter Robots
 const filterRobots = async (req, res) => {
   try {
-    const { 
-      minPrice, 
-      maxPrice, 
-      minWeight, 
-      maxWeight, 
-      colors, 
+    const {
+      minPrice,
+      maxPrice,
+      minWeight,
+      maxWeight,
+      colors,
       manufacturers,
-      category 
+      category
     } = req.query;
 
     let filter = {};
@@ -69,8 +70,16 @@ const filterRobots = async (req, res) => {
     }
 
     // Add category filtering
+    // if (category) {
+    //   filter.category = category;
+    // }
     if (category) {
-      filter.category = category;
+      const categoryDoc = await Category.findOne({ slug: category });
+      if (categoryDoc) {
+        filter.category = categoryDoc._id;
+      } else {
+        filter.category = category;
+      }
     }
 
     const robots = await Robot.find(filter)
