@@ -11843,6 +11843,28 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
   display: block;
   border-radius: 1000px;
 }
+
+.meta-filter-shop .price-tag {
+  background-color: #e3f2fd !important;
+  color: #1976d2 !important;
+  border-color: #1976d2 !important;
+}
+
+.meta-filter-shop .price-tag:hover {
+  background-color: #bbdefb !important;
+  border-color: #1565c0 !important;
+}
+
+.meta-filter-shop .weight-tag {
+  background-color: #f3e5f5 !important;
+  color: #7b1fa2 !important;
+  border-color: #7b1fa2 !important;
+}
+
+.meta-filter-shop .weight-tag:hover {
+  background-color: #e1bee7 !important;
+  border-color: #6a1b9a !important;
+}
 .meta-filter-shop .remove-all-filters {
   padding: 4px 12px;
   border: 1px solid var(--main);
@@ -11901,6 +11923,56 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
   display: grid;
   gap: 16px;
   grid-template-columns: 1fr 1fr;
+}
+
+.widget-facet.facet-price .price-range-info {
+  font-size: 12px;
+  color: #666;
+  text-align: center;
+  margin-top: 8px;
+  padding: 8px;
+  background-color: #f8f9fa;
+  border-radius: 4px;
+  border: 1px solid #e9ecef;
+}
+
+/* Weight Filter Styles */
+.widget-facet.facet-weight .weight-range-slider {
+  margin-bottom: 16px;
+}
+
+.widget-facet.facet-weight .weight-slider {
+  width: 100%;
+  margin-bottom: 12px;
+}
+
+.widget-facet.facet-weight .weight-range-values {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.widget-facet.facet-weight .weight-min-value,
+.widget-facet.facet-weight .weight-max-value {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--main);
+  padding: 4px 8px;
+  background-color: var(--surface);
+  border-radius: 4px;
+  border: 1px solid var(--line);
+}
+
+.widget-facet.facet-weight .weight-range-info {
+  font-size: 12px;
+  color: #666;
+  text-align: center;
+  margin-top: 8px;
+  padding: 8px;
+  background-color: #f8f9fa;
+  border-radius: 4px;
+  border: 1px solid #e9ecef;
 }
 .widget-facet.facet-price .title-price {
   margin-bottom: 4px;
@@ -18368,5 +18440,7 @@ ul.list-text.type-number {
     transform: translateX(100%);
   }
 }
+
+
 
 /*# sourceMappingURL=styles.css.map */

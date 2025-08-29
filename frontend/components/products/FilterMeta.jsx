@@ -19,9 +19,13 @@ export default function FilterMeta({ allProps, productLength }) {
         ) : (
           ""
         )}
-        {allProps.size != "All" ? (
-          <span className="filter-tag" onClick={() => allProps.setSize("All")}>
-            {allProps.size}
+                 {allProps.weight && allProps.weightBounds && 
+          allProps.weight[1] !== allProps.weightBounds[1] ? (
+          <span
+            className="filter-tag weight-tag"
+            onClick={() => allProps.setWeight(allProps.weightBounds)}
+          >
+            0 - {allProps.weight[1]} {allProps.weightUnit}
             <span className="remove-tag icon-close" />
           </span>
         ) : (
@@ -56,11 +60,28 @@ export default function FilterMeta({ allProps, productLength }) {
         ) : (
           ""
         )}
+        
+                 {/* Price filter tag */}
+         {allProps.price && allProps.priceBounds && 
+          allProps.price[1] !== allProps.priceBounds[1] ? (
+          <span
+            className="filter-tag price-tag"
+            onClick={() => allProps.setPrice(allProps.priceBounds)}
+          >
+            $0 - ${allProps.price[1]}
+            <span className="remove-tag icon-close" />
+          </span>
+        ) : (
+          ""
+        )}
       </div>
-      {allProps.availability != "All" ||
-      allProps.size != "All" ||
-      allProps.color != "All" ||
-      allProps.brands.length ? (
+                    {allProps.availability != "All" ||
+        (allProps.weight && allProps.weightBounds && 
+         allProps.weight[1] !== allProps.weightBounds[1]) ||
+        allProps.color != "All" ||
+        allProps.brands.length ||
+        (allProps.price && allProps.priceBounds && 
+         allProps.price[1] !== allProps.priceBounds[1]) ? (
         <button
           id="remove-all"
           className="remove-all-filters text-btn-uppercase"
