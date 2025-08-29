@@ -1,12 +1,13 @@
 import { productMain } from "@/data/products";
 
 export const initialState = {
-  price: [0, 100000], // Wider range to show all products initially
-
+  price: [0, 100000], // Will be updated dynamically based on actual product prices
+  priceBounds: [0, 100000], // The actual min/max prices from products
+  weight: [0, 1000], // Will be updated dynamically based on actual product weights
+  weightBounds: [0, 1000], // The actual min/max weights from products
+  weightUnit: 'g', // Default weight unit for filtering (grams)
   availability: "All",
-
   color: "All",
-  size: "All",
   activeFilterOnSale: false,
   brands: [],
   selectedParentCategory: null,
@@ -22,11 +23,31 @@ export function reducer(state, action) {
   switch (action.type) {
     case "SET_PRICE":
       return { ...state, price: action.payload };
+    
+    case "SET_PRICE_BOUNDS":
+      return { 
+        ...state, 
+        priceBounds: [0, action.payload[1]], // Always set min to 0
+        // Also update the current price range to match the bounds initially
+        price: [0, action.payload[1]]
+      };
+
+    case "SET_WEIGHT":
+      return { ...state, weight: action.payload };
+    
+    case "SET_WEIGHT_BOUNDS":
+      return { 
+        ...state, 
+        weightBounds: [0, action.payload[1]], // Always set min to 0
+        // Also update the current weight range to match the bounds initially
+        weight: [0, action.payload[1]]
+      };
+
+    case "SET_WEIGHT_UNIT":
+      return { ...state, weightUnit: action.payload };
 
     case "SET_COLOR":
       return { ...state, color: action.payload };
-    case "SET_SIZE":
-      return { ...state, size: action.payload };
     case "SET_AVAILABILITY":
       return { ...state, availability: action.payload };
     case "SET_BRANDS":
@@ -50,13 +71,11 @@ export function reducer(state, action) {
     case "CLEAR_FILTER":
       return {
         ...state,
-        price: [0, 100000], // Wider range to show all products
-
+        price: state.priceBounds, // Reset to actual product price bounds
+        weight: state.weightBounds, // Reset to actual product weight bounds
+        weightUnit: 'g', // Reset to default weight unit (grams)
         availability: "All",
-
         color: "All",
-        size: "All",
-
         brands: [],
         activeFilterOnSale: false,
         selectedParentCategory: null,
