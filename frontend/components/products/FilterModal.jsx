@@ -2,19 +2,18 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import {
-  availabilityOptions,
-  brands,
-  colors,
   sizes,
 } from "@/data/productFilterOptions";
-import { productMain } from "@/data/products";
 import { getParentCategories, getSubCategories } from "@/api/category";
+import { getAllColors, getAllManufacturers } from "@/api/filterData";
 
 import RangeSlider from "react-range-slider-input";
 
 export default function FilterModal({ allProps }) {
   const [parentCategories, setParentCategories] = useState([]);
   const [subCategories, setSubCategories] = useState([]);
+  const [colors, setColors] = useState([]);
+  const [manufacturers, setManufacturers] = useState([]);
   const [loading, setLoading] = useState(true);
   const timeoutRef = useRef(null);
 
@@ -43,25 +42,59 @@ export default function FilterModal({ allProps }) {
     };
   }, []);
 
-  // Fetch parent categories on component mount
+  // Fetch all filter data on component mount
   useEffect(() => {
-    const fetchParentCategories = async () => {
+    const fetchFilterData = async () => {
       try {
-        console.log('🚀 Starting to fetch parent categories...');
+        console.log('🚀 Starting to fetch filter data...');
         setLoading(true);
-        const categories = await getParentCategories();
-        console.log('📋 Received categories:', categories);
-        setParentCategories(categories);
+        
+        // Fetch all data in parallel
+        const [categoriesResult, colorsResult, manufacturersResult] = await Promise.allSettled([
+          getParentCategories(),
+          getAllColors(),
+          getAllManufacturers()
+        ]);
+        
+        // Handle categories
+        if (categoriesResult.status === 'fulfilled') {
+          console.log('📋 Received categories:', categoriesResult.value);
+          setParentCategories(categoriesResult.value);
+        } else {
+          console.error('❌ Error fetching categories:', categoriesResult.reason);
+          setParentCategories([]);
+        }
+        
+        // Handle colors
+        if (colorsResult.status === 'fulfilled') {
+          console.log('🎨 Received colors:', colorsResult.value);
+          setColors(colorsResult.value);
+        } else {
+          console.error('❌ Error fetching colors:', colorsResult.reason);
+          setColors([]);
+        }
+        
+        // Handle manufacturers
+        if (manufacturersResult.status === 'fulfilled') {
+          console.log('🏭 Received manufacturers:', manufacturersResult.value);
+          setManufacturers(manufacturersResult.value);
+        } else {
+          console.error('❌ Error fetching manufacturers:', manufacturersResult.reason);
+          setManufacturers([]);
+        }
+        
       } catch (error) {
-        console.error('❌ Error fetching parent categories:', error);
+        console.error('❌ Error fetching filter data:', error);
         setParentCategories([]);
+        setColors([]);
+        setManufacturers([]);
       } finally {
         setLoading(false);
-        console.log('🏁 Finished loading categories');
+        console.log('🏁 Finished loading filter data');
       }
     };
 
-    fetchParentCategories();
+    fetchFilterData();
   }, []);
 
   // Handle parent category selection
@@ -222,20 +255,26 @@ export default function FilterModal({ allProps }) {
           <div className="widget-facet facet-color">
             <h6 className="facet-title">Colors</h6>
             <div className="facet-color-box">
-              {colors.map((color, index) => (
-                <div
-                  onClick={() => allProps.setColor(color)}
-                  key={index}
-                  className={`color-item color-check ${
-                    color == allProps.color ? "active" : ""
-                  }`}
-                >
-                  <span className={`color ${color.className}`} />
-                  {color.name}
-                </div>
-              ))}
+              {loading ? (
+                <div>Loading colors...</div>
+              ) : (
+                colors.map((color, index) => (
+                  <div
+                    onClick={() => allProps.setColor(color)}
+                    key={index}
+                    className={`color-item color-check ${
+                      color == allProps.color ? "active" : ""
+                    }`}
+                  >
+                    <span className={`color ${color.className}`} />
+                    {color.name}
+                  </div>
+                ))
+              )}
             </div>
           </div>
+          {/* COMMENTED OUT: Availability section as requested */}
+          {/* 
           <div className="widget-facet facet-fieldset">
             <h6 className="facet-title">Availability</h6>
             <div className="box-fieldset-item">
@@ -267,36 +306,35 @@ export default function FilterModal({ allProps }) {
               ))}
             </div>
           </div>
+          */}
           <div className="widget-facet facet-fieldset">
-            <h6 className="facet-title">Brands</h6>
+            <h6 className="facet-title">Manufacturers</h6>
             <div className="box-fieldset-item">
-              {brands.map((brand, index) => (
-                <fieldset
-                  key={index}
-                  className="fieldset-item"
-                  onClick={() => allProps.setBrands(brand.label)}
-                >
-                  <input
-                    type="checkbox"
-                    name="brand"
-                    className="tf-check"
-                    readOnly
-                    checked={allProps.brands.includes(brand.label)}
-                  />
-                  <label>
-                    {brand.label}{" "}
-                    <span className="count-brand">
-                      (
-                      {
-                        productMain.filter((el) =>
-                          el.filterBrands.includes(brand.label)
-                        ).length
-                      }
-                      )
-                    </span>
-                  </label>
-                </fieldset>
-              ))}
+              {loading ? (
+                <div>Loading manufacturers...</div>
+              ) : (
+                manufacturers.map((manufacturer, index) => (
+                  <fieldset
+                    key={index}
+                    className="fieldset-item"
+                    onClick={() => allProps.setBrands(manufacturer.label)}
+                  >
+                    <input
+                      type="checkbox"
+                      name="manufacturer"
+                      className="tf-check"
+                      readOnly
+                      checked={allProps.brands.includes(manufacturer.label)}
+                    />
+                    <label>
+                      {manufacturer.label}{" "}
+                      <span className="count-brand">
+                        ({manufacturer.count})
+                      </span>
+                    </label>
+                  </fieldset>
+                ))
+              )}
             </div>
           </div>
         </div>

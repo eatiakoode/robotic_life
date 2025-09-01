@@ -8,6 +8,7 @@ import { useEffect, useReducer, useState, useCallback } from "react";
 import FilterModal from "./FilterModal";
 import { initialState, reducer } from "@/reducer/filterReducer";
 import { getAllProducts, getProductsByCategory } from "@/api/product";
+import { getFilteredProducts } from "@/api/filtering";
 import FilterMeta from "./FilterMeta";
 
 export default function Products1({ parentClass = "flat-spacing" }) {
@@ -144,15 +145,78 @@ export default function Products1({ parentClass = "flat-spacing" }) {
 
     let filteredProducts = [...productMain];
     console.log('🔍 Starting filtering with', productMain.length, 'products');
+    
+    // Check if we should use backend filtering
+    const shouldUseBackendFiltering = selectedParentCategory || brands.length > 0 || color !== "All";
+    
+    if (shouldUseBackendFiltering) {
+      console.log('🚀 Using backend filtering');
+      
+      try {
+        // Prepare filters for backend
+        const additionalFilters = {};
+        
+        if (brands.length > 0) {
+          additionalFilters.manufacturers = brands;
+        }
+        
+        if (color !== "All" && color.name) {
+          additionalFilters.colors = [color.name];
+        }
+        
+        if (price && price.length === 2) {
+          additionalFilters.minPrice = price[0];
+          additionalFilters.maxPrice = price[1];
+        }
+        
+        console.log('🔍 Backend filters:', additionalFilters);
+        
+        // Use backend filtering
+        const backendResults = await getFilteredProducts(additionalFilters);
+        console.log('🔍 Backend results received:', backendResults);
+        console.log('🔍 Backend results type:', typeof backendResults);
+        console.log('🔍 Backend results length:', backendResults?.length);
+        
+        if (backendResults && backendResults.length >= 0) {
+          filteredProducts = backendResults;
+          console.log('✅ Backend filtering successful:', filteredProducts.length, 'products');
+          console.log('✅ First product:', filteredProducts[0]);
+          
+          // Still apply client-side filters that aren't supported by backend
+          if (size !== "All" && size !== "Free Size") {
+            filteredProducts = filteredProducts.filter((elm) =>
+              elm.filterSizes.includes(size)
+            );
+            console.log('🔍 After size filtering (client-side):', filteredProducts.length, 'products');
+          }
+          
+          console.log('🔍 About to dispatch with products:', filteredProducts.length);
+          dispatch({ type: "SET_FILTERED", payload: filteredProducts });
+          console.log('🔍 Dispatch completed');
+          return;
+        }
+      } catch (error) {
+        console.log('⚠️ Backend filtering failed, falling back to client-side:', error);
+      }
+    }
+    
+    console.log('🔍 Using client-side filtering');
 
     // Apply filters sequentially
     if (brands.length > 0) {
       // Reset to first page when filters change
       dispatch({ type: "SET_CURRENT_PAGE", payload: 1 });
       
-      filteredProducts = filteredProducts.filter((elm) =>
-        brands.every((brand) => elm.filterBrands.includes(brand))
-      );
+      console.log('🏭 Filtering by brands:', brands);
+      console.log('🏭 Sample product brands before filter:', filteredProducts[0]?.filterBrands);
+      
+      filteredProducts = filteredProducts.filter((elm) => {
+        const hasBrand = brands.every((brand) => elm.filterBrands && elm.filterBrands.includes(brand));
+        if (!hasBrand && elm.filterBrands) {
+          console.log('🏭 Product brands:', elm.filterBrands, 'Looking for:', brands);
+        }
+        return hasBrand;
+      });
       console.log('🔍 After brand filtering:', filteredProducts.length, 'products');
     }
 
@@ -164,9 +228,16 @@ export default function Products1({ parentClass = "flat-spacing" }) {
     }
 
     if (color !== "All") {
-      filteredProducts = filteredProducts.filter((elm) =>
-        elm.filterColor.includes(color.name)
-      );
+      console.log('🎨 Filtering by color:', color);
+      console.log('🎨 Sample product colors before filter:', filteredProducts[0]?.filterColor);
+      
+      filteredProducts = filteredProducts.filter((elm) => {
+        const hasColor = elm.filterColor && elm.filterColor.includes(color.name);
+        if (!hasColor && elm.filterColor) {
+          console.log('🎨 Product colors:', elm.filterColor, 'Looking for:', color.name);
+        }
+        return hasColor;
+      });
       console.log('🔍 After color filtering:', filteredProducts.length, 'products');
     }
 

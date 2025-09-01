@@ -117,8 +117,8 @@ export const getAllProducts = async () => {
   return [];
 };
 
-// Get filtered products by category
-export const getProductsByCategory = async (category) => {
+// Get filtered products by category and additional filters
+export const getProductsByCategory = async (category, additionalFilters = {}) => {
   // Validate category
   if (!category) {
     return [];
@@ -131,7 +131,27 @@ export const getProductsByCategory = async (category) => {
   
   for (const baseUrl of urlsToTry) {
     try {
-      const apiUrl = `${baseUrl}/frontend/api/robot/filter?category=${categoryParam}`;
+      // Build query parameters
+      const params = new URLSearchParams({ category: categoryParam });
+      
+      // Add additional filters if provided
+      if (additionalFilters.colors && additionalFilters.colors.length > 0) {
+        params.append('colors', additionalFilters.colors.join(','));
+      }
+      
+      if (additionalFilters.manufacturers && additionalFilters.manufacturers.length > 0) {
+        params.append('manufacturers', additionalFilters.manufacturers.join(','));
+      }
+      
+      if (additionalFilters.minPrice !== undefined) {
+        params.append('minPrice', additionalFilters.minPrice);
+      }
+      
+      if (additionalFilters.maxPrice !== undefined) {
+        params.append('maxPrice', additionalFilters.maxPrice);
+      }
+      
+      const apiUrl = `${baseUrl}/frontend/api/robot/filter?${params.toString()}`;
       
       // Add timeout to prevent hanging requests
       const controller = new AbortController();

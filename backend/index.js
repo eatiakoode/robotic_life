@@ -88,6 +88,8 @@ const sliderRouter = require("./routes/sliderRouter.js");
 const sliderfrontendRouter = require("./routes/frontend/sliderFrntRouter.js");
 const categoryFrontendRouter = require("./routes/frontend/categoryFrntRouter.js");
 const robotFrontendRouter = require("./routes/frontend/robotFrntRouter.js");
+const colorFrontendRouter = require("./routes/frontend/colorFrntRouter.js");
+const manufacturerFrontendRouter = require("./routes/frontend/manufacturerFrntRouter.js");
 
 
 const cookieParser = require("cookie-parser");
@@ -181,6 +183,8 @@ app.use("/api/slider", sliderRouter);
 app.use("/frontend/api/slider", sliderfrontendRouter);
 app.use("/frontend/api/category", categoryFrontendRouter);
 app.use("/frontend/api/robot", robotFrontendRouter);
+app.use("/frontend/api/color", colorFrontendRouter);
+app.use("/frontend/api/manufacturer", manufacturerFrontendRouter);
 
 const path = require("path");
 // app.use("/public", express.static(path.join(__dirname, "public")));
