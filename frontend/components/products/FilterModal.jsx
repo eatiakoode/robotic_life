@@ -1,9 +1,6 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
-import {
-  sizes,
-} from "@/data/productFilterOptions";
 import { getParentCategories, getSubCategories } from "@/api/category";
 import { getAllColors, getAllManufacturers } from "@/api/filterData";
 
@@ -16,6 +13,7 @@ export default function FilterModal({ allProps }) {
   const [manufacturers, setManufacturers] = useState([]);
   const [loading, setLoading] = useState(true);
   const timeoutRef = useRef(null);
+  const weightTimeoutRef = useRef(null);
 
   // Debounced price update to prevent infinite loops
   const debouncedSetPrice = useCallback((value) => {
@@ -33,11 +31,30 @@ export default function FilterModal({ allProps }) {
     }
   }, [allProps, allProps.price]);
 
+  // Debounced weight update to prevent infinite loops
+  const debouncedSetWeight = useCallback((value) => {
+    // Only update if the value has actually changed
+    if (JSON.stringify(value) !== JSON.stringify(allProps.weight)) {
+      // Clear any existing timeout
+      if (weightTimeoutRef.current) {
+        clearTimeout(weightTimeoutRef.current);
+      }
+      
+      // Set a new timeout to update the weight
+      weightTimeoutRef.current = setTimeout(() => {
+        allProps.setWeight(value);
+      }, 100); // 100ms delay
+    }
+  }, [allProps, allProps.weight]);
+
   // Cleanup timeout on unmount
   useEffect(() => {
     return () => {
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
+      }
+      if (weightTimeoutRef.current) {
+        clearTimeout(weightTimeoutRef.current);
       }
     };
   }, []);
@@ -46,7 +63,6 @@ export default function FilterModal({ allProps }) {
   useEffect(() => {
     const fetchFilterData = async () => {
       try {
-        console.log('🚀 Starting to fetch filter data...');
         setLoading(true);
         
         // Fetch all data in parallel
@@ -58,7 +74,6 @@ export default function FilterModal({ allProps }) {
         
         // Handle categories
         if (categoriesResult.status === 'fulfilled') {
-          console.log('📋 Received categories:', categoriesResult.value);
           setParentCategories(categoriesResult.value);
         } else {
           console.error('❌ Error fetching categories:', categoriesResult.reason);
@@ -67,7 +82,6 @@ export default function FilterModal({ allProps }) {
         
         // Handle colors
         if (colorsResult.status === 'fulfilled') {
-          console.log('🎨 Received colors:', colorsResult.value);
           setColors(colorsResult.value);
         } else {
           console.error('❌ Error fetching colors:', colorsResult.reason);
@@ -76,7 +90,6 @@ export default function FilterModal({ allProps }) {
         
         // Handle manufacturers
         if (manufacturersResult.status === 'fulfilled') {
-          console.log('🏭 Received manufacturers:', manufacturersResult.value);
           setManufacturers(manufacturersResult.value);
         } else {
           console.error('❌ Error fetching manufacturers:', manufacturersResult.reason);
@@ -90,7 +103,6 @@ export default function FilterModal({ allProps }) {
         setManufacturers([]);
       } finally {
         setLoading(false);
-        console.log('🏁 Finished loading filter data');
       }
     };
 
@@ -99,13 +111,11 @@ export default function FilterModal({ allProps }) {
 
   // Handle parent category selection
   const handleParentCategorySelect = async (category) => {
-    console.log('Selected parent category:', category);
     allProps.setParentCategory(category);
     
     // Fetch sub-categories for the selected parent
     try {
       const subs = await getSubCategories(category._id);
-      console.log('Fetched sub-categories:', subs);
       setSubCategories(subs);
     } catch (error) {
       console.error('Error fetching sub-categories:', error);
@@ -115,6 +125,64 @@ export default function FilterModal({ allProps }) {
 
   return (
     <div className="offcanvas offcanvas-start canvas-filter" id="filterShop">
+      <style jsx>{`
+        .box-weight-product {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-top: 15px;
+        }
+        .box-weight-item {
+          text-align: center;
+        }
+        .title-weight {
+          font-size: 12px;
+          color: #666;
+          display: block;
+          margin-bottom: 5px;
+        }
+        .weight-val {
+          font-size: 14px;
+          font-weight: 600;
+          color: #333;
+        }
+        .weight-range-info {
+          font-size: 12px;
+          color: #999;
+          text-align: center;
+          margin-top: 10px;
+        }
+        .weight-unit-selector {
+          margin-top: 15px;
+          padding-top: 15px;
+          border-top: 1px solid #eee;
+        }
+        .weight-unit-label {
+          font-size: 14px;
+          font-weight: 600;
+          color: #333;
+          display: block;
+          margin-bottom: 10px;
+        }
+        .weight-unit-options {
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+        }
+        .weight-unit-option {
+          display: flex;
+          align-items: center;
+          cursor: pointer;
+          font-size: 13px;
+          color: #666;
+        }
+        .weight-unit-option input[type="radio"] {
+          margin-right: 8px;
+        }
+        .weight-unit-option span {
+          cursor: pointer;
+        }
+      `}</style>
       <div className="canvas-wrapper">
         <div className="canvas-header">
           <h5>Filters</h5>
@@ -228,28 +296,74 @@ export default function FilterModal({ allProps }) {
               Available range: ${allProps.priceBounds?.[0] || 0} - ${allProps.priceBounds?.[1] || 100000}
             </div>
           </div>
-          <div className="widget-facet facet-size">
-            <h6 className="facet-title">Size</h6>
-            <div className="facet-size-box size-box">
-              {sizes.map((size, index) => (
-                <span
-                  key={index}
-                  onClick={() => allProps.setSize(size)}
-                  className={`size-item size-check ${
-                    allProps.size === size ? "active" : ""
-                  }`}
+          <div className="widget-facet facet-weight">
+            <h6 className="facet-title">Weight Range</h6>
+
+            <RangeSlider
+              min={allProps.weightBounds?.[0] || 0}
+              max={allProps.weightBounds?.[1] || 1000}
+              value={allProps.weight}
+              onInput={debouncedSetWeight}
+            />
+            <div className="box-weight-product mt-3">
+              <div className="box-weight-item">
+                <span className="title-weight">Min weight</span>
+                <div
+                  className="weight-val"
+                  id="weight-min-value"
                 >
-                  {size}
-                </span>
-              ))}
-              <span
-                className={`size-item size-check free-size ${
-                  allProps.size == "Free Size" ? "active" : ""
-                } `}
-                onClick={() => allProps.setSize("Free Size")}
-              >
-                Free Size
-              </span>
+                  {allProps.weight[0]} {allProps.weightUnit}
+                </div>
+              </div>
+              <div className="box-weight-item">
+                <span className="title-weight">Max weight</span>
+                <div
+                  className="weight-val"
+                  id="weight-max-value"
+                >
+                  {allProps.weight[1]} {allProps.weightUnit}
+                </div>
+              </div>
+            </div>
+            <div className="weight-range-info">
+              Available range: {allProps.weightBounds?.[0] || 0} - {allProps.weightBounds?.[1] || 1000} {allProps.weightUnit}
+            </div>
+            
+            {/* Weight Unit Selector */}
+            <div className="weight-unit-selector mt-3">
+              <label className="weight-unit-label">Weight Unit:</label>
+              <div className="weight-unit-options">
+                <label className="weight-unit-option">
+                  <input
+                    type="radio"
+                    name="weightUnit"
+                    value="g"
+                    checked={allProps.weightUnit === "g"}
+                    onChange={() => allProps.setWeightUnit("g")}
+                  />
+                  <span>Grams (g)</span>
+                </label>
+                <label className="weight-unit-option">
+                  <input
+                    type="radio"
+                    name="weightUnit"
+                    value="kg"
+                    checked={allProps.weightUnit === "kg"}
+                    onChange={() => allProps.setWeightUnit("kg")}
+                  />
+                  <span>Kilograms (kg)</span>
+                </label>
+                <label className="weight-unit-option">
+                  <input
+                    type="radio"
+                    name="weightUnit"
+                    value="lb"
+                    checked={allProps.weightUnit === "lb"}
+                    onChange={() => allProps.setWeightUnit("lb")}
+                  />
+                  <span>Pounds (lb)</span>
+                </label>
+              </div>
             </div>
           </div>
           <div className="widget-facet facet-color">

@@ -93,7 +93,6 @@ export const getSubCategories = async (parentId) => {
 
       if (response.ok) {
         const data = await response.json();
-        console.log('📦 Raw sub-categories API response:', data);
         
         // Handle different response formats
         let categories = [];
@@ -104,14 +103,11 @@ export const getSubCategories = async (parentId) => {
           // Backend returns array directly
           categories = data;
         } else {
-          console.log('⚠️ Unexpected response format:', data);
           continue; // Try next URL
         }
         
         // Filter to only sub-categories (parent field matches the given parentId)
         const subCategories = categories.filter(category => category.parent === parentId);
-        console.log('🎯 Filtered sub-categories:', subCategories);
-        console.log('✅ Successfully connected to:', baseUrl);
         
         return subCategories;
       } else {
@@ -157,7 +153,6 @@ export const getAllCategories = async () => {
 
       if (response.ok) {
         const data = await response.json();
-        console.log('📦 Raw all categories API response:', data);
         
         // Handle different response formats
         let categories = [];
@@ -168,11 +163,9 @@ export const getAllCategories = async () => {
           // Backend returns array directly
           categories = data;
         } else {
-          console.log('⚠️ Unexpected response format:', data);
           continue; // Try next URL
         }
         
-        console.log('✅ Successfully connected to:', baseUrl);
         return categories;
       } else {
         console.log('❌ Failed to fetch all categories from:', baseUrl, 'Status:', response.status);

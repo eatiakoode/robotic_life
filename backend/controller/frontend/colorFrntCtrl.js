@@ -5,19 +5,13 @@ const Robot = require("../../models/robotModel");
 // Get all active colors for frontend
 const getActiveColors = asyncHandler(async (req, res) => {
   try {
-    console.log("🎨 Fetching colors from database...");
-    
     // First try to get colors from Color collection
     let colors = await Color.find({ status: true })
       .select("name status")
       .sort({ name: 1 });
 
-    console.log("🎨 Found colors from Color collection:", colors.length);
-
     // If no colors in Color collection, get them from robots
     if (!colors || colors.length === 0) {
-      console.log("🎨 No colors in Color collection, fetching from robots...");
-      
       // Get all unique colors used in robots
       const robots = await Robot.find()
         .populate("color", "name status")
@@ -47,8 +41,6 @@ const getActiveColors = asyncHandler(async (req, res) => {
           status: colorObj.status
         };
       }).sort((a, b) => a.name.localeCompare(b.name));
-
-      console.log("🎨 Found colors from robots:", colors);
     }
 
     res.status(200).json({

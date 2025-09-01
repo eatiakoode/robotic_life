@@ -5,14 +5,10 @@ const Robot = require("../../models/robotModel");
 // Get all active manufacturers for frontend
 const getActiveManufacturers = asyncHandler(async (req, res) => {
   try {
-    console.log("🏭 Fetching manufacturers from database...");
-    
     // Get all active manufacturers
     const manufacturers = await Manufacturer.find({ status: { $ne: false } })
       .select("name status")
       .sort({ name: 1 });
-
-    console.log("🏭 Found manufacturers:", manufacturers.length);
 
     // Count robots for each manufacturer
     const transformedManufacturers = await Promise.all(
@@ -28,8 +24,6 @@ const getActiveManufacturers = asyncHandler(async (req, res) => {
         };
       })
     );
-
-    console.log("🏭 Manufacturers with robot counts:", transformedManufacturers);
 
     res.status(200).json({
       success: true,

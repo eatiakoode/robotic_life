@@ -68,27 +68,15 @@ const convertWeight = (value, fromUnit, toUnit) => {
  
 const filterRobots = async (req, res) => {
   try {
-    console.log("🔍 Filter robots called with query:", req.query);
-    
     let {
       minPrice, maxPrice,
       minWeight, maxWeight, weightUnit = "kg",
       colors, manufacturers,
       category
     } = req.query;
-    
-        console.log("🔍 Parsed filters:", {
-      category,
-      colors,
-      manufacturers,
-      minPrice,
-      maxPrice
-    });
 
     let filter = {};
-    
-    console.log("🔍 Initial filter object:", filter);
- 
+
     if (minPrice || maxPrice) {
       // Convert string prices to numbers for comparison
       filter.$expr = {
@@ -107,41 +95,106 @@ const filterRobots = async (req, res) => {
         });
       }
     }
- 
+
+    // Add weight filtering to the database query
+    if (minWeight || maxWeight) {
+      // If we don't have $expr yet, create it
+      if (!filter.$expr) {
+        filter.$expr = { $and: [] };
+      }
+      
+      // First, ensure the robot has weight data
+      filter.$expr.$and.push({
+        $and: [
+          { $ne: ["$weight", null] },
+          { $ne: ["$weight.value", null] },
+          { $ne: ["$weight.unit", null] }
+        ]
+      });
+      
+      if (minWeight) {
+        // Convert minWeight to grams for comparison
+        const minWeightInGrams = convertWeight(Number(minWeight), weightUnit, "g");
+        // We need to convert the stored weight to grams for comparison
+        filter.$expr.$and.push({
+          $gte: [
+            {
+              $cond: {
+                if: { $eq: ["$weight.unit", "g"] },
+                then: { $toDouble: "$weight.value" },
+                else: {
+                  $cond: {
+                    if: { $eq: ["$weight.unit", "kg"] },
+                    then: { $multiply: [{ $toDouble: "$weight.value" }, 1000] },
+                    else: {
+                      $cond: {
+                        if: { $eq: ["$weight.unit", "lb"] },
+                        then: { $multiply: [{ $toDouble: "$weight.value" }, 453.592] },
+                        else: { $toDouble: "$weight.value" } // Assume grams
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            minWeightInGrams
+          ]
+        });
+      }
+      
+      if (maxWeight) {
+        // Convert maxWeight to grams for comparison
+        const maxWeightInGrams = convertWeight(Number(maxWeight), weightUnit, "g");
+        // We need to convert the stored weight to grams for comparison
+        filter.$expr.$and.push({
+          $lte: [
+            {
+              $cond: {
+                if: { $eq: ["$weight.unit", "g"] },
+                then: { $toDouble: "$weight.value" },
+                else: {
+                  $cond: {
+                    if: { $eq: ["$weight.unit", "kg"] },
+                    then: { $multiply: [{ $toDouble: "$weight.value" }, 1000] },
+                    else: {
+                      $cond: {
+                        if: { $eq: ["$weight.unit", "lb"] },
+                        then: { $multiply: [{ $toDouble: "$weight.value" }, 453.592] },
+                        else: { $toDouble: "$weight.value" } // Assume grams
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            maxWeightInGrams
+          ]
+        });
+      }
+    }
+
     if (category) {
-      console.log("🔍 Looking for category with slug:", category);
       const categoryDoc = await Category.findOne({ slug: category });
-      console.log("🔍 Category found:", categoryDoc);
       if (categoryDoc) {
         filter.category = categoryDoc._id;
       }
     }
- 
+
     if (manufacturers) {
-      console.log("🔍 Filtering by manufacturers:", manufacturers);
       const Manufacturer = require("../../models/manufacturerModel");
       
       if (typeof manufacturers === 'string') {
         const manufacturerNames = manufacturers.split(",");
-        console.log("🔍 Looking for manufacturers:", manufacturerNames);
         
         // Find manufacturers by name
         const manufacturerDocs = await Manufacturer.find({
           name: { $in: manufacturerNames }
         }).select("_id name");
         
-        console.log("🔍 Found manufacturers:", manufacturerDocs);
-        console.log("🔍 Manufacturer count:", manufacturerDocs.length);
-        
         if (manufacturerDocs && manufacturerDocs.length > 0) {
           const manufacturerIds = manufacturerDocs.map(doc => doc._id);
           filter.manufacturer = { $in: manufacturerIds };
-          console.log("🔍 Filtering by manufacturer IDs:", manufacturerIds);
         } else {
-          console.log("⚠️ No manufacturers found with names:", manufacturerNames);
-          console.log("🔍 Let me check what manufacturers exist in database...");
-          const allManufacturers = await Manufacturer.find().select("_id name");
-          console.log("🔍 All manufacturers in database:", allManufacturers);
           // Return empty result if manufacturer not found
           return res.status(200).json({
             success: true,
@@ -153,26 +206,20 @@ const filterRobots = async (req, res) => {
     }
 
     if (colors) {
-      console.log("🔍 Filtering by colors:", colors);
       const Color = require("../../models/colorModel");
       
       if (typeof colors === 'string') {
         const colorNames = colors.split(",");
-        console.log("🔍 Looking for colors:", colorNames);
         
         // Find colors by name
         const colorDocs = await Color.find({
           name: { $in: colorNames }
         }).select("_id name");
         
-        console.log("🔍 Found colors:", colorDocs);
-        
         if (colorDocs && colorDocs.length > 0) {
           const colorIds = colorDocs.map(doc => doc._id);
           filter.color = { $in: colorIds };
-          console.log("🔍 Filtering by color IDs:", colorIds);
         } else {
-          console.log("⚠️ No colors found with names:", colorNames);
           // Return empty result if color not found
           return res.status(200).json({
             success: true,
@@ -182,39 +229,19 @@ const filterRobots = async (req, res) => {
         }
       }
     }
- 
+
     let robots = await Robot.find(filter)
       .populate("category", "name slug")
       .populate("manufacturer", "name")
       .populate("color", "name")
       .lean();
-    
-    console.log("🔍 Final filter object:", filter);
-    console.log("🔍 Robots found:", robots.length);
-    if (robots.length > 0) {
-      console.log("🔍 Sample robot:", robots[0]);
-    }
- 
-    if (minWeight || maxWeight) {
-      const min = minWeight ? Number(minWeight) : 0;
-      const max = maxWeight ? Number(maxWeight) : Number.MAX_SAFE_INTEGER;
- 
-      robots = robots.filter(r => {
-        if (!r.weight || !r.weight.value || !r.weight.unit) return false;
- 
-        const converted = convertWeight(r.weight.value, r.weight.unit, weightUnit);
-        if (converted === null) return false;
- 
-        return converted >= min && converted <= max;
-      });
-    }
- 
+
     res.status(200).json({
       success: true,
       count: robots.length,
       data: robots
     });
- 
+
   } catch (err) {
     console.error("Filter error:", err);
     res.status(500).json({

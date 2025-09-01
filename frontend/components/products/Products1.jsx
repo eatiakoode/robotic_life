@@ -20,6 +20,9 @@ export default function Products1({ parentClass = "flat-spacing" }) {
   const {
     price,
     priceBounds,
+    weight,
+    weightBounds,
+    weightUnit,
     size,
     availability,
     color,
@@ -39,6 +42,9 @@ export default function Products1({ parentClass = "flat-spacing" }) {
   const allProps = {
     ...state,
     setPrice: (value) => dispatch({ type: "SET_PRICE", payload: value }),
+
+    setWeight: (value) => dispatch({ type: "SET_WEIGHT", payload: value }),
+    setWeightUnit: (value) => dispatch({ type: "SET_WEIGHT_UNIT", payload: value }),
 
     setColor: (value) => {
       value == color
@@ -99,12 +105,6 @@ export default function Products1({ parentClass = "flat-spacing" }) {
         
         // Only update if there's an actual change to prevent infinite loops
         if (newMinPrice < currentMin || newMaxPrice > currentMax) {
-          console.log('🔄 Price bounds need expansion:', {
-            current: [currentMin, currentMax],
-            new: [newMinPrice, newMaxPrice],
-            expanded: newMinPrice < currentMin ? 'min' : 'max'
-          });
-          
           // Expand bounds to include all products
           const expandedMin = Math.min(currentMin, newMinPrice);
           const expandedMax = Math.max(currentMax, newMaxPrice);
@@ -112,7 +112,6 @@ export default function Products1({ parentClass = "flat-spacing" }) {
           // Check if the new bounds are actually different from current bounds
           if (expandedMin !== currentMin || expandedMax !== currentMax) {
             dispatch({ type: "SET_PRICE_BOUNDS", payload: [expandedMin, expandedMax] });
-            console.log('✅ Price bounds expanded to:', [expandedMin, expandedMax]);
             
             // Show notification to user
             setPriceBoundsUpdate({
@@ -123,15 +122,74 @@ export default function Products1({ parentClass = "flat-spacing" }) {
             
             // Auto-hide notification after 5 seconds
             setTimeout(() => setPriceBoundsUpdate(null), 5000);
-          } else {
-            console.log('💰 Price bounds are already at the correct values');
           }
-        } else {
-          console.log('💰 Price bounds are current, no expansion needed');
         }
       }
     }
   }, [priceBounds]);
+
+  // Function to automatically refresh weight bounds when needed
+  const refreshWeightBounds = useCallback((products) => {
+    if (products && products.length > 0) {
+      const weights = products.map(p => {
+        if (p.weight && p.weight.value && p.weight.unit) {
+          // Convert all weights to grams for consistent comparison
+          const weightInGrams = convertWeightToGrams(p.weight.value, p.weight.unit);
+          return weightInGrams;
+        }
+        return null;
+      }).filter(weight => weight !== null && weight > 0 && !isNaN(weight));
+      
+      if (weights.length > 0) {
+        const newMinWeight = Math.floor(Math.min(...weights));
+        const newMaxWeight = Math.ceil(Math.max(...weights));
+        
+        // Check if current bounds need to be expanded
+        const currentMin = weightBounds[0];
+        const currentMax = weightBounds[1];
+        
+        // Only update if there's an actual change to prevent infinite loops
+        if (newMinWeight < currentMin || newMaxWeight > currentMax) {
+          // Expand bounds to include all products
+          const expandedMin = Math.min(currentMin, newMinWeight);
+          const expandedMax = Math.max(currentMax, newMaxWeight);
+          
+          // Check if the new bounds are actually different from current bounds
+          if (expandedMin !== currentMin || expandedMax !== currentMax) {
+            dispatch({ type: "SET_WEIGHT_BOUNDS", payload: [expandedMin, expandedMax] });
+          }
+        }
+      }
+    }
+  }, [weightBounds]);
+
+  // Helper function to convert weight to kg
+  const convertWeightToKg = (value, unit) => {
+    switch (unit.toLowerCase()) {
+      case 'g':
+        return value / 1000;
+      case 'kg':
+        return value;
+      case 'lb':
+        return value * 0.453592;
+      default:
+        return value;
+    }
+  };
+
+  // Helper function to convert weight to grams
+  const convertWeightToGrams = (value, unit) => {
+    switch (unit.toLowerCase()) {
+      case 'g':
+        return value;
+      case 'kg':
+        return value * 1000;
+      case 'lb':
+        return value * 453.592;
+      default:
+        return value;
+    }
+  };
 
 
 
@@ -139,22 +197,23 @@ export default function Products1({ parentClass = "flat-spacing" }) {
   const applyFilters = useCallback(async () => {
     // Only run filtering if we have products loaded
     if (productMain.length === 0) {
-      console.log('⚠️ No products loaded yet, skipping filtering');
       return;
     }
 
     let filteredProducts = [...productMain];
-    console.log('🔍 Starting filtering with', productMain.length, 'products');
     
-    // Check if we should use backend filtering
-    const shouldUseBackendFiltering = selectedParentCategory || brands.length > 0 || color !== "All";
+    // Check if we should use backend filtering (excluding category which has its own logic)
+    const shouldUseBackendFiltering = brands.length > 0 || color !== "All" || (weight && weight.length === 2 && (weight[0] !== weightBounds[0] || weight[1] !== weightBounds[1]));
     
     if (shouldUseBackendFiltering) {
-      console.log('🚀 Using backend filtering');
-      
       try {
         // Prepare filters for backend
         const additionalFilters = {};
+        
+        // Add category if selected
+        if (selectedParentCategory) {
+          additionalFilters.category = selectedParentCategory.slug;
+        }
         
         if (brands.length > 0) {
           additionalFilters.manufacturers = brands;
@@ -169,108 +228,98 @@ export default function Products1({ parentClass = "flat-spacing" }) {
           additionalFilters.maxPrice = price[1];
         }
         
-        console.log('🔍 Backend filters:', additionalFilters);
+        if (weight && weight.length === 2 && (weight[0] !== weightBounds[0] || weight[1] !== weightBounds[1])) {
+          additionalFilters.minWeight = weight[0];
+          additionalFilters.maxWeight = weight[1];
+          additionalFilters.weightUnit = weightUnit;
+        }
         
         // Use backend filtering
         const backendResults = await getFilteredProducts(additionalFilters);
-        console.log('🔍 Backend results received:', backendResults);
-        console.log('🔍 Backend results type:', typeof backendResults);
-        console.log('🔍 Backend results length:', backendResults?.length);
         
         if (backendResults && backendResults.length >= 0) {
           filteredProducts = backendResults;
-          console.log('✅ Backend filtering successful:', filteredProducts.length, 'products');
-          console.log('✅ First product:', filteredProducts[0]);
           
           // Still apply client-side filters that aren't supported by backend
           if (size !== "All" && size !== "Free Size") {
             filteredProducts = filteredProducts.filter((elm) =>
               elm.filterSizes.includes(size)
             );
-            console.log('🔍 After size filtering (client-side):', filteredProducts.length, 'products');
           }
           
-          console.log('🔍 About to dispatch with products:', filteredProducts.length);
           dispatch({ type: "SET_FILTERED", payload: filteredProducts });
-          console.log('🔍 Dispatch completed');
           return;
         }
       } catch (error) {
-        console.log('⚠️ Backend filtering failed, falling back to client-side:', error);
+        // Backend filtering failed, fallback to client-side
       }
     }
     
-    console.log('🔍 Using client-side filtering');
-
     // Apply filters sequentially
     if (brands.length > 0) {
       // Reset to first page when filters change
       dispatch({ type: "SET_CURRENT_PAGE", payload: 1 });
       
-      console.log('🏭 Filtering by brands:', brands);
-      console.log('🏭 Sample product brands before filter:', filteredProducts[0]?.filterBrands);
-      
       filteredProducts = filteredProducts.filter((elm) => {
         const hasBrand = brands.every((brand) => elm.filterBrands && elm.filterBrands.includes(brand));
-        if (!hasBrand && elm.filterBrands) {
-          console.log('🏭 Product brands:', elm.filterBrands, 'Looking for:', brands);
-        }
         return hasBrand;
       });
-      console.log('🔍 After brand filtering:', filteredProducts.length, 'products');
     }
 
     if (availability !== "All") {
       filteredProducts = filteredProducts.filter(
         (elm) => availability.value === elm.inStock
       );
-      console.log('🔍 After availability filtering:', filteredProducts.length, 'products');
     }
 
     if (color !== "All") {
-      console.log('🎨 Filtering by color:', color);
-      console.log('🎨 Sample product colors before filter:', filteredProducts[0]?.filterColor);
-      
       filteredProducts = filteredProducts.filter((elm) => {
         const hasColor = elm.filterColor && elm.filterColor.includes(color.name);
-        if (!hasColor && elm.filterColor) {
-          console.log('🎨 Product colors:', elm.filterColor, 'Looking for:', color.name);
-        }
         return hasColor;
       });
-      console.log('🔍 After color filtering:', filteredProducts.length, 'products');
     }
 
     if (size !== "All" && size !== "Free Size") {
       filteredProducts = filteredProducts.filter((elm) =>
         elm.filterSizes.includes(size)
       );
-      console.log('🔍 After size filtering:', filteredProducts.length, 'products');
     }
 
     if (activeFilterOnSale) {
       filteredProducts = filteredProducts.filter((elm) => elm.oldPrice);
-      console.log('🔍 After sale filtering:', filteredProducts.length, 'products');
     }
 
     // Filter by parent category - using backend category data
     if (selectedParentCategory) {
-      console.log('🎯 Filtering by parent category:', selectedParentCategory.name);
       // Reset to first page when category changes
       dispatch({ type: "SET_CURRENT_PAGE", payload: 1 });
       
-      // Try backend filtering first, then fallback to client-side filtering
-      try {
-        const categoryProducts = await getProductsByCategory(selectedParentCategory);
-        if (categoryProducts && categoryProducts.length > 0) {
-          console.log('✅ Found products for category via backend:', categoryProducts.length);
-          // Replace the current products with category-specific products
-          filteredProducts = categoryProducts;
-          
-          // Category products loaded successfully - auto-refresh price bounds
-          refreshPriceBounds(categoryProducts);
-        } else {
-          console.log('⚠️ No products found via backend, trying client-side filtering');
+      // Only use backend category filtering if we're not already using backend filtering for other filters
+      if (!shouldUseBackendFiltering) {
+        // Try backend filtering first, then fallback to client-side filtering
+        try {
+          const categoryProducts = await getProductsByCategory(selectedParentCategory);
+          if (categoryProducts && categoryProducts.length > 0) {
+            // Replace the current products with category-specific products
+            filteredProducts = categoryProducts;
+            
+            // Category products loaded successfully - auto-refresh price bounds
+            refreshPriceBounds(categoryProducts);
+          } else {
+            // Fallback to client-side filtering
+            filteredProducts = productMain.filter(product => {
+              const productCategoryId = product.category?._id || product.categoryId;
+              const selectedCategoryId = selectedParentCategory._id;
+              return productCategoryId === selectedCategoryId;
+            });
+            
+            if (filteredProducts.length > 0) {
+              refreshPriceBounds(filteredProducts);
+            } else {
+              filteredProducts = [];
+            }
+          }
+        } catch (error) {
           // Fallback to client-side filtering
           filteredProducts = productMain.filter(product => {
             const productCategoryId = product.category?._id || product.categoryId;
@@ -279,42 +328,21 @@ export default function Products1({ parentClass = "flat-spacing" }) {
           });
           
           if (filteredProducts.length > 0) {
-            console.log('✅ Found products for category via client-side filtering:', filteredProducts.length);
             refreshPriceBounds(filteredProducts);
           } else {
-            console.log('⚠️ No products found for this category, showing empty list');
             filteredProducts = [];
           }
-        }
-      } catch (error) {
-        console.log('⚠️ Error fetching products by category, trying client-side filtering:', error.message);
-        // Fallback to client-side filtering
-        filteredProducts = productMain.filter(product => {
-          const productCategoryId = product.category?._id || product.categoryId;
-          const selectedCategoryId = selectedParentCategory._id;
-          return productCategoryId === selectedCategoryId;
-        });
-        
-        if (filteredProducts.length > 0) {
-          console.log('✅ Found products for category via client-side filtering:', filteredProducts.length);
-          refreshPriceBounds(filteredProducts);
-        } else {
-          console.log('⚠️ No products found for this category, showing empty list');
-          filteredProducts = [];
         }
       }
     } else {
       // No category selected, show all products
-      console.log('🔍 No category selected, showing all products');
       filteredProducts = [...productMain];
     }
 
     // Filter by sub category - using backend category data
     if (selectedSubCategory) {
-      console.log('Filtering by sub category:', selectedSubCategory.name);
       // For sub-categories, we can further filter the already filtered products
       // or implement additional logic as needed
-      console.log('Sub-category filtering is active');
     }
 
     // Filter by price range - NOW ENABLED WITH DYNAMIC PRICING
@@ -325,33 +353,43 @@ export default function Products1({ parentClass = "flat-spacing" }) {
       filteredProducts = filteredProducts.filter(
         (elm) => elm.price >= price[0] && elm.price <= price[1]
       );
-      console.log('🔍 After price filtering:', filteredProducts.length, 'products');
     }
 
-    console.log('🎯 Final filtered products:', filteredProducts.length);
-    console.log('Selected parent category:', selectedParentCategory?.name);
-    console.log('Selected sub category:', selectedSubCategory?.name);
-    console.log('💰 Current price range:', price);
-    console.log('💰 Available price bounds:', priceBounds);
-    console.log('🎨 Current color filter:', color);
-    console.log('📏 Current size filter:', size);
-    console.log('🏷️ Current brand filters:', brands);
-    console.log('📦 Products before filtering:', productMain.length);
+    // Filter by weight range - ONLY when user actually changes the weight
+    if (weight && weight.length === 2 && (weight[0] !== weightBounds[0] || weight[1] !== weightBounds[1])) {
+      // Reset to first page when weight filter changes
+      dispatch({ type: "SET_CURRENT_PAGE", payload: 1 });
+      
+      filteredProducts = filteredProducts.filter((elm) => {
+        if (!elm.weight || !elm.weight.value || !elm.weight.unit) return false;
+        
+        // Convert the product's weight to grams for comparison
+        const productWeightInGrams = convertWeightToGrams(elm.weight.value, elm.weight.unit);
+        if (productWeightInGrams === null) return false;
+        
+        // Convert the filter weight to grams
+        const minWeightInGrams = convertWeightToGrams(weight[0], weightUnit);
+        const maxWeightInGrams = convertWeightToGrams(weight[1], weightUnit);
+        
+        return productWeightInGrams >= minWeightInGrams && productWeightInGrams <= maxWeightInGrams;
+      });
+    }
     
     dispatch({ type: "SET_FILTERED", payload: filteredProducts });
-  }, [productMain, price, availability, color, size, brands, activeFilterOnSale, selectedParentCategory, selectedSubCategory]); // Removed priceBounds and refreshPriceBounds dependencies
+  }, [productMain, price, weight, weightUnit, availability, color, size, brands, activeFilterOnSale, selectedParentCategory, selectedSubCategory]);
 
   // Main filtering useEffect - removed productMain from dependencies to prevent infinite loop
   useEffect(() => {
-    console.log('🔄 Filters changed, applying filters...');
     applyFilters();
-  }, [price, availability, color, size, brands, activeFilterOnSale, selectedParentCategory, selectedSubCategory, applyFilters]);
+  }, [price, weight, weightUnit, availability, color, size, brands, activeFilterOnSale, selectedParentCategory, selectedSubCategory, applyFilters]);
 
-  // Separate useEffect for price bounds calculation when productMain changes
+    // Separate useEffect for price bounds calculation when productMain changes
   useEffect(() => {
     if (productMain.length > 0) {
-              // Use auto-refresh to ensure price bounds are always current
-        refreshPriceBounds(productMain);
+      // Use auto-refresh to ensure price bounds are always current
+      refreshPriceBounds(productMain);
+      // Also refresh weight bounds
+      refreshWeightBounds(productMain);
     }
   }, [productMain]); // Removed refreshPriceBounds dependency
 
@@ -360,48 +398,38 @@ export default function Products1({ parentClass = "flat-spacing" }) {
     if (selectedParentCategory && productMain.length > 0) {
       // When category changes, we need to recalculate price bounds based on category products
       // This will be handled by the applyFilters function which fetches category products
-      console.log('🔄 Category changed, price bounds will be updated by applyFilters');
     } else if (!selectedParentCategory && productMain.length > 0) {
       // When no category is selected, reset to all products price bounds using auto-refresh
       refreshPriceBounds(productMain);
     }
-  }, [selectedParentCategory, productMain]); // Removed refreshPriceBounds dependency
+  }, [selectedParentCategory, productMain]);
 
   // Fetch products from backend on component mount
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         setLoading(true);
-        console.log('🚀 Starting to fetch products from backend...');
         const products = await getAllProducts();
-        console.log('📦 Fetched products from backend:', products.length);
-        console.log('📦 Product details:', products.map(p => ({ title: p.title, price: p.price, imgSrc: p.imgSrc })));
         setProductMain(products);
         
         // Auto-refresh price bounds to ensure they include all products
         refreshPriceBounds(products);
         
+        // Also refresh weight bounds
+        refreshWeightBounds(products);
+        
         // Also set the initial filtered products to show all products
         dispatch({ type: "SET_FILTERED", payload: products });
-        console.log('✅ Set initial filtered products to all products');
-        console.log('📊 Initial product details:', products.map(p => ({ 
-          title: p.title, 
-          price: p.price, 
-          category: p.category?.name || 'No Category',
-          manufacturer: p.filterBrands?.[0] || 'No Brand'
-        })));
-        console.log('🚀 Initial state - All products loaded and displayed');
       } catch (error) {
         console.error('❌ Error fetching products:', error);
         setProductMain([]);
       } finally {
         setLoading(false);
-        console.log('🏁 Finished loading products');
       }
     };
 
     fetchProducts();
-  }, []); // Removed refreshPriceBounds dependency
+  }, []);
 
   useEffect(() => {
     if (sortingOption === "Price Ascending") {
@@ -442,10 +470,6 @@ export default function Products1({ parentClass = "flat-spacing" }) {
           
           // If current bounds don't match the actual product range, refresh them
           if (currentMin !== priceBounds[0] || currentMax !== priceBounds[1]) {
-            console.log('🔄 Periodic check: Price bounds need refresh', {
-              current: priceBounds,
-              actual: [currentMin, currentMax]
-            });
             refreshPriceBounds(productMain);
           }
         }
@@ -453,7 +477,7 @@ export default function Products1({ parentClass = "flat-spacing" }) {
     }, 30000); // Check every 30 seconds
 
     return () => clearInterval(interval);
-  }, [productMain, priceBounds]); // Removed refreshPriceBounds dependency
+  }, [productMain, priceBounds]);
 
 
   

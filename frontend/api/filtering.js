@@ -12,8 +12,6 @@ const FALLBACK_URLS = [
 
 // Get filtered products with multiple filters (without requiring category)
 export const getFilteredProducts = async (filters = {}) => {
-  console.log('🔍 Starting getFilteredProducts with filters:', filters);
-  
   try {
     // Build query parameters
     const params = new URLSearchParams();
@@ -40,8 +38,19 @@ export const getFilteredProducts = async (filters = {}) => {
       params.append('maxPrice', filters.maxPrice);
     }
     
+    if (filters.minWeight !== undefined) {
+      params.append('minWeight', filters.minWeight);
+    }
+    
+    if (filters.maxWeight !== undefined) {
+      params.append('maxWeight', filters.maxWeight);
+    }
+    
+    if (filters.weightUnit !== undefined) {
+      params.append('weightUnit', filters.weightUnit);
+    }
+    
     const apiUrl = `http://localhost:5000/frontend/api/robot/filter?${params.toString()}`;
-    console.log('🔍 Making direct API call to:', apiUrl);
     
     // Simple fetch without timeout for debugging
     const response = await fetch(apiUrl, {
@@ -51,14 +60,10 @@ export const getFilteredProducts = async (filters = {}) => {
       }
     });
     
-    console.log('🔍 Response received:', response.status, response.ok);
-    
     if (response.ok) {
       const data = await response.json();
-      console.log('🔍 API response data:', data);
       
       if (data.success && data.data) {
-        console.log('🔍 Raw backend data:', data.data);
         // Transform backend data to match frontend structure
         const transformedProducts = data.data.map((product, index) => {
           // Safe price conversion
@@ -126,22 +131,18 @@ export const getFilteredProducts = async (filters = {}) => {
             material: product.material || []
           };
           
-          console.log('🔍 Transformed product:', transformedProduct);
           return transformedProduct;
         });
         
-        console.log('🔍 Final transformed products:', transformedProducts);
         return transformedProducts;
       } else {
-        console.log('🔍 API returned success: false or no data');
         return [];
       }
     } else {
-      console.log('🔍 API response not ok:', response.status);
       return [];
     }
   } catch (error) {
-    console.error('🔍 Filtering API error:', error);
+    console.error('Filtering API error:', error);
     return [];
   }
 };
