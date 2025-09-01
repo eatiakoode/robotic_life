@@ -19,13 +19,12 @@ export default function FilterMeta({ allProps, productLength }) {
         ) : (
           ""
         )}
-                 {allProps.weight && allProps.weightBounds && 
-          allProps.weight[1] !== allProps.weightBounds[1] ? (
+        {allProps.size != "All" ? (
           <span
-            className="filter-tag weight-tag"
-            onClick={() => allProps.setWeight(allProps.weightBounds)}
+            className="filter-tag size-tag"
+            onClick={() => allProps.setSize("All")}
           >
-            0 - {allProps.weight[1]} {allProps.weightUnit}
+            {allProps.size}
             <span className="remove-tag icon-close" />
           </span>
         ) : (
@@ -61,27 +60,28 @@ export default function FilterMeta({ allProps, productLength }) {
           ""
         )}
         
-                 {/* Price filter tag */}
-         {allProps.price && allProps.priceBounds && 
-          allProps.price[1] !== allProps.priceBounds[1] ? (
+        {/* Price filter tag */}
+        {allProps.price && allProps.priceBounds && 
+         (allProps.price[0] !== allProps.priceBounds[0] || 
+          allProps.price[1] !== allProps.priceBounds[1]) ? (
           <span
             className="filter-tag price-tag"
             onClick={() => allProps.setPrice(allProps.priceBounds)}
           >
-            $0 - ${allProps.price[1]}
+            ${allProps.price[0]} - ${allProps.price[1]}
             <span className="remove-tag icon-close" />
           </span>
         ) : (
           ""
         )}
       </div>
-                    {allProps.availability != "All" ||
-        (allProps.weight && allProps.weightBounds && 
-         allProps.weight[1] !== allProps.weightBounds[1]) ||
-        allProps.color != "All" ||
-        allProps.brands.length ||
-        (allProps.price && allProps.priceBounds && 
-         allProps.price[1] !== allProps.priceBounds[1]) ? (
+      {allProps.availability != "All" ||
+      allProps.size != "All" ||
+      allProps.color != "All" ||
+      allProps.brands.length ||
+      (allProps.price && allProps.priceBounds && 
+       (allProps.price[0] !== allProps.priceBounds[0] || 
+        allProps.price[1] !== allProps.priceBounds[1])) ? (
         <button
           id="remove-all"
           className="remove-all-filters text-btn-uppercase"

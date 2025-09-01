@@ -1,19 +1,47 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import {
   availabilityOptions,
   brands,
   colors,
+  sizes,
 } from "@/data/productFilterOptions";
 import { productMain } from "@/data/products";
 import { getParentCategories, getSubCategories } from "@/api/category";
 
 import RangeSlider from "react-range-slider-input";
+
 export default function FilterModal({ allProps }) {
   const [parentCategories, setParentCategories] = useState([]);
   const [subCategories, setSubCategories] = useState([]);
   const [loading, setLoading] = useState(true);
+  const timeoutRef = useRef(null);
+
+  // Debounced price update to prevent infinite loops
+  const debouncedSetPrice = useCallback((value) => {
+    // Only update if the value has actually changed
+    if (JSON.stringify(value) !== JSON.stringify(allProps.price)) {
+      // Clear any existing timeout
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+      
+      // Set a new timeout to update the price
+      timeoutRef.current = setTimeout(() => {
+        allProps.setPrice(value);
+      }, 100); // 100ms delay
+    }
+  }, [allProps, allProps.price]);
+
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, []);
 
   // Fetch parent categories on component mount
   useEffect(() => {
@@ -139,7 +167,7 @@ export default function FilterModal({ allProps }) {
               min={allProps.priceBounds?.[0] || 0}
               max={allProps.priceBounds?.[1] || 100000}
               value={allProps.price}
-              onInput={(value) => allProps.setPrice(value)}
+              onInput={debouncedSetPrice}
             />
             <div className="box-price-product mt-3">
               <div className="box-price-item">
@@ -149,7 +177,7 @@ export default function FilterModal({ allProps }) {
                   id="price-min-value"
                   data-currency="$"
                 >
-                  $0
+                  ${allProps.price[0]}
                 </div>
               </div>
               <div className="box-price-item">
@@ -164,122 +192,31 @@ export default function FilterModal({ allProps }) {
               </div>
             </div>
             <div className="price-range-info">
-              Available range: $0 - ${allProps.priceBounds?.[1] || 100000}
+              Available range: ${allProps.priceBounds?.[0] || 0} - ${allProps.priceBounds?.[1] || 100000}
             </div>
           </div>
-          <div className="widget-facet facet-weight">
-            <h6 className="facet-title">Weight Range</h6>
-            
-            {/* Weight Unit Selection */}
-            <div className="weight-unit-selector mb-3">
-              <label className="form-label" style={{ fontSize: '14px', fontWeight: '500', marginBottom: '8px' }}>Weight Unit:</label>
-              <select
-                className="form-select"
-                value={allProps.weightUnit}
-                onChange={(e) => allProps.setWeightUnit(e.target.value)}
-                style={{ 
-                  maxWidth: '120px',
-                  fontSize: '13px',
-                  padding: '6px 8px',
-                  border: '1px solid #ddd',
-                  borderRadius: '4px',
-                  backgroundColor: '#fff'
-                }}
+          <div className="widget-facet facet-size">
+            <h6 className="facet-title">Size</h6>
+            <div className="facet-size-box size-box">
+              {sizes.map((size, index) => (
+                <span
+                  key={index}
+                  onClick={() => allProps.setSize(size)}
+                  className={`size-item size-check ${
+                    allProps.size === size ? "active" : ""
+                  }`}
+                >
+                  {size}
+                </span>
+              ))}
+              <span
+                className={`size-item size-check free-size ${
+                  allProps.size == "Free Size" ? "active" : ""
+                } `}
+                onClick={() => allProps.setSize("Free Size")}
               >
-                <option value="g">Grams (g)</option>
-                <option value="kg">Kilograms (kg)</option>
-                <option value="lb">Pounds (lb)</option>
-              </select>
-            </div>
-
-            <div className="weight-range-slider">
-              <RangeSlider
-                min={allProps.weightBounds?.[0] || 0}
-                max={allProps.weightBounds?.[1] || 1000}
-                value={allProps.weight}
-                onInput={(value) => allProps.setWeight(value)}
-                className="weight-slider"
-              />
-                                        <div className="box-weight-product mt-3" style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                gap: '20px'
-              }}>
-                <div className="box-weight-item" style={{
-                  flex: '1',
-                  textAlign: 'center'
-                }}>
-                  <span className="title-weight" style={{
-                    fontSize: '14px',
-                    fontWeight: '500',
-                    color: '#666',
-                    marginBottom: '8px',
-                    display: 'block'
-                  }}>Min weight</span>
-                  <div
-                    className="weight-val"
-                    id="weight-min-value"
-                    data-unit={allProps.weightUnit}
-                    style={{
-                      fontSize: '16px',
-                      fontWeight: '600',
-                      color: '#333',
-                      textAlign: 'center',
-                      padding: '8px',
-                      backgroundColor: '#f8f9fa',
-                      borderRadius: '4px',
-                      border: '1px solid #dee2e6',
-                      minHeight: '40px',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center'
-                    }}
-                  >
-                    0 {allProps.weightUnit}
-                  </div>
-                </div>
-                <div className="box-weight-item" style={{
-                  flex: '1',
-                  textAlign: 'center'
-                }}>
-                  <span className="title-weight" style={{
-                    fontSize: '14px',
-                    fontWeight: '500',
-                    color: '#666',
-                    marginBottom: '8px',
-                    display: 'block'
-                  }}>Max weight</span>
-                  <div
-                    className="weight-val"
-                    id="weight-max-value"
-                    data-unit={allProps.weightUnit}
-                    style={{
-                      fontSize: '16px',
-                      fontWeight: '600',
-                      color: '#333',
-                      textAlign: 'center',
-                      padding: '8px',
-                      backgroundColor: '#f8f9fa',
-                      borderRadius: '4px',
-                      border: '1px solid #dee2e6',
-                      minHeight: '40px',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center'
-                    }}
-                  >
-                    {allProps.weight[1]} {allProps.weightUnit}
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="weight-range-info" style={{ 
-              marginTop: '8px',
-              fontSize: '12px',
-              color: '#888',
-              fontStyle: 'italic'
-            }}>
-              Available range: 0 - {allProps.weightBounds?.[1] || 1000} {allProps.weightUnit}
+                Free Size
+              </span>
             </div>
           </div>
           <div className="widget-facet facet-color">

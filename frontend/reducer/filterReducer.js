@@ -3,9 +3,7 @@ import { productMain } from "@/data/products";
 export const initialState = {
   price: [0, 100000], // Will be updated dynamically based on actual product prices
   priceBounds: [0, 100000], // The actual min/max prices from products
-  weight: [0, 1000], // Will be updated dynamically based on actual product weights
-  weightBounds: [0, 1000], // The actual min/max weights from products
-  weightUnit: 'g', // Default weight unit for filtering (grams)
+  size: "All",
   availability: "All",
   color: "All",
   activeFilterOnSale: false,
@@ -27,24 +25,12 @@ export function reducer(state, action) {
     case "SET_PRICE_BOUNDS":
       return { 
         ...state, 
-        priceBounds: [0, action.payload[1]], // Always set min to 0
-        // Also update the current price range to match the bounds initially
-        price: [0, action.payload[1]]
+        priceBounds: action.payload
+        // Removed the automatic price update to prevent infinite loop
       };
 
-    case "SET_WEIGHT":
-      return { ...state, weight: action.payload };
-    
-    case "SET_WEIGHT_BOUNDS":
-      return { 
-        ...state, 
-        weightBounds: [0, action.payload[1]], // Always set min to 0
-        // Also update the current weight range to match the bounds initially
-        weight: [0, action.payload[1]]
-      };
-
-    case "SET_WEIGHT_UNIT":
-      return { ...state, weightUnit: action.payload };
+    case "SET_SIZE":
+      return { ...state, size: action.payload };
 
     case "SET_COLOR":
       return { ...state, color: action.payload };
@@ -71,9 +57,8 @@ export function reducer(state, action) {
     case "CLEAR_FILTER":
       return {
         ...state,
-        price: state.priceBounds, // Reset to actual product price bounds
-        weight: state.weightBounds, // Reset to actual product weight bounds
-        weightUnit: 'g', // Reset to default weight unit (grams)
+        price: [...state.priceBounds], // Reset to actual product price bounds (create new array to avoid reference issues)
+        size: "All",
         availability: "All",
         color: "All",
         brands: [],

@@ -11936,35 +11936,36 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
   border: 1px solid #e9ecef;
 }
 
-/* Weight Filter Styles */
-.widget-facet.facet-weight .weight-range-slider {
+/* Weight filter styles */
+.widget-facet.facet-weight .weight-unit-selector {
   margin-bottom: 16px;
 }
 
-.widget-facet.facet-weight .weight-slider {
-  width: 100%;
-  margin-bottom: 12px;
-}
-
-.widget-facet.facet-weight .weight-range-values {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+.widget-facet.facet-weight .weight-unit-selector label {
+  display: block;
   margin-bottom: 8px;
-}
-
-.widget-facet.facet-weight .weight-min-value,
-.widget-facet.facet-weight .weight-max-value {
   font-size: 14px;
   font-weight: 500;
   color: var(--main);
-  padding: 4px 8px;
-  background-color: var(--surface);
-  border-radius: 4px;
-  border: 1px solid var(--line);
 }
 
-.widget-facet.facet-weight .weight-range-info {
+.widget-facet.facet-weight .weight-unit-selector select {
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 14px;
+  background-color: var(--white);
+  color: var(--main);
+  transition: border-color 0.3s ease;
+}
+
+.widget-facet.facet-weight .weight-unit-selector select:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.1);
+}
+
+.widget-facet.facet-weight .price-range-info {
   font-size: 12px;
   color: #666;
   text-align: center;
@@ -11974,6 +11975,8 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
   border-radius: 4px;
   border: 1px solid #e9ecef;
 }
+
+
 .widget-facet.facet-price .title-price {
   margin-bottom: 4px;
   display: block;
