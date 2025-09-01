@@ -121,7 +121,7 @@ app.use("/admin/api/country", countryRouter);
 // app.use("/admin/api/amenity", amenityRouter);
 app.use("/admin/api/category", categoryRouter);
 // app.use("/admin/api/propertytype", propertytypeRouter);
-app.use("/api/manufacturer", manufacturerRouter);
+app.use("/admin/api/manufacturer", manufacturerRouter);
 // app.use("/admin/api/agent", agentRouter);
 app.use("/admin/api/robot", robotRouter);
 // app.use("/admin/api/furnishingstatus", furnishingstatusRouter);
