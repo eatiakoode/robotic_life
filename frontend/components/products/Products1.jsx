@@ -5,18 +5,22 @@ import Sorting from "./Sorting";
 import Listview from "./Listview";
 import GridView from "./GridView";
 import { useEffect, useReducer, useState, useCallback } from "react";
+import { useSearchParams } from "next/navigation";
 import FilterModal from "./FilterModal";
 import { initialState, reducer } from "@/reducer/filterReducer";
 import { getAllProducts, getProductsByCategory } from "@/api/product";
 import { getFilteredProducts } from "@/api/filtering";
+import { getParentCategories } from "@/api/category";
 import FilterMeta from "./FilterMeta";
 
 export default function Products1({ parentClass = "flat-spacing" }) {
+  const searchParams = useSearchParams();
   const [activeLayout, setActiveLayout] = useState(1);
   const [state, dispatch] = useReducer(reducer, initialState);
   const [productMain, setProductMain] = useState([]);
   const [loading, setLoading] = useState(true);
   const [priceBoundsUpdate, setPriceBoundsUpdate] = useState(null);
+  const [urlCategoryLoaded, setUrlCategoryLoaded] = useState(false);
   const {
     price,
     priceBounds,
@@ -403,6 +407,29 @@ export default function Products1({ parentClass = "flat-spacing" }) {
       refreshPriceBounds(productMain);
     }
   }, [selectedParentCategory, productMain]);
+
+  // Handle URL parameters for category selection
+  useEffect(() => {
+    const categoryId = searchParams.get('category');
+    
+    if (categoryId && !urlCategoryLoaded) {
+      const loadCategoryFromUrl = async () => {
+        try {
+          const categories = await getParentCategories();
+          const category = categories.find(cat => cat._id === categoryId);
+          
+          if (category) {
+            dispatch({ type: "SET_PARENT_CATEGORY", payload: category });
+            setUrlCategoryLoaded(true);
+          }
+        } catch (error) {
+          console.error('Error loading category from URL:', error);
+        }
+      };
+      
+      loadCategoryFromUrl();
+    }
+  }, [searchParams, urlCategoryLoaded]);
 
   // Fetch products from backend on component mount
   useEffect(() => {

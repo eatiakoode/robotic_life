@@ -109,6 +109,7 @@ const EditList = () => {
   const [specifications, setSpecifications] = useState([]);
   const [metatitle, setMetatitle] = useState("");
   const [metadescription, setMetaDescription] = useState("");
+  const [status, setStatus] = useState(true); // true = Active, false = Inactive
 
   const [featuredimage, setFeaturedImage] = useState(null);
   const [existingFeaturedImage, setExistingFeaturedImage] = useState("");
@@ -250,6 +251,9 @@ const EditList = () => {
           setMetatitle(robotData.metatitle || "");
           setMetaDescription(robotData.metadescription || "");
           
+          // Status
+          setStatus(robotData.status !== undefined ? robotData.status : true);
+          
           // If category is selected, load subcategories
           if (robotData.category?._id || robotData.category) {
             const categoryId = robotData.category?._id || robotData.category;
@@ -352,14 +356,14 @@ const EditList = () => {
       .replace(/\s+/g, "-");
   };
 
-  // Auto-generate slug from title - Updated logic
+  // Auto-generate slug from title - Updated logic for both create and edit modes
   useEffect(() => {
-    if (!isEditMode && title) {
-      // Only auto-generate in create mode
+    if (title) {
+      // Always generate slug when title changes (both create and edit modes)
       const generatedSlug = generateSlug(title);
       setSlug(generatedSlug);
     }
-  }, [title, isEditMode]);
+  }, [title]);
 
   // --- Handlers ---
   const handleCountryChange = async (e) => {
@@ -489,10 +493,9 @@ const EditList = () => {
     e.preventDefault();
     const newErrors = {};
 
-    // Ensure slug is generated if empty
-    let finalSlug = slug?.trim();
-    if (!finalSlug && title?.trim()) {
-      finalSlug = generateSlug(title);
+    // Always generate slug from title to ensure consistency
+    let finalSlug = title?.trim() ? generateSlug(title) : "";
+    if (finalSlug !== slug) {
       setSlug(finalSlug);
     }
 
@@ -501,6 +504,7 @@ const EditList = () => {
       { key: "title", value: title, name: "Title" },
       { key: "slug", value: finalSlug, name: "Slug" },
       { key: "description", value: description, name: "Description" },
+      { key: "status", value: status, name: "Status" },
       { key: "price", value: price, name: "Total Price" },
       { key: "countryid", value: selectedCountry, name: "Country of Origin" },
       { key: "categoryid", value: selectedCategory, name: "Category" },
@@ -532,8 +536,26 @@ const EditList = () => {
 
     // Check for empty required fields
     requiredFields.forEach((field) => {
-      if (!field.value || (typeof field.value === "string" && !field.value.trim())) {
+      if (field.key === "status") {
+        // Status is a boolean, so only check if it's undefined/null
+        if (field.value === undefined || field.value === null) {
         newErrors[field.key] = `${field.name} is required`;
+        }
+      } else if (Array.isArray(field.value)) {
+        // For array fields, check if they have items
+        if (!field.value || field.value.length === 0) {
+          newErrors[field.key] = `${field.name} is required`;
+        }
+      } else if (typeof field.value === "string") {
+        // For string fields, check if they're empty after trimming
+        if (!field.value || !field.value.trim()) {
+          newErrors[field.key] = `${field.name} is required`;
+        }
+      } else {
+        // For other types (numbers, booleans), just check if they exist
+        if (field.value === undefined || field.value === null || field.value === "") {
+          newErrors[field.key] = `${field.name} is required`;
+        }
       }
     });
 
@@ -558,6 +580,7 @@ const EditList = () => {
       formData.append("title", title?.trim() || "");
       formData.append("slug", finalSlug || "");
       formData.append("description", description?.trim() || "");
+      formData.append("status", status ? "true" : "false");
       formData.append("totalPrice", price?.toString() || "");
       formData.append("countryOfOrigin", selectedCountry || "");
       formData.append("category", selectedCategory || "");
@@ -632,10 +655,13 @@ const EditList = () => {
       });
 
       // In edit mode, append existing images that should be kept
-      if (isEditMode) {
-        existingImages.forEach((img, index) => {
-          formData.append(`existingImages[${index}]`, img);
-        });
+      if (isEditMode && existingImages.length > 0) {
+        formData.append("existingImages", JSON.stringify(existingImages));
+      }
+      
+      // In edit mode, append existing featured image if no new one is selected
+      if (isEditMode && existingFeaturedImage && !featuredimage) {
+        formData.append("existingFeaturedImage", existingFeaturedImage);
       }
 
       // Debug: Log what's being sent
@@ -679,7 +705,7 @@ const EditList = () => {
         {/* Robot title start */}
         <div className="col-lg-6">
           <div className="my_profile_setting_input form-group">
-            <label htmlFor="roboTitle">Robot Title</label>
+            <label htmlFor="roboTitle">Robot Title *</label>
             <input
               type="text"
               className="form-control"
@@ -695,15 +721,18 @@ const EditList = () => {
         {/* Robot slug start */}
         <div className="col-lg-6">
           <div className="my_profile_setting_input form-group">
-            <label htmlFor="roboSlug">Robot Slug</label>
+            <label htmlFor="roboSlug">Robot Slug <span className="text-muted">(Auto-generated)</span></label>
             <input
               type="text"
               className="form-control"
               id="roboSlug"
               value={slug}
-              onChange={(e) => setSlug(e.target.value)}
+
               placeholder="Auto-generated slug"
+              disabled={true}
+              style={{ backgroundColor: '#f8f9fa', cursor: 'not-allowed' }}
             />
+            <small className="text-muted">Slug is automatically generated from the title</small>
             {error.slug && <span className="text-danger">{error.slug}</span>}
           </div>
         </div>
@@ -711,7 +740,7 @@ const EditList = () => {
         {/* Robot description start */}
         <div className="col-lg-12">
           <div className="my_profile_setting_textarea form-group">
-            <label htmlFor="roboDescription">Description</label>
+            <label htmlFor="roboDescription">Description *</label>
             <textarea
               id="roboDescription"
               className="form-control"
@@ -726,10 +755,27 @@ const EditList = () => {
           </div>
         </div>
 
+        {/* Robot status start */}
+        <div className="col-lg-6">
+          <div className="my_profile_setting_input form-group">
+            <label htmlFor="roboStatus">Status *</label>
+            <select
+              id="roboStatus"
+              className="form-select"
+              value={status}
+              onChange={(e) => setStatus(e.target.value === 'true')}
+            >
+              <option value={true}>Active</option>
+              <option value={false}>Inactive</option>
+            </select>
+            {error.status && <span className="text-danger">{error.status}</span>}
+          </div>
+        </div>
+
         {/* Robot category start */}
         <div className="col-lg-6 col-xl-6">
           <div className="my_profile_setting_input ui_kit_select_search form-group">
-            <label>Category</label>
+            <label>Category *</label>
             <select
               id="categorySelect"
               className="selectpicker form-select"
@@ -780,7 +826,7 @@ const EditList = () => {
         {/* Robot manufacturer start */}
         <div className="col-lg-6 col-xl-6">
           <div className="my_profile_setting_input ui_kit_select_search form-group">
-            <label>Manufacturer</label>
+            <label>Manufacturer *</label>
             <select
               id="manufacturerSelect"
               className="selectpicker form-select"
@@ -805,7 +851,7 @@ const EditList = () => {
         {/* Robot country start */}
         <div className="col-lg-6 col-xl-6">
           <div className="my_profile_setting_input ui_kit_select_search form-group">
-            <label htmlFor="countrySelect">Country of Origin</label>
+            <label htmlFor="countrySelect">Country of Origin *</label>
             <select
               id="countrySelect"
               className="selectpicker form-select"
@@ -830,7 +876,7 @@ const EditList = () => {
         {/* Robot launch year start */}
         <div className="col-lg-6">
           <div className="my_profile_setting_input form-group">
-            <label htmlFor="launchYear">Launch Year</label>
+            <label htmlFor="launchYear">Launch Year *</label>
             <select
               id="launchYear"
               className="form-control"
@@ -856,7 +902,7 @@ const EditList = () => {
         {/* Robot price start */}
         <div className="col-lg-6">
           <div className="my_profile_setting_input form-group">
-            <label htmlFor="roboPrice">Total Price</label>
+            <label htmlFor="roboPrice">Total Price *</label>
             <input
               type="text"
               className="form-control"
@@ -893,7 +939,7 @@ const EditList = () => {
             {/* Dimensions Start */}
             <div className="col-lg-12">
               <div className="my_profile_setting_input form-group">
-                <label htmlFor="dimensions">Dimensions</label>
+                <label htmlFor="dimensions">Dimensions *</label>
                 {/* Dimension row start */}
                 <div className="row">
                   {/* Length start */}
@@ -901,7 +947,7 @@ const EditList = () => {
                     <input
                       type="number"
                       className="form-control pe-5"
-                      placeholder="Enter Robot Length"
+                      placeholder="Enter Robot Length *"
                       value={length}
                       onChange={(e) => setLength(e.target.value)}
                     />
@@ -933,7 +979,7 @@ const EditList = () => {
                     <input
                       type="number"
                       className="form-control pe-5"
-                      placeholder="Enter Robot Width"
+                      placeholder="Enter Robot Width *"
                       value={width}
                       onChange={(e) => setWidth(e.target.value)}
                     />
@@ -965,7 +1011,7 @@ const EditList = () => {
                     <input
                       type="number"
                       className="form-control pe-5"
-                      placeholder="Enter Robot Height"
+                      placeholder="Enter Robot Height *"
                       value={height}
                       onChange={(e) => setHeight(e.target.value)}
                     />
@@ -997,12 +1043,12 @@ const EditList = () => {
                 <div className="row">
                   {/* Weight start */}
                   <div className="col-lg-6 mb-2">
-                    <label htmlFor="weight">Weight</label>
+                    <label htmlFor="weight">Weight *</label>
                     <div className="position-relative">
                       <input
                         type="number"
                         className="form-control pe-5"
-                        placeholder="Enter Robot Weight"
+                        placeholder="Enter Robot Weight *"
                         value={weight}
                         onChange={(e) => setWeight(e.target.value)}
                       />
@@ -1032,7 +1078,7 @@ const EditList = () => {
                   {/* Power Source start */}
                   <div className="col-lg-6 col-xl-6">
                     <div className="my_profile_setting_input ui_kit_select_search form-group">
-                      <label htmlFor="powerSelect">Power Source</label>
+            <label htmlFor="powerSelect">Power Source *</label>
                       <select
                         id="powerSelect"
                         className="selectpicker form-select"
@@ -1056,12 +1102,12 @@ const EditList = () => {
 
                   {/* Battery Capacity start */}
                   <div className="col-lg-6 mb-2">
-                    <label htmlFor="batteryCapacity">Battery Capacity</label>
+                    <label htmlFor="batteryCapacity">Battery Capacity *</label>
                     <div className="position-relative">
                       <input
                         type="number"
                         className="form-control pe-5"
-                        placeholder="Enter Battery Capacity"
+                        placeholder="Enter Battery Capacity *"
                         value={batteryCapacity}
                         onChange={(e) => setBatteryCapacity(e.target.value)}
                       />
@@ -1123,12 +1169,12 @@ const EditList = () => {
 
                   {/* Runtime start */}
                   <div className="col-lg-6 mb-2">
-                    <label htmlFor="runtime">Runtime</label>
+                    <label htmlFor="runtime">Runtime *</label>
                     <div className="position-relative">
                       <input
                         type="number"
                         className="form-control pe-5"
-                        placeholder="Enter Robot Runtime"
+                        placeholder="Enter Robot Runtime *"
                         value={runtime}
                         onChange={(e) => setRuntime(e.target.value)}
                       />
@@ -1191,12 +1237,12 @@ const EditList = () => {
 
                   {/* Speed start */}
                   <div className="col-lg-6 mb-2">
-                    <label htmlFor="speed">Speed</label>
+                    <label htmlFor="speed">Speed *</label>
                     <div className="position-relative">
                       <input
                         type="number"
                         className="form-control pe-5"
-                        placeholder="Enter Robot Speed"
+                        placeholder="Enter Robot Speed *"
                         value={speed}
                         onChange={(e) => setSpeed(e.target.value)}
                       />
@@ -1267,12 +1313,12 @@ const EditList = () => {
 
                   {/* Accuracy start */}
                   <div className="col-lg-6 mb-2">
-                    <label htmlFor="accuracy">Accuracy</label>
+                    <label htmlFor="accuracy">Accuracy *</label>
                     <div className="position-relative">
                       <input
                         type="number"
                         className="form-control pe-5"
-                        placeholder="Enter Robot Accuracy"
+                        placeholder="Enter Robot Accuracy *"
                         value={accuracy}
                         onChange={(e) => setAccuracy(e.target.value)}
                       />
@@ -1335,7 +1381,7 @@ const EditList = () => {
                   {/* Color start */}
                   <div className="col-lg-6 col-xl-6">
                     <div className="my_profile_setting_input ui_kit_select_search form-group">
-                      <label htmlFor="colorSelect">Color</label>
+            <label htmlFor="colorSelect">Color *</label>
                       <div className="position-relative">
                         <select
                           id="colorSelect"
@@ -1423,7 +1469,7 @@ const EditList = () => {
                   {/* Material Select start */}
                   <div className="col-lg-6 col-xl-6">
                     <div className="my_profile_setting_input ui_kit_select_search form-group">
-                      <label htmlFor="materialSelect">Material</label>
+                      <label htmlFor="materialSelect">Material *</label>
                       <div className="position-relative">
                         <select
                           id="materialSelect"
@@ -1520,7 +1566,7 @@ const EditList = () => {
               {/* Navigation Types start */}
               <div className="col-lg-6 col-xl-6">
                 <div className="my_profile_setting_input ui_kit_select_search form-group">
-                  <label htmlFor="navigationTypeSelect">Navigation Type</label>
+                  <label htmlFor="navigationTypeSelect">Navigation Type *</label>
                   <div className="position-relative">
                     <select
                       id="navigationTypeSelect"
@@ -1611,7 +1657,7 @@ const EditList = () => {
               {/* Sensors start */}
               <div className="col-lg-6 col-xl-6">
                 <div className="my_profile_setting_input ui_kit_select_search form-group">
-                  <label htmlFor="sensorSelect">Sensors</label>
+                  <label htmlFor="sensorSelect">Sensors *</label>
                   <div className="position-relative">
                     <select
                       id="sensorSelect"
@@ -1702,7 +1748,7 @@ const EditList = () => {
               {/* AI Software Features start */}
               <div className="col-lg-6 col-xl-6">
                 <div className="my_profile_setting_input ui_kit_select_search form-group">
-                  <label htmlFor="aiSoftwareSelect">AI Software Features</label>
+                  <label htmlFor="aiSoftwareSelect">AI Software Features *</label>
                   <div className="position-relative">
                     <select
                       id="aiSoftwareSelect"
@@ -1793,7 +1839,7 @@ const EditList = () => {
               {/* Primary Function start */}
               <div className="col-lg-6 col-xl-6">
                 <div className="my_profile_setting_input ui_kit_select_search form-group">
-                  <label htmlFor="primaryFunctionSelect">Primary Function</label>
+            <label htmlFor="primaryFunctionSelect">Primary Function *</label>
                   <select
                     id="primaryFunctionSelect"
                     className="selectpicker form-select"
@@ -1818,7 +1864,7 @@ const EditList = () => {
               {/* Operating Environment start */}
               <div className="col-lg-6 col-xl-6">
                 <div className="my_profile_setting_input ui_kit_select_search form-group">
-                  <label htmlFor="operatingEnvironmentSelect">Operating Environment</label>
+            <label htmlFor="operatingEnvironmentSelect">Operating Environment *</label>
                   <select
                     id="operatingEnvironmentSelect"
                     className="selectpicker form-select"
@@ -1843,7 +1889,7 @@ const EditList = () => {
               {/* Autonomy Level start */}
               <div className="col-lg-6 col-xl-6">
                 <div className="my_profile_setting_input ui_kit_select_search form-group">
-                  <label htmlFor="autonomyLevelSelect">Autonomy Level</label>
+            <label htmlFor="autonomyLevelSelect">Autonomy Level *</label>
                   <select
                     id="autonomyLevelSelect"
                     className="selectpicker form-select"
@@ -1868,7 +1914,7 @@ const EditList = () => {
               {/* Terrain Capability start */}
               <div className="col-lg-6 col-xl-6">
                 <div className="my_profile_setting_input ui_kit_select_search form-group">
-                  <label htmlFor="terrainCapabilitySelect">Terrain Capability</label>
+                  <label htmlFor="terrainCapabilitySelect">Terrain Capability *</label>
                   <div className="position-relative">
                     <select
                       id="terrainCapabilitySelect"
@@ -1959,7 +2005,7 @@ const EditList = () => {
               {/* Communication Method start */}
               <div className="col-lg-6 col-xl-6">
                 <div className="my_profile_setting_input ui_kit_select_search form-group">
-                  <label htmlFor="communicationMethodSelect">Communication Method</label>
+                  <label htmlFor="communicationMethodSelect">Communication Method *</label>
                   <div className="position-relative">
                     <select
                       id="communicationMethodSelect"
@@ -2050,7 +2096,7 @@ const EditList = () => {
               {/* Payload Type start */}
               <div className="col-lg-6 col-xl-6">
                 <div className="my_profile_setting_input ui_kit_select_search form-group">
-                  <label htmlFor="payloadTypeSelect">Payload Type</label>
+                  <label htmlFor="payloadTypeSelect">Payload Type *</label>
                   <div className="position-relative">
                     <select
                       id="payloadTypeSelect"
@@ -2144,7 +2190,7 @@ const EditList = () => {
         {/* Video embed code start */}
         <div className="col-lg-12">
           <div className="my_profile_setting_input form-group">
-            <label htmlFor="videoEmbedCode">Video Embed Code</label>
+            <label htmlFor="videoEmbedCode">Video Embed Code *</label>
             <textarea
               id="videoEmbedCode"
               className="form-control"

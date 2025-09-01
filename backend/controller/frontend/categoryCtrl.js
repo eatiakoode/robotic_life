@@ -15,10 +15,35 @@ const getCategory = asyncHandler(async (req, res) => {
 });
 const getallCategory = asyncHandler(async (req, res) => {
   try {
-    const getallCategory = await Category.find({"status":true}).lean();
-    res.json(getallCategory);
+    const { parent } = req.query;
+    
+    let filter = { "status": true };
+    
+    // If parent parameter is provided, filter by parent
+    if (parent) {
+      if (parent === 'null' || parent === '') {
+        // Get parent categories (no parent)
+        filter.parent = null;
+      } else {
+        // Get subcategories for specific parent
+        filter.parent = parent;
+      }
+    }
+    
+    console.log('🔍 Backend category filter:', filter);
+    const getallCategory = await Category.find(filter).lean();
+    console.log('📋 Backend found categories:', getallCategory.length, 'categories');
+    
+    res.json({
+      success: true,
+      data: getallCategory
+    });
   } catch (error) {
-    throw new Error(error);
+    console.error('❌ Backend category error:', error);
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
   }
 });
 module.exports = {

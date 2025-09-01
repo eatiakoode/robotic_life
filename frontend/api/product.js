@@ -117,6 +117,150 @@ export const getAllProducts = async () => {
   return [];
 };
 
+// Search products by query
+export const searchProducts = async (query, filters = {}) => {
+  if (!query || query.trim().length === 0) {
+    return [];
+  }
+
+  const urlsToTry = [BACKEND_API_URL, ...FALLBACK_URLS];
+  
+  for (const baseUrl of urlsToTry) {
+    try {
+      // Build query parameters
+      const params = new URLSearchParams({ 
+        q: query.trim(),
+        limit: filters.limit || 20,
+        page: filters.page || 1
+      });
+      
+      // Add additional filters if provided
+      if (filters.category) {
+        params.append('category', filters.category);
+      }
+      
+      if (filters.colors && filters.colors.length > 0) {
+        params.append('colors', filters.colors.join(','));
+      }
+      
+      if (filters.manufacturers && filters.manufacturers.length > 0) {
+        params.append('manufacturers', filters.manufacturers.join(','));
+      }
+      
+      if (filters.minPrice !== undefined) {
+        params.append('minPrice', filters.minPrice);
+      }
+      
+      if (filters.maxPrice !== undefined) {
+        params.append('maxPrice', filters.maxPrice);
+      }
+      
+      const apiUrl = `${baseUrl}/frontend/api/robot/search?${params.toString()}`;
+      
+      // Add timeout to prevent hanging requests
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
+      
+      const response = await fetch(apiUrl, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        signal: controller.signal
+      });
+
+      clearTimeout(timeoutId);
+
+      if (response.ok) {
+        const data = await response.json();
+        
+        if (data.success && data.data) {
+          // Transform backend data to match frontend structure
+          const transformedProducts = data.data.map((product, index) => {
+            // Safe price conversion
+            const originalPrice = product.totalPrice;
+            const convertedPrice = (() => {
+              if (originalPrice === undefined || originalPrice === null || originalPrice === '') return 0;
+              const numPrice = Number(originalPrice);
+              return isNaN(numPrice) ? 0 : numPrice;
+            })();
+            
+            return {
+              id: product._id || index + 1,
+              title: product.title || 'Untitled Product',
+              price: convertedPrice,
+              imgSrc: product.images && product.images[0] ? 
+                (product.images[0].startsWith('public/') ? 
+                  `${baseUrl}/${product.images[0].replace('public/', '')}` : 
+                  `${baseUrl}/${product.images[0]}`
+                ) : 
+                `${baseUrl}/images/products/default.jpg`,
+              imgHover: product.images && product.images[1] ? 
+                (product.images[1].startsWith('public/') ? 
+                  `${baseUrl}/${product.images[1].replace('public/', '')}` : 
+                  `${baseUrl}/${product.images[1]}`
+                ) : 
+                (product.images && product.images[0] ? 
+                  (product.images[0].startsWith('public/') ? 
+                    `${baseUrl}/${product.images[0].replace('public/', '')}` : 
+                    `${baseUrl}/${product.images[0]}`
+                  ) : 
+                  `${baseUrl}/images/products/default.jpg`
+                ),
+              description: product.description || '',
+              inStock: true,
+              
+              // Dynamic fields from backend
+              filterBrands: product.manufacturer ? [product.manufacturer.name] : ['Default Brand'],
+              filterColor: product.color && product.color.length > 0 ? 
+                product.color.map(c => c.name) : ['Default Color'],
+              filterSizes: ['Default Size'],
+              
+              // Additional robot-specific fields
+              oldPrice: null,
+              category: product.category,
+              categoryId: product.category?._id || product.category,
+              
+              // Robot specifications
+              slug: product.slug || '',
+              launchYear: product.launchYear || null,
+              version: product.version || '',
+              videoEmbedCode: product.videoEmbedCode || '',
+              
+              // Dimensions and specifications
+              dimensions: product.dimensions || {},
+              weight: product.weight || {},
+              batteryCapacity: product.batteryCapacity || {},
+              batteryChargeTime: product.batteryChargeTime || {},
+              loadCapacity: product.loadCapacity || {},
+              operatingTemperature: product.operatingTemperature || {},
+              range: product.range || {},
+              powerSource: product.powerSource || {},
+              runtime: product.runtime || {},
+              speed: product.speed || {},
+              accuracy: product.accuracy || {},
+              material: product.material || []
+            };
+          });
+          
+          return {
+            products: transformedProducts,
+            totalCount: data.totalCount || transformedProducts.length,
+            currentPage: data.currentPage || 1,
+            totalPages: data.totalPages || 1
+          };
+        } else {
+          return { products: [], totalCount: 0, currentPage: 1, totalPages: 1 };
+        }
+      }
+    } catch (error) {
+      continue;
+    }
+  }
+  
+  return { products: [], totalCount: 0, currentPage: 1, totalPages: 1 };
+};
+
 // Get filtered products by category and additional filters
 export const getProductsByCategory = async (category, additionalFilters = {}) => {
   // Validate category

@@ -17,7 +17,7 @@ export const metadata = {
 export default function AboutUsPage() {
   return (
     <>
-      <Topbar6 bgColor="bg-main" />
+      {/* <Topbar6 bgColor="bg-main" /> */}
       <Header1 />
       <div
         className="page-title"

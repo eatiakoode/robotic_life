@@ -17,7 +17,8 @@ export const getParentCategories = async () => {
   
   for (const baseUrl of urlsToTry) {
     try {
-      const apiUrl = `${baseUrl}/frontend/api/category`;
+      const apiUrl = `${baseUrl}/frontend/api/category?parent=null`;
+      console.log('🔍 Fetching parent categories from:', apiUrl);
       
       // Add timeout to prevent hanging requests
       const controller = new AbortController();
@@ -35,6 +36,7 @@ export const getParentCategories = async () => {
 
       if (response.ok) {
         const data = await response.json();
+        console.log('📥 Parent categories response:', data);
         
         // Handle different response formats
         let categories = [];
@@ -48,12 +50,13 @@ export const getParentCategories = async () => {
           continue; // Try next URL
         }
         
-        // Filter to only parent categories (no parent field or parent is null)
-        const parentCategories = categories.filter(category => !category.parent);
-        
-        return parentCategories;
+        console.log('✅ Parent categories found:', categories.length);
+        return categories;
+      } else {
+        console.log('❌ Failed to fetch parent categories, status:', response.status);
       }
     } catch (error) {
+      console.log('❌ Error fetching parent categories:', error);
       continue; // Try next URL
     }
   }
@@ -74,8 +77,8 @@ export const getSubCategories = async (parentId) => {
   
   for (const baseUrl of urlsToTry) {
     try {
-      const apiUrl = `${baseUrl}/frontend/api/category`;
-      console.log('🔍 Trying to fetch sub-categories from:', apiUrl);
+      const apiUrl = `${baseUrl}/frontend/api/category?parent=${parentId}`;
+      console.log('🔍 Trying to fetch sub-categories from:', apiUrl, 'for parent:', parentId);
       
       // Add timeout to prevent hanging requests
       const controller = new AbortController();
@@ -93,6 +96,7 @@ export const getSubCategories = async (parentId) => {
 
       if (response.ok) {
         const data = await response.json();
+        console.log('📥 Raw response from backend:', data);
         
         // Handle different response formats
         let categories = [];
@@ -103,12 +107,19 @@ export const getSubCategories = async (parentId) => {
           // Backend returns array directly
           categories = data;
         } else {
+          console.log('⚠️ Unexpected response format:', data);
           continue; // Try next URL
         }
         
-        // Filter to only sub-categories (parent field matches the given parentId)
-        const subCategories = categories.filter(category => category.parent === parentId);
+        console.log('📋 All categories from backend:', categories);
         
+        // Filter to only sub-categories (parent field matches the given parentId)
+        const subCategories = categories.filter(category => {
+          console.log(`🔍 Checking category: ${category.name}, parent: ${category.parent}, looking for: ${parentId}`);
+          return category.parent === parentId;
+        });
+        
+        console.log(`✅ Filtered subcategories for parent ${parentId}:`, subCategories);
         return subCategories;
       } else {
         console.log('❌ Failed to fetch sub-categories from:', baseUrl, 'Status:', response.status);
