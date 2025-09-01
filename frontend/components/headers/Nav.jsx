@@ -170,8 +170,8 @@ export default function Nav() {
               ) : (
                 <>
                   {/* Column 1 - First quarter of categories */}
-                  <div className="col-lg-2">
-                    <div className="mega-menu-item">
+              <div className="col-lg-2">
+                <div className="mega-menu-item">
                       {getCategoriesForColumn(0, Math.ceil(categories.length / 4)).map((category, index) => (
                         <div key={category._id} className="category-group">
                           <div 
@@ -196,8 +196,8 @@ export default function Nav() {
                                     style={{ paddingLeft: '15px', fontSize: '0.9em' }}
                                   >
                                     {subcategory.name}
-                                  </Link>
-                                </li>
+                        </Link>
+                      </li>
                               ))
                             ) : (
                               <li className="menu-item-li subcategory-item">
@@ -206,15 +206,15 @@ export default function Nav() {
                                 </span>
                               </li>
                             )}
-                          </ul>
+                  </ul>
                         </div>
                       ))}
-                    </div>
-                  </div>
+                </div>
+              </div>
                   
                   {/* Column 2 - Second quarter of categories */}
-                  <div className="col-lg-2">
-                    <div className="mega-menu-item">
+              <div className="col-lg-2">
+                <div className="mega-menu-item">
                       {getCategoriesForColumn(Math.ceil(categories.length / 4), Math.ceil(categories.length / 2)).map((category, index) => (
                         <div key={category._id} className="category-group">
                           <div 
@@ -239,8 +239,8 @@ export default function Nav() {
                                     style={{ paddingLeft: '15px', fontSize: '0.9em' }}
                                   >
                                     {subcategory.name}
-                                  </Link>
-                                </li>
+                        </Link>
+                      </li>
                               ))
                             ) : (
                               <li className="menu-item-li subcategory-item">
@@ -249,15 +249,15 @@ export default function Nav() {
                                 </span>
                               </li>
                             )}
-                          </ul>
+                  </ul>
                         </div>
                       ))}
-                    </div>
-                  </div>
+                </div>
+              </div>
                   
                   {/* Column 3 - Third quarter of categories */}
-                  <div className="col-lg-2">
-                    <div className="mega-menu-item">
+              <div className="col-lg-2">
+                <div className="mega-menu-item">
                       {getCategoriesForColumn(Math.ceil(categories.length / 2), Math.ceil(3 * categories.length / 4)).map((category, index) => (
                         <div key={category._id} className="category-group">
                           <div 
@@ -282,8 +282,8 @@ export default function Nav() {
                                     style={{ paddingLeft: '15px', fontSize: '0.9em' }}
                                   >
                                     {subcategory.name}
-                                  </Link>
-                                </li>
+                        </Link>
+                      </li>
                               ))
                             ) : (
                               <li className="menu-item-li subcategory-item">
@@ -292,15 +292,15 @@ export default function Nav() {
                                 </span>
                               </li>
                             )}
-                          </ul>
+                  </ul>
                         </div>
                       ))}
-                    </div>
-                  </div>
+                </div>
+              </div>
                   
                   {/* Column 4 - Fourth quarter of categories */}
-                  <div className="col-lg-2">
-                    <div className="mega-menu-item">
+              <div className="col-lg-2">
+                <div className="mega-menu-item">
                       {getCategoriesForColumn(Math.ceil(3 * categories.length / 4), categories.length).map((category, index) => (
                         <div key={category._id} className="category-group">
                           <div 
@@ -347,7 +347,7 @@ export default function Nav() {
                   {hoveredCategory && subcategories[hoveredCategory._id] && subcategories[hoveredCategory._id].length > 0 ? (
                     <>
                       <div className="menu-heading">Subcategories - {hoveredCategory.name}</div>
-                      <ul className="menu-list">
+                  <ul className="menu-list">
                         {subcategories[hoveredCategory._id].map((subcategory, index) => (
                           <li key={subcategory._id} className="menu-item-li">
                             <Link 
@@ -355,32 +355,32 @@ export default function Nav() {
                               className="menu-link-text"
                             >
                               {subcategory.name}
-                            </Link>
-                          </li>
-                        ))}
-                      </ul>
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
                     </>
                   ) : (
                     <>
-                      <div className="menu-heading">Recent Products</div>
-                      <Swiper
-                        dir="ltr"
-                        className="swiper tf-product-header"
-                        slidesPerView={2}
-                        spaceBetween={20}
-                      >
-                        {products
-                          .slice(0, 4)
-                          .map((elm) => ({
-                            ...elm,
-                            colors: null,
-                          }))
-                          .map((elm, i) => (
-                            <SwiperSlide key={i} className="swiper-slide">
-                              <ProductCard1 product={elm} />
-                            </SwiperSlide>
-                          ))}
-                      </Swiper>
+                  <div className="menu-heading">Recent Products</div>
+                  <Swiper
+                    dir="ltr"
+                    className="swiper tf-product-header"
+                    slidesPerView={2}
+                    spaceBetween={20}
+                  >
+                    {products
+                      .slice(0, 4)
+                      .map((elm) => ({
+                        ...elm,
+                        colors: null,
+                      }))
+                      .map((elm, i) => (
+                        <SwiperSlide key={i} className="swiper-slide">
+                          <ProductCard1 product={elm} />
+                        </SwiperSlide>
+                      ))}
+                  </Swiper>
                     </>
                   )}
                 </div>
