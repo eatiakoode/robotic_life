@@ -2,15 +2,35 @@ const asyncHandler = require("express-async-handler");
 const Category = require("../../models/categoryModel");
 const Robot = require("../../models/robotModel");
 
-// Get all active categories
+// Get all active categories (with parent parameter support)
 const getActiveParentCategories = asyncHandler(async (req, res) => {
     try {
-        const categories = await Category.find({
-            parent: null,
-            status: true
-        })
-            .select("name slug description logoimage")
+        const { parent } = req.query;
+        
+        let filter = { status: true };
+        
+        // If parent parameter is provided, filter by parent
+        if (parent) {
+            if (parent === 'null' || parent === '') {
+                // Get parent categories (no parent)
+                filter.parent = null;
+            } else {
+                // Get subcategories for specific parent
+                filter.parent = parent;
+            }
+        } else {
+            // Default: get parent categories
+            filter.parent = null;
+        }
+        
+        console.log('🔍 Backend category filter:', filter);
+        
+        const categories = await Category.find(filter)
+            .select("name slug description logoimage parent")
             .sort({ createdAt: -1 });
+
+        console.log('📋 Backend found categories:', categories.length, 'categories');
+        console.log('📋 Categories data:', categories);
 
         res.status(200).json({
             success: true,
@@ -18,6 +38,7 @@ const getActiveParentCategories = asyncHandler(async (req, res) => {
             data: categories,
         });
     } catch (err) {
+        console.error('❌ Backend category error:', err);
         res.status(500).json({ success: false, error: err.message });
     }
 });

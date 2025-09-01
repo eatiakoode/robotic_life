@@ -2,10 +2,11 @@
 import Link from "next/link";
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
-import { products } from "@/data/products";
+
 import { Swiper, SwiperSlide } from "swiper/react";
 import ProductCard1 from "../productCards/ProductCard1";
 import { getParentCategories, getSubCategories } from "@/api/category";
+import { getAllProducts } from "@/api/product";
 import { usePathname } from "next/navigation";
 export default function Nav() {
   const pathname = usePathname();
@@ -13,14 +14,26 @@ export default function Nav() {
   const [subcategories, setSubcategories] = useState({});
   const [loading, setLoading] = useState(false);
   const [hoveredCategory, setHoveredCategory] = useState(null);
+  const [robots, setRobots] = useState([]);
+  const [robotsLoading, setRobotsLoading] = useState(false);
 
-  // Fetch parent categories and their subcategories on component mount
+  // Fetch parent categories, their subcategories, and recent robots on component mount
   useEffect(() => {
-    const fetchCategories = async () => {
+    const fetchData = async () => {
       try {
         setLoading(true);
-        const parentCategories = await getParentCategories();
+        setRobotsLoading(true);
+        
+        // Fetch parent categories and robots in parallel
+        const [parentCategories, robotsData] = await Promise.all([
+          getParentCategories(),
+          getAllProducts()
+        ]);
+        
+        console.log('📋 Parent categories fetched:', parentCategories.length);
+        console.log('🤖 Robots data fetched:', robotsData.length, 'robots');
         setCategories(parentCategories);
+        setRobots(robotsData.slice(0, 4)); // Take only first 4 robots for recent section
         
         // Fetch subcategories for all parent categories
         console.log('🔍 Fetching subcategories for', parentCategories.length, 'parent categories');
@@ -45,13 +58,14 @@ export default function Nav() {
         console.log('📊 Final subcategory map:', subcategoryMap);
         setSubcategories(subcategoryMap);
       } catch (error) {
-        console.error('Error fetching categories:', error);
+        console.error('Error fetching data:', error);
       } finally {
         setLoading(false);
+        setRobotsLoading(false);
       }
     };
 
-    fetchCategories();
+    fetchData();
   }, []);
 
   // Fetch subcategories when hovering over a parent category
@@ -173,11 +187,19 @@ export default function Nav() {
               <div className="col-lg-2">
                 <div className="mega-menu-item">
                       {getCategoriesForColumn(0, Math.ceil(categories.length / 4)).map((category, index) => (
-                        <div key={category._id} className="category-group">
+                        <div key={category._id} className="category-group" style={{ marginBottom: '20px' }}>
                           <div 
                             className="menu-heading parent-category"
                             onMouseEnter={() => handleCategoryHover(category)}
-                            style={{ cursor: 'pointer', fontWeight: 'bold', color: '#333' }}
+                            style={{ 
+                              cursor: 'pointer', 
+                              fontWeight: 'bold', 
+                              color: '#333',
+                              fontSize: '16px',
+                              marginBottom: '8px',
+                              padding: '8px 0',
+                              borderBottom: '1px solid #eee'
+                            }}
                           >
                             <Link 
                               href={`/shop-default-grid?category=${category._id}&categoryName=${encodeURIComponent(category.name)}`}
@@ -186,27 +208,47 @@ export default function Nav() {
                               {category.name}
                             </Link>
                           </div>
-                          <ul className="menu-list subcategory-list">
+                          <ul className="menu-list subcategory-list" style={{ listStyle: 'none', padding: 0, margin: 0 }}>
                             {getSubcategoriesForParent(category._id).length > 0 ? (
                               getSubcategoriesForParent(category._id).map((subcategory, subIndex) => (
-                                <li key={subcategory._id} className="menu-item-li subcategory-item">
+                                <li key={subcategory._id} className="menu-item-li subcategory-item" style={{ marginBottom: '4px' }}>
                                   <Link 
                                     href={`/shop-default-grid?category=${subcategory._id}&categoryName=${encodeURIComponent(subcategory.name)}`} 
                                     className="menu-link-text"
-                                    style={{ paddingLeft: '15px', fontSize: '0.9em' }}
+                                    style={{ 
+                                      paddingLeft: '0px', 
+                                      fontSize: '14px',
+                                      color: '#666',
+                                      textDecoration: 'none',
+                                      display: 'block',
+                                      padding: '4px 0',
+                                      transition: 'color 0.2s ease'
+                                    }}
+                                    onMouseEnter={(e) => e.target.style.color = '#333'}
+                                    onMouseLeave={(e) => e.target.style.color = '#666'}
                                   >
                                     {subcategory.name}
-                        </Link>
-                      </li>
+                                  </Link>
+                                </li>
                               ))
                             ) : (
-                              <li className="menu-item-li subcategory-item">
-                                <span className="menu-link-text" style={{ paddingLeft: '15px', fontSize: '0.9em', color: '#999' }}>
+                              <li className="menu-item-li subcategory-item" style={{ marginBottom: '4px' }}>
+                                <span 
+                                  className="menu-link-text" 
+                                  style={{ 
+                                    paddingLeft: '0px', 
+                                    fontSize: '14px', 
+                                    color: '#999',
+                                    display: 'block',
+                                    padding: '4px 0',
+                                    fontStyle: 'italic'
+                                  }}
+                                >
                                   No subcategories found
                                 </span>
                               </li>
                             )}
-                  </ul>
+                          </ul>
                         </div>
                       ))}
                 </div>
@@ -216,11 +258,19 @@ export default function Nav() {
               <div className="col-lg-2">
                 <div className="mega-menu-item">
                       {getCategoriesForColumn(Math.ceil(categories.length / 4), Math.ceil(categories.length / 2)).map((category, index) => (
-                        <div key={category._id} className="category-group">
+                        <div key={category._id} className="category-group" style={{ marginBottom: '20px' }}>
                           <div 
                             className="menu-heading parent-category"
                             onMouseEnter={() => handleCategoryHover(category)}
-                            style={{ cursor: 'pointer', fontWeight: 'bold', color: '#333' }}
+                            style={{ 
+                              cursor: 'pointer', 
+                              fontWeight: 'bold', 
+                              color: '#333',
+                              fontSize: '16px',
+                              marginBottom: '8px',
+                              padding: '8px 0',
+                              borderBottom: '1px solid #eee'
+                            }}
                           >
                             <Link 
                               href={`/shop-default-grid?category=${category._id}&categoryName=${encodeURIComponent(category.name)}`}
@@ -229,27 +279,47 @@ export default function Nav() {
                               {category.name}
                             </Link>
                           </div>
-                          <ul className="menu-list subcategory-list">
+                          <ul className="menu-list subcategory-list" style={{ listStyle: 'none', padding: 0, margin: 0 }}>
                             {getSubcategoriesForParent(category._id).length > 0 ? (
                               getSubcategoriesForParent(category._id).map((subcategory, subIndex) => (
-                                <li key={subcategory._id} className="menu-item-li subcategory-item">
+                                <li key={subcategory._id} className="menu-item-li subcategory-item" style={{ marginBottom: '4px' }}>
                                   <Link 
                                     href={`/shop-default-grid?category=${subcategory._id}&categoryName=${encodeURIComponent(subcategory.name)}`} 
                                     className="menu-link-text"
-                                    style={{ paddingLeft: '15px', fontSize: '0.9em' }}
+                                    style={{ 
+                                      paddingLeft: '0px', 
+                                      fontSize: '14px',
+                                      color: '#666',
+                                      textDecoration: 'none',
+                                      display: 'block',
+                                      padding: '4px 0',
+                                      transition: 'color 0.2s ease'
+                                    }}
+                                    onMouseEnter={(e) => e.target.style.color = '#333'}
+                                    onMouseLeave={(e) => e.target.style.color = '#666'}
                                   >
                                     {subcategory.name}
-                        </Link>
-                      </li>
+                                  </Link>
+                                </li>
                               ))
                             ) : (
-                              <li className="menu-item-li subcategory-item">
-                                <span className="menu-link-text" style={{ paddingLeft: '15px', fontSize: '0.9em', color: '#999' }}>
+                              <li className="menu-item-li subcategory-item" style={{ marginBottom: '4px' }}>
+                                <span 
+                                  className="menu-link-text" 
+                                  style={{ 
+                                    paddingLeft: '0px', 
+                                    fontSize: '14px', 
+                                    color: '#999',
+                                    display: 'block',
+                                    padding: '4px 0',
+                                    fontStyle: 'italic'
+                                  }}
+                                >
                                   No subcategories found
                                 </span>
                               </li>
                             )}
-                  </ul>
+                          </ul>
                         </div>
                       ))}
                 </div>
@@ -259,11 +329,19 @@ export default function Nav() {
               <div className="col-lg-2">
                 <div className="mega-menu-item">
                       {getCategoriesForColumn(Math.ceil(categories.length / 2), Math.ceil(3 * categories.length / 4)).map((category, index) => (
-                        <div key={category._id} className="category-group">
+                        <div key={category._id} className="category-group" style={{ marginBottom: '20px' }}>
                           <div 
                             className="menu-heading parent-category"
                             onMouseEnter={() => handleCategoryHover(category)}
-                            style={{ cursor: 'pointer', fontWeight: 'bold', color: '#333' }}
+                            style={{ 
+                              cursor: 'pointer', 
+                              fontWeight: 'bold', 
+                              color: '#333',
+                              fontSize: '16px',
+                              marginBottom: '8px',
+                              padding: '8px 0',
+                              borderBottom: '1px solid #eee'
+                            }}
                           >
                             <Link 
                               href={`/shop-default-grid?category=${category._id}&categoryName=${encodeURIComponent(category.name)}`}
@@ -272,27 +350,47 @@ export default function Nav() {
                               {category.name}
                             </Link>
                           </div>
-                          <ul className="menu-list subcategory-list">
+                          <ul className="menu-list subcategory-list" style={{ listStyle: 'none', padding: 0, margin: 0 }}>
                             {getSubcategoriesForParent(category._id).length > 0 ? (
                               getSubcategoriesForParent(category._id).map((subcategory, subIndex) => (
-                                <li key={subcategory._id} className="menu-item-li subcategory-item">
+                                <li key={subcategory._id} className="menu-item-li subcategory-item" style={{ marginBottom: '4px' }}>
                                   <Link 
                                     href={`/shop-default-grid?category=${subcategory._id}&categoryName=${encodeURIComponent(subcategory.name)}`} 
                                     className="menu-link-text"
-                                    style={{ paddingLeft: '15px', fontSize: '0.9em' }}
+                                    style={{ 
+                                      paddingLeft: '0px', 
+                                      fontSize: '14px',
+                                      color: '#666',
+                                      textDecoration: 'none',
+                                      display: 'block',
+                                      padding: '4px 0',
+                                      transition: 'color 0.2s ease'
+                                    }}
+                                    onMouseEnter={(e) => e.target.style.color = '#333'}
+                                    onMouseLeave={(e) => e.target.style.color = '#666'}
                                   >
                                     {subcategory.name}
-                        </Link>
-                      </li>
+                                  </Link>
+                                </li>
                               ))
                             ) : (
-                              <li className="menu-item-li subcategory-item">
-                                <span className="menu-link-text" style={{ paddingLeft: '15px', fontSize: '0.9em', color: '#999' }}>
+                              <li className="menu-item-li subcategory-item" style={{ marginBottom: '4px' }}>
+                                <span 
+                                  className="menu-link-text" 
+                                  style={{ 
+                                    paddingLeft: '0px', 
+                                    fontSize: '14px', 
+                                    color: '#999',
+                                    display: 'block',
+                                    padding: '4px 0',
+                                    fontStyle: 'italic'
+                                  }}
+                                >
                                   No subcategories found
                                 </span>
                               </li>
                             )}
-                  </ul>
+                          </ul>
                         </div>
                       ))}
                 </div>
@@ -302,11 +400,19 @@ export default function Nav() {
               <div className="col-lg-2">
                 <div className="mega-menu-item">
                       {getCategoriesForColumn(Math.ceil(3 * categories.length / 4), categories.length).map((category, index) => (
-                        <div key={category._id} className="category-group">
+                        <div key={category._id} className="category-group" style={{ marginBottom: '20px' }}>
                           <div 
                             className="menu-heading parent-category"
                             onMouseEnter={() => handleCategoryHover(category)}
-                            style={{ cursor: 'pointer', fontWeight: 'bold', color: '#333' }}
+                            style={{ 
+                              cursor: 'pointer', 
+                              fontWeight: 'bold', 
+                              color: '#333',
+                              fontSize: '16px',
+                              marginBottom: '8px',
+                              padding: '8px 0',
+                              borderBottom: '1px solid #eee'
+                            }}
                           >
                             <Link 
                               href={`/shop-default-grid?category=${category._id}&categoryName=${encodeURIComponent(category.name)}`}
@@ -315,22 +421,42 @@ export default function Nav() {
                               {category.name}
                             </Link>
                           </div>
-                          <ul className="menu-list subcategory-list">
+                          <ul className="menu-list subcategory-list" style={{ listStyle: 'none', padding: 0, margin: 0 }}>
                             {getSubcategoriesForParent(category._id).length > 0 ? (
                               getSubcategoriesForParent(category._id).map((subcategory, subIndex) => (
-                                <li key={subcategory._id} className="menu-item-li subcategory-item">
+                                <li key={subcategory._id} className="menu-item-li subcategory-item" style={{ marginBottom: '4px' }}>
                                   <Link 
                                     href={`/shop-default-grid?category=${subcategory._id}&categoryName=${encodeURIComponent(subcategory.name)}`} 
                                     className="menu-link-text"
-                                    style={{ paddingLeft: '15px', fontSize: '0.9em' }}
+                                    style={{ 
+                                      paddingLeft: '0px', 
+                                      fontSize: '14px',
+                                      color: '#666',
+                                      textDecoration: 'none',
+                                      display: 'block',
+                                      padding: '4px 0',
+                                      transition: 'color 0.2s ease'
+                                    }}
+                                    onMouseEnter={(e) => e.target.style.color = '#333'}
+                                    onMouseLeave={(e) => e.target.style.color = '#666'}
                                   >
                                     {subcategory.name}
                                   </Link>
                                 </li>
                               ))
                             ) : (
-                              <li className="menu-item-li subcategory-item">
-                                <span className="menu-link-text" style={{ paddingLeft: '15px', fontSize: '0.9em', color: '#999' }}>
+                              <li className="menu-item-li subcategory-item" style={{ marginBottom: '4px' }}>
+                                <span 
+                                  className="menu-link-text" 
+                                  style={{ 
+                                    paddingLeft: '0px', 
+                                    fontSize: '14px', 
+                                    color: '#999',
+                                    display: 'block',
+                                    padding: '4px 0',
+                                    fontStyle: 'italic'
+                                  }}
+                                >
                                   No subcategories found
                                 </span>
                               </li>
@@ -362,25 +488,31 @@ export default function Nav() {
                     </>
                   ) : (
                     <>
-                  <div className="menu-heading">Recent Products</div>
-                  <Swiper
-                    dir="ltr"
-                    className="swiper tf-product-header"
-                    slidesPerView={2}
-                    spaceBetween={20}
-                  >
-                    {products
-                      .slice(0, 4)
-                      .map((elm) => ({
-                        ...elm,
-                        colors: null,
-                      }))
-                      .map((elm, i) => (
-                        <SwiperSlide key={i} className="swiper-slide">
-                          <ProductCard1 product={elm} />
+                  <div className="menu-heading">Recent Robots</div>
+                  {robotsLoading ? (
+                    <div className="text-center py-3">
+                      <div className="spinner-border spinner-border-sm" role="status">
+                        <span className="visually-hidden">Loading robots...</span>
+                      </div>
+                    </div>
+                  ) : robots.length > 0 ? (
+                    <Swiper
+                      dir="ltr"
+                      className="swiper tf-product-header"
+                      slidesPerView={2}
+                      spaceBetween={20}
+                    >
+                      {robots.map((robot, i) => (
+                        <SwiperSlide key={robot.id || i} className="swiper-slide">
+                          <ProductCard1 product={robot} />
                         </SwiperSlide>
                       ))}
-                  </Swiper>
+                    </Swiper>
+                  ) : (
+                    <div className="text-center py-3">
+                      <p className="text-muted mb-0">No robots available</p>
+                    </div>
+                  )}
                     </>
                   )}
                 </div>
