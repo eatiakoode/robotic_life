@@ -6,8 +6,14 @@ const {
   getBlogSlug
 } = require("../../controller/frontend/blogCtrl");
 const router = express.Router();
-router.get("/byid/:id", getBlog);
-router.get("/list", getallBlog);
+
+// Get blog by ID
+router.get("/:id", getBlog);
+
+// Get all blogs
+router.get("/", getallBlog);
+
+// Get blog by slug
 router.get("/slug/:slug", getBlogSlug);
 
 module.exports = router;

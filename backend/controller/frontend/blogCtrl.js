@@ -9,7 +9,7 @@ const getBlog = asyncHandler(async (req, res) => {
     const getaBlog = await Blog.findById(id).populate("blogcategory").lean();
     const message={
       "status":"success",
-      "message":"Data deleted sucessfully",
+      "message":"Blog data retrieved successfully",
       "data":getaBlog
     }
     res.json(message);
@@ -47,7 +47,7 @@ const getBlogSlug = asyncHandler(async (req, res) => {
     const getaBlog = await Blog.findOne({slug:slug}).populate("blogcategory").lean();
     const message={
       "status":"success",
-      "message":"Data deleted sucessfully",
+      "message":"Blog data retrieved successfully",
       "data":getaBlog
     }
     res.json(message);

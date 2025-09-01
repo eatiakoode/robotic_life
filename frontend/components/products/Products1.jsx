@@ -254,7 +254,7 @@ export default function Products1({ parentClass = "flat-spacing" }) {
         // Backend filtering failed, fallback to client-side
       }
     }
-    
+
     // Apply filters sequentially
     if (brands.length > 0) {
       // Reset to first page when filters change
@@ -296,30 +296,16 @@ export default function Products1({ parentClass = "flat-spacing" }) {
       
       // Only use backend category filtering if we're not already using backend filtering for other filters
       if (!shouldUseBackendFiltering) {
-        // Try backend filtering first, then fallback to client-side filtering
-        try {
-          const categoryProducts = await getProductsByCategory(selectedParentCategory);
-          if (categoryProducts && categoryProducts.length > 0) {
-            // Replace the current products with category-specific products
-            filteredProducts = categoryProducts;
-            
-            // Category products loaded successfully - auto-refresh price bounds
-            refreshPriceBounds(categoryProducts);
-          } else {
-            // Fallback to client-side filtering
-            filteredProducts = productMain.filter(product => {
-              const productCategoryId = product.category?._id || product.categoryId;
-              const selectedCategoryId = selectedParentCategory._id;
-              return productCategoryId === selectedCategoryId;
-            });
-            
-            if (filteredProducts.length > 0) {
-              refreshPriceBounds(filteredProducts);
-            } else {
-              filteredProducts = [];
-            }
-          }
-        } catch (error) {
+      // Try backend filtering first, then fallback to client-side filtering
+      try {
+        const categoryProducts = await getProductsByCategory(selectedParentCategory);
+        if (categoryProducts && categoryProducts.length > 0) {
+          // Replace the current products with category-specific products
+          filteredProducts = categoryProducts;
+          
+          // Category products loaded successfully - auto-refresh price bounds
+          refreshPriceBounds(categoryProducts);
+        } else {
           // Fallback to client-side filtering
           filteredProducts = productMain.filter(product => {
             const productCategoryId = product.category?._id || product.categoryId;
@@ -331,6 +317,20 @@ export default function Products1({ parentClass = "flat-spacing" }) {
             refreshPriceBounds(filteredProducts);
           } else {
             filteredProducts = [];
+          }
+        }
+      } catch (error) {
+        // Fallback to client-side filtering
+        filteredProducts = productMain.filter(product => {
+          const productCategoryId = product.category?._id || product.categoryId;
+          const selectedCategoryId = selectedParentCategory._id;
+          return productCategoryId === selectedCategoryId;
+        });
+        
+        if (filteredProducts.length > 0) {
+          refreshPriceBounds(filteredProducts);
+        } else {
+          filteredProducts = [];
           }
         }
       }
@@ -383,11 +383,11 @@ export default function Products1({ parentClass = "flat-spacing" }) {
     applyFilters();
   }, [price, weight, weightUnit, availability, color, size, brands, activeFilterOnSale, selectedParentCategory, selectedSubCategory, applyFilters]);
 
-    // Separate useEffect for price bounds calculation when productMain changes
+  // Separate useEffect for price bounds calculation when productMain changes
   useEffect(() => {
     if (productMain.length > 0) {
-      // Use auto-refresh to ensure price bounds are always current
-      refreshPriceBounds(productMain);
+              // Use auto-refresh to ensure price bounds are always current
+        refreshPriceBounds(productMain);
       // Also refresh weight bounds
       refreshWeightBounds(productMain);
     }

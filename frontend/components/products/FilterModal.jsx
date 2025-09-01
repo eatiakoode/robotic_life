@@ -373,16 +373,16 @@ export default function FilterModal({ allProps }) {
                 <div>Loading colors...</div>
               ) : (
                 colors.map((color, index) => (
-                  <div
-                    onClick={() => allProps.setColor(color)}
-                    key={index}
-                    className={`color-item color-check ${
-                      color == allProps.color ? "active" : ""
-                    }`}
-                  >
-                    <span className={`color ${color.className}`} />
-                    {color.name}
-                  </div>
+                <div
+                  onClick={() => allProps.setColor(color)}
+                  key={index}
+                  className={`color-item color-check ${
+                    color == allProps.color ? "active" : ""
+                  }`}
+                >
+                  <span className={`color ${color.className}`} />
+                  {color.name}
+                </div>
                 ))
               )}
             </div>
@@ -428,25 +428,25 @@ export default function FilterModal({ allProps }) {
                 <div>Loading manufacturers...</div>
               ) : (
                 manufacturers.map((manufacturer, index) => (
-                  <fieldset
-                    key={index}
-                    className="fieldset-item"
+                <fieldset
+                  key={index}
+                  className="fieldset-item"
                     onClick={() => allProps.setBrands(manufacturer.label)}
-                  >
-                    <input
-                      type="checkbox"
+                >
+                  <input
+                    type="checkbox"
                       name="manufacturer"
-                      className="tf-check"
-                      readOnly
+                    className="tf-check"
+                    readOnly
                       checked={allProps.brands.includes(manufacturer.label)}
-                    />
-                    <label>
+                  />
+                  <label>
                       {manufacturer.label}{" "}
-                      <span className="count-brand">
+                    <span className="count-brand">
                         ({manufacturer.count})
-                      </span>
-                    </label>
-                  </fieldset>
+                    </span>
+                  </label>
+                </fieldset>
                 ))
               )}
             </div>

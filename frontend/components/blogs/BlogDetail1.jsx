@@ -2,7 +2,38 @@ import React from "react";
 import Comments from "./Comments";
 import CommentForm from "./CommentForm";
 import Image from "next/image";
+
 export default function BlogDetail1({ blog }) {
+  // Helper function to format date
+  const formatDate = (dateString) => {
+    if (!dateString) return "Unknown Date";
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+  };
+
+  // Helper function to get image URL
+  const getImageUrl = (imagePath) => {
+    if (!imagePath) return "/images/blog/blog-details-1.jpg"; // fallback image
+    
+    // If it's already a full URL, return as is
+    if (imagePath.startsWith('http')) {
+      return imagePath;
+    }
+    
+    // If it's a filename, construct the backend URL
+    if (!imagePath.includes('/')) {
+      return `http://localhost:5000/images/blogs/${imagePath}`;
+    }
+    
+    // If it's a full path, extract filename and construct URL
+    const filename = imagePath.split('/').pop();
+    return `http://localhost:5000/images/blogs/${filename}`;
+  };
+
   return (
     <div className="blog-detail-wrap">
       <div className="image" />
@@ -11,7 +42,7 @@ export default function BlogDetail1({ blog }) {
           <ul className="list-tags has-bg justify-content-center">
             <li>
               <a href="#" className="link">
-                Fashion Trends
+                {blog.blogcategory?.title || "Blog"}
               </a>
             </li>
           </ul>
@@ -21,7 +52,7 @@ export default function BlogDetail1({ blog }) {
               <div className="icon">
                 <i className="icon-calendar" />
               </div>
-              <p className="body-text-1">February 28, 2024</p>
+              <p className="body-text-1">{formatDate(blog.date || blog.createdAt)}</p>
             </div>
             <div className="meta-item gap-8">
               <div className="icon">
@@ -30,95 +61,127 @@ export default function BlogDetail1({ blog }) {
               <p className="body-text-1">
                 by{" "}
                 <a className="link" href="#">
-                  Themesflat
+                  {blog.source || "Admin"}
                 </a>
               </p>
             </div>
           </div>
         </div>
+        
         <div className="content">
           <p className="body-text-1 mb_12">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi
-            interdum sed mauris eu imperdiet. Donec congue orci nec mi luctus,
-            ut faucibus mauris scelerisque. Donec orci lorem, volutpat a mauris
-            nec, sodales imperdiet urna. Sed dictum enim libero. Interdum et
-            malesuada fames ac ante ipsum primis in faucibus. Maecenas ligula
-            libero, pharetra non dolor et, tempor bibendum magna. Mauris a
-            efficitur nisi.
-          </p>
-          <p className="body-text-1">
-            Praesent interdum lacus ac est viverra hendrerit. Aliquam dapibus,
-            ante vitae mattis gravida, purus sapien interdum magna, convallis
-            volutpat est turpis pulvinar dui. Aenean eu turpis est. In hac
-            habitasse platea dictumst. Integer at lobortis metus. Proin molestie
-            eget massa vel gravida. Suspendisse nec ante vel
+            {blog.description}
           </p>
         </div>
+        
+        {/* Additional images section - dynamic images within existing dimensions */}
         <div className="group-image d-flex gap-20">
           <div>
             <Image
-              alt=""
-              src="/images/blog/blog-details-3.jpg"
+              alt={`${blog.title} - Additional image 1`}
+              src={
+                blog.additionalImages && blog.additionalImages.length > 0 
+                  ? getImageUrl(blog.additionalImages[0]) 
+                  : blog.logoimage 
+                    ? getImageUrl(blog.logoimage) 
+                    : "/images/blog/blog-details-3.jpg"
+              }
               width={623}
               height={468}
+              style={{ width: '100%', height: 'auto', objectFit: 'cover' }}
             />
           </div>
           <div>
             <Image
-              alt=""
-              src="/images/blog/blog-details-4.jpg"
+              alt={`${blog.title} - Additional image 2`}
+              src={
+                blog.additionalImages && blog.additionalImages.length > 1 
+                  ? getImageUrl(blog.additionalImages[1]) 
+                  : blog.logoimage 
+                    ? getImageUrl(blog.logoimage) 
+                    : "/images/blog/blog-details-4.jpg"
+              }
               width={623}
               height={468}
+              style={{ width: '100%', height: 'auto', objectFit: 'cover' }}
             />
           </div>
         </div>
+        
         <div className="content">
-          <h3 className="fw-5 mb_16">How to deal with employee quitting</h3>
-          <p className="body-text-1 mb_16">
-            Donec eu dui condimentum, laoreet nulla vitae, venenatis ipsum.
-            Donec luctus sem sit amet varius laoreet. Aliquam fermentum sit amet
-            urna fringilla tincidunt. Vestibulum ullamcorper nec lacus ac
-            molestie. Curabitur congue neque sed nisi auctor consequat.
-            Pellentesque rhoncus tortor vitae ipsum sagittis tempor.
-          </p>
-          <p className="body-text-1 mb_16">
-            Vestibulum et pharetra arcu. In porta lobortis turpis. Ut faucibus
-            fermentum posuere. Suspendisse potenti. Mauris a metus sed est
-            semper vestibulum. Mauris tortor sem, consectetur vehicula vulputate
-            id, suscipit vel leo.
-          </p>
-          <ul className="list-text type-disc mb_16">
-            <li className="body-text-1">
-              15+ years of industry experience designing, building, and
-              supporting large-scale distributed systems in production, with
-              recent experience in building large scale cloud services.
-            </li>
-            <li className="body-text-1">
-              Deep knowledge and experience with different security areas like
-              identity and access management, cryptography, network security,
-              etc.
-            </li>
-            <li className="body-text-1">
-              Experience with database systems and database internals, such as
-              query engines and optimizers are a big plus.
-            </li>
-            <li className="body-text-1">
-              Strong fundamentals in computer science skills.
-            </li>
-            <li className="body-text-1">
-              Expert-level development skills in Java or C++.
-            </li>
-            <li className="body-text-1">
-              Knowledge of industry standard security concepts and protocols
-              like SAML, SCIM, OAuth, RBAC, cryptography is a plus.
-            </li>
-            <li className="body-text-1">
-              Advanced degree in Computer Science or related degree.
-            </li>
-            <li className="body-text-1">
-              Ph.D. in the related field is a plus
-            </li>
-          </ul>
+          {blog.contentTitle && (
+            <h3 className="fw-5 mb_16">{blog.contentTitle}</h3>
+          )}
+          
+          {blog.contentParagraphs && blog.contentParagraphs.length > 0 ? (
+            blog.contentParagraphs.map((paragraph, index) => (
+              <p key={index} className="body-text-1 mb_16">
+                {paragraph}
+              </p>
+            ))
+          ) : (
+            // Fallback content if no dynamic paragraphs
+            <>
+              <p className="body-text-1 mb_16">
+                Donec eu dui condimentum, laoreet nulla vitae, venenatis ipsum.
+                Donec luctus sem sit amet varius laoreet. Aliquam fermentum sit amet
+                urna fringilla tincidunt. Vestibulum ullamcorper nec lacus ac
+                molestie. Curabitur congue neque sed nisi auctor consequat.
+                Pellentesque rhoncus tortor vitae ipsum sagittis tempor.
+              </p>
+              <p className="body-text-1 mb_16">
+                Vestibulum et pharetra arcu. In porta lobortis turpis. Ut faucibus
+                fermentum posuere. Suspendisse potenti. Mauris a metus sed est
+                semper vestibulum. Mauris tortor sem, consectetur vehicula vulputate
+                id, suscipit vel leo.
+              </p>
+            </>
+          )}
+          
+          {blog.contentList && blog.contentList.length > 0 ? (
+            <ul className="list-text type-disc mb_16">
+              {blog.contentList.map((item, index) => (
+                <li key={index} className="body-text-1">
+                  {item}
+                </li>
+              ))}
+            </ul>
+          ) : (
+            // Fallback list if no dynamic list items
+            <ul className="list-text type-disc mb_16">
+              <li className="body-text-1">
+                15+ years of industry experience designing, building, and
+                supporting large-scale distributed systems in production, with
+                recent experience in building large scale cloud services.
+              </li>
+              <li className="body-text-1">
+                Deep knowledge and experience with different security areas like
+                identity and access management, cryptography, network security,
+                etc.
+              </li>
+              <li className="body-text-1">
+                Experience with database systems and database internals, such as
+                query engines and optimizers are a big plus.
+              </li>
+              <li className="body-text-1">
+                Strong fundamentals in computer science skills.
+              </li>
+              <li className="body-text-1">
+                Expert-level development skills in Java or C++.
+              </li>
+              <li className="body-text-1">
+                Knowledge of industry standard security concepts and protocols
+                like SAML, SCIM, OAuth, RBAC, cryptography is a plus.
+              </li>
+              <li className="body-text-1">
+                Advanced degree in Computer Science or related degree.
+              </li>
+              <li className="body-text-1">
+                Ph.D. in the related field is a plus
+              </li>
+            </ul>
+          )}
+          
           <p className="body-text-1 mb_16">
             Curabitur aliquam ac arcu in mattis. Phasellus pulvinar erat at
             aliquam hendrerit. Nam ut velit dolor. Sed fermentum tempus odio, ac
@@ -135,16 +198,28 @@ export default function BlogDetail1({ blog }) {
         <div className="bot d-flex justify-content-between gap-10 flex-wrap">
           <ul className="list-tags has-bg">
             <li>Tag:</li>
-            <li>
-              <a href="#" className="link">
-                Fashion
-              </a>
-            </li>
-            <li>
-              <a href="#" className="link">
-                Trending
-              </a>
-            </li>
+            {blog.tags && blog.tags.length > 0 ? (
+              blog.tags.map((tag, index) => (
+                <li key={index}>
+                  <a href="#" className="link">
+                    {tag}
+                  </a>
+                </li>
+              ))
+            ) : (
+              <>
+                <li>
+                  <a href="#" className="link">
+                    {blog.blogcategory?.title || "Blog"}
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="link">
+                    Trending
+                  </a>
+                </li>
+              </>
+            )}
           </ul>
           <div className="d-flex align-items-center justify-content-between gap-16">
             <p>Share this post:</p>
@@ -194,8 +269,8 @@ export default function BlogDetail1({ blog }) {
             </h6>
           </div>
         </div>
-        <Comments />
-        <CommentForm />
+        {/* <Comments /> */}
+        {/* <CommentForm /> */}
       </div>
     </div>
   );
