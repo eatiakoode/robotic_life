@@ -77,20 +77,35 @@ const filterRobots = async (req, res) => {
       category
     } = req.query;
     
-    console.log("🔍 Parsed filters:", {
+        console.log("🔍 Parsed filters:", {
       category,
       colors,
       manufacturers,
       minPrice,
       maxPrice
     });
- 
+
     let filter = {};
+    
+    console.log("🔍 Initial filter object:", filter);
  
     if (minPrice || maxPrice) {
-      filter.totalPrice = {};
-      if (minPrice) filter.totalPrice.$gte = Number(minPrice);
-      if (maxPrice) filter.totalPrice.$lte = Number(maxPrice);
+      // Convert string prices to numbers for comparison
+      filter.$expr = {
+        $and: []
+      };
+      
+      if (minPrice) {
+        filter.$expr.$and.push({
+          $gte: [{ $toDouble: "$totalPrice" }, Number(minPrice)]
+        });
+      }
+      
+      if (maxPrice) {
+        filter.$expr.$and.push({
+          $lte: [{ $toDouble: "$totalPrice" }, Number(maxPrice)]
+        });
+      }
     }
  
     if (category) {
@@ -116,6 +131,7 @@ const filterRobots = async (req, res) => {
         }).select("_id name");
         
         console.log("🔍 Found manufacturers:", manufacturerDocs);
+        console.log("🔍 Manufacturer count:", manufacturerDocs.length);
         
         if (manufacturerDocs && manufacturerDocs.length > 0) {
           const manufacturerIds = manufacturerDocs.map(doc => doc._id);
@@ -123,6 +139,9 @@ const filterRobots = async (req, res) => {
           console.log("🔍 Filtering by manufacturer IDs:", manufacturerIds);
         } else {
           console.log("⚠️ No manufacturers found with names:", manufacturerNames);
+          console.log("🔍 Let me check what manufacturers exist in database...");
+          const allManufacturers = await Manufacturer.find().select("_id name");
+          console.log("🔍 All manufacturers in database:", allManufacturers);
           // Return empty result if manufacturer not found
           return res.status(200).json({
             success: true,
@@ -169,6 +188,12 @@ const filterRobots = async (req, res) => {
       .populate("manufacturer", "name")
       .populate("color", "name")
       .lean();
+    
+    console.log("🔍 Final filter object:", filter);
+    console.log("🔍 Robots found:", robots.length);
+    if (robots.length > 0) {
+      console.log("🔍 Sample robot:", robots[0]);
+    }
  
     if (minWeight || maxWeight) {
       const min = minWeight ? Number(minWeight) : 0;
