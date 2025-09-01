@@ -56,8 +56,7 @@ const RobotSchema = new mongoose.Schema(
       required: true
     },
     totalPrice: {
-      type: String,
-      trim: true
+      type: Number,
     },
     version: {
       type: String,
