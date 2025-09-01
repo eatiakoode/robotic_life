@@ -1,5 +1,5 @@
 import Footer1 from "@/components/footers/Footer1";
-import Header15 from "@/components/headers/Header15";
+import Header1 from "@/components/headers/Header1";
 import Topbar9 from "@/components/headers/Topbar9";
 import Blogs from "@/components/homes/home-gaming/Blogs";
 import Collections from "@/components/homes/home-gaming/Collections";
@@ -20,7 +20,7 @@ export default function HomePage() {
   return (
     <>
       <Topbar9 />
-      <Header15 />
+      <Header1 />
       <Hero />
       <Collections />
       <Products />

@@ -24,19 +24,19 @@ export default function Nav() {
     <>
       {" "}
       <li
-        className={`menu-item ${
-          [...demoItems].some(
-            (elm) => elm.href.split("/")[1] == pathname.split("/")[1]
-          )
-            ? "active"
-            : ""
-        } `}
+      // className={`menu-item ${
+      //   [...demoItems].some(
+      //     (elm) => elm.href.split("/")[1] == pathname.split("/")[1]
+      //   )
+      //     ? "active"
+      //     : ""
+      // } `}
       >
-        <a href="#" className="item-link">
+        <a href="/" className="item-link">
           Home
-          <i className="icon icon-arrow-down" />
+          {/* <i className="icon icon-arrow-down" /> */}
         </a>
-        <div className="sub-menu mega-menu">
+        {/* <div className="sub-menu mega-menu">
           <div className="container">
             <div className="row-demo">
               {demoItems.slice(0, 12).map((item, index) => (
@@ -82,7 +82,7 @@ export default function Nav() {
               </a>
             </div>
           </div>
-        </div>
+        </div> */}
       </li>
       <li
         className={`menu-item ${
@@ -96,8 +96,8 @@ export default function Nav() {
             : ""
         } `}
       >
-        <a href="#" className="item-link">
-          Shop
+        <a href="filter-canvas" className="item-link">
+          Robot
           <i className="icon icon-arrow-down" />
         </a>
         <div className="sub-menu mega-menu">
@@ -214,7 +214,7 @@ export default function Nav() {
           </div>
         </div>
       </li>
-      <li
+      {/* <li
         className={`menu-item ${
           [...productLinks, ...swatchLinks, ...productFeatures].some(
             (elm) => elm.href.split("/")[1] == pathname.split("/")[1]
@@ -347,21 +347,21 @@ export default function Nav() {
             </div>
           </div>
         </div>
-      </li>
+      </li> */}
       <li
-        className={`menu-item position-relative ${
-          [...blogLinks].some(
-            (elm) => elm.href.split("/")[1] == pathname.split("/")[1]
-          )
-            ? "active"
-            : ""
-        } `}
+      // className={`menu-item position-relative ${
+      //   [...blogLinks].some(
+      //     (elm) => elm.href.split("/")[1] == pathname.split("/")[1]
+      //   )
+      //     ? "active"
+      //     : ""
+      // } `}
       >
-        <a href="#" className="item-link">
+        <a href="blog-list" className="item-link">
           Blog
-          <i className="icon icon-arrow-down" />
+          {/* <i className="icon icon-arrow-down" /> */}
         </a>
-        <div className="sub-menu submenu-default">
+        {/* <div className="sub-menu submenu-default">
           <ul className="menu-list">
             {blogLinks.map((link, index) => (
               <li
@@ -378,22 +378,23 @@ export default function Nav() {
               </li>
             ))}
           </ul>
-        </div>
+        </div> */}
       </li>
       <li
-        className={`menu-item position-relative ${
-          [...otherPageLinks].some(
-            (elm) => elm.href.split("/")[1] == pathname.split("/")[1]
-          )
-            ? "active"
-            : ""
-        } `}
+      // className={`menu-item position-relative ${
+      //   [...otherPageLinks].some(
+      //     (elm) => elm.href.split("/")[1] == pathname.split("/")[1]
+      //   )
+      //     ? "active"
+      //     : ""
+      // } `}
       >
-        <a href="#" className="item-link">
-          Pages
-          <i className="icon icon-arrow-down" />
+        <a href="about-us" className="item-link">
+          About Us
+          {/* <i className="icon icon-arrow-down" /> */}
         </a>
-        <div className="sub-menu submenu-default">
+
+        {/* <div className="sub-menu submenu-default">
           <ul className="menu-list">
             {otherPageLinks.map((link, index) => (
               <li
@@ -410,13 +411,19 @@ export default function Nav() {
               </li>
             ))}
           </ul>
-        </div>
+        </div> */}
       </li>
-      <li className="menu-item">
+      <li>
+        <a href="contact" className="item-link">
+          Contact
+          {/* <i className="icon icon-arrow-down" /> */}
+        </a>
+      </li>
+      {/* <li className="menu-item">
         <a href="https://themeforest.net/user/themesflat" className="item-link">
           Buy Theme
         </a>
-      </li>
+      </li> */}
     </>
   );
 }
