@@ -24,8 +24,8 @@ export default function Header15() {
                 <Image
                   alt="logo"
                   className="logo w-auto"
-                  src="/images/logo/logo-2.svg"
-                  width={131}
+                  src="/images/logo/theBots.png"
+                  width={97}
                   height={25}
                 />
               </Link>
@@ -119,7 +119,7 @@ export default function Header15() {
                 </li>
               </ul>
               <span className="br-line type-vertical d-none d-sm-block bg-line" />
-              <ul className="nav-icon d-flex justify-content-end align-items-center">
+              {/* <ul className="nav-icon d-flex justify-content-end align-items-center">
                 <li className="nav-account">
                   <a href="#" className="nav-icon-item">
                     <svg
@@ -209,7 +209,7 @@ export default function Header15() {
                     </span>
                   </a>
                 </li>
-              </ul>
+              </ul> */}
             </div>
           </div>
         </div>

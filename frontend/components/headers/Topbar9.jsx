@@ -11,7 +11,7 @@ export default function Topbar9() {
       <div className="container">
         <div className="row align-items-center">
           <div className="col-xl-3 d-none d-xl-block">
-            <div className="tf-cur">
+            {/* <div className="tf-cur">
               <div className="tf-currencies">
                 <CurrencySelect light topStart />
               </div>
@@ -21,7 +21,7 @@ export default function Topbar9() {
                   topStart
                 />
               </div>
-            </div>
+            </div> */}
           </div>
           <div className="col-xl-6 col-12 text-center">
             <Swiper
@@ -34,7 +34,7 @@ export default function Topbar9() {
               loop
               speed={2000}
             >
-              <SwiperSlide className="swiper-slide">
+              {/* <SwiperSlide className="swiper-slide">
                 <p className="top-bar-text text-line-clamp-1 text-btn-uppercase fw-semibold letter-1 text-white">
                   Free shipping on all orders over
                   <span className="text-primary">$20.00</span>
@@ -45,11 +45,11 @@ export default function Topbar9() {
                   Midseason Sale: 20% Off - Auto Applied at Checkout - Limited
                   Time Only.
                 </p>
-              </SwiperSlide>
+              </SwiperSlide> */}
             </Swiper>
           </div>
           <div className="col-xl-3 d-none d-xl-block">
-            <ul className="tf-social-icon style-fill style-fill-2 justify-content-end">
+            {/* <ul className="tf-social-icon style-fill style-fill-2 justify-content-end">
               <li>
                 <a href="#" className="social-facebook">
                   <i className="icon icon-fb" />
@@ -80,7 +80,7 @@ export default function Topbar9() {
                   <i className="icon icon-pinterest" />
                 </a>
               </li>
-            </ul>
+            </ul> */}
           </div>
         </div>
       </div>
