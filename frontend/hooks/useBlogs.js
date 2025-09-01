@@ -11,7 +11,7 @@ export const useBlogs = () => {
     try {
       setLoading(true);
       setError(null);
-      const response = await fetch(`${API_BASE_URL}/frontend/api/blog/list`);
+      const response = await fetch(`${API_BASE_URL}/frontend/api/blog`);
       
       if (!response.ok) {
         throw new Error('Failed to fetch blogs');
