@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import {
   availabilityOptions,
   brands,
@@ -11,10 +11,37 @@ import { productMain } from "@/data/products";
 import { getParentCategories, getSubCategories } from "@/api/category";
 
 import RangeSlider from "react-range-slider-input";
+
 export default function FilterModal({ allProps }) {
   const [parentCategories, setParentCategories] = useState([]);
   const [subCategories, setSubCategories] = useState([]);
   const [loading, setLoading] = useState(true);
+  const timeoutRef = useRef(null);
+
+  // Debounced price update to prevent infinite loops
+  const debouncedSetPrice = useCallback((value) => {
+    // Only update if the value has actually changed
+    if (JSON.stringify(value) !== JSON.stringify(allProps.price)) {
+      // Clear any existing timeout
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+      
+      // Set a new timeout to update the price
+      timeoutRef.current = setTimeout(() => {
+        allProps.setPrice(value);
+      }, 100); // 100ms delay
+    }
+  }, [allProps, allProps.price]);
+
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, []);
 
   // Fetch parent categories on component mount
   useEffect(() => {
@@ -140,7 +167,7 @@ export default function FilterModal({ allProps }) {
               min={allProps.priceBounds?.[0] || 0}
               max={allProps.priceBounds?.[1] || 100000}
               value={allProps.price}
-              onInput={(value) => allProps.setPrice(value)}
+              onInput={debouncedSetPrice}
             />
             <div className="box-price-product mt-3">
               <div className="box-price-item">

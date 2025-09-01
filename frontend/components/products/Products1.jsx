@@ -96,6 +96,7 @@ export default function Products1({ parentClass = "flat-spacing" }) {
         const currentMin = priceBounds[0];
         const currentMax = priceBounds[1];
         
+        // Only update if there's an actual change to prevent infinite loops
         if (newMinPrice < currentMin || newMaxPrice > currentMax) {
           console.log('🔄 Price bounds need expansion:', {
             current: [currentMin, currentMax],
@@ -107,18 +108,23 @@ export default function Products1({ parentClass = "flat-spacing" }) {
           const expandedMin = Math.min(currentMin, newMinPrice);
           const expandedMax = Math.max(currentMax, newMaxPrice);
           
-          dispatch({ type: "SET_PRICE_BOUNDS", payload: [expandedMin, expandedMax] });
-          console.log('✅ Price bounds expanded to:', [expandedMin, expandedMax]);
-          
-          // Show notification to user
-          setPriceBoundsUpdate({
-            message: `Price range updated to $${expandedMin} - $${expandedMax}`,
-            type: 'success',
-            timestamp: Date.now()
-          });
-          
-          // Auto-hide notification after 5 seconds
-          setTimeout(() => setPriceBoundsUpdate(null), 5000);
+          // Check if the new bounds are actually different from current bounds
+          if (expandedMin !== currentMin || expandedMax !== currentMax) {
+            dispatch({ type: "SET_PRICE_BOUNDS", payload: [expandedMin, expandedMax] });
+            console.log('✅ Price bounds expanded to:', [expandedMin, expandedMax]);
+            
+            // Show notification to user
+            setPriceBoundsUpdate({
+              message: `Price range updated to $${expandedMin} - $${expandedMax}`,
+              type: 'success',
+              timestamp: Date.now()
+            });
+            
+            // Auto-hide notification after 5 seconds
+            setTimeout(() => setPriceBoundsUpdate(null), 5000);
+          } else {
+            console.log('💰 Price bounds are already at the correct values');
+          }
         } else {
           console.log('💰 Price bounds are current, no expansion needed');
         }
@@ -182,25 +188,49 @@ export default function Products1({ parentClass = "flat-spacing" }) {
       // Reset to first page when category changes
       dispatch({ type: "SET_CURRENT_PAGE", payload: 1 });
       
-      // Fetch products by category from backend
+      // Try backend filtering first, then fallback to client-side filtering
       try {
-        const categoryProducts = await getProductsByCategory(selectedParentCategory._id);
-        if (categoryProducts.length > 0) {
-          console.log('✅ Found products for category:', categoryProducts.length);
+        const categoryProducts = await getProductsByCategory(selectedParentCategory);
+        if (categoryProducts && categoryProducts.length > 0) {
+          console.log('✅ Found products for category via backend:', categoryProducts.length);
           // Replace the current products with category-specific products
           filteredProducts = categoryProducts;
           
-                  // Category products loaded successfully - auto-refresh price bounds
-        refreshPriceBounds(categoryProducts);
+          // Category products loaded successfully - auto-refresh price bounds
+          refreshPriceBounds(categoryProducts);
         } else {
-          console.log('⚠️ No products found for this category, showing empty list');
-          // If no category products found, show empty list (no robots found)
-          filteredProducts = [];
+          console.log('⚠️ No products found via backend, trying client-side filtering');
+          // Fallback to client-side filtering
+          filteredProducts = productMain.filter(product => {
+            const productCategoryId = product.category?._id || product.categoryId;
+            const selectedCategoryId = selectedParentCategory._id;
+            return productCategoryId === selectedCategoryId;
+          });
+          
+          if (filteredProducts.length > 0) {
+            console.log('✅ Found products for category via client-side filtering:', filteredProducts.length);
+            refreshPriceBounds(filteredProducts);
+          } else {
+            console.log('⚠️ No products found for this category, showing empty list');
+            filteredProducts = [];
+          }
         }
       } catch (error) {
-        console.error('❌ Error fetching products by category:', error);
-        // On error, show empty list (no robots found)
-        filteredProducts = [];
+        console.log('⚠️ Error fetching products by category, trying client-side filtering:', error.message);
+        // Fallback to client-side filtering
+        filteredProducts = productMain.filter(product => {
+          const productCategoryId = product.category?._id || product.categoryId;
+          const selectedCategoryId = selectedParentCategory._id;
+          return productCategoryId === selectedCategoryId;
+        });
+        
+        if (filteredProducts.length > 0) {
+          console.log('✅ Found products for category via client-side filtering:', filteredProducts.length);
+          refreshPriceBounds(filteredProducts);
+        } else {
+          console.log('⚠️ No products found for this category, showing empty list');
+          filteredProducts = [];
+        }
       }
     } else {
       // No category selected, show all products
@@ -238,7 +268,7 @@ export default function Products1({ parentClass = "flat-spacing" }) {
     console.log('📦 Products before filtering:', productMain.length);
     
     dispatch({ type: "SET_FILTERED", payload: filteredProducts });
-  }, [productMain, price, availability, color, size, brands, activeFilterOnSale, selectedParentCategory, selectedSubCategory, priceBounds, refreshPriceBounds]);
+  }, [productMain, price, availability, color, size, brands, activeFilterOnSale, selectedParentCategory, selectedSubCategory]); // Removed priceBounds and refreshPriceBounds dependencies
 
   // Main filtering useEffect - removed productMain from dependencies to prevent infinite loop
   useEffect(() => {
@@ -252,7 +282,7 @@ export default function Products1({ parentClass = "flat-spacing" }) {
               // Use auto-refresh to ensure price bounds are always current
         refreshPriceBounds(productMain);
     }
-  }, [productMain, refreshPriceBounds]);
+  }, [productMain]); // Removed refreshPriceBounds dependency
 
   // Separate useEffect for price bounds calculation when category changes
   useEffect(() => {
@@ -264,7 +294,7 @@ export default function Products1({ parentClass = "flat-spacing" }) {
       // When no category is selected, reset to all products price bounds using auto-refresh
       refreshPriceBounds(productMain);
     }
-  }, [selectedParentCategory, productMain, refreshPriceBounds]);
+  }, [selectedParentCategory, productMain]); // Removed refreshPriceBounds dependency
 
   // Fetch products from backend on component mount
   useEffect(() => {
@@ -300,7 +330,7 @@ export default function Products1({ parentClass = "flat-spacing" }) {
     };
 
     fetchProducts();
-  }, [refreshPriceBounds]);
+  }, []); // Removed refreshPriceBounds dependency
 
   useEffect(() => {
     if (sortingOption === "Price Ascending") {
@@ -352,7 +382,7 @@ export default function Products1({ parentClass = "flat-spacing" }) {
     }, 30000); // Check every 30 seconds
 
     return () => clearInterval(interval);
-  }, [productMain, priceBounds, refreshPriceBounds]);
+  }, [productMain, priceBounds]); // Removed refreshPriceBounds dependency
 
 
   

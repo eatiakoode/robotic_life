@@ -25,9 +25,8 @@ export function reducer(state, action) {
     case "SET_PRICE_BOUNDS":
       return { 
         ...state, 
-        priceBounds: action.payload,
-        // Also update the current price range to match the bounds initially
-        price: action.payload
+        priceBounds: action.payload
+        // Removed the automatic price update to prevent infinite loop
       };
 
     case "SET_SIZE":
@@ -58,7 +57,7 @@ export function reducer(state, action) {
     case "CLEAR_FILTER":
       return {
         ...state,
-        price: state.priceBounds, // Reset to actual product price bounds
+        price: [...state.priceBounds], // Reset to actual product price bounds (create new array to avoid reference issues)
         size: "All",
         availability: "All",
         color: "All",
