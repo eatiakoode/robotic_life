@@ -119,15 +119,11 @@ const getRelatedBlogs = asyncHandler(async (req, res) => {
 });
 
 const getPopularTags = async (req, res) => {
-  console.log('getPopularTags called');
-  
   try {
     // First check if there are any blogs with tags
     const blogsWithTags = await Blog.countDocuments({ 
       tags: { $exists: true, $ne: [], $not: { $size: 0 } } 
     });
-    
-    console.log('Blogs with tags found:', blogsWithTags);
     
     let tags = [];
     
@@ -141,8 +137,6 @@ const getPopularTags = async (req, res) => {
         { $limit: 10 }
       ]);
     }
-
-    console.log('Popular tags found:', tags);
  
     res.status(200).json({
       success: true,
@@ -150,7 +144,6 @@ const getPopularTags = async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Error in getPopularTags:', error);
     res.status(500).json({
       success: false,
       message: "Server Error",
