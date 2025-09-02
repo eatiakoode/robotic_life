@@ -79,26 +79,58 @@ const TableData = ({ sliders = [], loading = false, error = null, onRefresh }) =
   let tbodyContent = sliders.map((item) => (
     <tr key={item._id || Math.random()}>
       {/* Image */}
-      <td className="align-middle text-center" style={{ width: 110 }}>
+      <td className="align-middle text-start" style={{ width: 130 }}>
         <div
           className="thumb"
           style={{
-            width: 90,
-            height: 90,
+            width: 100,
+            height: 100,
             overflow: "hidden",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            margin: "0 auto",
+            border: "1px solid #e5e5e5",
+            borderRadius: "4px"
           }}
         >
-          <SafeImage
-            width={90}
-            height={90}
-            className="img-whp cover"
-            src={item?.images && item.images.length > 0 ? item.images[0] : null}
+          <img
+            width={100}
+            height={100}
+            src={(() => {
+              const imagePath = item?.images && item.images.length > 0 ? item.images[0] : null;
+              const backendUrl = (process.env.NEXT_PUBLIC_BACKEND_API_URL || 'http://localhost:5000').replace(/\/$/, '');
+              
+              if (!imagePath) {
+                return `${backendUrl}/public/assets/images/thumbnail.webp`;
+              }
+              
+              if (imagePath.startsWith('http')) {
+                return imagePath;
+              }
+              
+              // Fix double slash issue by ensuring proper URL construction
+              const cleanPath = imagePath.startsWith('/') ? imagePath.substring(1) : imagePath;
+              const fullUrl = `${backendUrl}/${cleanPath}`;
+              console.log(`Constructing image URL for ${item?.title}:`, {
+                originalPath: imagePath,
+                cleanPath: cleanPath,
+                backendUrl: backendUrl,
+                fullUrl: fullUrl
+              });
+              return fullUrl;
+            })()}
             alt={`${item?.title || 'Slider'}`}
-            style={{ width: "100%", height: "100%", objectFit: "contain" }}
+            style={{ 
+              width: "100%",
+              height: "100%",
+              objectFit: "contain",
+              objectPosition: "center"
+            }}
+            onError={(e) => {
+              console.log(`Image failed to load: ${e.target.src}`);
+              const backendUrl = (process.env.NEXT_PUBLIC_BACKEND_API_URL || 'http://localhost:5000').replace(/\/$/, '');
+              e.target.src = `${backendUrl}/public/assets/images/thumbnail.webp`;
+            }}
           />
         </div>
       </td>

@@ -34,7 +34,9 @@ import { buildApiUrl, getAuthHeaders } from './config';
     await new Promise((resolve) => setTimeout(resolve, 10));
     try {
       const headers = getAuthHeaders();
-      const apiUrl = buildApiUrl(`api/slider?limit=${defaultFilter.limit}&skip=${defaultFilter.page}`);
+      // Calculate skip value: (page - 1) * limit
+      const skip = (defaultFilter.page - 1) * defaultFilter.limit;
+      const apiUrl = buildApiUrl(`api/slider?limit=${defaultFilter.limit}&skip=${skip}`);
       
       console.log("Fetching sliders from:", apiUrl);
       console.log("Using headers:", headers);
