@@ -212,7 +212,7 @@ export const getBlogCategories = async () => {
       const apiUrl = `${baseUrl}/frontend/api/blogcategory`;
       
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 5000);
+      const timeoutId = setTimeout(() => controller.abort(), 10000); // Increased timeout
       
       const response = await fetch(apiUrl, {
         method: 'GET',
@@ -223,7 +223,7 @@ export const getBlogCategories = async () => {
       });
 
       clearTimeout(timeoutId);
-
+      
       if (response.ok) {
         const data = await response.json();
         
@@ -237,6 +237,9 @@ export const getBlogCategories = async () => {
         }
       }
     } catch (error) {
+      if (error.name !== 'AbortError') {
+        console.error('Categories fetch error:', error);
+      }
       continue;
     }
   }
@@ -253,7 +256,7 @@ export const getBlogTags = async () => {
       const apiUrl = `${baseUrl}/frontend/api/blog/tags`;
       
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 5000);
+      const timeoutId = setTimeout(() => controller.abort(), 10000); // Increased timeout
       
       const response = await fetch(apiUrl, {
         method: 'GET',
@@ -264,18 +267,23 @@ export const getBlogTags = async () => {
       });
 
       clearTimeout(timeoutId);
-
+      
       if (response.ok) {
         const data = await response.json();
         
         // Handle backend response format
         if (data.success && data.data) {
-          return data.data.map(tag => tag._id); // Extract tag names from the aggregation result
+          const tags = data.data.map(tag => tag._id); // Extract tag names from the aggregation result
+          return tags;
         } else if (Array.isArray(data)) {
-          return data.map(tag => tag._id);
+          const tags = data.map(tag => tag._id);
+          return tags;
         }
       }
     } catch (error) {
+      if (error.name !== 'AbortError') {
+        console.error('Tags fetch error:', error);
+      }
       continue;
     }
   }
