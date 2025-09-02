@@ -30,21 +30,20 @@ export default function Nav() {
           getAllProducts()
         ]);
         
-        console.log('📋 Parent categories fetched:', parentCategories.length);
-        console.log('🤖 Robots data fetched:', robotsData.length, 'robots');
+
+
+
         setCategories(parentCategories);
         setRobots(robotsData.slice(0, 4)); // Take only first 4 robots for recent section
         
         // Fetch subcategories for all parent categories
-        console.log('🔍 Fetching subcategories for', parentCategories.length, 'parent categories');
+
         const subcategoryPromises = parentCategories.map(async (category) => {
           try {
-            console.log(`🔍 Fetching subcategories for parent: ${category.name} (ID: ${category._id})`);
             const subs = await getSubCategories(category._id);
-            console.log(`✅ Found ${subs.length} subcategories for ${category.name}:`, subs);
             return { categoryId: category._id, subcategories: subs };
           } catch (error) {
-            console.error(`❌ Error fetching subcategories for ${category.name}:`, error);
+            console.error(`Error fetching subcategories for ${category.name}:`, error);
             return { categoryId: category._id, subcategories: [] };
           }
         });
@@ -92,7 +91,7 @@ export default function Nav() {
   // Get subcategories for a specific parent category
   const getSubcategoriesForParent = (parentId) => {
     const subs = subcategories[parentId] || [];
-    console.log(`🔍 Getting subcategories for parent ${parentId}:`, subs);
+
     return subs;
   };
 
@@ -167,7 +166,7 @@ export default function Nav() {
             : ""
         } `}
       >
-        <a href="filter-canvas" className="item-link">
+        <a href="shop-filter-canvas" className="item-link">
           Robot
           <i className="icon icon-arrow-down" />
         </a>
@@ -228,8 +227,8 @@ export default function Nav() {
                                     onMouseLeave={(e) => e.target.style.color = '#666'}
                                   >
                                     {subcategory.name}
-                                  </Link>
-                                </li>
+                        </Link>
+                      </li>
                               ))
                             ) : (
                               <li className="menu-item-li subcategory-item" style={{ marginBottom: '4px' }}>
@@ -299,8 +298,8 @@ export default function Nav() {
                                     onMouseLeave={(e) => e.target.style.color = '#666'}
                                   >
                                     {subcategory.name}
-                                  </Link>
-                                </li>
+                        </Link>
+                      </li>
                               ))
                             ) : (
                               <li className="menu-item-li subcategory-item" style={{ marginBottom: '4px' }}>
@@ -370,8 +369,8 @@ export default function Nav() {
                                     onMouseLeave={(e) => e.target.style.color = '#666'}
                                   >
                                     {subcategory.name}
-                                  </Link>
-                                </li>
+                        </Link>
+                      </li>
                               ))
                             ) : (
                               <li className="menu-item-li subcategory-item" style={{ marginBottom: '4px' }}>
@@ -493,21 +492,21 @@ export default function Nav() {
                     <div className="text-center py-3">
                       <div className="spinner-border spinner-border-sm" role="status">
                         <span className="visually-hidden">Loading robots...</span>
-                      </div>
-                    </div>
+                </div>
+              </div>
                   ) : robots.length > 0 ? (
-                    <Swiper
-                      dir="ltr"
-                      className="swiper tf-product-header"
-                      slidesPerView={2}
-                      spaceBetween={20}
-                    >
-                      {robots.map((robot, i) => (
-                        <SwiperSlide key={robot.id || i} className="swiper-slide">
-                          <ProductCard1 product={robot} />
+                  <Swiper
+                    dir="ltr"
+                    className="swiper tf-product-header"
+                    slidesPerView={2}
+                    spaceBetween={20}
+                  >
+                                                  {robots.map((robot, i) => (
+                              <SwiperSlide key={robot.id || i} className="swiper-slide">
+                                <ProductCard1 product={robot} />
                         </SwiperSlide>
                       ))}
-                    </Swiper>
+                  </Swiper>
                   ) : (
                     <div className="text-center py-3">
                       <p className="text-muted mb-0">No robots available</p>

@@ -29,7 +29,7 @@ export default function ProductCard10({ product, gridClass = "" }) {
       } ${product.sizes ? "card-product-size" : ""}`}
     >
       <div className="card-product-wrapper">
-        <Link href={`/product-detail/${product.id}`} className="product-img">
+        <Link href={`/product-detail/${product.slug && product.slug.trim() ? product.slug : product.id}`} className="product-img">
           <Image
             className="lazyload img-product"
             src={currentImage}
@@ -224,7 +224,7 @@ export default function ProductCard10({ product, gridClass = "" }) {
         </div>
       </div>
       <div className="card-product-info">
-        <Link href={`/product-detail/${product.id}`} className="title link">
+        <Link href={`/product-detail/${product.slug && product.slug.trim() ? product.slug : product.id}`} className="title link">
           {product.title}
         </Link>
         <span className="price">

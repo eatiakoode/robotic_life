@@ -26,6 +26,8 @@ export const getAllProducts = async () => {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
+          'Cache-Control': 'no-cache',
+          'Pragma': 'no-cache'
         },
         signal: controller.signal
       });
@@ -37,7 +39,12 @@ export const getAllProducts = async () => {
         
         // Handle new response format with success/data structure
         const products = data.success && data.data ? data.data : data;
+
         
+
+
+
+
         // Transform backend data to match frontend structure
         const transformedProducts = products.map((product, index) => {
            // Safe price conversion
@@ -86,7 +93,7 @@ export const getAllProducts = async () => {
               categoryId: product.category?._id || product.category,
               
               // Robot specifications
-              slug: product.slug || '',
+              slug: product.slug && product.slug.trim() ? product.slug : null,
               launchYear: product.launchYear || null,
               version: product.version || '',
               videoEmbedCode: product.videoEmbedCode || '',
@@ -107,6 +114,8 @@ export const getAllProducts = async () => {
             };
          });
         
+
+        
         return transformedProducts;
       }
     } catch (error) {
@@ -115,6 +124,145 @@ export const getAllProducts = async () => {
   }
   
   return [];
+};
+
+// Get robot by slug
+export const getRobotBySlug = async (slug) => {
+  if (!slug) {
+    console.warn('⚠️ No slug provided to getRobotBySlug');
+    return null;
+  }
+
+  const urlsToTry = [BACKEND_API_URL, ...FALLBACK_URLS];
+  
+  for (const baseUrl of urlsToTry) {
+    try {
+      const apiUrl = `${baseUrl}/frontend/api/robot/slug/${slug}`;
+
+      
+      // Add timeout to prevent hanging requests
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
+      
+      const response = await fetch(apiUrl, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Cache-Control': 'no-cache',
+          'Pragma': 'no-cache'
+        },
+        signal: controller.signal
+      });
+
+      clearTimeout(timeoutId);
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log('📥 Robot by slug response:', data);
+        
+        if (data.success && data.data) {
+          // Transform backend data to match frontend structure
+          const robot = data.data;
+          
+          // Safe price conversion
+          const originalPrice = robot.totalPrice;
+          const convertedPrice = (() => {
+            if (originalPrice === undefined || originalPrice === null || originalPrice === '') return 0;
+            const numPrice = Number(originalPrice);
+            return isNaN(numPrice) ? 0 : numPrice;
+          })();
+          
+          const transformedRobot = {
+            id: robot._id,
+            title: robot.title || 'Untitled Robot',
+            price: convertedPrice,
+            imgSrc: robot.images && robot.images[0] ? 
+              (robot.images[0].startsWith('public/') ? 
+                `${baseUrl}/${robot.images[0].replace('public/', '')}` : 
+                `${baseUrl}/${robot.images[0]}`
+              ) : 
+              `${baseUrl}/images/products/default.jpg`,
+            imgHover: robot.images && robot.images[1] ? 
+              (robot.images[1].startsWith('public/') ? 
+                `${baseUrl}/${robot.images[1].replace('public/', '')}` : 
+                `${baseUrl}/${robot.images[1]}`
+              ) : 
+              (robot.images && robot.images[0] ? 
+                (robot.images[0].startsWith('public/') ? 
+                  `${baseUrl}/${robot.images[0].replace('public/', '')}` : 
+                  `${baseUrl}/${robot.images[0]}`
+                ) : 
+                `${baseUrl}/images/products/default.jpg`
+              ),
+            description: robot.description || '',
+            inStock: true,
+            
+            // Dynamic fields from backend
+            filterBrands: robot.manufacturer ? [robot.manufacturer.name] : ['Default Brand'],
+            filterColor: robot.color && robot.color.length > 0 ? 
+              robot.color.map(c => c.name) : ['Default Color'],
+            filterSizes: ['Default Size'],
+            
+            // Additional robot-specific fields
+            oldPrice: null,
+            category: robot.category,
+            categoryId: robot.category?._id || robot.category,
+            
+            // Robot specifications
+            slug: robot.slug || '',
+            launchYear: robot.launchYear || null,
+            version: robot.version || '',
+            videoEmbedCode: robot.videoEmbedCode || '',
+            
+            // Dimensions and specifications
+            dimensions: robot.dimensions || {},
+            weight: robot.weight || {},
+            batteryCapacity: robot.batteryCapacity || {},
+            batteryChargeTime: robot.batteryChargeTime || {},
+            loadCapacity: robot.loadCapacity || {},
+            operatingTemperature: robot.operatingTemperature || {},
+            range: robot.range || {},
+            powerSource: robot.powerSource || {},
+            runtime: robot.runtime || {},
+            speed: robot.speed || {},
+            accuracy: robot.accuracy || {},
+            material: robot.material || [],
+            
+            // Additional populated fields
+            manufacturer: robot.manufacturer,
+            countryOfOrigin: robot.countryOfOrigin,
+            navigationType: robot.navigationType,
+            sensors: robot.sensors,
+            primaryFunction: robot.primaryFunction,
+            aiSoftwareFeatures: robot.aiSoftwareFeatures,
+            operatingEnvironment: robot.operatingEnvironment,
+            terrainCapability: robot.terrainCapability,
+            autonomyLevel: robot.autonomyLevel,
+            communicationMethod: robot.communicationMethod,
+            payloadTypesSupported: robot.payloadTypesSupported
+          };
+          
+
+          return transformedRobot;
+        } else {
+          console.log('No robot data found for slug:', slug);
+          return null;
+        }
+      } else {
+        console.log('Failed to fetch robot by slug, status:', response.status);
+      }
+    } catch (error) {
+      if (error.name === 'AbortError') {
+        console.log('Request timeout for:', baseUrl);
+      } else {
+        console.log('Error fetching robot by slug:', error);
+      }
+      continue; // Try next URL
+    }
+  }
+  
+  console.log('Failed to fetch robot by slug from all URLs');
+  return null;
 };
 
 // Search products by query
@@ -165,6 +313,8 @@ export const searchProducts = async (query, filters = {}) => {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
+          'Cache-Control': 'no-cache',
+          'Pragma': 'no-cache'
         },
         signal: controller.signal
       });
@@ -222,7 +372,7 @@ export const searchProducts = async (query, filters = {}) => {
               categoryId: product.category?._id || product.category,
               
               // Robot specifications
-              slug: product.slug || '',
+              slug: product.slug && product.slug.trim() ? product.slug : null,
               launchYear: product.launchYear || null,
               version: product.version || '',
               videoEmbedCode: product.videoEmbedCode || '',
@@ -305,6 +455,8 @@ export const getProductsByCategory = async (category, additionalFilters = {}) =>
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
+          'Cache-Control': 'no-cache',
+          'Pragma': 'no-cache'
         },
         signal: controller.signal
       });
@@ -363,7 +515,7 @@ export const getProductsByCategory = async (category, additionalFilters = {}) =>
               categoryId: product.category?._id || product.category,
               
               // Robot specifications
-              slug: product.slug || '',
+              slug: product.slug && product.slug.trim() ? product.slug : null,
               launchYear: product.launchYear || null,
               version: product.version || '',
               videoEmbedCode: product.videoEmbedCode || '',

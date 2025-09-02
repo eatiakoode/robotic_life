@@ -11,6 +11,7 @@ export default function ProductCard1({
   isNotImageRatio = false,
   radiusClass = "",
 }) {
+
   const [currentImage, setCurrentImage] = useState(product.imgSrc);
 
   const {
@@ -39,7 +40,7 @@ export default function ProductCard1({
           isNotImageRatio ? "aspect-ratio-0" : ""
         } ${radiusClass} `}
       >
-        <Link href={`/product-detail/${product.id}`} className="product-img">
+        <Link href={`/product-detail/${product.slug && product.slug.trim() ? product.slug : product.id}`} className="product-img">
           <Image
             className="lazyload img-product"
             src={currentImage}
@@ -243,7 +244,7 @@ export default function ProductCard1({
         </div>
       </div>
       <div className="card-product-info">
-        <Link href={`/product-detail/${product.id}`} className="title link">
+        <Link href={`/product-detail/${product.slug && product.slug.trim() ? product.slug : product.id}`} className="title link">
           {product.title}
         </Link>
         <span className="price">

@@ -23,14 +23,13 @@ const getActiveParentCategories = asyncHandler(async (req, res) => {
             filter.parent = null;
         }
         
-        console.log('🔍 Backend category filter:', filter);
+
         
         const categories = await Category.find(filter)
             .select("name slug description logoimage parent")
             .sort({ createdAt: -1 });
 
-        console.log('📋 Backend found categories:', categories.length, 'categories');
-        console.log('📋 Categories data:', categories);
+
 
         res.status(200).json({
             success: true,
@@ -38,7 +37,7 @@ const getActiveParentCategories = asyncHandler(async (req, res) => {
             data: categories,
         });
     } catch (err) {
-        console.error('❌ Backend category error:', err);
+        console.error('Backend category error:', err);
         res.status(500).json({ success: false, error: err.message });
     }
 });
@@ -56,10 +55,15 @@ const getFilteredRobotsByParentCategory = asyncHandler(async (req, res) => {
 
     const categoryIds = [parentCategory._id, ...childCategories.map(cat => cat._id)];
 
+
+
     const robots = await Robot.find({ category: { $in: categoryIds } })
-        .select("title slug totalPrice images color")
         .populate("color", "name")
+        .populate("category", "name slug")
+        .populate("manufacturer", "name")
         .limit(4);
+
+
 
     res.status(200).json(robots);
 });

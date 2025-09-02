@@ -42,6 +42,7 @@ export default function Products2() {
   const transformedRobots = robots.map(robot => ({
     id: robot._id,
     title: robot.title,
+    slug: robot.slug, // Add slug field
     price: parseFloat(robot.totalPrice) || 0, // Only totalPrice, no old price
     imgSrc: robot.images && robot.images.length > 0 
       ? (robot.images[0].startsWith('http') 

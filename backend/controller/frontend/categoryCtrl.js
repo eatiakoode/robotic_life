@@ -30,9 +30,9 @@ const getallCategory = asyncHandler(async (req, res) => {
       }
     }
     
-    console.log('🔍 Backend category filter:', filter);
+    
     const getallCategory = await Category.find(filter).lean();
-    console.log('📋 Backend found categories:', getallCategory.length, 'categories');
+
     
     res.json({
       success: true,

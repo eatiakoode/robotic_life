@@ -5,19 +5,39 @@ import Breadcumb from "@/components/productDetails/Breadcumb";
 import Descriptions1 from "@/components/productDetails/descriptions/Descriptions1";
 import Details1 from "@/components/productDetails/details/Details1";
 import RelatedProducts from "@/components/productDetails/RelatedProducts";
-import { allProducts } from "@/data/products";
+import { getRobotBySlug } from "@/api/product";
 import React from "react";
 
 export const metadata = {
-  title:
-    "Product Detail || Modave - Multipurpose React Nextjs eCommerce Template",
-  description: "Modave - Multipurpose React Nextjs eCommerce Template",
+  title: "Robot Detail || THEBOTSWORLD - Advanced Robotics Solutions",
+  description: "Explore detailed specifications and features of our advanced robotics solutions",
 };
 
 export default async function ProductDetailPage({ params }) {
-  const { id } = await params;
+  const { slug } = await params;
 
-  const product = allProducts.filter((p) => p.id == id)[0] || allProducts[0];
+  // Fetch robot data from backend using slug
+  const product = await getRobotBySlug(slug);
+  
+  // Fallback to default product if not found
+  if (!product) {
+    return (
+      <>
+        <Topbar6 bgColor="bg-main" />
+        <Header1 />
+        <div className="container mt-5">
+          <div className="row">
+            <div className="col-12">
+              <h1>Robot not found</h1>
+              <p>The robot you're looking for doesn't exist.</p>
+            </div>
+          </div>
+        </div>
+        <Footer1 hasPaddingBottom />
+      </>
+    );
+  }
+
   return (
     <>
       <Topbar6 bgColor="bg-main" />

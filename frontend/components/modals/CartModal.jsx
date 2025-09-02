@@ -113,7 +113,7 @@ export default function CartModal() {
                               <div className="mb_12 d-flex align-items-center justify-content-between flex-wrap gap-12">
                                 <div className="text-title">
                                   <Link
-                                    href={`/product-detail/${product.id}`}
+                                    href={`/product-detail/${product.slug || product.id}`}
                                     className="link text-line-clamp-1"
                                   >
                                     {product.title}

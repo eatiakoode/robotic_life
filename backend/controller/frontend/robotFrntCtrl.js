@@ -5,8 +5,10 @@ const Category = require("../../models/categoryModel");
 // Get Most Recent Robots
 const getRecentRobots = asyncHandler(async (req, res) => {
   const robots = await Robot.find()
-    .select("title slug images totalPrice color")
+    .select("title slug images totalPrice color description category manufacturer")
     .populate("color", "name status")
+    .populate("category", "name slug")
+    .populate("manufacturer", "name")
     .sort({ createdAt: -1 })
     .limit(3);
  
@@ -17,13 +19,18 @@ const getRecentRobots = asyncHandler(async (req, res) => {
 const getallRobots = asyncHandler(async (req, res) => {
   try {
     const getallRobots = await Robot.find()
+      .select("title slug description totalPrice images category manufacturer color powerSource material launchYear version videoEmbedCode dimensions weight batteryCapacity loadCapacity operatingTemperature range runtime speed accuracy")
       .populate("category", "name slug")
       .populate("manufacturer", "name")
       .populate("color", "name")
       .populate("powerSource", "name")
       .populate("material", "name")
       .lean();
- 
+
+
+
+
+
     res.json({
       success: true,
       count: getallRobots.length,
@@ -31,6 +38,49 @@ const getallRobots = asyncHandler(async (req, res) => {
     });
   } catch (error) {
     throw new Error(error);
+  }
+});
+
+// Get robot by slug
+const getRobotBySlug = asyncHandler(async (req, res) => {
+  try {
+    const { slug } = req.params;
+    
+    const robot = await Robot.findOne({ slug: slug })
+      .populate("category", "name slug parent")
+      .populate("manufacturer", "name")
+      .populate("countryOfOrigin", "name")
+      .populate("powerSource", "name")
+      .populate("color", "name")
+      .populate("material", "name")
+      .populate("navigationType", "name")
+      .populate("sensors", "name")
+      .populate("primaryFunction", "name")
+      .populate("aiSoftwareFeatures", "name")
+      .populate("operatingEnvironment", "name")
+      .populate("terrainCapability", "name")
+      .populate("autonomyLevel", "name")
+      .populate("communicationMethod", "name")
+      .populate("payloadTypesSupported", "name")
+      .lean();
+
+    if (!robot) {
+      return res.status(404).json({ 
+        success: false,
+        error: "Robot not found" 
+      });
+    }
+
+    res.json({
+      success: true,
+      data: robot
+    });
+  } catch (error) {
+    console.error('Error fetching robot by slug:', error);
+    res.status(500).json({ 
+      success: false,
+      error: error.message 
+    });
   }
 });
  
@@ -252,4 +302,4 @@ const filterRobots = async (req, res) => {
   }
 };
  
-module.exports = { getRecentRobots, getallRobots, filterRobots };
+module.exports = { getRecentRobots, getallRobots, getRobotBySlug, filterRobots };

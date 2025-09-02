@@ -128,6 +128,9 @@ export default function SearchModal() {
     const updatedRecent = [product, ...recent.filter(p => p.id !== product.id)].slice(0, 10);
     localStorage.setItem('recentlyViewedRobots', JSON.stringify(updatedRecent));
     setRecentlyViewed(updatedRecent.slice(0, 4));
+    
+    // Navigate to product detail page using slug
+    router.push(`/product-detail/${product.slug || product.id}`);
   };
   return (
     <div className="modal fade modal-search" id="search">
