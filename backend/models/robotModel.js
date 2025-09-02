@@ -147,6 +147,10 @@ const RobotSchema = new mongoose.Schema(
       default: true,
       required: true
     },
+    recentlyViewed: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Robot"
+  }]
 
   },
   { timestamps: true }
