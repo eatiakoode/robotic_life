@@ -9,14 +9,8 @@ const {
 } = require("../../controller/frontend/blogCtrl");
 const router = express.Router();
 
-// Get popular tags (must be before /:id route)
+// Get popular tags
 router.get("/tags", getPopularTags);
-
-// Get blog by slug
-router.get("/slug/:slug", getBlogBySlug);
-
-// Get related blogs
-router.get("/related/:blogId", getRelatedBlogs);
 
 // Get blog by ID
 router.get("/:id", getBlog);
@@ -24,5 +18,10 @@ router.get("/:id", getBlog);
 // Get all blogs
 router.get("/", getallBlog);
 
+// Get blog by slug
+router.get("/slug/:slug", getBlogBySlug);
+
+// Get related blogs
+router.get("/related/:blogId", getRelatedBlogs);
 
 module.exports = router;
