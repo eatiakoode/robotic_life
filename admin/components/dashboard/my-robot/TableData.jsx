@@ -99,10 +99,7 @@ const TableData = ({ robots = [], loading = false, error = null, onRefresh }) =>
     }
   }, []);
 
-  // Get display name helper
-  const getDisplayName = useCallback((item) => {
-    return item?.name || item?.title || item?.model || 'Unnamed Robot';
-  }, []);
+
 
   // Get price helper
   const getPrice = useCallback((item) => {
@@ -110,7 +107,8 @@ const TableData = ({ robots = [], loading = false, error = null, onRefresh }) =>
   }, []);
 
   const theadContent = [
-    "Robot Details",
+    "Image",
+    "Listing Title",
     "Date Published", 
     "Status",
     "Actions",
@@ -162,15 +160,15 @@ const TableData = ({ robots = [], loading = false, error = null, onRefresh }) =>
   return (
     <div className="table-responsive">
       <table className="table">
-        <thead className="thead-light">
-          <tr>
-            {theadContent.map((value, i) => (
-              <th scope="col" key={i}>
-                {value}
-              </th>
-            ))}
-          </tr>
-        </thead>
+                 <thead className="thead-light">
+           <tr>
+             {theadContent.map((value, i) => (
+               <th scope="col" key={i} className="text-start">
+                 {value}
+               </th>
+             ))}
+           </tr>
+         </thead>
         <tbody>
           {robots.map((item, index) => {
             // Debug logging - remove after fixing
@@ -184,94 +182,110 @@ const TableData = ({ robots = [], loading = false, error = null, onRefresh }) =>
             
             return (
               <tr key={item._id || index}>
-                <td scope="row">
-                  <div className="feat_robot list favorite_page style2">
-                    <div className="thumb">
-                      <SafeImage
-                        width={150}
-                        height={220}
-                        className="img-whp cover"
-                        src={item.images?.[0] || item.images?.url || item.images}
-                        alt={item.name || item.title || 'Robot Image'}
-                      />
-                      <div className="thmb_cntnt">
-                        <ul className="tag mb0">
-                          <li className="list-inline-item">
-                            <a href="#" onClick={(e) => e.preventDefault()}>
-                              {getDisplayName(item, 'category') || getDisplayName(item, 'categoryid') || 'Uncategorized'}
-                            </a>
-                          </li>
-                        </ul>
-                      </div>
-                    </div>
-                    <div className="details">
-                      <div className="tc_content">
-                        <h4 title={item.name || item.title}>
-                          {item.name || item.title || 'Unnamed Robot'}
-                        </h4>
-                        {(getDisplayName(item, 'manufacturer') || getDisplayName(item, 'countryOfOrigin')) && (
-                          <p>
-                            <span className="flaticon-placeholder"></span>
-                            {getDisplayName(item, 'manufacturer') || getDisplayName(item, 'countryOfOrigin')}
-                          </p>
-                        )}
-                        <a className="fp_price text-thm" href="#" onClick={(e) => e.preventDefault()}>
-                          ${getPrice(item)}
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                </td>
+                                 {/* Image */}
+                 <td className="align-middle text-start" style={{ width: 130 }}>
+                   <div
+                     className="thumb"
+                     style={{
+                       width: 100,
+                       height: 100,
+                       overflow: "hidden",
+                       display: "flex",
+                       alignItems: "center",
+                       justifyContent: "center",
+                       border: "1px solid #e5e5e5",
+                       borderRadius: "4px"
+                     }}
+                   >
+                     <SafeImage
+                       width={100}
+                       height={100}
+                       className="img-whp"
+                       src={item.images?.[0] || item.images?.url || item.images}
+                       alt={item.name || item.title || 'Robot Image'}
+                       style={{ 
+                         width: "100%",
+                         height: "100%",
+                         objectFit: "contain",
+                         objectPosition: "center"
+                       }}
+                     />
+                   </div>
+                 </td>
 
-                <td>
-                  {formatDate(item.createdAt)}
-                </td>
-
-                <td>
-                  <span className={`status_tag ${item.status ? 'badge2' : 'badge'}`}>
-                    {item.status ? "Active" : "Inactive"}
-                  </span>
-                </td>
-
-                <td>
-                  <ul className="view_edit_delete_list mb0">
-                    <li
-                      className="list-inline-item"
-                      data-toggle="tooltip"
-                      data-placement="top"
-                      title="Edit"
+                                   {/* Listing Title */}
+                  <td className="align-middle text-start">
+                    <div
+                      style={{ display: "flex", alignItems: "center", height: "100%", minHeight: "90px", justifyContent: "flex-start" }}
                     >
-                      <button 
-                        onClick={() => editRobot(item._id)}
-                        className="btn btn-link p-0"
-                        disabled={deletingId === item._id}
-                        aria-label={`Edit ${item.name || 'robot'}`}
-                      >
-                        <span className="flaticon-edit"></span>
-                      </button>
-                    </li>
+                      <h4 className="mb-0">{item.name || item.title || 'Unnamed Robot'}</h4>
+                    </div>
+                  </td>
 
-                    <li 
-                      className="list-inline-item"
-                      data-toggle="tooltip"
-                      data-placement="top"
-                      title="Delete"
-                    >
-                      <button 
-                        onClick={() => deleteRobot(item._id)}
-                        className="btn btn-link p-0 text-danger"
-                        disabled={deletingId === item._id}
-                        aria-label={`Delete ${item.name || 'robot'}`}
-                      >
-                        {deletingId === item._id ? (
-                          <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                        ) : (
-                          <span className="flaticon-garbage"></span>
-                        )}
-                      </button>
-                    </li>
-                  </ul>
-                </td>
+                                 {/* Date Published */}
+                 <td className="align-middle text-start">
+                   <div
+                     style={{ display: "flex", alignItems: "center", height: "100%", justifyContent: "flex-start" }}
+                   >
+                     {formatDate(item.createdAt)}
+                   </div>
+                 </td>
+
+                                 {/* Status */}
+                 <td className="align-middle text-start">
+                   <div
+                     style={{ display: "flex", alignItems: "center", height: "100%", justifyContent: "flex-start" }}
+                   >
+                     <span className={`status_tag ${item.status ? 'badge2' : 'badge'}`}>
+                       {item.status ? "Active" : "Inactive"}
+                     </span>
+                   </div>
+                 </td>
+
+                                 {/* Actions */}
+                 <td className="align-middle text-start">
+                   <div
+                     style={{ display: "flex", alignItems: "center", justifyContent: "flex-start", height: "100%" }}
+                   >
+                     <ul className="view_edit_delete_list mb0 d-flex">
+                       <li
+                         className="list-inline-item"
+                         data-toggle="tooltip"
+                         data-placement="top"
+                         title="Edit"
+                       >
+                         <button 
+                           onClick={() => editRobot(item._id)}
+                           className="btn btn-link p-0"
+                           disabled={deletingId === item._id}
+                           aria-label={`Edit ${item.name || 'robot'}`}
+                         >
+                           <span className="flaticon-edit"></span>
+                         </button>
+                       </li>
+
+                       <li 
+                         className="list-inline-item"
+                         data-toggle="tooltip"
+                         data-placement="top"
+                         title="Delete"
+                       >
+                         <button 
+                           onClick={() => deleteRobot(item._id)}
+                           className="btn btn-link p-0 text-danger"
+                           disabled={deletingId === item._id}
+                           aria-label={`Delete ${item.name || 'robot'}`}
+                         >
+                           {deletingId === item._id ? (
+                             <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                           ) : (
+                             <span className="flaticon-garbage"></span>
+                           )}
+                         </button>
+                       </li>
+                     </ul>
+                   </div>
+                 </td>
               </tr>
             );
           })}

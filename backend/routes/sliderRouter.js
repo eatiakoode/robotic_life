@@ -6,7 +6,10 @@ const { uploadPhoto } = require("../middlewares/uploadImage");
 
 
 router.post("/", authMiddleware, isAdmin, uploadPhoto.array("images", 10), createSlider);
-router.get("/", authMiddleware, isAdmin, getSliders);
+router.get("/", authMiddleware, isAdmin, (req, res, next) => {
+    console.log("Slider GET route hit");
+    next();
+}, getSliders);
 router.get("/:id", authMiddleware, isAdmin, getSliderById);
 router.put("/:id", authMiddleware, isAdmin, uploadPhoto.array("images", 10), updateSlider);
 router.delete("/:id", authMiddleware, isAdmin, deleteSlider);

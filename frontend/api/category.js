@@ -17,7 +17,8 @@ export const getParentCategories = async () => {
   
   for (const baseUrl of urlsToTry) {
     try {
-      const apiUrl = `${baseUrl}/frontend/api/category`;
+      const apiUrl = `${baseUrl}/frontend/api/category?parent=null`;
+
       
       // Add timeout to prevent hanging requests
       const controller = new AbortController();
@@ -35,6 +36,7 @@ export const getParentCategories = async () => {
 
       if (response.ok) {
         const data = await response.json();
+        console.log('📥 Parent categories response:', data);
         
         // Handle different response formats
         let categories = [];
@@ -48,12 +50,13 @@ export const getParentCategories = async () => {
           continue; // Try next URL
         }
         
-        // Filter to only parent categories (no parent field or parent is null)
-        const parentCategories = categories.filter(category => !category.parent);
-        
-        return parentCategories;
+
+        return categories;
+      } else {
+        console.log('Failed to fetch parent categories, status:', response.status);
       }
     } catch (error) {
+      console.log('Error fetching parent categories:', error);
       continue; // Try next URL
     }
   }
@@ -69,18 +72,20 @@ export const getSubCategories = async (parentId) => {
     return [];
   }
 
+  console.log('🚀 Starting getSubCategories for parentId:', parentId);
+
   // Try multiple backend URLs
   const urlsToTry = [BACKEND_API_URL, ...FALLBACK_URLS];
-  
+
   for (const baseUrl of urlsToTry) {
     try {
-      const apiUrl = `${baseUrl}/frontend/api/category`;
-      console.log('🔍 Trying to fetch sub-categories from:', apiUrl);
-      
+      const apiUrl = `${baseUrl}/frontend/api/category?parent=${parentId}`;
+
+
       // Add timeout to prevent hanging requests
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
-      
+      const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+
       const response = await fetch(apiUrl, {
         method: 'GET',
         headers: {
@@ -91,39 +96,48 @@ export const getSubCategories = async (parentId) => {
 
       clearTimeout(timeoutId);
 
+      console.log('📡 Response status:', response.status, 'for URL:', apiUrl);
+
       if (response.ok) {
         const data = await response.json();
-        
+        console.log('📥 Raw response from backend:', data);
+
         // Handle different response formats
         let categories = [];
         if (data.success && data.data && Array.isArray(data.data)) {
           // Backend returns { success: true, data: [...] }
           categories = data.data;
+
         } else if (Array.isArray(data)) {
           // Backend returns array directly
           categories = data;
+
         } else {
+          console.log('Unexpected response format:', data);
           continue; // Try next URL
         }
-        
-        // Filter to only sub-categories (parent field matches the given parentId)
-        const subCategories = categories.filter(category => category.parent === parentId);
-        
-        return subCategories;
+
+
+
+        // Since backend now filters by parent, we don't need to filter again
+        // Just return the categories directly
+
+        return categories;
       } else {
-        console.log('❌ Failed to fetch sub-categories from:', baseUrl, 'Status:', response.status);
+        const errorText = await response.text();
+        console.log('Failed to fetch sub-categories from:', baseUrl, 'Status:', response.status, 'Error:', errorText);
       }
     } catch (error) {
       if (error.name === 'AbortError') {
-        console.log('⏰ Request timeout for:', baseUrl);
+        console.log('Request timeout for:', baseUrl);
       } else {
-        console.log('❌ Error fetching sub-categories from:', baseUrl, error.message);
+        console.log('Error fetching sub-categories from:', baseUrl, error.message);
       }
       continue; // Try next URL
     }
   }
-  
-  console.log('⚠️ Failed to fetch sub-categories from all URLs, returning empty array');
+
+  console.log('Failed to fetch sub-categories from all URLs, returning empty array');
   return [];
 };
 
@@ -135,7 +149,7 @@ export const getAllCategories = async () => {
   for (const baseUrl of urlsToTry) {
     try {
       const apiUrl = `${baseUrl}/frontend/api/category`;
-      console.log('🔍 Trying to fetch all categories from:', apiUrl);
+
       
       // Add timeout to prevent hanging requests
       const controller = new AbortController();
@@ -168,18 +182,18 @@ export const getAllCategories = async () => {
         
         return categories;
       } else {
-        console.log('❌ Failed to fetch all categories from:', baseUrl, 'Status:', response.status);
+        console.log('Failed to fetch all categories from:', baseUrl, 'Status:', response.status);
       }
     } catch (error) {
       if (error.name === 'AbortError') {
-        console.log('⏰ Request timeout for:', baseUrl);
+        console.log('Request timeout for:', baseUrl);
       } else {
-        console.log('❌ Error fetching all categories from:', baseUrl, error.message);
+        console.log('Error fetching all categories from:', baseUrl, error.message);
       }
       continue; // Try next URL
     }
   }
   
-  console.log('⚠️ Failed to fetch all categories from all URLs, returning empty array');
+  console.log('Failed to fetch all categories from all URLs, returning empty array');
   return [];
 };

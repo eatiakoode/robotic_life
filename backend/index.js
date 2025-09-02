@@ -179,7 +179,7 @@ app.use("/admin/api/terraincapability", terrainCapabilityRouter);
 app.use("/admin/api/autonomylevel", autonomyLevelRouter);
 app.use("/admin/api/communicationmethod", communicationMethodRouter);
 app.use("/admin/api/payloadtype", payloadTypesSupportedRouter);
-app.use("/api/slider", sliderRouter);
+app.use("/admin/api/slider", sliderRouter);
 app.use("/frontend/api/slider", sliderfrontendRouter);
 app.use("/frontend/api/category", categoryFrontendRouter);
 app.use("/frontend/api/robot", robotFrontendRouter);

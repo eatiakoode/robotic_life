@@ -142,6 +142,11 @@ const RobotSchema = new mongoose.Schema(
     metaDescription: {
       type: String,
     },
+    status: {
+      type: Boolean,
+      default: true,
+      required: true
+    },
 
   },
   { timestamps: true }

@@ -9,44 +9,40 @@ export default function Collections() {
   const { categories, loading, error } = useCategories();
 
   // Debug logging
-  console.log('🔍 Collections Component Debug:');
-  console.log('🔍 Loading:', loading);
-  console.log('🔍 Error:', error);
-  console.log('🔍 Categories:', categories);
-  console.log('🔍 Categories length:', categories?.length);
+
 
   // Function to get the correct image URL
   const getImageUrl = (imagePath) => {
     if (!imagePath) {
-      console.log('🔍 No image path provided, using fallback');
+
       return "/images/collections/grid-cls/gaming-1.jpg";
     }
     
-    console.log('🔍 Processing image path:', imagePath);
+
     
     // If the image path is already a full URL, return it as is
     if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
-      console.log('🔍 Full URL detected:', imagePath);
+
       return imagePath;
     }
     
     // If it's a relative path starting with 'public/', construct the backend URL
     if (imagePath.startsWith('public/')) {
       const url = `http://localhost:5000/${imagePath}`;
-      console.log('🔍 Constructed backend URL (public):', url);
+
       return url;
     }
     
     // If it's just a filename, construct the backend URL
     if (!imagePath.includes('/')) {
       const url = `http://localhost:5000/public/images/category/${imagePath}`;
-      console.log('🔍 Constructed backend URL (filename):', url);
+
       return url;
     }
     
     // For other cases, try to construct the backend URL
     const url = `http://localhost:5000/${imagePath}`;
-    console.log('🔍 Constructed backend URL (other):', url);
+
     return url;
   };
 
@@ -75,8 +71,7 @@ export default function Collections() {
   // Use API data if available, otherwise fallback
   const displayCategories = categories && categories.length > 0 ? categories : fallbackCategories;
   
-  console.log('🔍 Display categories:', displayCategories);
-  console.log('🔍 Using fallback:', categories && categories.length === 0);
+
 
   // Show loading state
   if (loading) {
@@ -117,7 +112,7 @@ export default function Collections() {
           {/* First two cards - top row */}
           {displayCategories.slice(0, 2).map((category, index) => {
             const imageUrl = getImageUrl(category.logoimage);
-            console.log(`🔍 Card ${index + 1} image URL:`, imageUrl);
+
             
             return (
               <div

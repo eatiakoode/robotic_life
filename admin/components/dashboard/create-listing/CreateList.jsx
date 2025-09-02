@@ -108,6 +108,7 @@ const CreateList = () => {
   const [specifications, setSpecifications] = useState("");
   const [metatitle, setMetatitle] = useState("");
   const [metadescription, setMetaDescription] = useState("");
+  const [status, setStatus] = useState(true); // true = Active, false = Inactive
   const [featuredimage, setFeaturedImage] = useState(null);
   const [robotSelectedImgs, setRobotSelectedImgs] = useState([]);
 
@@ -379,10 +380,11 @@ const CreateList = () => {
     const requiredFields = [
       { key: "title", value: title, name: "Title" },
       { key: "description", value: description, name: "Description" },
+      { key: "status", value: status, name: "Status" },
       { key: "price", value: price, name: "Total Price" },
       { key: "selectedCountry", value: selectedCountry, name: "Country of Origin" },
       { key: "selectedCategory", value: selectedCategory, name: "Category" },
-      { key: "selectedSubCategory", value: selectedSubCategory, name: "Sub Category" },
+      // { key: "selectedSubCategory", value: selectedSubCategory, name: "Sub Category" },
       { key: "selectedManufacturer", value: selectedManufacturer, name: "Manufacturer" },
       { key: "launchYear", value: launchYear, name: "Launch Year" },
       { key: "selectedPower", value: selectedPower, name: "Power Source" },
@@ -430,6 +432,7 @@ const CreateList = () => {
       formData.append("title", title.trim());
       formData.append("slug", slug);
       formData.append("description", description.trim());
+      formData.append("status", status ? "true" : "false");
       formData.append("totalPrice", price);
       formData.append("countryOfOrigin", selectedCountry);
       formData.append("category", selectedCategory);
@@ -644,6 +647,25 @@ const CreateList = () => {
         </div>
         {/* robot description ends */}
 
+        {/* robot status start */}
+        <div className="col-lg-6">
+          <div className="my_profile_setting_input form-group">
+            <label htmlFor="roboStatus">Status *</label>
+            <select
+              id="roboStatus"
+              className={`form-select ${error.status ? 'is-invalid' : ''}`}
+              value={status}
+              onChange={(e) => setStatus(e.target.value === 'true')}
+              required
+            >
+              <option value={true}>Active</option>
+              <option value={false}>Inactive</option>
+            </select>
+            {error.status && <span className="text-danger">{error.status}</span>}
+          </div>
+        </div>
+        {/* robot status ends */}
+
         {/* robot category start */}
         <div className="col-lg-6 col-xl-6">
           <div className="my_profile_setting_input ui_kit_select_search form-group">
@@ -674,16 +696,15 @@ const CreateList = () => {
         {/* Sub Category Field */}
         <div className="col-lg-6 col-xl-6">
           <div className="my_profile_setting_input ui_kit_select_search form-group">
-            <label>Sub Category *</label>
+            <label>Sub Category</label>
             <select
               id="subCategorySelect"
-              className={`selectpicker form-select ${error.selectedSubCategory ? 'is-invalid' : ''}`}
+              className="selectpicker form-select"
               value={selectedSubCategory}
               onChange={handleSubCategoryChange}
               data-live-search="true"
               data-width="100%"
               disabled={!selectedCategory || subCategories.length === 0}
-              required
             >
               <option value="">-- Select Sub Category --</option>
               {subCategories.map((sub) => (
@@ -692,9 +713,7 @@ const CreateList = () => {
                 </option>
               ))}
             </select>
-            {error.selectedSubCategory && (
-              <span className="text-danger">{error.selectedSubCategory}</span>
-            )}
+
           </div>
         </div>
         {/* robot sub category ends */}

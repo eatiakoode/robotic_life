@@ -31,7 +31,7 @@ export default function ProductsCards6({ product }) {
       data-brand="gucci"
     >
       <div className="card-product-wrapper">
-        <Link href={`/product-detail/${product.id}`} className="product-img">
+        <Link href={`/product-detail/${product.slug && product.slug.trim() ? product.slug : product.id}`} className="product-img">
           <Image
             className="lazyload img-product"
             src={currentImage}
@@ -57,7 +57,7 @@ export default function ProductsCards6({ product }) {
         )}
       </div>
       <div className="card-product-info">
-        <Link href={`/product-detail/${product.id}`} className="title link">
+        <Link href={`/product-detail/${product.slug && product.slug.trim() ? product.slug : product.id}`} className="title link">
           {product.title}
         </Link>
         <span className="price current-price">
