@@ -15,14 +15,14 @@ export default function BlogList() {
     totalBlogs: 0,
     hasNextPage: false,
     hasPrevPage: false,
-    limit: 6
+    limit: 4
   });
   const [loading, setLoading] = useState(true);
 
   const fetchBlogs = async (page = 1) => {
     try {
       setLoading(true);
-      const response = await getAllBlogs(page, 6);
+      const response = await getAllBlogs(page, 4);
       setBlogs(response.blogs || []);
       setPagination(response.pagination || pagination);
     } catch (error) {

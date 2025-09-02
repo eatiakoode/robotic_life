@@ -50,7 +50,7 @@ export const getBlogById = async (id) => {
 };
 
 // Get all blogs with pagination
-export const getAllBlogs = async (page = 1, limit = 6) => {
+export const getAllBlogs = async (page = 1, limit = 4) => {
   const urlsToTry = [BACKEND_API_URL, ...FALLBACK_URLS];
   
   for (const baseUrl of urlsToTry) {
@@ -162,4 +162,82 @@ export const getBlogBySlug = async (slug) => {
   }
   
   return null;
+};
+
+// Get related blogs by blog ID
+export const getRelatedBlogs = async (blogId) => {
+  const urlsToTry = [BACKEND_API_URL, ...FALLBACK_URLS];
+  
+  for (const baseUrl of urlsToTry) {
+    try {
+      const apiUrl = `${baseUrl}/frontend/api/blog/related/${blogId}`;
+      
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 5000);
+      
+      const response = await fetch(apiUrl, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        signal: controller.signal
+      });
+
+      clearTimeout(timeoutId);
+
+      if (response.ok) {
+        const data = await response.json();
+        
+        // Handle backend response format
+        if (data.success && data.data) {
+          return data.data;
+        } else if (data.data) {
+          return data.data;
+        }
+      }
+    } catch (error) {
+      continue;
+    }
+  }
+  
+  return [];
+};
+
+// Get all blog categories
+export const getBlogCategories = async () => {
+  const urlsToTry = [BACKEND_API_URL, ...FALLBACK_URLS];
+  
+  for (const baseUrl of urlsToTry) {
+    try {
+      const apiUrl = `${baseUrl}/admin/api/blogcategory`;
+      
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 5000);
+      
+      const response = await fetch(apiUrl, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        signal: controller.signal
+      });
+
+      clearTimeout(timeoutId);
+
+      if (response.ok) {
+        const data = await response.json();
+        
+        // Handle backend response format
+        if (Array.isArray(data)) {
+          return data;
+        } else if (data.data && Array.isArray(data.data)) {
+          return data.data;
+        }
+      }
+    } catch (error) {
+      continue;
+    }
+  }
+  
+  return [];
 };

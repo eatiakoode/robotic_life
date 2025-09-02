@@ -3,7 +3,7 @@ const express = require("express");
 const {
   getBlog,
   getallBlog,
-  getBlogSlug,
+  getBlogBySlug,
   getRelatedBlogs
 } = require("../../controller/frontend/blogCtrl");
 const router = express.Router();
@@ -15,7 +15,7 @@ router.get("/:id", getBlog);
 router.get("/", getallBlog);
 
 // Get blog by slug
-router.get("/slug/:slug", getBlogSlug);
+router.get("/slug/:slug", getBlogBySlug);
 
 // Get related blogs
 router.get("/related/:blogId", getRelatedBlogs);

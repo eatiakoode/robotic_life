@@ -3,23 +3,44 @@ import Link from "next/link";
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { blogPosts6 } from "@/data/blogs";
-import { getAllBlogs, getBlogCategories } from "@/api/blog";
+import { getAllBlogs, getRelatedBlogs, getBlogCategories } from "@/api/blog";
 
-export default function Sidebar() {
-  const [recentPosts, setRecentPosts] = useState([]);
+/**
+ * SidebarWithRelated Component
+ * 
+ * A dynamic sidebar that can show either related posts or recent posts
+ * 
+ * @param {string} blogId - Optional blog ID. If provided, shows related posts for that blog.
+ *                         If null/undefined, shows recent posts instead.
+ * 
+ * Usage examples:
+ * - <SidebarWithRelated /> - Shows recent posts
+ * - <SidebarWithRelated blogId="64a1b2c3d4e5f6789012345" /> - Shows related posts
+ */
+export default function SidebarWithRelated({ blogId = null }) {
+  const [posts, setPosts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [categoriesLoading, setCategoriesLoading] = useState(true);
 
   useEffect(() => {
-    const fetchRecentPosts = async () => {
+    const fetchPosts = async () => {
       try {
         setLoading(true);
-        const response = await getAllBlogs(1, 5); // Get 5 recent posts
-        setRecentPosts(response.blogs || []);
+        let response;
+        
+        if (blogId) {
+          // Fetch related posts if blogId is provided
+          response = await getRelatedBlogs(blogId);
+          setPosts(response || []);
+        } else {
+          // Fetch recent posts if no blogId
+          const recentResponse = await getAllBlogs(1, 5);
+          setPosts(recentResponse.blogs || []);
+        }
       } catch (error) {
-        console.error('Error fetching recent posts:', error);
-        setRecentPosts([]);
+        console.error('Error fetching posts:', error);
+        setPosts([]);
       } finally {
         setLoading(false);
       }
@@ -38,9 +59,9 @@ export default function Sidebar() {
       }
     };
 
-    fetchRecentPosts();
+    fetchPosts();
     fetchCategories();
-  }, []);
+  }, [blogId]);
 
   // Helper function to get image URL
   const getImageUrl = (imagePath) => {
@@ -71,6 +92,7 @@ export default function Sidebar() {
       day: 'numeric'
     });
   };
+
   return (
     <div className="sidebar maxw-360">
       <div className="sidebar-item sidebar-search">
@@ -115,14 +137,14 @@ export default function Sidebar() {
         </form>
       </div>
       <div className="sidebar-item sidebar-relatest-post">
-        <h5 className="sidebar-heading">Relatest Post</h5>
+        <h5 className="sidebar-heading">{blogId ? "Related Post" : "Relatest Post"}</h5>
         <div>
           {loading ? (
             <div className="text-center">
-              <p>Loading recent posts...</p>
+              <p>Loading posts...</p>
             </div>
-          ) : recentPosts.length > 0 ? (
-            recentPosts.map((post, i) => (
+          ) : posts.length > 0 ? (
+            posts.map((post, i) => (
               <div
                 key={post._id || i}
                 className={`relatest-post-item ${
@@ -168,7 +190,7 @@ export default function Sidebar() {
             ))
           ) : (
             <div className="text-center">
-              <p>No recent posts available</p>
+              <p>No posts available</p>
             </div>
           )}
         </div>
