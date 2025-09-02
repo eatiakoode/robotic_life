@@ -3,13 +3,15 @@ import Link from "next/link";
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { blogPosts6 } from "@/data/blogs";
-import { getAllBlogs, getBlogCategories } from "@/api/blog";
+import { getAllBlogs, getBlogCategories, getBlogTags } from "@/api/blog";
 
 export default function Sidebar() {
   const [recentPosts, setRecentPosts] = useState([]);
   const [categories, setCategories] = useState([]);
+  const [tags, setTags] = useState([]);
   const [loading, setLoading] = useState(true);
   const [categoriesLoading, setCategoriesLoading] = useState(true);
+  const [tagsLoading, setTagsLoading] = useState(true);
 
   useEffect(() => {
     const fetchRecentPosts = async () => {
@@ -38,8 +40,22 @@ export default function Sidebar() {
       }
     };
 
+    const fetchTags = async () => {
+      try {
+        setTagsLoading(true);
+        const response = await getBlogTags();
+        setTags(response || []);
+      } catch (error) {
+        console.error('Error fetching tags:', error);
+        setTags([]);
+      } finally {
+        setTagsLoading(false);
+      }
+    };
+
     fetchRecentPosts();
     fetchCategories();
+    fetchTags();
   }, []);
 
   // Helper function to get image URL
@@ -199,46 +215,24 @@ export default function Sidebar() {
       <div className="sidebar-item sidebar-tag">
         <h5 className="sidebar-heading">Popular Tag</h5>
         <ul className="list-tags">
-          <li>
-            <a href="#" className="text-caption-1 link">
-              Fashion Trends
-            </a>
-          </li>
-          <li>
-            <a href="#" className="text-caption-1 link">
-              Sustainable Fashion
-            </a>
-          </li>
-          <li>
-            <a href="#" className="text-caption-1 link">
-              Street Style
-            </a>
-          </li>
-          <li>
-            <a href="#" className="text-caption-1 link">
-              Beauty Tips
-            </a>
-          </li>
-          <li>
-            <a href="#" className="text-caption-1 link">
-              Street Style
-            </a>
-          </li>
-          <li>
-            <a href="#" className="text-caption-1 link">
-              Vintage Fashion
-            </a>
-          </li>
-          <li>
-            <a href="#" className="text-caption-1 link">
-              Eco Friendly
-            </a>
-          </li>
-          <li>
-            <a href="#" className="text-caption-1 link">
-              Tips
-            </a>
-          </li>
+          {tagsLoading ? (
+            <li>
+              <span className="text-caption-1">Loading tags...</span>
+            </li>
+          ) : tags.length > 0 ? (
+            tags.map((tag, index) => (
+              <li key={index}>
+                {/* Tag links can be used to filter blogs by tag */}
+                <a href={`/blogs?tag=${encodeURIComponent(tag)}`} className="text-caption-1 link">
+                  {tag}
+                </a>
+              </li>
+            ))
+          ) : (
+            <li>
+              <span className="text-caption-1">No tags available</span>
+            </li>
+          )}
         </ul>
       </div>
     </div>

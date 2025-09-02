@@ -209,7 +209,7 @@ export const getBlogCategories = async () => {
   
   for (const baseUrl of urlsToTry) {
     try {
-      const apiUrl = `${baseUrl}/admin/api/blogcategory`;
+      const apiUrl = `${baseUrl}/frontend/api/blogcategory`;
       
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 5000);
@@ -228,10 +228,51 @@ export const getBlogCategories = async () => {
         const data = await response.json();
         
         // Handle backend response format
-        if (Array.isArray(data)) {
+        if (data.success && data.data && Array.isArray(data.data)) {
+          return data.data;
+        } else if (Array.isArray(data)) {
           return data;
         } else if (data.data && Array.isArray(data.data)) {
           return data.data;
+        }
+      }
+    } catch (error) {
+      continue;
+    }
+  }
+  
+  return [];
+};
+
+// Get popular blog tags
+export const getBlogTags = async () => {
+  const urlsToTry = [BACKEND_API_URL, ...FALLBACK_URLS];
+  
+  for (const baseUrl of urlsToTry) {
+    try {
+      const apiUrl = `${baseUrl}/frontend/api/blog/tags`;
+      
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 5000);
+      
+      const response = await fetch(apiUrl, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        signal: controller.signal
+      });
+
+      clearTimeout(timeoutId);
+
+      if (response.ok) {
+        const data = await response.json();
+        
+        // Handle backend response format
+        if (data.success && data.data) {
+          return data.data.map(tag => tag._id); // Extract tag names from the aggregation result
+        } else if (Array.isArray(data)) {
+          return data.map(tag => tag._id);
         }
       }
     } catch (error) {

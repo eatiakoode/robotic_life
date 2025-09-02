@@ -118,9 +118,37 @@ const getRelatedBlogs = asyncHandler(async (req, res) => {
   }
 });
 
+const getPopularTags = async (req, res) => {
+
+  try {
+
+    const tags = await Blog.aggregate([
+
+      { $unwind: "$tags" },
+      { $group: { _id: "$tags", count: { $sum: 1 } } }, 
+      { $sort: { count: -1 } },
+      { $limit: 10 }
+
+    ]);
+ 
+    res.status(200).json({
+      success: true,
+      data: tags
+    });
+
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Server Error",
+      error: error.message
+    });
+  }
+};
+
 module.exports = {
   getBlog,
   getallBlog,
   getBlogBySlug,
-  getRelatedBlogs
+  getRelatedBlogs,
+  getPopularTags
 };
