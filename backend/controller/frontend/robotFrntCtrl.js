@@ -1,6 +1,8 @@
 const asyncHandler = require("express-async-handler");
 const Robot = require("../../models/robotModel");
 const Category = require("../../models/categoryModel");
+const Color = require("../../models/colorModel");
+const Manufacturer = require("../../models/manufacturerModel");
  
 // Get Most Recent Robots
 const getRecentRobots = asyncHandler(async (req, res) => {
@@ -26,10 +28,6 @@ const getallRobots = asyncHandler(async (req, res) => {
       .populate("powerSource", "name")
       .populate("material", "name")
       .lean();
-
-
-
-
 
     res.json({
       success: true,
@@ -128,7 +126,6 @@ const filterRobots = async (req, res) => {
     let filter = {};
 
     if (minPrice || maxPrice) {
-      // Convert string prices to numbers for comparison
       filter.$expr = {
         $and: []
       };
@@ -146,14 +143,11 @@ const filterRobots = async (req, res) => {
       }
     }
 
-    // Add weight filtering to the database query
     if (minWeight || maxWeight) {
-      // If we don't have $expr yet, create it
       if (!filter.$expr) {
         filter.$expr = { $and: [] };
       }
       
-      // First, ensure the robot has weight data
       filter.$expr.$and.push({
         $and: [
           { $ne: ["$weight", null] },
@@ -163,9 +157,7 @@ const filterRobots = async (req, res) => {
       });
       
       if (minWeight) {
-        // Convert minWeight to grams for comparison
         const minWeightInGrams = convertWeight(Number(minWeight), weightUnit, "g");
-        // We need to convert the stored weight to grams for comparison
         filter.$expr.$and.push({
           $gte: [
             {
@@ -180,7 +172,7 @@ const filterRobots = async (req, res) => {
                       $cond: {
                         if: { $eq: ["$weight.unit", "lb"] },
                         then: { $multiply: [{ $toDouble: "$weight.value" }, 453.592] },
-                        else: { $toDouble: "$weight.value" } // Assume grams
+                        else: { $toDouble: "$weight.value" }
                       }
                     }
                   }
@@ -193,9 +185,7 @@ const filterRobots = async (req, res) => {
       }
       
       if (maxWeight) {
-        // Convert maxWeight to grams for comparison
         const maxWeightInGrams = convertWeight(Number(maxWeight), weightUnit, "g");
-        // We need to convert the stored weight to grams for comparison
         filter.$expr.$and.push({
           $lte: [
             {
@@ -210,7 +200,7 @@ const filterRobots = async (req, res) => {
                       $cond: {
                         if: { $eq: ["$weight.unit", "lb"] },
                         then: { $multiply: [{ $toDouble: "$weight.value" }, 453.592] },
-                        else: { $toDouble: "$weight.value" } // Assume grams
+                        else: { $toDouble: "$weight.value" }
                       }
                     }
                   }
@@ -231,12 +221,10 @@ const filterRobots = async (req, res) => {
     }
 
     if (manufacturers) {
-      const Manufacturer = require("../../models/manufacturerModel");
       
       if (typeof manufacturers === 'string') {
         const manufacturerNames = manufacturers.split(",");
         
-        // Find manufacturers by name
         const manufacturerDocs = await Manufacturer.find({
           name: { $in: manufacturerNames }
         }).select("_id name");
@@ -245,7 +233,6 @@ const filterRobots = async (req, res) => {
           const manufacturerIds = manufacturerDocs.map(doc => doc._id);
           filter.manufacturer = { $in: manufacturerIds };
         } else {
-          // Return empty result if manufacturer not found
           return res.status(200).json({
             success: true,
             count: 0,
@@ -256,12 +243,10 @@ const filterRobots = async (req, res) => {
     }
 
     if (colors) {
-      const Color = require("../../models/colorModel");
       
       if (typeof colors === 'string') {
         const colorNames = colors.split(",");
         
-        // Find colors by name
         const colorDocs = await Color.find({
           name: { $in: colorNames }
         }).select("_id name");
@@ -270,7 +255,6 @@ const filterRobots = async (req, res) => {
           const colorIds = colorDocs.map(doc => doc._id);
           filter.color = { $in: colorIds };
         } else {
-          // Return empty result if color not found
           return res.status(200).json({
             success: true,
             count: 0,
@@ -301,5 +285,37 @@ const filterRobots = async (req, res) => {
     });
   }
 };
+
+// Get Recently Viewed Robots
+const getRecentlyViewed = asyncHandler(async (req, res) => {
+  try {
+    let { ids } = req.body;
+
+    if (!ids || !Array.isArray(ids)) {
+      return res.status(400).json({
+        success: false,
+        message: "Please provide an array of robot IDs",
+      });
+    }
+
+    ids = [...new Set(ids)].slice(0, 2);
+
+    const robots = await Robot.find({ _id: { $in: ids } })
+      .select("title slug images totalPrice")
+      .lean();
+
+    res.json({
+      success: true,
+      count: robots.length,
+      data: robots,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Server Error",
+      error: error.message,
+    });
+  }
+});
  
-module.exports = { getRecentRobots, getallRobots, getRobotBySlug, filterRobots };
+module.exports = { getRecentRobots, getallRobots, getRobotBySlug, filterRobots, getRecentlyViewed };
