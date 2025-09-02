@@ -20,12 +20,24 @@ const getBlog = asyncHandler(async (req, res) => {
 });
 const getallBlog = asyncHandler(async (req, res) => {
   try {
-    const getallBlog = await Blog.find({"status":true}).select("title createdAt logoimage").populate("blogcategory","title").lean().limit(2);
     
-    // Transform the data to extract only filename from logoimage path
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 3;
+    const skip = (page - 1) * limit;
+
+    const totalBlogs = await Blog.countDocuments({"status": true});
+    
+    const getallBlog = await Blog.find({"status": true})
+      .select("title slug description source date logoimage createdAt")
+      .populate("blogcategory", "title")
+      .sort({ createdAt: -1 }) // Sort by newest first
+      .skip(skip)
+      .limit(limit)
+      .lean();
+
     const transformedBlogs = getallBlog.map(blog => {
       if (blog.logoimage) {
-        // Extract filename from path like "public/images/blogs/upload-1756280684139.png"
+       
         const filename = blog.logoimage.split('/').pop();
         return {
           ...blog,
@@ -35,7 +47,21 @@ const getallBlog = asyncHandler(async (req, res) => {
       return blog;
     });
     
-    res.json(transformedBlogs);
+    const totalPages = Math.ceil(totalBlogs / limit);
+    const hasNextPage = page < totalPages;
+    const hasPrevPage = page > 1;
+    
+    res.json({
+      blogs: transformedBlogs,
+      pagination: {
+        currentPage: page,
+        totalPages: totalPages,
+        totalBlogs: totalBlogs,
+        hasNextPage: hasNextPage,
+        hasPrevPage: hasPrevPage,
+        limit: limit
+      }
+    });
   } catch (error) {
     throw new Error(error);
   }

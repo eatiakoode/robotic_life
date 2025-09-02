@@ -49,13 +49,13 @@ export const getBlogById = async (id) => {
   return null;
 };
 
-// Get all blogs
-export const getAllBlogs = async () => {
+// Get all blogs with pagination
+export const getAllBlogs = async (page = 1, limit = 6) => {
   const urlsToTry = [BACKEND_API_URL, ...FALLBACK_URLS];
   
   for (const baseUrl of urlsToTry) {
     try {
-      const apiUrl = `${baseUrl}/frontend/api/blog`;
+      const apiUrl = `${baseUrl}/frontend/api/blog?page=${page}&limit=${limit}`;
       
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 5000);
@@ -73,11 +73,38 @@ export const getAllBlogs = async () => {
       if (response.ok) {
         const data = await response.json();
         
-        // Handle backend response format
-        if (Array.isArray(data)) {
-          return data;
+        // Handle new backend response format with pagination
+        if (data.blogs && data.pagination) {
+          return {
+            blogs: data.blogs,
+            pagination: data.pagination
+          };
+        }
+        // Handle old backend response format (fallback)
+        else if (Array.isArray(data)) {
+          return {
+            blogs: data,
+            pagination: {
+              currentPage: 1,
+              totalPages: 1,
+              totalBlogs: data.length,
+              hasNextPage: false,
+              hasPrevPage: false,
+              limit: limit
+            }
+          };
         } else if (data.data && Array.isArray(data.data)) {
-          return data.data;
+          return {
+            blogs: data.data,
+            pagination: {
+              currentPage: 1,
+              totalPages: 1,
+              totalBlogs: data.data.length,
+              hasNextPage: false,
+              hasPrevPage: false,
+              limit: limit
+            }
+          };
         }
       }
     } catch (error) {
@@ -85,7 +112,17 @@ export const getAllBlogs = async () => {
     }
   }
   
-  return [];
+  return {
+    blogs: [],
+    pagination: {
+      currentPage: 1,
+      totalPages: 1,
+      totalBlogs: 0,
+      hasNextPage: false,
+      hasPrevPage: false,
+      limit: limit
+    }
+  };
 };
 
 // Get blog by slug

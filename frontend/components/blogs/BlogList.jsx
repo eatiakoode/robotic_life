@@ -9,24 +9,39 @@ import { getAllBlogs } from "@/api/blog";
 
 export default function BlogList() {
   const [blogs, setBlogs] = useState([]);
+  const [pagination, setPagination] = useState({
+    currentPage: 1,
+    totalPages: 1,
+    totalBlogs: 0,
+    hasNextPage: false,
+    hasPrevPage: false,
+    limit: 6
+  });
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchBlogs = async () => {
-      try {
-        setLoading(true);
-        const blogsData = await getAllBlogs();
-        setBlogs(blogsData);
-      } catch (error) {
-        console.error('Error fetching blogs:', error);
-        setBlogs([]);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const fetchBlogs = async (page = 1) => {
+    try {
+      setLoading(true);
+      const response = await getAllBlogs(page, 6);
+      setBlogs(response.blogs || []);
+      setPagination(response.pagination || pagination);
+    } catch (error) {
+      console.error('Error fetching blogs:', error);
+      setBlogs([]);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    fetchBlogs();
+  useEffect(() => {
+    fetchBlogs(1);
   }, []);
+
+  const handlePageChange = (page) => {
+    fetchBlogs(page);
+    // Scroll to top when page changes
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   // Helper function to get image URL
   const getImageUrl = (imagePath) => {
@@ -119,13 +134,13 @@ export default function BlogList() {
                       </div>
                     </div>
                     <h5 className="title">
-                      <Link className="link" href={`/blog-detail/${post._id}`}>
+                      <Link className="link" href={`/blog-detail/${post.slug || post._id}`}>
                         {post.title}
                       </Link>
                     </h5>
                     <p>{post.description ? post.description.split(" ").slice(0, 20).join(" ") + "..." : "No description available"}</p>
                     <Link
-                      href={`/blog-detail/${post._id}`}
+                      href={`/blog-detail/${post.slug || post._id}`}
                       className="link text-button bot-button"
                     >
                       Read More
@@ -134,9 +149,17 @@ export default function BlogList() {
                 </div>
               ))
             )}
-            <ul className="wg-pagination">
-              <Pagination />
-            </ul>
+            {pagination.totalPages > 1 && (
+              <ul className="wg-pagination">
+                <Pagination 
+                  totalPages={pagination.totalPages}
+                  currentPage={pagination.currentPage}
+                  onPageChange={handlePageChange}
+                  totalItems={pagination.totalBlogs}
+                  itemsPerPage={pagination.limit}
+                />
+              </ul>
+            )}
           </div>
           <div className="col-lg-4">
             <Sidebar />

@@ -39,7 +39,7 @@ export default function Pagination({
         color: '#6c757d',
         fontSize: '14px'
       }}>
-        Showing {Math.min((currentPage - 1) * itemsPerPage + 1, totalItems)} to {Math.min(currentPage * itemsPerPage, totalItems)} of {totalItems} robots
+        Showing {Math.min((currentPage - 1) * itemsPerPage + 1, totalItems)} to {Math.min(currentPage * itemsPerPage, totalItems)} of {totalItems} blogs
       </div>
       
       {/* Pagination Controls */}

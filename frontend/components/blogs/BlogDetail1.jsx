@@ -113,32 +113,14 @@ export default function BlogDetail1({ blog }) {
             <h3 className="fw-5 mb_16">{blog.contentTitle}</h3>
           )}
           
-          {blog.contentParagraphs && blog.contentParagraphs.length > 0 ? (
-            blog.contentParagraphs.map((paragraph, index) => (
-              <p key={index} className="body-text-1 mb_16">
-                {paragraph}
-              </p>
-            ))
-          ) : (
-            // Fallback content if no dynamic paragraphs
-            <>
-              <p className="body-text-1 mb_16">
-                Donec eu dui condimentum, laoreet nulla vitae, venenatis ipsum.
-                Donec luctus sem sit amet varius laoreet. Aliquam fermentum sit amet
-                urna fringilla tincidunt. Vestibulum ullamcorper nec lacus ac
-                molestie. Curabitur congue neque sed nisi auctor consequat.
-                Pellentesque rhoncus tortor vitae ipsum sagittis tempor.
-              </p>
-              <p className="body-text-1 mb_16">
-                Vestibulum et pharetra arcu. In porta lobortis turpis. Ut faucibus
-                fermentum posuere. Suspendisse potenti. Mauris a metus sed est
-                semper vestibulum. Mauris tortor sem, consectetur vehicula vulputate
-                id, suscipit vel leo.
-              </p>
-            </>
+          {blog.contentParagraphs && (
+            // Handle contentParagraphs as a string (from backend model)
+            <div className="body-text-1 mb_16" style={{ whiteSpace: 'pre-line' }}>
+              {blog.contentParagraphs}
+            </div>
           )}
           
-          {blog.contentList && blog.contentList.length > 0 ? (
+          {blog.contentList && blog.contentList.length > 0 && (
             <ul className="list-text type-disc mb_16">
               {blog.contentList.map((item, index) => (
                 <li key={index} className="body-text-1">
@@ -146,59 +128,15 @@ export default function BlogDetail1({ blog }) {
                 </li>
               ))}
             </ul>
-          ) : (
-            // Fallback list if no dynamic list items
-            <ul className="list-text type-disc mb_16">
-              <li className="body-text-1">
-                15+ years of industry experience designing, building, and
-                supporting large-scale distributed systems in production, with
-                recent experience in building large scale cloud services.
-              </li>
-              <li className="body-text-1">
-                Deep knowledge and experience with different security areas like
-                identity and access management, cryptography, network security,
-                etc.
-              </li>
-              <li className="body-text-1">
-                Experience with database systems and database internals, such as
-                query engines and optimizers are a big plus.
-              </li>
-              <li className="body-text-1">
-                Strong fundamentals in computer science skills.
-              </li>
-              <li className="body-text-1">
-                Expert-level development skills in Java or C++.
-              </li>
-              <li className="body-text-1">
-                Knowledge of industry standard security concepts and protocols
-                like SAML, SCIM, OAuth, RBAC, cryptography is a plus.
-              </li>
-              <li className="body-text-1">
-                Advanced degree in Computer Science or related degree.
-              </li>
-              <li className="body-text-1">
-                Ph.D. in the related field is a plus
-              </li>
-            </ul>
           )}
           
-          <p className="body-text-1 mb_16">
-            Curabitur aliquam ac arcu in mattis. Phasellus pulvinar erat at
-            aliquam hendrerit. Nam ut velit dolor. Sed fermentum tempus odio, ac
-            faucibus elit scelerisque consequat. Fusce ac malesuada elit. Nam at
-            aliquam libero, quis lacinia erat. In hac habitasse platea dictumst.
-            Suspendisse id dolor orci. Vivamus at aliquam tellus. Vestibulum a
-            augue ac purus suscipit varius non eget lectus. Nam lobortis mauris
-            luctus tristique feugiat. Nulla eleifend risus sit amet nisi
-            feugiat, id eleifend sapien malesuada. Phasellus venenatis convallis
-            mattis. Duis vel tempor eros. Mauris semper sollicitudin neque,
-            imperdiet ultrices urna maximus id.
-          </p>
+
         </div>
         <div className="bot d-flex justify-content-between gap-10 flex-wrap">
           <ul className="list-tags has-bg">
             <li>Tag:</li>
             {blog.tags && blog.tags.length > 0 ? (
+              // Handle tags as array from backend model
               blog.tags.map((tag, index) => (
                 <li key={index}>
                   <a href="#" className="link">
@@ -206,20 +144,23 @@ export default function BlogDetail1({ blog }) {
                   </a>
                 </li>
               ))
-            ) : (
-              <>
-                <li>
+            ) : blog.tags && typeof blog.tags === 'string' && blog.tags.trim() ? (
+              // Handle tags as comma-separated string (from admin form)
+              blog.tags.split(',').map((tag, index) => (
+                <li key={index}>
                   <a href="#" className="link">
-                    {blog.blogcategory?.title || "Blog"}
+                    {tag.trim()}
                   </a>
                 </li>
-                <li>
-                  <a href="#" className="link">
-                    Trending
-                  </a>
-                </li>
-              </>
-            )}
+              ))
+            ) : blog.blogcategory?.title ? (
+              // Only show category if no tags
+              <li>
+                <a href="#" className="link">
+                  {blog.blogcategory.title}
+                </a>
+              </li>
+            ) : null}
           </ul>
           <div className="d-flex align-items-center justify-content-between gap-16">
             <p>Share this post:</p>

@@ -5,14 +5,29 @@ import RelatedBlogs from "@/components/blogs/RelatedBlogs";
 import Footer1 from "@/components/footers/Footer1";
 import Header1 from "@/components/headers/Header1";
 // import Topbar6 from "@/components/headers/Topbar6";
-import { getBlogById } from "@/api/blog";
+import { getBlogById, getBlogBySlug } from "@/api/blog";
 import React from "react";
 
 export default async function BlogDetailsPage1({ params }) {
   const { id } = await params;
 
-  // Fetch blog data from backend
-  const blog = await getBlogById(id);
+  // Try to fetch blog by slug first, then by ID as fallback
+  let blog = null;
+  try {
+    // Check if the id looks like a slug (contains hyphens and no special characters)
+    if (id && !id.match(/^[0-9a-fA-F]{24}$/)) {
+      // It's likely a slug
+      blog = await getBlogBySlug(id);
+    }
+    
+    // If not found by slug or it's an ID, try by ID
+    if (!blog) {
+      blog = await getBlogById(id);
+    }
+  } catch (error) {
+    console.error('Error fetching blog:', error);
+    blog = null;
+  }
   
   // Fallback to default blog if not found
   if (!blog) {
