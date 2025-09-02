@@ -16,8 +16,8 @@ const createBlog = asyncHandler(async (req, res) => {
     }
     if (req.body.slug) {
       req.body.slug = slugify(req.body.slug.toLowerCase());
-    } else if (req.body.name) {
-      req.body.slug = slugify(req.body.name.toLowerCase());
+    } else if (req.body.title) {
+      req.body.slug = slugify(req.body.title.toLowerCase());
     } else {
       req.body.slug = "";
     }
@@ -50,8 +50,8 @@ const updateBlog = asyncHandler(async (req, res) => {
     }
     if (req.body.slug) {
       req.body.slug = slugify(req.body.slug.toLowerCase());
-    } else if (req.body.name) {
-      req.body.slug = slugify(req.body.name.toLowerCase());
+    } else if (req.body.title) {
+      req.body.slug = slugify(req.body.title.toLowerCase());
     }
     const updatedBlog = await Blog.findByIdAndUpdate(id, req.body, {
       new: true,

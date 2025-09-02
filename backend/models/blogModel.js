@@ -26,13 +26,8 @@ var blogSchema = new mongoose.Schema(
       index: true,
     },
     contentParagraphs: {
-      type: [String],
-      default: [],
-      index: true,
-    },
-    contentList: {
-      type: [String],
-      default: [],
+      type: String,
+      default: "",
       index: true,
     },
     tags: {
@@ -44,11 +39,6 @@ var blogSchema = new mongoose.Schema(
       type: String,
       // required: true,
       // unique: true,
-      index: true,
-    },
-    additionalImages: {
-      type: [String],
-      default: [],
       index: true,
     },
     blogcategory: {
