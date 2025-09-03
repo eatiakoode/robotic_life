@@ -8,7 +8,9 @@ import Image from "next/image";
 import { useContextElement } from "@/context/Context";
 import ProductStikyBottom from "../ProductStikyBottom";
 export default function Details1({ product }) {
-  const [activeColor, setActiveColor] = useState("gray");
+  const [activeColor, setActiveColor] = useState(
+    product.colors && product.colors.length > 0 ? product.colors[0].color : "gray"
+  );
   const [quantity, setQuantity] = useState(1);
   const {
     addProductToCart,
@@ -105,6 +107,7 @@ export default function Details1({ product }) {
                     <ColorSelect
                       setActiveColor={setActiveColor}
                       activeColor={activeColor}
+                      colorOptions={product.colors || []}
                     />
                     <SizeSelect />
                     <div className="tf-product-info-quantity">

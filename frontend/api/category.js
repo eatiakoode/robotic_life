@@ -208,6 +208,8 @@ export const getRobotsByCategorySlug = async (categorySlug) => {
 
 
 
+
+
   // Try multiple backend URLs
   const urlsToTry = [BACKEND_API_URL, ...FALLBACK_URLS];
 
@@ -273,6 +275,7 @@ export const getRobotsByCategorySlug = async (categorySlug) => {
 
           continue; // Try next URL
         }
+
 
 
         return robots;

@@ -198,19 +198,15 @@ export default function Products1({ parentClass = "flat-spacing" }) {
   // Helper function to transform robot data for ProductCard1
   const transformRobotData = (robots) => {
     return robots.map(robot => {
-      // Get the first image as main image
-      const mainImage = robot.images && robot.images.length > 0 
-        ? (robot.images[0].startsWith('http') 
-            ? robot.images[0] 
-            : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}${robot.images[0].startsWith('/') ? robot.images[0] : `/${robot.images[0]}`}`)
-        : '/images/products/product-1.jpg';
+      // Get the main image, prioritizing robot.imgSrc, then robot.images[0], then fallback
+      const mainImage = robot.imgSrc || (robot.images && robot.images.length > 0 ? robot.images[0] : '/images/products/product-1.jpg');
+      // Ensure it's a full URL if it's a relative path
+      const finalMainImage = mainImage.startsWith('http') ? mainImage : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}${mainImage.startsWith('/') ? mainImage : `/${mainImage}`}`;
 
-      // Get the second image as hover image, or use the first image if no second image
-      const hoverImage = robot.images && robot.images.length > 1 
-        ? (robot.images[1].startsWith('http') 
-            ? robot.images[1] 
-            : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}${robot.images[1].startsWith('/') ? robot.images[1] : `/${robot.images[1]}`}`)
-        : mainImage;
+      // Get the hover image, prioritizing robot.imgHover, then robot.images[1], then fallback to main image
+      const hoverImage = robot.imgHover || (robot.images && robot.images.length > 1 ? robot.images[1] : finalMainImage);
+      // Ensure it's a full URL if it's a relative path
+      const finalHoverImage = hoverImage.startsWith('http') ? hoverImage : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}${hoverImage.startsWith('/') ? hoverImage : `/${hoverImage}`}`;
 
       // Transform colors if they exist
       let colors = [];
@@ -238,9 +234,9 @@ export default function Products1({ parentClass = "flat-spacing" }) {
       return {
         ...robot,
         id: robot._id,
-        imgSrc: mainImage,
-        imgHover: hoverImage,
-        price: parseFloat(robot.totalPrice) || 0,
+        imgSrc: finalMainImage,
+        imgHover: finalHoverImage,
+        price: parseFloat(robot.totalPrice) || parseFloat(robot.price) || parseFloat(robot.cost) || 0,
         colors: colors,
         inStock: true,
         oldPrice: null,
@@ -263,57 +259,56 @@ export default function Products1({ parentClass = "flat-spacing" }) {
 
     let filteredProducts = [...productMain];
     
-    // Check if we should use backend filtering (excluding category which has its own logic)
-    const shouldUseBackendFiltering = brands.length > 0 || color !== "All" || (weight && weight.length === 2 && (weight[0] !== weightBounds[0] || weight[1] !== weightBounds[1]));
-    
-    if (shouldUseBackendFiltering) {
-      try {
-        // Prepare filters for backend
-        const additionalFilters = {};
-        
-        // Add category if selected
-        if (selectedParentCategory) {
-          additionalFilters.category = selectedParentCategory.slug;
-        }
-        
-        if (brands.length > 0) {
-          additionalFilters.manufacturers = brands;
-        }
-        
-        if (color !== "All" && color.name) {
-          additionalFilters.colors = [color.name];
-        }
-        
-        if (price && price.length === 2) {
-          additionalFilters.minPrice = price[0];
-          additionalFilters.maxPrice = price[1];
-        }
-        
-        if (weight && weight.length === 2 && (weight[0] !== weightBounds[0] || weight[1] !== weightBounds[1])) {
-          additionalFilters.minWeight = weight[0];
-          additionalFilters.maxWeight = weight[1];
-          additionalFilters.weightUnit = weightUnit;
-        }
-        
-        // Use backend filtering
-        const backendResults = await getFilteredProducts(additionalFilters);
-        
-        if (backendResults && backendResults.length >= 0) {
-          filteredProducts = backendResults;
-          
-          // Still apply client-side filters that aren't supported by backend
-          if (size !== "All" && size !== "Free Size") {
-            filteredProducts = filteredProducts.filter((elm) =>
-              elm.filterSizes.includes(size)
-            );
-          }
-          
-          dispatch({ type: "SET_FILTERED", payload: filteredProducts });
-          return;
-        }
-      } catch (error) {
-        // Backend filtering failed, fallback to client-side
+    // Always use backend filtering for consistency (same as search bar logic)
+    try {
+      // Prepare filters for backend
+      const additionalFilters = {};
+      
+      // Add category if selected (prioritize subcategory over parent category)
+      if (selectedSubCategory) {
+        additionalFilters.category = selectedSubCategory.slug;
+      } else if (selectedParentCategory) {
+        additionalFilters.category = selectedParentCategory.slug;
       }
+      
+      if (brands.length > 0) {
+        additionalFilters.manufacturers = brands;
+      }
+      
+      if (color !== "All" && color.name) {
+        additionalFilters.colors = [color.name];
+      }
+      
+      if (price && price.length === 2) {
+        additionalFilters.minPrice = price[0];
+        additionalFilters.maxPrice = price[1];
+      }
+      
+      if (weight && weight.length === 2 && (weight[0] !== weightBounds[0] || weight[1] !== weightBounds[1])) {
+        additionalFilters.minWeight = weight[0];
+        additionalFilters.maxWeight = weight[1];
+        additionalFilters.weightUnit = weightUnit;
+      }
+      
+      // Use backend filtering (same as search bar)
+      const backendResults = await getFilteredProducts(additionalFilters);
+      
+      if (backendResults && backendResults.length >= 0) {
+        filteredProducts = backendResults;
+        
+        // Still apply client-side filters that aren't supported by backend
+        if (size !== "All" && size !== "Free Size") {
+          filteredProducts = filteredProducts.filter((elm) =>
+            elm.filterSizes.includes(size)
+          );
+        }
+        
+        dispatch({ type: "SET_FILTERED", payload: filteredProducts });
+        return;
+      }
+    } catch (error) {
+      // Backend filtering failed, fallback to client-side
+      console.log('Backend filtering failed, using client-side filtering:', error);
     }
 
     // Apply filters sequentially
@@ -350,57 +345,8 @@ export default function Products1({ parentClass = "flat-spacing" }) {
       filteredProducts = filteredProducts.filter((elm) => elm.oldPrice);
     }
 
-    // Filter by parent category - using backend category data
-    // BUT: Skip category filtering if we loaded category data from URL to avoid overwriting it
-    if (selectedParentCategory && !urlCategoryLoaded) {
-      // Reset to first page when category changes
-      dispatch({ type: "SET_CURRENT_PAGE", payload: 1 });
-      
-      // Only use backend category filtering if we're not already using backend filtering for other filters
-      if (!shouldUseBackendFiltering) {
-      // Try backend filtering first, then fallback to client-side filtering
-      try {
-        const categoryProducts = await getProductsByCategory(selectedParentCategory);
-        if (categoryProducts && categoryProducts.length > 0) {
-          // Replace the current products with category-specific products
-          filteredProducts = categoryProducts;
-          
-          // Category products loaded successfully - auto-refresh price bounds
-          refreshPriceBounds(categoryProducts);
-        } else {
-          // Fallback to client-side filtering
-          filteredProducts = productMain.filter(product => {
-            const productCategoryId = product.category?._id || product.categoryId;
-            const selectedCategoryId = selectedParentCategory._id;
-            return productCategoryId === selectedCategoryId;
-          });
-          
-          if (filteredProducts.length > 0) {
-            refreshPriceBounds(filteredProducts);
-          } else {
-            filteredProducts = [];
-          }
-        }
-      } catch (error) {
-        // Fallback to client-side filtering
-        filteredProducts = productMain.filter(product => {
-          const productCategoryId = product.category?._id || product.categoryId;
-          const selectedCategoryId = selectedParentCategory._id;
-          return productCategoryId === selectedCategoryId;
-        });
-        
-        if (filteredProducts.length > 0) {
-          refreshPriceBounds(filteredProducts);
-        } else {
-          filteredProducts = [];
-          }
-        }
-      }
-    } else if (!selectedParentCategory) {
-      // No category selected, show all products
-      filteredProducts = [...productMain];
-    }
-    // If urlCategoryLoaded is true, we keep the existing filteredProducts (which came from URL category loading)
+    // Category filtering is now handled by backend filtering above
+    // No need for separate category logic since we use the same backend API as search bar
 
     // Filter by sub category - using backend category data
     if (selectedSubCategory) {
@@ -490,18 +436,19 @@ export default function Products1({ parentClass = "flat-spacing" }) {
           dispatch({ type: "SET_PARENT_CATEGORY", payload: null });
           dispatch({ type: "SET_SUB_CATEGORY", payload: null });
           
-          // Fetch robots by category slug using the backend API
-          const robots = await getRobotsByCategorySlug(categorySlug);
+          // Use the same backend filtering logic as search bar
+          const filters = {
+            category: categorySlug
+          };
           
-          if (robots && robots.length > 0) {
-            // Transform robot data for ProductCard1 compatibility
-            const transformedRobots = transformRobotData(robots);
-            
-            // Set the robots as the main products
-            setProductMain(transformedRobots);
+          const filteredResults = await getFilteredProducts(filters);
+          
+          if (filteredResults && filteredResults.length > 0) {
+            // Set the robots as the main products (already transformed by getFilteredProducts)
+            setProductMain(filteredResults);
             
             // Set filtered products
-            dispatch({ type: "SET_FILTERED", payload: transformedRobots });
+            dispatch({ type: "SET_FILTERED", payload: filteredResults });
             
             // Create a category object for the state
             const categoryObj = {
@@ -519,8 +466,8 @@ export default function Products1({ parentClass = "flat-spacing" }) {
             }
             
             // Auto-refresh price bounds for the category products
-            refreshPriceBounds(transformedRobots);
-            refreshWeightBounds(transformedRobots);
+            refreshPriceBounds(filteredResults);
+            refreshWeightBounds(filteredResults);
             
             setUrlCategoryLoaded(true);
           } else {

@@ -40,7 +40,7 @@ export const getAllColors = async () => {
         // Transform to match frontend structure with CSS classes
         const transformedColors = colors.map(color => ({
           name: color.name,
-          className: getColorClassName(color.name) // Map to CSS class
+          bgColor: getColorClassName(color.name) // Map to CSS class
         }));
         
         return transformedColors;
@@ -107,7 +107,9 @@ const getColorClassName = (colorName) => {
     'Green': 'bg-light-green',
     'Black': 'bg-main',
     'White': 'bg-white line-black',
-    'Purple': 'bg-purple-3',
+    'Purple': 'bg-purple-2',
+    'Violet': 'bg-purple-2',
+    'Voilet': 'bg-purple-2', // Handle misspelling from backend
     'Grey': 'bg-grey',
     'Gray': 'bg-grey',
     'Light Blue': 'bg-light-blue-5',
