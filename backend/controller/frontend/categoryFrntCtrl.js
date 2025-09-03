@@ -68,4 +68,54 @@ const getFilteredRobotsByParentCategory = asyncHandler(async (req, res) => {
     res.status(200).json(robots);
 });
 
-module.exports = { getActiveParentCategories, getFilteredRobotsByParentCategory };
+const getRobotsByCategorySlug = asyncHandler(async (req, res) => {
+  try {
+    const { slug } = req.params;
+
+    if (!slug) {
+      return res.status(400).json({
+        success: false,
+        message: "Category slug is required",
+      });
+    }
+
+    const category = await Category.findOne({ slug });
+    if (!category) {
+      return res.status(404).json({
+        success: false,
+        message: "Category not found",
+      });
+    }
+
+    let categoryIds = [category._id];
+
+    if (!category.parent) {
+      const subcategories = await Category.find({ parent: category._id }).select("_id");
+      categoryIds = categoryIds.concat(subcategories.map((c) => c._id));
+    }
+
+    const robots = await Robot.find({
+      category: { $in: categoryIds },
+      status: true,
+    })
+      .populate("category", "name slug")
+      .populate("manufacturer", "name")
+      .populate("countryOfOrigin", "name")
+      .populate("powerSource", "name");
+
+    res.status(200).json({
+      success: true,
+      count: robots.length,
+      data: robots,
+    });
+  } catch (error) {
+    console.error("Error fetching robots by category slug:", error);
+    res.status(500).json({
+      success: false,
+      message: "Server Error",
+      error: error.message,
+    });
+  }
+});
+
+module.exports = { getActiveParentCategories, getFilteredRobotsByParentCategory, getRobotsByCategorySlug };
