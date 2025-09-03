@@ -120,7 +120,7 @@ export default function Products() {
               </ul>
             </div>
             <Link href={`/shop-filter-canvas`} className="btn-line">
-              View All Products
+              View All Robots
             </Link>
           </div>
           <div className="flat-animate-tab">

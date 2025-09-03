@@ -121,7 +121,7 @@ export default function Collections2() {
                         href={`/shop-filter-canvas`}
                         className="tf-btn btn-fill btn-white btn-md"
                       >
-                        <span className="text">Shop now</span>
+                        <span className="text">View More</span>
                         <i className="icon icon-arrowUpRight" />
                       </Link>
                     </div>
@@ -201,7 +201,7 @@ export default function Collections2() {
                       href={`/shop-filter-canvas`}
                       className="tf-btn btn-fill btn-white btn-md"
                     >
-                      <span className="text">Shop now</span>
+                      <span className="text">View More</span>
                       <i className="icon icon-arrowUpRight" />
                     </Link>
                   </div>

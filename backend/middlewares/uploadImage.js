@@ -263,25 +263,11 @@ const sliderImgResize = async (files) => {
       const outputPath = path.join(outputDir, filename);
 
       try {
-        const ext = path.extname(file.originalname).toLowerCase();
-        
-        if (ext === ".svg" || ext === ".webp") {
-          // Copy vectors/WEBP as-is to preserve quality
-          fs.copyFileSync(file.path, outputPath);
-        } else {
-          // Resize with fit: "contain" to preserve aspect ratio and prevent cropping
-          const isPng = ext === ".png";
-          const pipeline = sharp(file.path).resize(1920, 600, {
-            fit: "contain", // 👈 This prevents cropping and preserves aspect ratio
-            background: isPng ? { r: 255, g: 255, b: 255, alpha: 0 } : { r: 255, g: 255, b: 255, alpha: 1 },
-          });
-          
-          if (isPng) {
-            await pipeline.png({ quality: 90 }).toFile(outputPath);
-          } else {
-            await pipeline.jpeg({ quality: 90 }).toFile(outputPath);
-          }
-        }
+        await sharp(file.path)
+          .resize(1920, 600) // 👈 typical banner ratio
+          .toFormat("jpeg")
+          .jpeg({ quality: 90 })
+          .toFile(outputPath);
 
         fs.unlinkSync(file.path); // remove temp uploaded file
         console.log("Successfully processed:", filename);
