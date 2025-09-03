@@ -267,9 +267,9 @@ const sliderImgResize = async (files) => {
           .resize({
             width: 1920,
             height: 600,
-            fit: "cover",
+            fit: "contain",
             background: { r: 0, g: 0, b: 0, alpha: 1 },
-            position: "center"
+            // position: "center"
           })
           .toFormat("jpeg")
           .jpeg({ quality: 90 })

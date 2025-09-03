@@ -14,29 +14,36 @@ export default function ShopDefaultGridPage() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const categoryId = searchParams.get('category');
+    const categorySlug = searchParams.get('category');
     const categoryNameParam = searchParams.get('categoryName');
+    const categoryType = searchParams.get('type');
     
     if (categoryNameParam) {
       setCategoryName(decodeURIComponent(categoryNameParam));
-    } else if (categoryId) {
-      // If we have categoryId but no name, fetch the category name
+    } else if (categorySlug) {
+      // If we have categorySlug but no name, fetch the category name
       const fetchCategoryName = async () => {
         try {
           setLoading(true);
           const categories = await getParentCategories();
-          const category = categories.find(cat => cat._id === categoryId);
+          const category = categories.find(cat => cat.slug === categorySlug);
           if (category) {
             setCategoryName(category.name);
+          } else {
+            // If not found in parent categories, it might be a subcategory
+            setCategoryName(categorySlug);
           }
         } catch (error) {
           console.error('Error fetching category name:', error);
+          setCategoryName(categorySlug);
         } finally {
           setLoading(false);
         }
       };
       
       fetchCategoryName();
+    } else {
+      setCategoryName("All Robots");
     }
   }, [searchParams]);
 

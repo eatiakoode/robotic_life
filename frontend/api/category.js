@@ -36,7 +36,7 @@ export const getParentCategories = async () => {
 
       if (response.ok) {
         const data = await response.json();
-        console.log('📥 Parent categories response:', data);
+
         
         // Handle different response formats
         let categories = [];
@@ -53,10 +53,10 @@ export const getParentCategories = async () => {
 
         return categories;
       } else {
-        console.log('Failed to fetch parent categories, status:', response.status);
+
       }
     } catch (error) {
-      console.log('Error fetching parent categories:', error);
+
       continue; // Try next URL
     }
   }
@@ -72,7 +72,7 @@ export const getSubCategories = async (parentId) => {
     return [];
   }
 
-  console.log('🚀 Starting getSubCategories for parentId:', parentId);
+
 
   // Try multiple backend URLs
   const urlsToTry = [BACKEND_API_URL, ...FALLBACK_URLS];
@@ -96,11 +96,11 @@ export const getSubCategories = async (parentId) => {
 
       clearTimeout(timeoutId);
 
-      console.log('📡 Response status:', response.status, 'for URL:', apiUrl);
+
 
       if (response.ok) {
         const data = await response.json();
-        console.log('📥 Raw response from backend:', data);
+
 
         // Handle different response formats
         let categories = [];
@@ -113,7 +113,7 @@ export const getSubCategories = async (parentId) => {
           categories = data;
 
         } else {
-          console.log('Unexpected response format:', data);
+
           continue; // Try next URL
         }
 
@@ -125,19 +125,19 @@ export const getSubCategories = async (parentId) => {
         return categories;
       } else {
         const errorText = await response.text();
-        console.log('Failed to fetch sub-categories from:', baseUrl, 'Status:', response.status, 'Error:', errorText);
+
       }
     } catch (error) {
       if (error.name === 'AbortError') {
-        console.log('Request timeout for:', baseUrl);
+
       } else {
-        console.log('Error fetching sub-categories from:', baseUrl, error.message);
+
       }
       continue; // Try next URL
     }
   }
 
-  console.log('Failed to fetch sub-categories from all URLs, returning empty array');
+
   return [];
 };
 
@@ -182,18 +182,114 @@ export const getAllCategories = async () => {
         
         return categories;
       } else {
-        console.log('Failed to fetch all categories from:', baseUrl, 'Status:', response.status);
+
       }
     } catch (error) {
       if (error.name === 'AbortError') {
-        console.log('Request timeout for:', baseUrl);
+
       } else {
-        console.log('Error fetching all categories from:', baseUrl, error.message);
+
       }
       continue; // Try next URL
     }
   }
   
-  console.log('Failed to fetch all categories from all URLs, returning empty array');
+
+  return [];
+};
+
+// Get robots by category slug (handles both parent and subcategory)
+export const getRobotsByCategorySlug = async (categorySlug) => {
+  // Validate categorySlug
+  if (!categorySlug) {
+    console.warn('⚠️ No categorySlug provided to getRobotsByCategorySlug');
+    return [];
+  }
+
+
+
+  // Try multiple backend URLs
+  const urlsToTry = [BACKEND_API_URL, ...FALLBACK_URLS];
+
+  for (const baseUrl of urlsToTry) {
+    try {
+      // Try the original slug first
+      let apiUrl = `${baseUrl}/frontend/api/category/${categorySlug}`;
+      
+      // Add timeout to prevent hanging requests
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+
+      let response = await fetch(apiUrl, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        signal: controller.signal
+      });
+
+      clearTimeout(timeoutId);
+
+
+      
+      // If not found, try with different case variations
+      if (!response.ok && response.status === 404) {
+
+        
+        // Try capitalized version
+        const capitalizedSlug = categorySlug.charAt(0).toUpperCase() + categorySlug.slice(1);
+        apiUrl = `${baseUrl}/frontend/api/category/${capitalizedSlug}`;
+        
+        const controller2 = new AbortController();
+        const timeoutId2 = setTimeout(() => controller2.abort(), 10000);
+        
+        response = await fetch(apiUrl, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          signal: controller2.signal
+        });
+        
+        clearTimeout(timeoutId2);
+
+      }
+
+      if (response.ok) {
+        const data = await response.json();
+
+
+        // Handle different response formats
+        let robots = [];
+        if (data.success && data.data && Array.isArray(data.data)) {
+          // Backend returns { success: true, data: [...] }
+          robots = data.data;
+
+        } else if (Array.isArray(data)) {
+          // Backend returns array directly
+          robots = data;
+
+        } else {
+
+          continue; // Try next URL
+        }
+
+
+        return robots;
+      } else {
+        const errorText = await response.text();
+
+      }
+    } catch (error) {
+      if (error.name === 'AbortError') {
+
+      } else {
+
+      }
+      continue; // Try next URL
+    }
+  }
+
+
   return [];
 };

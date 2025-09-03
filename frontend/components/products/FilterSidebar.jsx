@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import {
   availabilityOptions,
   brands,
@@ -12,6 +13,7 @@ import { getParentCategories, getSubCategories } from "@/api/category";
 
 import RangeSlider from "react-range-slider-input";
 export default function FilterSidebar({ allProps }) {
+  const router = useRouter();
   const [parentCategories, setParentCategories] = useState([]);
   const [subCategories, setSubCategories] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -34,18 +36,18 @@ export default function FilterSidebar({ allProps }) {
     fetchParentCategories();
   }, []);
 
-  // Handle parent category selection
+  // Handle parent category selection - navigate to listing page with all robots including subcategories
   const handleParentCategorySelect = async (category) => {
-    allProps.setParentCategory(category);
-    
-    // Fetch sub-categories for the selected parent
-    try {
-      const subs = await getSubCategories(category._id);
-      setSubCategories(subs);
-    } catch (error) {
-      console.error('Error fetching sub-categories:', error);
-      setSubCategories([]);
-    }
+    // Navigate to the listing page with the parent category
+    // This will show all robots in the parent category including its subcategories
+    router.push(`/shop-default-grid?category=${category.slug}&categoryName=${encodeURIComponent(category.name)}&type=parent`);
+  };
+
+  // Handle subcategory selection - navigate to listing page with only subcategory robots
+  const handleSubCategorySelect = async (subcategory) => {
+    // Navigate to the listing page with the subcategory
+    // This will show only robots in the specific subcategory
+    router.push(`/shop-default-grid?category=${subcategory.slug}&categoryName=${encodeURIComponent(subcategory.name)}&type=subcategory`);
   };
 
   return (
@@ -105,7 +107,7 @@ export default function FilterSidebar({ allProps }) {
                         }`}
                         onClick={(e) => {
                           e.preventDefault();
-                          allProps.setSubCategory(category);
+                          handleSubCategorySelect(category);
                         }}
                         style={{
                           display: 'block',

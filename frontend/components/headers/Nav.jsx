@@ -201,7 +201,7 @@ export default function Nav() {
                             }}
                           >
                             <Link 
-                              href={`/shop-default-grid?category=${category._id}&categoryName=${encodeURIComponent(category.name)}`}
+                              href={`/shop-default-grid?category=${category.slug}&categoryName=${encodeURIComponent(category.name)}&type=parent`}
                               style={{ textDecoration: 'none', color: 'inherit' }}
                             >
                               {category.name}
@@ -212,7 +212,7 @@ export default function Nav() {
                               getSubcategoriesForParent(category._id).map((subcategory, subIndex) => (
                                 <li key={subcategory._id} className="menu-item-li subcategory-item" style={{ marginBottom: '4px' }}>
                                   <Link 
-                                    href={`/shop-default-grid?category=${subcategory._id}&categoryName=${encodeURIComponent(subcategory.name)}`} 
+                                    href={`/shop-default-grid?category=${subcategory.slug}&categoryName=${encodeURIComponent(subcategory.name)}&type=subcategory`} 
                                     className="menu-link-text"
                                     style={{ 
                                       paddingLeft: '0px', 
@@ -272,7 +272,7 @@ export default function Nav() {
                             }}
                           >
                             <Link 
-                              href={`/shop-default-grid?category=${category._id}&categoryName=${encodeURIComponent(category.name)}`}
+                              href={`/shop-default-grid?category=${category.slug}&categoryName=${encodeURIComponent(category.name)}&type=parent`}
                               style={{ textDecoration: 'none', color: 'inherit' }}
                             >
                               {category.name}
@@ -283,7 +283,7 @@ export default function Nav() {
                               getSubcategoriesForParent(category._id).map((subcategory, subIndex) => (
                                 <li key={subcategory._id} className="menu-item-li subcategory-item" style={{ marginBottom: '4px' }}>
                                   <Link 
-                                    href={`/shop-default-grid?category=${subcategory._id}&categoryName=${encodeURIComponent(subcategory.name)}`} 
+                                    href={`/shop-default-grid?category=${subcategory.slug}&categoryName=${encodeURIComponent(subcategory.name)}&type=subcategory`} 
                                     className="menu-link-text"
                                     style={{ 
                                       paddingLeft: '0px', 
@@ -343,7 +343,7 @@ export default function Nav() {
                             }}
                           >
                             <Link 
-                              href={`/shop-default-grid?category=${category._id}&categoryName=${encodeURIComponent(category.name)}`}
+                              href={`/shop-default-grid?category=${category.slug}&categoryName=${encodeURIComponent(category.name)}&type=parent`}
                               style={{ textDecoration: 'none', color: 'inherit' }}
                             >
                               {category.name}
@@ -354,7 +354,7 @@ export default function Nav() {
                               getSubcategoriesForParent(category._id).map((subcategory, subIndex) => (
                                 <li key={subcategory._id} className="menu-item-li subcategory-item" style={{ marginBottom: '4px' }}>
                                   <Link 
-                                    href={`/shop-default-grid?category=${subcategory._id}&categoryName=${encodeURIComponent(subcategory.name)}`} 
+                                    href={`/shop-default-grid?category=${subcategory.slug}&categoryName=${encodeURIComponent(subcategory.name)}&type=subcategory`} 
                                     className="menu-link-text"
                                     style={{ 
                                       paddingLeft: '0px', 
@@ -414,7 +414,7 @@ export default function Nav() {
                             }}
                           >
                             <Link 
-                              href={`/shop-default-grid?category=${category._id}&categoryName=${encodeURIComponent(category.name)}`}
+                              href={`/shop-default-grid?category=${category.slug}&categoryName=${encodeURIComponent(category.name)}&type=parent`}
                               style={{ textDecoration: 'none', color: 'inherit' }}
                             >
                               {category.name}
@@ -425,7 +425,7 @@ export default function Nav() {
                               getSubcategoriesForParent(category._id).map((subcategory, subIndex) => (
                                 <li key={subcategory._id} className="menu-item-li subcategory-item" style={{ marginBottom: '4px' }}>
                                   <Link 
-                                    href={`/shop-default-grid?category=${subcategory._id}&categoryName=${encodeURIComponent(subcategory.name)}`} 
+                                    href={`/shop-default-grid?category=${subcategory.slug}&categoryName=${encodeURIComponent(subcategory.name)}&type=subcategory`} 
                                     className="menu-link-text"
                                     style={{ 
                                       paddingLeft: '0px', 
@@ -476,7 +476,7 @@ export default function Nav() {
                         {subcategories[hoveredCategory._id].map((subcategory, index) => (
                           <li key={subcategory._id} className="menu-item-li">
                             <Link 
-                              href={`/shop-default-grid?category=${subcategory._id}&categoryName=${encodeURIComponent(subcategory.name)}`} 
+                              href={`/shop-default-grid?category=${subcategory.slug}&categoryName=${encodeURIComponent(subcategory.name)}&type=subcategory`} 
                               className="menu-link-text"
                             >
                               {subcategory.name}

@@ -118,7 +118,7 @@ export default function SearchModal() {
     }
     
     // Navigate to product listing page with category filter
-    router.push(`/shop-default-grid?category=${encodeURIComponent(category._id)}&categoryName=${encodeURIComponent(category.name)}`);
+    router.push(`/shop-default-grid?category=${encodeURIComponent(category.slug)}&categoryName=${encodeURIComponent(category.name)}&type=parent`);
   };
 
   // Handle product click (for recently viewed)

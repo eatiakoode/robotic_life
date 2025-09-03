@@ -6,7 +6,15 @@ import CountdownTimer from "../common/Countdown";
 
 import { useContextElement } from "@/context/Context";
 export default function ProductsCards6({ product }) {
-  const [currentImage, setCurrentImage] = useState(product.imgSrc);
+  // Helper function to get a valid image source
+  const getValidImageSrc = (imgSrc) => {
+    if (!imgSrc || imgSrc === '' || imgSrc === null || imgSrc === undefined) {
+      return '/images/products/product-1.jpg'; // Default fallback image
+    }
+    return imgSrc;
+  };
+
+  const [currentImage, setCurrentImage] = useState(getValidImageSrc(product.imgSrc));
   
 
 
@@ -22,7 +30,7 @@ export default function ProductsCards6({ product }) {
   } = useContextElement();
 
   useEffect(() => {
-    setCurrentImage(product.imgSrc);
+    setCurrentImage(getValidImageSrc(product.imgSrc));
   }, [product]);
   return (
     <div
@@ -34,8 +42,8 @@ export default function ProductsCards6({ product }) {
         <Link href={`/product-detail/${product.slug && product.slug.trim() ? product.slug : product.id}`} className="product-img">
           <Image
             className="lazyload img-product"
-            src={currentImage}
-            alt={product.title}
+            src={getValidImageSrc(currentImage)}
+            alt={product.title || 'Robot'}
             width={600}
             height={800}
             style={{ position: 'relative', zIndex: 0 }}
@@ -43,8 +51,8 @@ export default function ProductsCards6({ product }) {
           {/* Hover image - will be the same as main image if no second image exists */}
           <Image
             className="lazyload img-hover"
-            src={product.imgHover}
-            alt={product.title}
+            src={getValidImageSrc(product.imgHover)}
+            alt={product.title || 'Robot'}
             width={600}
             height={800}
             style={{ position: 'absolute', inset: 0, zIndex: 1 }}
@@ -79,12 +87,12 @@ export default function ProductsCards6({ product }) {
                   className={`list-color-item color-swatch ${
                     currentImage == color.imgSrc ? "active" : ""
                   } `}
-                  onMouseOver={() => setCurrentImage(color.imgSrc)}
+                  onMouseOver={() => setCurrentImage(getValidImageSrc(color.imgSrc))}
                 >
                   <span className={`swatch-value ${color.bgColor}`} />
                   <Image
                     className="lazyload"
-                    src={color.imgSrc}
+                    src={getValidImageSrc(color.imgSrc)}
                     alt="color variant"
                     width={600}
                     height={800}
