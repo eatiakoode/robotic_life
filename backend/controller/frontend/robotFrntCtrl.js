@@ -3,7 +3,7 @@ const Robot = require("../../models/robotModel");
 const Category = require("../../models/categoryModel");
 const Color = require("../../models/colorModel");
 const Manufacturer = require("../../models/manufacturerModel");
- 
+
 // Get Most Recent Robots
 const getRecentRobots = asyncHandler(async (req, res) => {
   const robots = await Robot.find()
@@ -13,10 +13,10 @@ const getRecentRobots = asyncHandler(async (req, res) => {
     .populate("manufacturer", "name")
     .sort({ createdAt: -1 })
     .limit(3);
- 
+
   res.status(200).json(robots);
 });
- 
+
 // get all robots
 const getallRobots = asyncHandler(async (req, res) => {
   try {
@@ -43,7 +43,7 @@ const getallRobots = asyncHandler(async (req, res) => {
 const getRobotBySlug = asyncHandler(async (req, res) => {
   try {
     const { slug } = req.params;
-    
+
     const robot = await Robot.findOne({ slug: slug })
       .populate("category", "name slug parent")
       .populate("manufacturer", "name")
@@ -63,9 +63,9 @@ const getRobotBySlug = asyncHandler(async (req, res) => {
       .lean();
 
     if (!robot) {
-      return res.status(404).json({ 
+      return res.status(404).json({
         success: false,
-        error: "Robot not found" 
+        error: "Robot not found"
       });
     }
 
@@ -75,19 +75,19 @@ const getRobotBySlug = asyncHandler(async (req, res) => {
     });
   } catch (error) {
     console.error('Error fetching robot by slug:', error);
-    res.status(500).json({ 
+    res.status(500).json({
       success: false,
-      error: error.message 
+      error: error.message
     });
   }
 });
- 
+
 // Filter Robots
 const convertWeight = (value, fromUnit, toUnit) => {
   if (!value) return null;
- 
+
   let inKg;
- 
+
   switch (fromUnit.toLowerCase()) {
     case "g":
       inKg = value / 1000;
@@ -101,7 +101,7 @@ const convertWeight = (value, fromUnit, toUnit) => {
     default:
       return null;
   }
- 
+
   switch (toUnit.toLowerCase()) {
     case "g":
       return inKg * 1000;
@@ -113,7 +113,7 @@ const convertWeight = (value, fromUnit, toUnit) => {
       return inKg;
   }
 };
- 
+
 const filterRobots = async (req, res) => {
   try {
     let {
@@ -129,13 +129,13 @@ const filterRobots = async (req, res) => {
       filter.$expr = {
         $and: []
       };
-      
+
       if (minPrice) {
         filter.$expr.$and.push({
           $gte: [{ $toDouble: "$totalPrice" }, Number(minPrice)]
         });
       }
-      
+
       if (maxPrice) {
         filter.$expr.$and.push({
           $lte: [{ $toDouble: "$totalPrice" }, Number(maxPrice)]
@@ -147,7 +147,7 @@ const filterRobots = async (req, res) => {
       if (!filter.$expr) {
         filter.$expr = { $and: [] };
       }
-      
+
       filter.$expr.$and.push({
         $and: [
           { $ne: ["$weight", null] },
@@ -155,7 +155,7 @@ const filterRobots = async (req, res) => {
           { $ne: ["$weight.unit", null] }
         ]
       });
-      
+
       if (minWeight) {
         const minWeightInGrams = convertWeight(Number(minWeight), weightUnit, "g");
         filter.$expr.$and.push({
@@ -183,7 +183,7 @@ const filterRobots = async (req, res) => {
           ]
         });
       }
-      
+
       if (maxWeight) {
         const maxWeightInGrams = convertWeight(Number(maxWeight), weightUnit, "g");
         filter.$expr.$and.push({
@@ -216,19 +216,25 @@ const filterRobots = async (req, res) => {
     if (category) {
       const categoryDoc = await Category.findOne({ slug: category });
       if (categoryDoc) {
-        filter.category = categoryDoc._id;
+        if (!categoryDoc.parent) {
+          const subcategories = await Category.find({ parent: categoryDoc._id }).select("_id");
+          const categoryIds = [categoryDoc._id, ...subcategories.map(c => c._id)];
+          filter.category = { $in: categoryIds };
+        } else {
+          filter.category = categoryDoc._id;
+        }
       }
     }
 
     if (manufacturers) {
-      
+
       if (typeof manufacturers === 'string') {
         const manufacturerNames = manufacturers.split(",");
-        
+
         const manufacturerDocs = await Manufacturer.find({
           name: { $in: manufacturerNames }
         }).select("_id name");
-        
+
         if (manufacturerDocs && manufacturerDocs.length > 0) {
           const manufacturerIds = manufacturerDocs.map(doc => doc._id);
           filter.manufacturer = { $in: manufacturerIds };
@@ -243,14 +249,14 @@ const filterRobots = async (req, res) => {
     }
 
     if (colors) {
-      
+
       if (typeof colors === 'string') {
         const colorNames = colors.split(",");
-        
+
         const colorDocs = await Color.find({
           name: { $in: colorNames }
         }).select("_id name");
-        
+
         if (colorDocs && colorDocs.length > 0) {
           const colorIds = colorDocs.map(doc => doc._id);
           filter.color = { $in: colorIds };
@@ -317,5 +323,5 @@ const getRecentlyViewed = asyncHandler(async (req, res) => {
     });
   }
 });
- 
+
 module.exports = { getRecentRobots, getallRobots, getRobotBySlug, filterRobots, getRecentlyViewed };
