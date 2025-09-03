@@ -201,7 +201,7 @@ const robotImgUpload = async (req) => {
 
   const processedFilenames = [];
   const outputDir = path.join("public", "images", "robot");
-  
+
   if (!fs.existsSync(outputDir)) {
     fs.mkdirSync(outputDir, { recursive: true });
   }
@@ -224,10 +224,10 @@ const robotImgUpload = async (req) => {
 
         // Simply copy the file without any processing - preserve original image
         fs.copyFileSync(file.path, outputPath);
-        
+
         // Remove temp uploaded file
         fs.unlinkSync(file.path);
-        
+
         processedFilenames.push(filename);
       } catch (error) {
         console.error("Error processing robot image:", file.originalname, error);
@@ -264,7 +264,13 @@ const sliderImgResize = async (files) => {
 
       try {
         await sharp(file.path)
-          .resize(1920, 600) // 👈 typical banner ratio
+          .resize({
+            width: 1920,
+            height: 600,
+            fit: "cover",
+            background: { r: 0, g: 0, b: 0, alpha: 1 },
+            position: "center"
+          })
           .toFormat("jpeg")
           .jpeg({ quality: 90 })
           .toFile(outputPath);
@@ -1437,4 +1443,4 @@ const processUploadedPDFsadd = async (req) => {
 
   return processedFilenames;
 };
-module.exports = { uploadPhoto, productImgResize, blogImgResize, manufacturerImgResize, robotImgUpload,sliderImgResize, featuredImageResize, sitePlanResize, masterPlanResize, photoUploadMiddleware, testimonialImgResize, propertySelectedImgsResize, cityImgResize, processFloorPlanImages, photoUploadMiddleware1, processFloorPlanImagesGet, amenityImgResize, bannerImageResize, aboutImageResize, gallerySelectedImgsResize, groupFilesByFieldname, groupFilesByFieldname2, processLandingPlanGet, processLandingPlan, processUploadedPDFs, processFloorPlanImagesAdd, featuredImageResizeAdd, featuredImageResizeAddSite, propertySelectedImgsResizeadd, processUploadedPDFsadd, featuredImageResizeAddMaster, locationImgResize, categoryImgResize };
+module.exports = { uploadPhoto, productImgResize, blogImgResize, manufacturerImgResize, robotImgUpload, sliderImgResize, featuredImageResize, sitePlanResize, masterPlanResize, photoUploadMiddleware, testimonialImgResize, propertySelectedImgsResize, cityImgResize, processFloorPlanImages, photoUploadMiddleware1, processFloorPlanImagesGet, amenityImgResize, bannerImageResize, aboutImageResize, gallerySelectedImgsResize, groupFilesByFieldname, groupFilesByFieldname2, processLandingPlanGet, processLandingPlan, processUploadedPDFs, processFloorPlanImagesAdd, featuredImageResizeAdd, featuredImageResizeAddSite, propertySelectedImgsResizeadd, processUploadedPDFsadd, featuredImageResizeAddMaster, locationImgResize, categoryImgResize };
