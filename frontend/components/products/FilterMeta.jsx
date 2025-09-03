@@ -35,7 +35,7 @@ export default function FilterMeta({ allProps, productLength }) {
             className="filter-tag color-tag"
             onClick={() => allProps.setColor("All")}
           >
-            <span className={`color bg-red ${allProps.color.className} `} />
+            <span className={`color ${allProps.color.bgColor} `} />
             {allProps.color.name}
             <span className="remove-tag icon-close" />
           </span>

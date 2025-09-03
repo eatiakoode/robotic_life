@@ -380,7 +380,7 @@ export default function FilterModal({ allProps }) {
                     color == allProps.color ? "active" : ""
                   }`}
                 >
-                  <span className={`color ${color.className}`} />
+                  <span className={`color ${color.bgColor}`} />
                   {color.name}
                 </div>
                 ))

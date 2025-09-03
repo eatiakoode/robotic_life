@@ -72,7 +72,7 @@ export default function ColorSelect({
               }`}
               htmlFor={id}
             >
-              <span className={`btn-checkbox bg-color-${color}`} />
+              <span className={`btn-checkbox ${colorOptions.find(c => c.color === color)?.bgColor || `bg-color-${color}`}`} />
               <span className="tooltip">{value}</span>
             </label>
           </React.Fragment>

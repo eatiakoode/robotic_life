@@ -3,6 +3,34 @@
 // Backend API base URL
 const BACKEND_API_URL = process.env.NEXT_PUBLIC_BACKEND_API_URL || 'http://localhost:5000';
 
+// Helper function to map color names to CSS classes
+const getColorClass = (colorName) => {
+  if (!colorName) return 'bg-primary';
+  
+  const colorMap = {
+    'red': 'bg-red',
+    'blue': 'bg-blue', 
+    'green': 'bg-green',
+    'yellow': 'bg-yellow',
+    'orange': 'bg-orange',
+    'purple': 'bg-purple',
+    'violet': 'bg-purple-2',
+    'voilet': 'bg-purple-2', // Handle misspelling from backend
+    'pink': 'bg-pink',
+    'black': 'bg-black',
+    'white': 'bg-white',
+    'gray': 'bg-gray',
+    'grey': 'bg-gray',
+    'brown': 'bg-brown',
+    'silver': 'bg-silver',
+    'gold': 'bg-gold',
+    'default': 'bg-primary'
+  };
+  
+  const normalizedColor = colorName.toLowerCase().trim();
+  return colorMap[normalizedColor] || `bg-${normalizedColor.replace(/\s+/g, '-')}`;
+};
+
 // Fallback URLs in case the main one fails
 const FALLBACK_URLS = [
   'http://localhost:5000',
@@ -104,6 +132,29 @@ export const getFilteredProducts = async (filters = {}) => {
             filterColor: product.color && product.color.length > 0 ? 
               product.color.map(c => c.name) : ['Default Color'],
             filterSizes: ['Default Size'],
+            
+            // Colors array for ProductCard component
+            colors: product.color && product.color.length > 0 ? 
+              product.color.map(colorItem => ({
+                imgSrc: product.images && product.images[0] ? 
+                  (product.images[0].startsWith('public/') ? 
+                    `http://localhost:5000/${product.images[0].replace('public/', '')}` : 
+                    `http://localhost:5000/${product.images[0]}`
+                  ) : 
+                  `http://localhost:5000/images/products/default.jpg`,
+                bgColor: getColorClass(colorItem.name),
+                name: colorItem.name || 'Default'
+              })) : 
+              [{
+                imgSrc: product.images && product.images[0] ? 
+                  (product.images[0].startsWith('public/') ? 
+                    `http://localhost:5000/${product.images[0].replace('public/', '')}` : 
+                    `http://localhost:5000/${product.images[0]}`
+                  ) : 
+                  `http://localhost:5000/images/products/default.jpg`,
+                                  bgColor: getColorClass('Default'),
+                name: 'Default'
+              }],
             
             // Additional robot-specific fields
             oldPrice: null,
