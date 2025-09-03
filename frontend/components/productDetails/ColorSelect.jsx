@@ -43,7 +43,10 @@ export default function ColorSelect({
           className="text-title variant-picker-label-value value-currentColor"
           style={{ textTransform: "capitalize" }}
         >
-          {activeColor || activeColorDefault}
+          {activeColor ? 
+            (colorOptions.find(c => c.color === activeColor)?.value || activeColor) : 
+            activeColorDefault
+          }
         </span>
       </div>
       <div className="variant-picker-values">

@@ -111,11 +111,14 @@ export const SafeImage = ({
   const apiUrl = getApiUrl();
   const backendUrl = getBackendApiUrl();
   
+  // Ensure src is a string before using string methods
+  const safeSrc = typeof src === 'string' ? src : '';
+  
   // If src is already a full URL, use it directly
-  if (src && (src.startsWith('http://') || src.startsWith('https://'))) {
+  if (safeSrc && (safeSrc.startsWith('http://') || safeSrc.startsWith('https://'))) {
     return (
       <img
-        src={src}
+        src={safeSrc}
         alt={alt || 'Image'}
         width={width}
         height={height}
@@ -127,24 +130,24 @@ export const SafeImage = ({
   }
   
   // If src is a relative path, determine if it's a backend image or frontend image
-  if (src) {
-    let safeSrc;
+  if (safeSrc) {
+    let finalSrc;
     
     // Check if this is a backend image (contains 'images/slider', 'images/robot', etc.)
-    if (src.includes('images/slider') || src.includes('images/robot') || src.includes('images/') && !src.startsWith('/assets/')) {
+    if (safeSrc.includes('images/slider') || safeSrc.includes('images/robot') || safeSrc.includes('images/') && !safeSrc.startsWith('/assets/')) {
       // This is a backend image, use backend URL
       // Remove 'public/' prefix if it exists
-      const cleanSrc = src.replace(/^public\//, '');
-      safeSrc = `${backendUrl}${cleanSrc}`;
+      const cleanSrc = safeSrc.replace(/^public\//, '');
+      finalSrc = `${backendUrl}${cleanSrc}`;
     } else {
       // This is a frontend image, use frontend URL
-      safeSrc = getSafeImageUrl(apiUrl, src, fallbackSrc);
+      finalSrc = getSafeImageUrl(apiUrl, safeSrc, fallbackSrc);
     }
     
     try {
       return (
         <img
-          src={safeSrc}
+          src={finalSrc}
           alt={alt || 'Image'}
           width={width}
           height={height}

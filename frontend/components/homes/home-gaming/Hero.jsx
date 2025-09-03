@@ -130,14 +130,8 @@ export default function Hero() {
   useEffect(() => {
     if (sliders && sliders.length > 0) {
       setDisplaySlides(sliders);
-      console.log('Using API data:', sliders);
-      // Log image counts for each slide
-      sliders.forEach((slide, index) => {
-        console.log(`Slide ${index + 1} has ${slide.images ? slide.images.length : 0} images:`, slide.images);
-      });
     } else if (!loading) {
       setDisplaySlides(fallbackSlides);
-      console.log('Using fallback data');
     }
   }, [sliders, loading]);
 
@@ -149,7 +143,7 @@ export default function Hero() {
       <Swiper
         dir="ltr"
         className="swiper tf-sw-slideshow"
-        loop
+        loop={slidesToShow.length > 1}
         modules={[Autoplay, Pagination]}
         autoplay={{
           delay: 2000,

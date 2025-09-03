@@ -29,6 +29,7 @@ export default function Header1({ fullWidth = false }) {
                 src="/images/logo/theBots.png"
                 width={144}
                 height={25}
+                priority
               />
             </Link>
           </div>

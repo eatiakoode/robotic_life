@@ -29,13 +29,7 @@ export default function Blogs() {
       }
     }
     
-    console.log(`Blog ${index}:`, { 
-      original: blog.logoimage, 
-      transformed: imageSrc,
-      title: blog.title,
-      hasImage: !!blog.logoimage,
-      finalUrl: imageSrc
-    });
+
     
     return {
       id: blog._id || blog.id || index + 1,
@@ -135,11 +129,10 @@ export default function Blogs() {
                       width={630}
                       height={472}
                       onError={(e) => {
-                        console.log('Image failed to load:', post.imageSrc);
                         e.target.src = "/images/blog/gaming-1.jpg"; // Fallback image
                       }}
                       onLoad={() => {
-                        console.log('Image loaded successfully:', post.imageSrc);
+                        // Image loaded successfully
                       }}
                     />
                   </Link>
@@ -213,11 +206,10 @@ export default function Blogs() {
                     width={630}
                     height={472}
                     onError={(e) => {
-                      console.log('Image failed to load:', post.imageSrc);
                       e.target.src = "/images/blog/gaming-1.jpg"; // Fallback image
                     }}
                     onLoad={() => {
-                      console.log('Image loaded successfully:', post.imageSrc);
+                      // Image loaded successfully
                     }}
                   />
                 </Link>

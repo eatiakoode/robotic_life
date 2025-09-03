@@ -147,7 +147,7 @@ export const getAllProducts = async () => {
               slug: product.slug && product.slug.trim() ? product.slug : null,
               launchYear: product.launchYear || null,
               version: product.version || '',
-              videoEmbedCode: product.videoEmbedCode || '',
+              videoEmbedCode: product.videoEmbedCode || product.videoembedcode || '',
               
               // Dimensions and specifications
               dimensions: product.dimensions || {},
@@ -293,6 +293,15 @@ export const getRobotBySlug = async (slug) => {
                 color: 'default',
                 bgColor: getColorClass('Default')
               }],
+            
+            // Images array for slider
+            images: robot.images && robot.images.length > 0 ? 
+              robot.images.map(img => 
+                img.startsWith('public/') ? 
+                  `${baseUrl}/${img.replace('public/', '')}` : 
+                  `${baseUrl}/${img}`
+              ) : 
+              [`${baseUrl}/images/products/default.jpg`],
             
             // Additional populated fields
             manufacturer: robot.manufacturer,
@@ -464,7 +473,7 @@ export const searchProducts = async (query, filters = {}) => {
               slug: product.slug && product.slug.trim() ? product.slug : null,
               launchYear: product.launchYear || null,
               version: product.version || '',
-              videoEmbedCode: product.videoEmbedCode || '',
+              videoEmbedCode: product.videoEmbedCode || product.videoembedcode || '',
               
               // Dimensions and specifications
               dimensions: product.dimensions || {},
@@ -630,7 +639,7 @@ export const getProductsByCategory = async (category, additionalFilters = {}) =>
               slug: product.slug && product.slug.trim() ? product.slug : null,
               launchYear: product.launchYear || null,
               version: product.version || '',
-              videoEmbedCode: product.videoEmbedCode || '',
+              videoEmbedCode: product.videoEmbedCode || product.videoembedcode || '',
               
               // Dimensions and specifications
               dimensions: product.dimensions || {},

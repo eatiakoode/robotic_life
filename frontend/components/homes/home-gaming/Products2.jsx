@@ -48,7 +48,7 @@ export default function Products2() {
       ? (robot.images[0].startsWith('http') 
           ? robot.images[0] 
           : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}${robot.images[0].startsWith('/') ? robot.images[0] : `/${robot.images[0]}`}`)
-      : '/images/placeholder-robot.svg',
+      : '/images/product/placeholder.jpg',
     imgHover: robot.images && robot.images.length > 1 
       ? (robot.images[1].startsWith('http') 
           ? robot.images[1] 
@@ -57,7 +57,7 @@ export default function Products2() {
         ? (robot.images[0].startsWith('http') 
             ? robot.images[0] 
             : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}${robot.images[0].startsWith('/') ? robot.images[0] : `/${robot.images[0]}`}`)
-        : '/images/placeholder-robot.svg',
+        : '/images/product/placeholder.jpg',
     colors: robot.color && robot.color.length > 0 ? robot.color.map(color => ({
       bgColor: getColorClass(color.name),
       colorName: color.name || 'Unknown',
@@ -65,7 +65,7 @@ export default function Products2() {
         ? (robot.images[0].startsWith('http') 
             ? robot.images[0] 
             : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}${robot.images[0].startsWith('/') ? robot.images[0] : `/${robot.images[0]}`}`)
-        : '/images/placeholder-robot.svg'
+        : '/images/product/placeholder.jpg'
     })) : (robot.images && robot.images.length > 0 ? [{
       bgColor: 'bg-primary',
       colorName: 'Default',

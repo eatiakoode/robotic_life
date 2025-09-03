@@ -4,7 +4,13 @@ import "../public/scss/main.scss";
 import "photoswipe/style.css";
 import "react-range-slider-input/dist/style.css";
 import "../public/css/image-compare-viewer.min.css";
+import "@fortawesome/fontawesome-svg-core/styles.css";
 import { useEffect, useState } from "react";
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faRobot, faBookOpen, faFlask, faUsers } from '@fortawesome/free-solid-svg-icons';
+
+// Add icons to the library
+library.add(faRobot, faBookOpen, faFlask, faUsers);
 import ScrollTop from "@/components/common/ScrollTop";
 import Context from "@/context/Context";
 import CartModal from "@/components/modals/CartModal";
