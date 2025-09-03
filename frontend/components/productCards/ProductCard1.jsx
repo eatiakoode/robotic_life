@@ -12,7 +12,15 @@ export default function ProductCard1({
   radiusClass = "",
 }) {
 
-  const [currentImage, setCurrentImage] = useState(product.imgSrc);
+  // Helper function to get a valid image source
+  const getValidImageSrc = (imgSrc) => {
+    if (!imgSrc || imgSrc === '' || imgSrc === null || imgSrc === undefined) {
+      return '/images/products/product-1.jpg'; // Default fallback image
+    }
+    return imgSrc;
+  };
+
+  const [currentImage, setCurrentImage] = useState(getValidImageSrc(product.imgSrc));
 
   const {
     setQuickAddItem,
@@ -26,7 +34,7 @@ export default function ProductCard1({
   } = useContextElement();
 
   useEffect(() => {
-    setCurrentImage(product.imgSrc);
+    setCurrentImage(getValidImageSrc(product.imgSrc));
   }, [product]);
 
   return (
@@ -43,16 +51,16 @@ export default function ProductCard1({
         <Link href={`/product-detail/${product.slug && product.slug.trim() ? product.slug : product.id}`} className="product-img">
           <Image
             className="lazyload img-product"
-            src={currentImage}
-            alt={product.title}
+            src={getValidImageSrc(currentImage)}
+            alt={product.title || 'Robot'}
             width={600}
             height={800}
           />
 
           <Image
             className="lazyload img-hover"
-            src={product.imgHover}
-            alt={product.title}
+            src={getValidImageSrc(product.imgHover)}
+            alt={product.title || 'Robot'}
             width={600}
             height={800}
           />
@@ -261,12 +269,12 @@ export default function ProductCard1({
                 className={`list-color-item color-swatch ${
                   currentImage == color.imgSrc ? "active" : ""
                 } ${color.bgColor == "bg-white" ? "line" : ""}`}
-                onMouseOver={() => setCurrentImage(color.imgSrc)}
+                onMouseOver={() => setCurrentImage(getValidImageSrc(color.imgSrc))}
               >
                 <span className={`swatch-value ${color.bgColor}`} />
                 <Image
                   className="lazyload"
-                  src={color.imgSrc}
+                  src={getValidImageSrc(color.imgSrc)}
                   alt="color variant"
                   width={600}
                   height={800}

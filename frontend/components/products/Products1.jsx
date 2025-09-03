@@ -10,7 +10,7 @@ import FilterModal from "./FilterModal";
 import { initialState, reducer } from "@/reducer/filterReducer";
 import { getAllProducts, getProductsByCategory } from "@/api/product";
 import { getFilteredProducts } from "@/api/filtering";
-import { getParentCategories } from "@/api/category";
+import { getParentCategories, getRobotsByCategorySlug } from "@/api/category";
 import FilterMeta from "./FilterMeta";
 
 export default function Products1({ parentClass = "flat-spacing" }) {
@@ -195,6 +195,63 @@ export default function Products1({ parentClass = "flat-spacing" }) {
     }
   };
 
+  // Helper function to transform robot data for ProductCard1
+  const transformRobotData = (robots) => {
+    return robots.map(robot => {
+      // Get the first image as main image
+      const mainImage = robot.images && robot.images.length > 0 
+        ? (robot.images[0].startsWith('http') 
+            ? robot.images[0] 
+            : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}${robot.images[0].startsWith('/') ? robot.images[0] : `/${robot.images[0]}`}`)
+        : '/images/products/product-1.jpg';
+
+      // Get the second image as hover image, or use the first image if no second image
+      const hoverImage = robot.images && robot.images.length > 1 
+        ? (robot.images[1].startsWith('http') 
+            ? robot.images[1] 
+            : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}${robot.images[1].startsWith('/') ? robot.images[1] : `/${robot.images[1]}`}`)
+        : mainImage;
+
+      // Transform colors if they exist
+      let colors = [];
+      if (robot.color && Array.isArray(robot.color) && robot.color.length > 0) {
+        colors = robot.color.map(colorItem => ({
+          imgSrc: mainImage,
+          bgColor: colorItem.name ? `bg-${colorItem.name.toLowerCase().replace(/\s+/g, '-')}` : 'bg-primary',
+          name: colorItem.name || 'Default'
+        }));
+      } else if (robot.color && typeof robot.color === 'object' && robot.color.name) {
+        colors = [{
+          imgSrc: mainImage,
+          bgColor: `bg-${robot.color.name.toLowerCase().replace(/\s+/g, '-')}`,
+          name: robot.color.name
+        }];
+      } else {
+        // Default color if no color data
+        colors = [{
+          imgSrc: mainImage,
+          bgColor: 'bg-primary',
+          name: 'Default'
+        }];
+      }
+
+      return {
+        ...robot,
+        id: robot._id,
+        imgSrc: mainImage,
+        imgHover: hoverImage,
+        price: parseFloat(robot.totalPrice) || 0,
+        colors: colors,
+        inStock: true,
+        oldPrice: null,
+        rating: 5,
+        isOnSale: false,
+        sizes: null,
+        wowDelay: "0.1s"
+      };
+    });
+  };
+
 
 
   // Main filtering function
@@ -294,7 +351,8 @@ export default function Products1({ parentClass = "flat-spacing" }) {
     }
 
     // Filter by parent category - using backend category data
-    if (selectedParentCategory) {
+    // BUT: Skip category filtering if we loaded category data from URL to avoid overwriting it
+    if (selectedParentCategory && !urlCategoryLoaded) {
       // Reset to first page when category changes
       dispatch({ type: "SET_CURRENT_PAGE", payload: 1 });
       
@@ -338,10 +396,11 @@ export default function Products1({ parentClass = "flat-spacing" }) {
           }
         }
       }
-    } else {
+    } else if (!selectedParentCategory) {
       // No category selected, show all products
       filteredProducts = [...productMain];
     }
+    // If urlCategoryLoaded is true, we keep the existing filteredProducts (which came from URL category loading)
 
     // Filter by sub category - using backend category data
     if (selectedSubCategory) {
@@ -384,6 +443,11 @@ export default function Products1({ parentClass = "flat-spacing" }) {
 
   // Main filtering useEffect - removed productMain from dependencies to prevent infinite loop
   useEffect(() => {
+    // Don't run applyFilters if we're still loading category from URL
+    if (!urlCategoryLoaded) {
+      return;
+    }
+    
     applyFilters();
   }, [price, weight, weightUnit, availability, color, size, brands, activeFilterOnSale, selectedParentCategory, selectedSubCategory, applyFilters]);
 
@@ -410,43 +474,100 @@ export default function Products1({ parentClass = "flat-spacing" }) {
 
   // Handle URL parameters for category selection
   useEffect(() => {
-    const categoryId = searchParams.get('category');
+    const categorySlug = searchParams.get('category');
+    const categoryName = searchParams.get('categoryName');
+    const categoryType = searchParams.get('type');
     
-    if (categoryId && !urlCategoryLoaded) {
+    // Reset URL category loaded state when URL changes
+    setUrlCategoryLoaded(false);
+    
+    if (categorySlug) {
       const loadCategoryFromUrl = async () => {
         try {
-          const categories = await getParentCategories();
-          const category = categories.find(cat => cat._id === categoryId);
+          setLoading(true);
           
-          if (category) {
-            dispatch({ type: "SET_PARENT_CATEGORY", payload: category });
+          // Clear previous category selections
+          dispatch({ type: "SET_PARENT_CATEGORY", payload: null });
+          dispatch({ type: "SET_SUB_CATEGORY", payload: null });
+          
+          // Fetch robots by category slug using the backend API
+          const robots = await getRobotsByCategorySlug(categorySlug);
+          
+          if (robots && robots.length > 0) {
+            // Transform robot data for ProductCard1 compatibility
+            const transformedRobots = transformRobotData(robots);
+            
+            // Set the robots as the main products
+            setProductMain(transformedRobots);
+            
+            // Set filtered products
+            dispatch({ type: "SET_FILTERED", payload: transformedRobots });
+            
+            // Create a category object for the state
+            const categoryObj = {
+              _id: categorySlug, // Use slug as ID for consistency
+              slug: categorySlug,
+              name: categoryName || categorySlug,
+              type: categoryType || 'parent'
+            };
+            
+            // Set the category in state
+            if (categoryType === 'subcategory') {
+              dispatch({ type: "SET_SUB_CATEGORY", payload: categoryObj });
+            } else {
+              dispatch({ type: "SET_PARENT_CATEGORY", payload: categoryObj });
+            }
+            
+            // Auto-refresh price bounds for the category products
+            refreshPriceBounds(transformedRobots);
+            refreshWeightBounds(transformedRobots);
+            
+            setUrlCategoryLoaded(true);
+          } else {
+            // No robots found for this category
+            setProductMain([]);
+            dispatch({ type: "SET_FILTERED", payload: [] });
             setUrlCategoryLoaded(true);
           }
         } catch (error) {
           console.error('Error loading category from URL:', error);
+          setUrlCategoryLoaded(true);
+        } finally {
+          setLoading(false);
         }
       };
       
       loadCategoryFromUrl();
+    } else {
+      // No category in URL, reset to show all products
+      setUrlCategoryLoaded(true);
     }
-  }, [searchParams, urlCategoryLoaded]);
+  }, [searchParams]);
 
-  // Fetch products from backend on component mount
+  // Fetch products from backend on component mount (only if no category in URL)
   useEffect(() => {
+    const categorySlug = searchParams.get('category');
+    
+    // Only fetch all products if no category is specified in URL and URL category is loaded
+    if (!categorySlug && urlCategoryLoaded) {
     const fetchProducts = async () => {
       try {
         setLoading(true);
         const products = await getAllProducts();
-        setProductMain(products);
+          
+          // Transform robot data for ProductCard1 compatibility
+          const transformedProducts = transformRobotData(products);
+          
+          setProductMain(transformedProducts);
         
         // Auto-refresh price bounds to ensure they include all products
-        refreshPriceBounds(products);
+          refreshPriceBounds(transformedProducts);
         
         // Also refresh weight bounds
-        refreshWeightBounds(products);
+          refreshWeightBounds(transformedProducts);
         
         // Also set the initial filtered products to show all products
-        dispatch({ type: "SET_FILTERED", payload: products });
+          dispatch({ type: "SET_FILTERED", payload: transformedProducts });
       } catch (error) {
         console.error('❌ Error fetching products:', error);
         setProductMain([]);
@@ -456,28 +577,33 @@ export default function Products1({ parentClass = "flat-spacing" }) {
     };
 
     fetchProducts();
-  }, []);
+    }
+  }, [searchParams, urlCategoryLoaded]);
 
   useEffect(() => {
     if (sortingOption === "Price Ascending") {
+      const sorted = [...filtered].sort((a, b) => a.price - b.price);
       dispatch({
         type: "SET_SORTED",
-        payload: [...filtered].sort((a, b) => a.price - b.price),
+        payload: sorted,
       });
     } else if (sortingOption === "Price Descending") {
+      const sorted = [...filtered].sort((a, b) => b.price - a.price);
       dispatch({
         type: "SET_SORTED",
-        payload: [...filtered].sort((a, b) => b.price - a.price),
+        payload: sorted,
       });
     } else if (sortingOption === "Title Ascending") {
+      const sorted = [...filtered].sort((a, b) => a.title.localeCompare(b.title));
       dispatch({
         type: "SET_SORTED",
-        payload: [...filtered].sort((a, b) => a.title.localeCompare(b.title)),
+        payload: sorted,
       });
     } else if (sortingOption === "Title Descending") {
+      const sorted = [...filtered].sort((a, b) => b.title.localeCompare(a.title));
       dispatch({
         type: "SET_SORTED",
-        payload: [...filtered].sort((a, b) => b.title.localeCompare(a.title)),
+        payload: sorted,
       });
     } else {
       dispatch({ type: "SET_SORTED", payload: filtered });
@@ -572,7 +698,7 @@ export default function Products1({ parentClass = "flat-spacing" }) {
             <FilterMeta productLength={sorted.length} allProps={allProps} />
 
             {/* Show "No robots found" message when category is selected but no products */}
-            {selectedParentCategory && sorted.length === 0 && !loading && (
+            {(selectedParentCategory || selectedSubCategory) && sorted.length === 0 && !loading && (
               <div className="no-robots-found" style={{ 
                 textAlign: 'center', 
                 padding: '50px 20px',
@@ -586,10 +712,14 @@ export default function Products1({ parentClass = "flat-spacing" }) {
                   No Robots Found
                 </h3>
                 <p style={{ color: '#6c757d', marginBottom: '20px' }}>
-                  No robots found in the <strong>"{selectedParentCategory.name}"</strong> category.
+                  No robots found in the <strong>"{selectedSubCategory?.name || selectedParentCategory?.name}"</strong> {selectedSubCategory ? 'subcategory' : 'category'}.
                 </p>
                 <button 
-                  onClick={() => allProps.setParentCategory(null)}
+                  onClick={() => {
+                    allProps.setParentCategory(null);
+                    allProps.setSubCategory(null);
+                    window.location.href = '/shop-default-grid';
+                  }}
                   style={{
                     backgroundColor: '#007bff',
                     color: 'white',
