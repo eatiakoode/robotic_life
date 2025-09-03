@@ -324,4 +324,43 @@ const getRecentlyViewed = asyncHandler(async (req, res) => {
   }
 });
 
-module.exports = { getRecentRobots, getallRobots, getRobotBySlug, filterRobots, getRecentlyViewed };
+// Get Related Robots
+const getRelatedRobots = async (req, res) => {
+  try {
+    const { slug } = req.params;
+
+    const robot = await Robot.findOne({ slug }).populate("category", "name parent");
+
+    if (!robot) {
+      return res.status(404).json({
+        success: false,
+        message: "Robot not found",
+      });
+    }
+
+    const relatedRobots = await Robot.find({
+      category: robot.category._id,
+      _id: { $ne: robot._id },
+      status: true
+    })
+      .select("title totalPrice images color slug")
+      .populate("color", "name")
+      .limit(4)
+
+    res.status(200).json({
+      success: true,
+      count: relatedRobots.length,
+      data: relatedRobots,
+    });
+
+  } catch (err) {
+    console.error("Related robots error:", err);
+    res.status(500).json({
+      success: false,
+      message: "Server Error",
+      error: err.message
+    });
+  }
+};
+
+module.exports = { getRecentRobots, getallRobots, getRobotBySlug, filterRobots, getRecentlyViewed, getRelatedRobots };
