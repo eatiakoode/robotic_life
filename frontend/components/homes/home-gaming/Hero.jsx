@@ -37,7 +37,7 @@ const fallbackSlides = [
 
 export default function Hero() {
   const { sliders, loading, error } = useSlider();
-  const [displaySlides, setDisplaySlides] = useState(slides13); // Start with static data
+  const [displaySlides, setDisplaySlides] = useState(sliders); // Start with static data
 
   useEffect(() => {
     if (sliders && sliders.length > 0) {
@@ -66,7 +66,7 @@ export default function Hero() {
   };
 
   const slidesToShow =
-    displaySlides && displaySlides.length > 0 ? displaySlides : slides13;
+    displaySlides && displaySlides.length > 0 ? displaySlides : sliders;
 
   return (
     <div className="tf-slideshow slider-default slider-effect-fade">
