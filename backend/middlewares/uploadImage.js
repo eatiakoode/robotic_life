@@ -266,8 +266,8 @@ const sliderImgResize = async (files) => {
         await sharp(file.path)
           .resize({
             width: 1920,
-            height: 600,
-            fit: "contain",
+            height: 756,
+            fit: "cover",
             background: { r: 0, g: 0, b: 0, alpha: 1 },
             // position: "center"
           })
@@ -338,7 +338,7 @@ const categoryImgResize = async (req) => {
       } else {
         // Pad to square 260x260 while preserving full image inside the canvas
         const isPng = ext === ".png";
-        const pipeline = sharp(file.path).resize(260, 260, {
+        const pipeline = sharp(file.path).resize( {
           fit: "contain",
           background: isPng ? { r: 255, g: 255, b: 255, alpha: 0 } : { r: 255, g: 255, b: 255, alpha: 1 },
         });
