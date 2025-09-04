@@ -338,7 +338,7 @@ const categoryImgResize = async (req) => {
       } else {
         // Pad to square 260x260 while preserving full image inside the canvas
         const isPng = ext === ".png";
-        const pipeline = sharp(file.path).resize( {
+        const pipeline = sharp(file.path).resize({
           fit: "contain",
           background: isPng ? { r: 255, g: 255, b: 255, alpha: 0 } : { r: 255, g: 255, b: 255, alpha: 1 },
         });

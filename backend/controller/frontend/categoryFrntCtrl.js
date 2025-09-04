@@ -27,7 +27,7 @@ const getActiveParentCategories = asyncHandler(async (req, res) => {
         
         const categories = await Category.find(filter)
             .select("name slug description logoimage parent")
-            .sort({ createdAt: -1 });
+            .sort({ createdAt: 1, _id: 1 });
 
 
 
