@@ -13,7 +13,7 @@ const fallbackSlides = [
     _id: "fallback-1",
     title: "Powerful Sound",
     description: "Fill any space with immersive, high-quality audio.",
-    buttonText: "View More",
+    buttonText: "Explore Robots",
     buttonLink: "/shop-filter-canvas",
     images: ["/images/slider/slider-gaming-1.jpg"]
   },
@@ -173,7 +173,7 @@ export default function Hero() {
                       href={slide.buttonLink || "/shop-filter-canvas"}
                       className="tf-btn btn-fill btn-white"
                     >
-                      <span className="text">{slide.buttonText || "View More"}</span>
+                      <span className="text">{slide.buttonText || "Explore Robots"}</span>
                       <i className="icon icon-arrowUpRight" />
                     </Link>
                   </div>

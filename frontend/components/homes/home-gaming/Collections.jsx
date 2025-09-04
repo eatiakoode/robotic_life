@@ -163,7 +163,7 @@ export default function Collections() {
                       href={`/shop-filter-canvas`}
                       className="btn-line style-white has-icon"
                     >
-                      View More
+                      Explore Robots & Research
                       <i className="icon icon-arrowUpRight" />
                     </Link>
                   </div>
@@ -222,7 +222,7 @@ export default function Collections() {
                     href={`/shop-filter-canvas`}
                     className="btn-line style-white has-icon"
                   >
-                    View More
+                    Explore Robots & Research
                     <i className="icon icon-arrowUpRight" />
                   </Link>
                 </div>
