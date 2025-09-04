@@ -119,14 +119,13 @@ export default function Collections() {
                 </a>
                 <div className="content text-start">
                   <div className="box-title">
-                    <p className="tag text-btn-uppercase text-white">
-                      {category.name || "ACCESSORIES"}
-                    </p>
-                    <h3 className="title">
-                      <Link href="/shop-filter-canvas" className="link text-white fw-bold font-5">
+                    
+                    <h3 className="title text-white">
+                      {/* <Link href="/shop-filter-canvas" className="link text-white fw-bold font-5">
                         {line1} <br />
                         {line2}
-                      </Link>
+                      </Link> */}
+                      {category.name || "ACCESSORIES"}
                     </h3>
                     <p className="text-white body-text-1">
                       {category.description || "Clear sound, all-day comfort."}
