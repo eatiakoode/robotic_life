@@ -32,7 +32,7 @@ const createRobot = asyncHandler(async (req, res) => {
     const populatedRobot = await Robot.findById(robot._id)
       .populate("category", "name")
       .populate("manufacturer", "name")
-      .populate("countryOfOrigin", "name")
+      .populate("countryOfOrigin", "title")
       .populate("powerSource", "name")
       .populate("color", "name")
       .populate("material", "name")
@@ -72,7 +72,7 @@ const getRobots = async (req, res) => {
     const robots = await Robot.find(filter)
       .populate("category", "name parent")
       .populate("manufacturer", "name")
-      .populate("countryOfOrigin", "name")
+      .populate("countryOfOrigin", "title")
       .sort({ createdAt: -1 });
 
     res.json(robots);
@@ -87,7 +87,7 @@ const getRobotById = async (req, res) => {
     const robot = await Robot.findById(req.params.id)
       .populate("category", "name parent")
       .populate("manufacturer", "name")
-      .populate("countryOfOrigin", "name");
+      .populate("countryOfOrigin", "title");
 
     if (!robot) {
       return res.status(404).json({ error: "Robot not found" });
@@ -177,7 +177,7 @@ const updateRobot = async (req, res) => {
     const populatedRobot = await Robot.findById(robot._id)
       .populate("category", "name")
       .populate("manufacturer", "name")
-      .populate("countryOfOrigin", "name")
+      .populate("countryOfOrigin", "title")
       .populate("powerSource", "name")
       .populate("color", "name")
       .populate("material", "name")

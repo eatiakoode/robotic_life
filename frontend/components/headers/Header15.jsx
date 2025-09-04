@@ -27,6 +27,7 @@ export default function Header15() {
                   src="/images/logo/theBots.png"
                   width={97}
                   height={25}
+                  style={{ width: 'auto', height: 'auto' }}
                 />
               </Link>
               <div className="d-none d-xl-block">

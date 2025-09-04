@@ -4,7 +4,7 @@ const dbConnect = require("./config/dbConnect");
 const { notFound, errorHandler } = require("./middlewares/errorHandler");
 const app = express();
 const dotenv = require("dotenv").config();
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 5000;
 // const rateLimit = require('express-rate-limit');
 
 // const limiter = rateLimit({
@@ -91,6 +91,7 @@ const categoryFrontendRouter = require("./routes/frontend/categoryFrntRouter.js"
 const robotFrontendRouter = require("./routes/frontend/robotFrntRouter.js");
 const colorFrontendRouter = require("./routes/frontend/colorFrntRouter.js");
 const manufacturerFrontendRouter = require("./routes/frontend/manufacturerFrntRouter.js");
+const countryFrontendRouter = require("./routes/frontend/countryFrntRouter.js");
 
 
 const cookieParser = require("cookie-parser");
@@ -187,6 +188,7 @@ app.use("/frontend/api/category", categoryFrontendRouter);
 app.use("/frontend/api/robot", robotFrontendRouter);
 app.use("/frontend/api/color", colorFrontendRouter);
 app.use("/frontend/api/manufacturer", manufacturerFrontendRouter);
+app.use("/frontend/api/country", countryFrontendRouter);
 
 const path = require("path");
 // app.use("/public", express.static(path.join(__dirname, "public")));

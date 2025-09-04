@@ -10,7 +10,7 @@ const getColorClass = (colorName) => {
   const colorMap = {
     'red': 'bg-red',
     'blue': 'bg-blue', 
-    'green': 'bg-green',
+    'green': 'bg-primary', // Use primary for green since bg-green doesn't exist
     'yellow': 'bg-yellow',
     'orange': 'bg-orange',
     'purple': 'bg-purple',
@@ -19,23 +19,28 @@ const getColorClass = (colorName) => {
     'pink': 'bg-pink',
     'black': 'bg-black',
     'white': 'bg-white',
-    'gray': 'bg-gray',
-    'grey': 'bg-gray',
+    'gray': 'bg-grey', // Use bg-grey instead of bg-gray
+    'grey': 'bg-grey',
     'brown': 'bg-brown',
-    'silver': 'bg-silver',
-    'gold': 'bg-gold',
-    'default': 'bg-primary'
+    'silver': 'bg-grey', // Use grey for silver
+    'gold': 'bg-yellow', // Use yellow for gold
+    'default': 'bg-primary',
+    'beige': 'bg-primary', // Use primary for beige
+    'light blue': 'bg-blue',
+    'light green': 'bg-primary',
+    'light pink': 'bg-pink',
+    'dark blue': 'bg-blue',
+    'dark grey': 'bg-grey',
+    'dark gray': 'bg-grey'
   };
   
   const normalizedColor = colorName.toLowerCase().trim();
-  return colorMap[normalizedColor] || `bg-${normalizedColor.replace(/\s+/g, '-')}`;
+  return colorMap[normalizedColor] || 'bg-primary'; // Default to primary instead of creating non-existent classes
 };
 
 // Fallback URLs in case the main one fails
 const FALLBACK_URLS = [
-  'http://localhost:5000',
-  'http://localhost:3001',
-  'http://localhost:8000'
+  'http://localhost:5000' // Only use the main backend URL
 ];
 
 // Get all products (robots) from backend
@@ -117,16 +122,23 @@ export const getAllProducts = async () => {
               
               // Colors array for ProductCard component
               colors: product.color && product.color.length > 0 ? 
-                product.color.map(colorItem => ({
-                  imgSrc: product.images && product.images[0] ? 
-                    (product.images[0].startsWith('public/') ? 
-                      `${baseUrl}/${product.images[0].replace('public/', '')}` : 
-                      `${baseUrl}/${product.images[0]}`
+                product.color.map((colorItem, colorIndex) => {
+                  // Use different images for different colors if available
+                  const imageIndex = colorIndex < (product.images?.length || 0) ? colorIndex : 0;
+                  const imageSrc = product.images && product.images[imageIndex] ? 
+                    (product.images[imageIndex].startsWith('public/') ? 
+                      `${baseUrl}/${product.images[imageIndex].replace('public/', '')}` : 
+                      `${baseUrl}/${product.images[imageIndex]}`
                     ) : 
-                    `${baseUrl}/images/products/default.jpg`,
-                  bgColor: getColorClass(colorItem.name),
-                  name: colorItem.name || 'Default'
-                })) : 
+                    `${baseUrl}/images/products/default.jpg`;
+                  
+                  return {
+                    imgSrc: imageSrc,
+                    bgColor: getColorClass(colorItem.name),
+                    name: colorItem.name || 'Default',
+                    color: colorItem.name?.toLowerCase().replace(/\s+/g, '-') || 'default'
+                  };
+                }) : 
                 [{
                   imgSrc: product.images && product.images[0] ? 
                     (product.images[0].startsWith('public/') ? 
@@ -135,7 +147,8 @@ export const getAllProducts = async () => {
                     ) : 
                     `${baseUrl}/images/products/default.jpg`,
                   bgColor: getColorClass('Default'),
-                  name: 'Default'
+                  name: 'Default',
+                  color: 'default'
                 }],
               
               // Additional robot-specific fields
@@ -209,7 +222,6 @@ export const getRobotBySlug = async (slug) => {
 
       if (response.ok) {
         const data = await response.json();
-        console.log('📥 Robot by slug response:', data);
         
         if (data.success && data.data) {
           // Transform backend data to match frontend structure
@@ -281,17 +293,37 @@ export const getRobotBySlug = async (slug) => {
             
             // Colors array for ColorSelect component
             colors: robot.color && robot.color.length > 0 ? 
-              robot.color.map(colorItem => ({
-                id: `values-${colorItem.name?.toLowerCase().replace(/\s+/g, '-') || 'default'}`,
-                value: colorItem.name || 'Default',
-                color: colorItem.name?.toLowerCase().replace(/\s+/g, '-') || 'default',
-                bgColor: getColorClass(colorItem.name)
-              })) : 
+              robot.color.map((colorItem, colorIndex) => {
+                // Use different images for different colors if available
+                const imageIndex = colorIndex < (robot.images?.length || 0) ? colorIndex : 0;
+                const imageSrc = robot.images && robot.images[imageIndex] ? 
+                  (robot.images[imageIndex].startsWith('public/') ? 
+                    `${baseUrl}/${robot.images[imageIndex].replace('public/', '')}` : 
+                    `${baseUrl}/${robot.images[imageIndex]}`
+                  ) : 
+                  `${baseUrl}/images/products/default.jpg`;
+                
+                return {
+                  id: `values-${colorItem.name?.toLowerCase().replace(/\s+/g, '-') || 'default'}`,
+                  value: colorItem.name || 'Default',
+                  color: colorItem.name?.toLowerCase().replace(/\s+/g, '-') || 'default',
+                  bgColor: getColorClass(colorItem.name),
+                  imgSrc: imageSrc,
+                  name: colorItem.name || 'Default'
+                };
+              }) : 
               [{
                 id: 'values-default',
                 value: 'Default',
                 color: 'default',
-                bgColor: getColorClass('Default')
+                bgColor: getColorClass('Default'),
+                imgSrc: robot.images && robot.images[0] ? 
+                  (robot.images[0].startsWith('public/') ? 
+                    `${baseUrl}/${robot.images[0].replace('public/', '')}` : 
+                    `${baseUrl}/${robot.images[0]}`
+                  ) : 
+                  `${baseUrl}/images/products/default.jpg`,
+                name: 'Default'
               }],
             
             // Images array for slider
@@ -324,19 +356,19 @@ export const getRobotBySlug = async (slug) => {
           return null;
         }
       } else {
-        console.log('Failed to fetch robot by slug, status:', response.status);
+        // Silently handle failed requests to reduce console noise
       }
     } catch (error) {
       if (error.name === 'AbortError') {
-        console.log('Request timeout for:', baseUrl);
+        // Request timeout - silently continue to next URL
       } else {
-        console.log('Error fetching robot by slug:', error);
+        // Silently handle errors to reduce console noise
       }
       continue; // Try next URL
     }
   }
   
-  console.log('Failed to fetch robot by slug from all URLs');
+  // Silently return null when all URLs fail
   return null;
 };
 
@@ -609,16 +641,23 @@ export const getProductsByCategory = async (category, additionalFilters = {}) =>
               
               // Colors array for ProductCard component
               colors: product.color && product.color.length > 0 ? 
-                product.color.map(colorItem => ({
-                  imgSrc: product.images && product.images[0] ? 
-                    (product.images[0].startsWith('public/') ? 
-                      `${baseUrl}/${product.images[0].replace('public/', '')}` : 
-                      `${baseUrl}/${product.images[0]}`
+                product.color.map((colorItem, colorIndex) => {
+                  // Use different images for different colors if available
+                  const imageIndex = colorIndex < (product.images?.length || 0) ? colorIndex : 0;
+                  const imageSrc = product.images && product.images[imageIndex] ? 
+                    (product.images[imageIndex].startsWith('public/') ? 
+                      `${baseUrl}/${product.images[imageIndex].replace('public/', '')}` : 
+                      `${baseUrl}/${product.images[imageIndex]}`
                     ) : 
-                    `${baseUrl}/images/products/default.jpg`,
-                  bgColor: getColorClass(colorItem.name),
-                  name: colorItem.name || 'Default'
-                })) : 
+                    `${baseUrl}/images/products/default.jpg`;
+                  
+                  return {
+                    imgSrc: imageSrc,
+                    bgColor: getColorClass(colorItem.name),
+                    name: colorItem.name || 'Default',
+                    color: colorItem.name?.toLowerCase().replace(/\s+/g, '-') || 'default'
+                  };
+                }) : 
                 [{
                   imgSrc: product.images && product.images[0] ? 
                     (product.images[0].startsWith('public/') ? 
@@ -627,7 +666,8 @@ export const getProductsByCategory = async (category, additionalFilters = {}) =>
                     ) : 
                     `${baseUrl}/images/products/default.jpg`,
                   bgColor: getColorClass('Default'),
-                  name: 'Default'
+                  name: 'Default',
+                  color: 'default'
                 }],
               
               // Additional robot-specific fields
@@ -667,5 +707,312 @@ export const getProductsByCategory = async (category, additionalFilters = {}) =>
     }
   }
   
+  return [];
+};
+
+// Get related products by slug
+export const getRelatedProducts = async (slug) => {
+  if (!slug) {
+    console.warn('⚠️ No slug provided to getRelatedProducts');
+    return [];
+  }
+
+  const urlsToTry = [BACKEND_API_URL, ...FALLBACK_URLS];
+  
+  for (const baseUrl of urlsToTry) {
+    try {
+      const apiUrl = `${baseUrl}/frontend/api/robot/related/${slug}`;
+      
+      // Add timeout to prevent hanging requests
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
+      
+      const response = await fetch(apiUrl, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Cache-Control': 'no-cache',
+          'Pragma': 'no-cache'
+        },
+        signal: controller.signal
+      });
+
+      clearTimeout(timeoutId);
+
+      if (response.ok) {
+        const data = await response.json();
+        if (data.success && data.data && Array.isArray(data.data)) {
+          // Transform backend data to match frontend structure
+          const transformedProducts = data.data.map((product, index) => {
+            // Safe price conversion
+            const originalPrice = product.totalPrice;
+            const convertedPrice = (() => {
+              if (originalPrice === undefined || originalPrice === null || originalPrice === '') return 0;
+              const numPrice = Number(originalPrice);
+              return isNaN(numPrice) ? 0 : numPrice;
+            })();
+            
+            return {
+              id: product._id || index + 1,
+              title: product.title || 'Untitled Product',
+              price: convertedPrice,
+              imgSrc: product.images && product.images[0] ? 
+                (product.images[0].startsWith('public/') ? 
+                  `${baseUrl}/${product.images[0].replace('public/', '')}` : 
+                  `${baseUrl}/${product.images[0]}`
+                ) : 
+                `${baseUrl}/images/products/default.jpg`,
+              imgHover: product.images && product.images[1] ? 
+                (product.images[1].startsWith('public/') ? 
+                  `${baseUrl}/${product.images[1].replace('public/', '')}` : 
+                  `${baseUrl}/${product.images[1]}`
+                ) : 
+                (product.images && product.images[0] ? 
+                  (product.images[0].startsWith('public/') ? 
+                    `${baseUrl}/${product.images[0].replace('public/', '')}` : 
+                    `${baseUrl}/${product.images[0]}`
+                  ) : 
+                  `${baseUrl}/images/products/default.jpg`
+                ),
+              description: product.description || '',
+              inStock: true,
+              
+              // Dynamic fields from backend
+              filterBrands: product.manufacturer ? [product.manufacturer.name] : ['Default Brand'],
+              filterColor: product.color && product.color.length > 0 ? 
+                product.color.map(c => c.name) : ['Default Color'],
+              filterSizes: ['Default Size'],
+              
+              // Colors array for ProductCard component
+              colors: product.color && product.color.length > 0 ? 
+                product.color.map((colorItem, colorIndex) => {
+                  // Use different images for different colors if available
+                  const imageIndex = colorIndex < (product.images?.length || 0) ? colorIndex : 0;
+                  const imageSrc = product.images && product.images[imageIndex] ? 
+                    (product.images[imageIndex].startsWith('public/') ? 
+                      `${baseUrl}/${product.images[imageIndex].replace('public/', '')}` : 
+                      `${baseUrl}/${product.images[imageIndex]}`
+                    ) : 
+                    `${baseUrl}/images/products/default.jpg`;
+                  
+                  return {
+                    imgSrc: imageSrc,
+                    bgColor: getColorClass(colorItem.name),
+                    name: colorItem.name || 'Default',
+                    color: colorItem.name?.toLowerCase().replace(/\s+/g, '-') || 'default'
+                  };
+                }) : 
+                [{
+                  imgSrc: product.images && product.images[0] ? 
+                    (product.images[0].startsWith('public/') ? 
+                      `${baseUrl}/${product.images[0].replace('public/', '')}` : 
+                      `${baseUrl}/${product.images[0]}`
+                    ) : 
+                    `${baseUrl}/images/products/default.jpg`,
+                  bgColor: getColorClass('Default'),
+                  name: 'Default',
+                  color: 'default'
+                }],
+              
+              // Additional robot-specific fields
+              oldPrice: null,
+              category: product.category,
+              categoryId: product.category?._id || product.category,
+              
+              // Robot specifications
+              slug: product.slug && product.slug.trim() ? product.slug : null,
+              launchYear: product.launchYear || null,
+              version: product.version || '',
+              videoEmbedCode: product.videoEmbedCode || product.videoembedcode || '',
+              
+              // Dimensions and specifications
+              dimensions: product.dimensions || {},
+              weight: product.weight || {},
+              batteryCapacity: product.batteryCapacity || {},
+              batteryChargeTime: product.batteryChargeTime || {},
+              loadCapacity: product.loadCapacity || {},
+              operatingTemperature: product.operatingTemperature || {},
+              range: product.range || {},
+              powerSource: product.powerSource || {},
+              runtime: product.runtime || {},
+              speed: product.speed || {},
+              accuracy: product.accuracy || {},
+              material: product.material || []
+            };
+          });
+          
+          return transformedProducts;
+        } else {
+          // No related products found - this is normal
+          return [];
+        }
+      } else {
+        // Silently handle failed requests to reduce console noise
+      }
+    } catch (error) {
+      if (error.name === 'AbortError') {
+        // Request timeout - silently continue to next URL
+      } else {
+        // Silently handle errors to reduce console noise
+      }
+      continue; // Try next URL
+    }
+  }
+  
+  // Silently return empty array when all URLs fail
+  return [];
+};
+
+// Get recently viewed products by IDs
+export const getRecentlyViewed = async (ids) => {
+  if (!ids || !Array.isArray(ids) || ids.length === 0) {
+    console.warn('⚠️ No IDs provided to getRecentlyViewed');
+    return [];
+  }
+
+  const urlsToTry = [BACKEND_API_URL, ...FALLBACK_URLS];
+  
+  for (const baseUrl of urlsToTry) {
+    try {
+      const apiUrl = `${baseUrl}/frontend/api/robot/recentlyviewed`;
+      
+      // Add timeout to prevent hanging requests
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
+      
+      const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Cache-Control': 'no-cache',
+          'Pragma': 'no-cache'
+        },
+        body: JSON.stringify({ ids }),
+        signal: controller.signal
+      });
+
+      clearTimeout(timeoutId);
+
+      if (response.ok) {
+        const data = await response.json();
+        if (data.success && data.data && Array.isArray(data.data)) {
+          // Transform backend data to match frontend structure
+          const transformedProducts = data.data.map((product, index) => {
+            // Safe price conversion
+            const originalPrice = product.totalPrice;
+            const convertedPrice = (() => {
+              if (originalPrice === undefined || originalPrice === null || originalPrice === '') return 0;
+              const numPrice = Number(originalPrice);
+              return isNaN(numPrice) ? 0 : numPrice;
+            })();
+            
+            return {
+              id: product._id || index + 1,
+              title: product.title || 'Untitled Product',
+              price: convertedPrice,
+              imgSrc: product.images && product.images[0] ? 
+                (product.images[0].startsWith('public/') ? 
+                  `${baseUrl}/${product.images[0].replace('public/', '')}` : 
+                  `${baseUrl}/${product.images[0]}`
+                ) : 
+                `${baseUrl}/images/products/default.jpg`,
+              imgHover: product.images && product.images[1] ? 
+                (product.images[1].startsWith('public/') ? 
+                  `${baseUrl}/${product.images[1].replace('public/', '')}` : 
+                  `${baseUrl}/${product.images[1]}`
+                ) : 
+                (product.images && product.images[0] ? 
+                  (product.images[0].startsWith('public/') ? 
+                    `${baseUrl}/${product.images[0].replace('public/', '')}` : 
+                    `${baseUrl}/${product.images[0]}`
+                  ) : 
+                  `${baseUrl}/images/products/default.jpg`
+                ),
+              description: product.description || '',
+              inStock: true,
+              
+              // Dynamic fields from backend
+              filterBrands: product.manufacturer ? [product.manufacturer.name] : ['Default Brand'],
+              filterColor: product.color && product.color.length > 0 ? 
+                product.color.map(c => c.name) : ['Default Color'],
+              filterSizes: ['Default Size'],
+              
+              // Colors array for ProductCard component
+              colors: product.color && product.color.length > 0 ? 
+                product.color.map((colorItem, colorIndex) => {
+                  // Use different images for different colors if available
+                  const imageIndex = colorIndex < (product.images?.length || 0) ? colorIndex : 0;
+                  const imageSrc = product.images && product.images[imageIndex] ? 
+                    (product.images[imageIndex].startsWith('public/') ? 
+                      `${baseUrl}/${product.images[imageIndex].replace('public/', '')}` : 
+                      `${baseUrl}/${product.images[imageIndex]}`
+                    ) : 
+                    `${baseUrl}/images/products/default.jpg`;
+                  
+                  return {
+                    imgSrc: imageSrc,
+                    bgColor: getColorClass(colorItem.name),
+                    name: colorItem.name || 'Default',
+                    color: colorItem.name?.toLowerCase().replace(/\s+/g, '-') || 'default'
+                  };
+                }) : 
+                [{
+                  imgSrc: product.images && product.images[0] ? 
+                    (product.images[0].startsWith('public/') ? 
+                      `${baseUrl}/${product.images[0].replace('public/', '')}` : 
+                      `${baseUrl}/${product.images[0]}`
+                    ) : 
+                    `${baseUrl}/images/products/default.jpg`,
+                  bgColor: getColorClass('Default'),
+                  name: 'Default',
+                  color: 'default'
+                }],
+              
+              // Additional robot-specific fields
+              oldPrice: null,
+              category: product.category,
+              categoryId: product.category?._id || product.category,
+              
+              // Robot specifications
+              slug: product.slug && product.slug.trim() ? product.slug : null,
+              launchYear: product.launchYear || null,
+              version: product.version || '',
+              videoEmbedCode: product.videoEmbedCode || product.videoembedcode || '',
+              
+              // Dimensions and specifications
+              dimensions: product.dimensions || {},
+              weight: product.weight || {},
+              batteryCapacity: product.batteryCapacity || {},
+              batteryChargeTime: product.batteryChargeTime || {},
+              loadCapacity: product.loadCapacity || {},
+              operatingTemperature: product.operatingTemperature || {},
+              range: product.range || {},
+              powerSource: product.powerSource || {},
+              runtime: product.runtime || {},
+              speed: product.speed || {},
+              accuracy: product.accuracy || {},
+              material: product.material || []
+            };
+          });
+          
+          return transformedProducts;
+        } else {
+          // No recently viewed products found - this is normal
+          return [];
+        }
+      } else {
+        // Silently handle failed requests to reduce console noise
+      }
+    } catch (error) {
+      if (error.name === 'AbortError') {
+        // Request timeout - silently continue to next URL
+      } else {
+        // Silently handle errors to reduce console noise
+      }
+      continue; // Try next URL
+    }
+  }
+  
+  // Silently return empty array when all URLs fail
   return [];
 };

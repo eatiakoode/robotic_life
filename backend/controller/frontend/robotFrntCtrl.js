@@ -47,7 +47,7 @@ const getRobotBySlug = asyncHandler(async (req, res) => {
     const robot = await Robot.findOne({ slug: slug })
       .populate("category", "name slug parent")
       .populate("manufacturer", "name")
-      .populate("countryOfOrigin", "name")
+      .populate("countryOfOrigin", "title")
       .populate("powerSource", "name")
       .populate("color", "name")
       .populate("material", "name")
@@ -68,6 +68,7 @@ const getRobotBySlug = asyncHandler(async (req, res) => {
         error: "Robot not found"
       });
     }
+
 
     res.json({
       success: true,
@@ -307,7 +308,8 @@ const getRecentlyViewed = asyncHandler(async (req, res) => {
     ids = [...new Set(ids)].slice(0, 2);
 
     const robots = await Robot.find({ _id: { $in: ids } })
-      .select("title slug images totalPrice")
+      .select("title slug images totalPrice color")
+      .populate("color", "name")
       .lean();
 
     res.json({
@@ -346,6 +348,7 @@ const getRelatedRobots = async (req, res) => {
       .select("title totalPrice images color slug")
       .populate("color", "name")
       .limit(4)
+      .lean()
 
     res.status(200).json({
       success: true,

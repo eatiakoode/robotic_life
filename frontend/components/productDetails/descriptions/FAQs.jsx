@@ -24,10 +24,6 @@ export default function FAQs({ product }) {
         // Ensure the base URL is always present, with a fallback to common backend ports
         const baseUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL || 'http://localhost:5000/';
         const apiUrl = `${baseUrl}frontend/api/faq/robot/${productId}`;
-        console.log('Environment variable NEXT_PUBLIC_BACKEND_API_URL:', process.env.NEXT_PUBLIC_BACKEND_API_URL);
-        console.log('Using base URL:', baseUrl);
-        console.log('FAQ API URL:', apiUrl);
-        console.log('Product ID:', productId);
         const response = await fetch(apiUrl);
         
         if (!response.ok) {
@@ -35,7 +31,6 @@ export default function FAQs({ product }) {
         }
         
         const data = await response.json();
-        console.log('FAQ API Response:', data); // Debug log
         
         // Handle the response data structure
         if (data.success && Array.isArray(data.data)) {

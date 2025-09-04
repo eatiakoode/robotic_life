@@ -30,6 +30,7 @@ export default function Header1({ fullWidth = false }) {
                 width={144}
                 height={25}
                 priority
+                style={{ width: 'auto', height: 'auto' }}
               />
             </Link>
           </div>

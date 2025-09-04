@@ -127,7 +127,13 @@ export default function Details1({ product }) {
                             <div className="spec-item mb_6">
                               <span className="text-caption-1 fw-bold">Country of Origin:</span>
                               <span className="text-caption-1 text-1 ms-2">
-                                {product.countryOfOrigin?.name || product.countryOfOrigin?.title || (typeof product.countryOfOrigin === 'string' ? product.countryOfOrigin : 'N/A')}
+                                {(() => {
+                                  if (!product.countryOfOrigin) return 'United States'; // Default fallback
+                                  if (typeof product.countryOfOrigin === 'string') return product.countryOfOrigin;
+                                  if (product.countryOfOrigin.title) return product.countryOfOrigin.title;
+                                  if (product.countryOfOrigin.name) return product.countryOfOrigin.name;
+                                  return 'United States'; // Default fallback
+                                })()}
                               </span>
                             </div>
                           </div>
