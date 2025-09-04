@@ -1,12 +1,11 @@
 "use client";
 import React, { useState } from "react";
 import Description from "./Description";
-import Reviews from "./Reviews";
+import Capabilities from "./Capabilities";
+import Media from "./Media";
+import FAQs from "./FAQs";
 
-import Shipping from "./Shipping";
-import ReturnPolicies from "./ReturnPolicies";
-
-export default function Descriptions1() {
+export default function Descriptions1({ product }) {
   const [activeTab, setActiveTab] = useState(1);
   return (
     <section className="">
@@ -19,25 +18,25 @@ export default function Descriptions1() {
                   className={`item-title ${activeTab == 1 ? "active" : ""} `}
                   onClick={() => setActiveTab(1)}
                 >
-                  <span className="inner">Description</span>
+                  <span className="inner">Specification</span>
                 </li>
                 <li
                   className={`item-title ${activeTab == 2 ? "active" : ""} `}
                   onClick={() => setActiveTab(2)}
                 >
-                  <span className="inner">Customer Reviews</span>
+                  <span className="inner">Capabilities</span>
                 </li>
                 <li
                   className={`item-title ${activeTab == 3 ? "active" : ""} `}
                   onClick={() => setActiveTab(3)}
                 >
-                  <span className="inner">Shipping &amp; Returns</span>
+                  <span className="inner">Media</span>
                 </li>
                 <li
                   className={`item-title ${activeTab == 4 ? "active" : ""} `}
                   onClick={() => setActiveTab(4)}
                 >
-                  <span className="inner">Return Policies</span>
+                  <span className="inner">FAQs</span>
                 </li>
               </ul>
               <div className="widget-content-tab">
@@ -47,7 +46,7 @@ export default function Descriptions1() {
                   } `}
                 >
                   <div className="tab-description">
-                    <Description />
+                    <Description product={product} />
                   </div>
                 </div>
                 <div
@@ -55,8 +54,8 @@ export default function Descriptions1() {
                     activeTab == 2 ? "active" : ""
                   } `}
                 >
-                  <div className="tab-reviews write-cancel-review-wrap">
-                    <Reviews />
+                  <div className="tab-capabilities">
+                    <Capabilities product={product} />
                   </div>
                 </div>
                 <div
@@ -64,8 +63,8 @@ export default function Descriptions1() {
                     activeTab == 3 ? "active" : ""
                   } `}
                 >
-                  <div className="tab-shipping">
-                    <Shipping />
+                  <div className="tab-media">
+                    <Media product={product} />
                   </div>
                 </div>
                 <div
@@ -73,8 +72,8 @@ export default function Descriptions1() {
                     activeTab == 4 ? "active" : ""
                   } `}
                 >
-                  <div className="tab-policies">
-                    <ReturnPolicies />
+                  <div className="tab-faqs">
+                    <FAQs product={product} />
                   </div>
                 </div>
               </div>

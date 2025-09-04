@@ -13,7 +13,7 @@ const fallbackSlides = [
     _id: "fallback-1",
     title: "Powerful Sound",
     description: "Fill any space with immersive, high-quality audio.",
-    buttonText: "View More",
+    buttonText: "Explore Robots",
     buttonLink: "/shop-filter-canvas",
     images: ["/images/slider/slider-gaming-1.jpg"]
   },
@@ -130,14 +130,8 @@ export default function Hero() {
   useEffect(() => {
     if (sliders && sliders.length > 0) {
       setDisplaySlides(sliders);
-      console.log('Using API data:', sliders);
-      // Log image counts for each slide
-      sliders.forEach((slide, index) => {
-        console.log(`Slide ${index + 1} has ${slide.images ? slide.images.length : 0} images:`, slide.images);
-      });
     } else if (!loading) {
       setDisplaySlides(fallbackSlides);
-      console.log('Using fallback data');
     }
   }, [sliders, loading]);
 
@@ -149,7 +143,7 @@ export default function Hero() {
       <Swiper
         dir="ltr"
         className="swiper tf-sw-slideshow"
-        loop
+        loop={slidesToShow.length > 1}
         modules={[Autoplay, Pagination]}
         autoplay={{
           delay: 2000,
@@ -179,7 +173,7 @@ export default function Hero() {
                       href={slide.buttonLink || "/shop-filter-canvas"}
                       className="tf-btn btn-fill btn-white"
                     >
-                      <span className="text">{slide.buttonText || "View More"}</span>
+                      <span className="text">{slide.buttonText || "Explore Robots"}</span>
                       <i className="icon icon-arrowUpRight" />
                     </Link>
                   </div>

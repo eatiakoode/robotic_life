@@ -18,7 +18,6 @@ export const useBlogs = () => {
       }
       
       const data = await response.json();
-      console.log('Backend blog data:', data); // Debug: See what we're getting
       
       // Handle the response format from backend
       if (data.blogs && Array.isArray(data.blogs)) {
@@ -29,7 +28,6 @@ export const useBlogs = () => {
         setBlogs([]);
       }
     } catch (err) {
-      console.error('Error fetching blogs:', err);
       setError(err.message || 'Failed to fetch blogs');
     } finally {
       setLoading(false);

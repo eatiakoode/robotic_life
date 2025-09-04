@@ -23,7 +23,7 @@ export default async function ProductDetailPage({ params }) {
   if (!product) {
     return (
       <>
-        <Topbar6 bgColor="bg-main" />
+        {/* <Topbar6 bgColor="bg-main" /> */}
         <Header1 />
         <div className="container mt-5">
           <div className="row">
@@ -40,11 +40,11 @@ export default async function ProductDetailPage({ params }) {
 
   return (
     <>
-      <Topbar6 bgColor="bg-main" />
+      {/* <Topbar6 bgColor="bg-main" /> */}
       <Header1 />
       <Breadcumb product={product} />
       <Details1 product={product} />
-      <Descriptions1 />
+      <Descriptions1 product={product} />
       <RelatedProducts />
       <Footer1 hasPaddingBottom />
     </>

@@ -24,15 +24,11 @@ const useSlider = () => {
 
         for (const url of backendUrls) {
           try {
-            console.log(`Trying to fetch from: ${url}`);
             response = await fetch(url);
-            console.log(`Response from ${url}:`, response.status, response.statusText);
             if (response.ok) {
-              console.log(`Successfully connected to: ${url}`);
               break;
             }
           } catch (err) {
-            console.log(`Failed to fetch from ${url}:`, err.message);
             lastError = err;
             continue;
           }
@@ -43,7 +39,6 @@ const useSlider = () => {
         }
 
         const data = await response.json();
-        console.log('Slider data received:', data);
         
         if (data.success) {
           setSliders(data.data);
@@ -52,7 +47,6 @@ const useSlider = () => {
         }
       } catch (err) {
         setError(err.message);
-        console.error('Error fetching sliders:', err);
         // Fallback to empty array if API fails
         setSliders([]);
       } finally {

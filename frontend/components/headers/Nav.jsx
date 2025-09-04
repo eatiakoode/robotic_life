@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -16,6 +16,7 @@ export default function Nav() {
   const [hoveredCategory, setHoveredCategory] = useState(null);
   const [robots, setRobots] = useState([]);
   const [robotsLoading, setRobotsLoading] = useState(false);
+  const leaveTimeoutRef = useRef(null);
 
   // Fetch parent categories, their subcategories, and recent robots on component mount
   useEffect(() => {
@@ -54,7 +55,7 @@ export default function Nav() {
           subcategoryMap[result.categoryId] = result.subcategories;
         });
         
-        console.log('📊 Final subcategory map:', subcategoryMap);
+
         setSubcategories(subcategoryMap);
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -67,8 +68,23 @@ export default function Nav() {
     fetchData();
   }, []);
 
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (leaveTimeoutRef.current) {
+        clearTimeout(leaveTimeoutRef.current);
+      }
+    };
+  }, []);
+
   // Fetch subcategories when hovering over a parent category
   const handleCategoryHover = async (category) => {
+    // Clear any pending leave timeout
+    if (leaveTimeoutRef.current) {
+      clearTimeout(leaveTimeoutRef.current);
+      leaveTimeoutRef.current = null;
+    }
+    
     if (!subcategories[category._id]) {
       try {
         const subs = await getSubCategories(category._id);
@@ -81,6 +97,14 @@ export default function Nav() {
       }
     }
     setHoveredCategory(category);
+  };
+
+  // Reset hovered category when mouse leaves the category group
+  const handleCategoryLeave = () => {
+    // Add a small delay to prevent flickering when moving mouse quickly
+    leaveTimeoutRef.current = setTimeout(() => {
+      setHoveredCategory(null);
+    }, 150);
   };
 
   // Split categories into groups for the 4 columns
@@ -170,7 +194,7 @@ export default function Nav() {
           Robot
           <i className="icon icon-arrow-down" />
         </a>
-        <div className="sub-menu mega-menu">
+        <div className="sub-menu mega-menu" onMouseLeave={handleCategoryLeave}>
           <div className="container">
             <div className="row">
               {loading ? (
@@ -186,7 +210,12 @@ export default function Nav() {
               <div className="col-lg-2">
                 <div className="mega-menu-item">
                       {getCategoriesForColumn(0, Math.ceil(categories.length / 4)).map((category, index) => (
-                        <div key={category._id} className="category-group" style={{ marginBottom: '20px' }}>
+                        <div 
+                          key={category._id} 
+                          className="category-group" 
+                          style={{ marginBottom: '20px' }}
+                          onMouseLeave={handleCategoryLeave}
+                        >
                           <div 
                             className="menu-heading parent-category"
                             onMouseEnter={() => handleCategoryHover(category)}
@@ -257,7 +286,12 @@ export default function Nav() {
               <div className="col-lg-2">
                 <div className="mega-menu-item">
                       {getCategoriesForColumn(Math.ceil(categories.length / 4), Math.ceil(categories.length / 2)).map((category, index) => (
-                        <div key={category._id} className="category-group" style={{ marginBottom: '20px' }}>
+                        <div 
+                          key={category._id} 
+                          className="category-group" 
+                          style={{ marginBottom: '20px' }}
+                          onMouseLeave={handleCategoryLeave}
+                        >
                           <div 
                             className="menu-heading parent-category"
                             onMouseEnter={() => handleCategoryHover(category)}
@@ -328,7 +362,12 @@ export default function Nav() {
               <div className="col-lg-2">
                 <div className="mega-menu-item">
                       {getCategoriesForColumn(Math.ceil(categories.length / 2), Math.ceil(3 * categories.length / 4)).map((category, index) => (
-                        <div key={category._id} className="category-group" style={{ marginBottom: '20px' }}>
+                        <div 
+                          key={category._id} 
+                          className="category-group" 
+                          style={{ marginBottom: '20px' }}
+                          onMouseLeave={handleCategoryLeave}
+                        >
                           <div 
                             className="menu-heading parent-category"
                             onMouseEnter={() => handleCategoryHover(category)}
@@ -399,7 +438,12 @@ export default function Nav() {
               <div className="col-lg-2">
                 <div className="mega-menu-item">
                       {getCategoriesForColumn(Math.ceil(3 * categories.length / 4), categories.length).map((category, index) => (
-                        <div key={category._id} className="category-group" style={{ marginBottom: '20px' }}>
+                        <div 
+                          key={category._id} 
+                          className="category-group" 
+                          style={{ marginBottom: '20px' }}
+                          onMouseLeave={handleCategoryLeave}
+                        >
                           <div 
                             className="menu-heading parent-category"
                             onMouseEnter={() => handleCategoryHover(category)}

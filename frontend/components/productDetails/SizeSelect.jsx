@@ -25,13 +25,7 @@ export default function SizeSelect() {
             {selectedSize}
           </span>
         </div>
-        <a
-          href="#size-guide"
-          data-bs-toggle="modal"
-          className="size-guide text-title link"
-        >
-          Size Guide
-        </a>
+        {/* Size Guide button removed as requested */}
       </div>
       <div className="variant-picker-values gap12">
         {sizes.map(({ id, value, price, disabled }) => (

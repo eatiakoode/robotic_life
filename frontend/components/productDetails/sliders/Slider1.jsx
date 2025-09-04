@@ -13,9 +13,24 @@ export default function Slider1({
   slideItems = slides,
   thumbSlidePerView = 6,
   thumbSlidePerViewOnMobile = 6,
+  productImages = [], // New prop for robot images
 }) {
-  const items = [...slideItems];
-  items[0].src = firstItem ?? items[0].src;
+  // Use robot images if available, otherwise fall back to static slides
+  const items = productImages && productImages.length > 0 
+    ? productImages.map((img, index) => ({
+        id: index + 1,
+        color: activeColor,
+        src: img,
+        alt: `Robot image ${index + 1}`,
+        width: 600,
+        height: 800,
+      }))
+    : [...slideItems];
+  
+  // Set first item if provided
+  if (firstItem && items.length > 0) {
+    items[0].src = firstItem;
+  }
 
   useEffect(() => {
     // Function to initialize Drift

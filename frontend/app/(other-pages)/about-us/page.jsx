@@ -26,7 +26,7 @@ export default function AboutUsPage() {
         <div className="container-full">
           <div className="row">
             <div className="col-12">
-              <h3 className="heading text-center">About Our Store</h3>
+              <h3 className="heading text-center">About Us</h3>
               <ul className="breadcrumbs d-flex align-items-center justify-content-center">
                 <li>
                   <Link className="link" href={`/`}>
@@ -36,15 +36,7 @@ export default function AboutUsPage() {
                 <li>
                   <i className="icon-arrRight" />
                 </li>
-                <li>
-                  <a className="link" href="#">
-                    Pages
-                  </a>
-                </li>
-                <li>
-                  <i className="icon-arrRight" />
-                </li>
-                <li>About Our Store</li>
+                <li>About Us</li>
               </ul>
             </div>
           </div>
