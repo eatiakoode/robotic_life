@@ -118,4 +118,27 @@ const getRobotsByCategorySlug = asyncHandler(async (req, res) => {
   }
 });
 
-module.exports = { getActiveParentCategories, getFilteredRobotsByParentCategory, getRobotsByCategorySlug };
+const getActiveSubcategories = async (req, res) => {
+  try {
+    const subcategories = await Category.find({
+      status: true,
+      parent: { $ne: null }
+    })
+      .populate("parent", "name slug")
+      .sort({ name: 1 });
+
+    res.status(200).json({
+      success: true,
+      count: subcategories.length,
+      data: subcategories,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Error fetching subcategories",
+      error: error.message,
+    });
+  }
+};
+
+module.exports = { getActiveParentCategories, getFilteredRobotsByParentCategory, getRobotsByCategorySlug, getActiveSubcategories };
