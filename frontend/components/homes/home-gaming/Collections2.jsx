@@ -4,137 +4,60 @@ import { Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import Link from "next/link";
 import Image from "next/image";
-import useCategories from "@/hooks/useCategories";
+import useSubCategories from "@/hooks/useSubCategories";
+
+// Static fallback data from your provided static code
+const staticCollections17 = [
+  {
+    id: 1,
+    imageSrc: "/images/collections/list-cls/gaming-1.jpg",
+    alt: "Category 1",
+    title: "Headphones Collection",
+    description: "Clear sound, all-day comfort.",
+    delay: "0s",
+  },
+  {
+    id: 2,
+    imageSrc: "/images/collections/list-cls/gaming-2.jpg",
+    alt: "Category 2",
+    title: "Laptop Collection",
+    description: "Style meets functionality.",
+    delay: "0.1s",
+  },
+  {
+    id: 3,
+    imageSrc: "/images/collections/list-cls/gaming-3.jpg",
+    alt: "Category 3",
+    title: "Mouse & Keyboard",
+    description: "Unleash Speed, Accuracy, and Control for the Ultimate Gaming Edge!",
+    delay: "0.2s",
+  },
+];
 
 export default function Collections2() {
-  const { categories, loading, error } = useCategories();
-
-  // Fallback data if API fails
-  const fallbackCategories = [
-    {
-      _id: "fallback-1",
-      name: "ACCESSORIES",
-      description: "Clear sound, all-day comfort.",
-      logoimage: "/images/collections/list-cls/gaming-1.jpg"
-    },
-    {
-      _id: "fallback-2",
-      name: "ACCESSORIES", 
-      description: "Style meets functionality.",
-      logoimage: "/images/collections/list-cls/gaming-2.jpg"
-    },
-    {
-      _id: "fallback-3",
-      name: "ROG GAMING MOUSE",
-      description: "Unleash Speed, Accuracy, and Control for the Ultimate Gaming Edge!",
-      logoimage: "/images/collections/list-cls/gaming-3.jpg"
-    }
-  ];
+  const { subcategories, loading, error } = useSubCategories();
 
   // Function to get the correct image URL
   const getImageUrl = (imagePath) => {
     if (!imagePath) return "/images/collections/list-cls/gaming-1.jpg";
-    
-    // If the image path is already a full URL, return it as is
+
     if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
       return imagePath;
     }
-    
-    // If it's a relative path starting with 'public/', construct the backend URL
+
     if (imagePath.startsWith('public/')) {
       return `http://localhost:5000/${imagePath}`;
     }
-    
-    // If it's just a filename, construct the backend URL
+
     if (!imagePath.includes('/')) {
       return `http://localhost:5000/public/images/category/${imagePath}`;
     }
-    
-    // For other cases, try to construct the backend URL
+
     return `http://localhost:5000/${imagePath}`;
   };
 
-  // Use API data if available, otherwise fallback
-  const displayCategories = categories && categories.length > 0 ? categories.slice(0, 3) : fallbackCategories;
-
-  // Show loading state while fetching categories
-  if (loading) {
-    return (
-      <section className="flat-spacing">
-        <div className="container">
-          <Swiper
-            dir="ltr"
-            className="swiper tf-sw-recent"
-            spaceBetween={15}
-            breakpoints={{
-              0: { slidesPerView: 1 },
-              575: {
-                slidesPerView: 1,
-              },
-              768: {
-                slidesPerView: 2,
-                spaceBetween: 20,
-              },
-              992: {
-                spaceBetween: 30,
-                slidesPerView: 3,
-              },
-            }}
-            modules={[Pagination]}
-            pagination={{
-              clickable: true,
-              el: ".spd26",
-            }}
-          >
-            {[1, 2, 3].map((index) => (
-              <SwiperSlide className="swiper-slide" key={index}>
-                <div
-                  className="collection-default hover-button abs-left-bottom type-2 hover-img wow fadeInUp"
-                  data-wow-delay="0s"
-                >
-                  <a className="img-style">
-                    <Image
-                      className="lazyload"
-                      data-src="/images/collections/list-cls/gaming-1.jpg"
-                      alt="Loading..."
-                      src="/images/collections/list-cls/gaming-1.jpg"
-                      width={410}
-                      height={546}
-                    />
-                  </a>
-                  <div className="content text-start">
-                    <div className="box-title">
-                      <h5 className="title">
-                        <Link
-                          href={`/shop-filter-canvas`}
-                          className="link text-white fw-bold"
-                        >
-                          Loading...
-                        </Link>
-                      </h5>
-                      <p className="text-white body-text">
-                        Please wait while we fetch categories...
-                      </p>
-                    </div>
-                    <div className="box-btn">
-                      <Link
-                        href={`/shop-filter-canvas`}
-                        className="tf-btn btn-fill btn-white btn-md"
-                      >
-                        <span className="text">Explore Robots & Research</span>
-                        <i className="icon icon-arrowUpRight" />
-                      </Link>
-                    </div>
-                  </div>
-                </div>
-              </SwiperSlide>
-            ))}
-            <div className="sw-pagination-recent sw-dots type-circle justify-content-center spd26" />
-          </Swiper>
-        </div>
-      </section>
-    );
-  }
+  // Use API data if available, otherwise fallback to static data
+  const displayCategories = subcategories && subcategories.length > 0 ? subcategories.slice(0, 3) : staticCollections17;
 
   return (
     <section className="flat-spacing">
@@ -164,7 +87,7 @@ export default function Collections2() {
           }}
         >
           {displayCategories.map((category, index) => (
-            <SwiperSlide className="swiper-slide" key={category._id || `category-${index}`}>
+            <SwiperSlide className="swiper-slide" key={category._id || category.id || index}>
               <div
                 className="collection-default hover-button abs-left-bottom type-2 hover-img wow fadeInUp"
                 data-wow-delay={`${index * 0.1}s`}
@@ -172,13 +95,13 @@ export default function Collections2() {
                 <a className="img-style">
                   <Image
                     className="lazyload"
-                    data-src={getImageUrl(category.logoimage)}
-                    alt={category.name || 'Category'}
-                    src={getImageUrl(category.logoimage)}
+                    data-src={getImageUrl(category.logoimage || category.imageSrc)}
+                    alt={category.name || category.alt || 'Category'}
+                    src={getImageUrl(category.logoimage || category.imageSrc)}
                     width={410}
                     height={546}
                     onError={(e) => {
-                      e.target.src = '/images/collections/list-cls/gaming-1.jpg';
+                      e.target.src = staticCollections17[index]?.imageSrc || '/images/collections/list-cls/gaming-1.jpg';
                     }}
                   />
                 </a>
@@ -186,10 +109,10 @@ export default function Collections2() {
                   <div className="box-title">
                     <h5 className="title">
                       <Link
-                        href={`/shop-filter-canvas`}
+                        href="/shop-filter-canvas"
                         className="link text-white fw-bold"
                       >
-                        {category.name || 'Category'}
+                        {category.name || category.title || 'Category'}
                       </Link>
                     </h5>
                     <p className="text-white body-text">
@@ -198,10 +121,10 @@ export default function Collections2() {
                   </div>
                   <div className="box-btn">
                     <Link
-                      href={`/shop-filter-canvas`}
+                      href="/shop-filter-canvas"
                       className="tf-btn btn-fill btn-white btn-md"
                     >
-                      <span className="text">Explore Robots & Research</span>
+                      <span className="text">Shop now</span>
                       <i className="icon icon-arrowUpRight" />
                     </Link>
                   </div>
@@ -209,7 +132,6 @@ export default function Collections2() {
               </div>
             </SwiperSlide>
           ))}
-
           <div className="sw-pagination-recent sw-dots type-circle justify-content-center spd26" />
         </Swiper>
       </div>

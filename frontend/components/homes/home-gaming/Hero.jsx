@@ -98,9 +98,9 @@ export default function Hero() {
               <div className="box-content type-2 type-3">
                 <div className="content-slider">
                   <div className="box-title-slider">
-                    <p className="fade-item fade-item-1 fw-bold text-white title-display font-5">
+                    <span className="fade-item fade-item-1 fw-bold text-white title-display font-5">
                       {slide.title || "Title"}
-                    </p>
+                    </span>
                     <p className="fade-item fade-item-2 body-text-1 text-white">
                       {slide.description || "Description"}
                     </p>
