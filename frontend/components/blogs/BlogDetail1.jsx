@@ -1,9 +1,16 @@
+"use client";
+
 import React from "react";
 import Comments from "./Comments";
 import CommentForm from "./CommentForm";
 import Image from "next/image";
+import Link from "next/link";
+import { useAdjacentBlogs } from "@/hooks/useAdjacentBlogs";
 
 export default function BlogDetail1({ blog }) {
+  // Fetch adjacent blogs (previous and next)
+  const { adjacentBlogs, loading: adjacentLoading } = useAdjacentBlogs(blog?._id);
+
   // Helper function to format date
   const formatDate = (dateString) => {
     if (!dateString) return "Unknown Date";
@@ -191,22 +198,48 @@ export default function BlogDetail1({ blog }) {
         <div className="related-post">
           <div className="pre w-50">
             <div className="text-btn-uppercase">
-              <a href="#">Previous</a>
+              {adjacentBlogs.previous ? (
+                <Link href={`/blog-detail/${adjacentBlogs.previous.slug || adjacentBlogs.previous._id}`}>
+                  Previous
+                </Link>
+              ) : (
+                <span style={{ color: '#ccc' }}>Previous</span>
+              )}
             </div>
             <h6 className="fw-5">
-              <a className="link" href="#">
-                How to choose the right customer
-              </a>
+              {adjacentBlogs.previous ? (
+                <Link 
+                  className="link" 
+                  href={`/blog-detail/${adjacentBlogs.previous.slug || adjacentBlogs.previous._id}`}
+                >
+                  {adjacentBlogs.previous.title}
+                </Link>
+              ) : (
+                <span style={{ color: '#ccc' }}>No previous post</span>
+              )}
             </h6>
           </div>
           <div className="next w-50">
             <div className="text-btn-uppercase text-end">
-              <a href="#">Next</a>
+              {adjacentBlogs.next ? (
+                <Link href={`/blog-detail/${adjacentBlogs.next.slug || adjacentBlogs.next._id}`}>
+                  Next
+                </Link>
+              ) : (
+                <span style={{ color: '#ccc' }}>Next</span>
+              )}
             </div>
             <h6 className="fw-5 text-end">
-              <a className="link" href="#">
-                Starting your traveling blog with Vasco
-              </a>
+              {adjacentBlogs.next ? (
+                <Link 
+                  className="link" 
+                  href={`/blog-detail/${adjacentBlogs.next.slug || adjacentBlogs.next._id}`}
+                >
+                  {adjacentBlogs.next.title}
+                </Link>
+              ) : (
+                <span style={{ color: '#ccc' }}>No next post</span>
+              )}
             </h6>
           </div>
         </div>
