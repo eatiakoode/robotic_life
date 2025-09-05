@@ -506,58 +506,58 @@ const EditList = () => {
       { key: "description", value: description, name: "Description" },
       { key: "status", value: status, name: "Status" },
       { key: "price", value: price, name: "Total Price" },
-      { key: "countryid", value: selectedCountry, name: "Country of Origin" },
-      { key: "categoryid", value: selectedCategory, name: "Category" },
+      // { key: "countryid", value: selectedCountry, name: "Country of Origin" },
+      // { key: "categoryid", value: selectedCategory, name: "Category" },
       // { key: "subcategoryid", value: selectedSubCategory, name: "Sub Category" },
-      { key: "manufacturerid", value: selectedManufacturer, name: "Manufacturer" },
-      { key: "launchYear", value: launchYear, name: "Launch Year" },
-      { key: "length", value: length, name: "Length" },
-      { key: "width", value: width, name: "Width" },
-      { key: "height", value: height, name: "Height" },
-      { key: "weight", value: weight, name: "Weight" },
-      { key: "batteryCapacity", value: batteryCapacity, name: "Battery Capacity" },
-      { key: "runtime", value: runtime, name: "Runtime" },
-      { key: "speed", value: speed, name: "Speed" },
-      { key: "accuracy", value: accuracy, name: "Accuracy" },
-      { key: "selectedPower", value: selectedPower, name: "Power Source" },
-      { key: "videoembedcode", value: videoembedcode, name: "Video Embed Code" },
-      { key: "selectedPrimaryFunction", value: selectedPrimaryFunction, name: "Primary Function" },
-      { key: "selectedOperatingEnvironment", value: selectedOperatingEnvironment, name: "Operating Environment" },
-      { key: "selectedAutonomyLevel", value: selectedAutonomyLevel, name: "Autonomy Level" },
-      { key: "colors", value: selectedColors.length > 0 ? selectedColors : null, name: "Colors" },
-      { key: "materials", value: selectedMaterials.length > 0 ? selectedMaterials : null, name: "Materials" },
-      { key: "navigationTypes", value: selectedNavigationType.length > 0 ? selectedNavigationType : null, name: "Navigation Types" },
-      { key: "sensors", value: selectedSensor.length > 0 ? selectedSensor : null, name: "Sensors" },
-      { key: "aiSoftwareFeatures", value: selectedAISoftwareFeature.length > 0 ? selectedAISoftwareFeature : null, name: "AI Software Features" },
-      { key: "terrainCapability", value: selectedTerrainCapability.length > 0 ? selectedTerrainCapability : null, name: "Terrain Capability" },
-      { key: "communicationMethod", value: selectedCommunicationMethod.length > 0 ? selectedCommunicationMethod : null, name: "Communication Method" },
-      { key: "payloadType", value: selectedPayloadType.length > 0 ? selectedPayloadType : null, name: "Payload Type" },
+      // { key: "manufacturerid", value: selectedManufacturer, name: "Manufacturer" },
+      // { key: "launchYear", value: launchYear, name: "Launch Year" },
+      // { key: "length", value: length, name: "Length" },
+      // { key: "width", value: width, name: "Width" },
+      // { key: "height", value: height, name: "Height" },
+      // { key: "weight", value: weight, name: "Weight" },
+      // { key: "batteryCapacity", value: batteryCapacity, name: "Battery Capacity" },
+      // { key: "runtime", value: runtime, name: "Runtime" },
+      // { key: "speed", value: speed, name: "Speed" },
+      // { key: "accuracy", value: accuracy, name: "Accuracy" },
+      // { key: "selectedPower", value: selectedPower, name: "Power Source" },
+      // { key: "videoembedcode", value: videoembedcode, name: "Video Embed Code" },
+      // { key: "selectedPrimaryFunction", value: selectedPrimaryFunction, name: "Primary Function" },
+      // { key: "selectedOperatingEnvironment", value: selectedOperatingEnvironment, name: "Operating Environment" },
+      // { key: "selectedAutonomyLevel", value: selectedAutonomyLevel, name: "Autonomy Level" },
+      // { key: "colors", value: selectedColors.length > 0 ? selectedColors : null, name: "Colors" },
+      // { key: "materials", value: selectedMaterials.length > 0 ? selectedMaterials : null, name: "Materials" },
+      // { key: "navigationTypes", value: selectedNavigationType.length > 0 ? selectedNavigationType : null, name: "Navigation Types" },
+      // { key: "sensors", value: selectedSensor.length > 0 ? selectedSensor : null, name: "Sensors" },
+      // { key: "aiSoftwareFeatures", value: selectedAISoftwareFeature.length > 0 ? selectedAISoftwareFeature : null, name: "AI Software Features" },
+      // { key: "terrainCapability", value: selectedTerrainCapability.length > 0 ? selectedTerrainCapability : null, name: "Terrain Capability" },
+      // { key: "communicationMethod", value: selectedCommunicationMethod.length > 0 ? selectedCommunicationMethod : null, name: "Communication Method" },
+      // { key: "payloadType", value: selectedPayloadType.length > 0 ? selectedPayloadType : null, name: "Payload Type" },
     ];
 
     // Check for empty required fields
-    requiredFields.forEach((field) => {
-      if (field.key === "status") {
-        // Status is a boolean, so only check if it's undefined/null
-        if (field.value === undefined || field.value === null) {
-        newErrors[field.key] = `${field.name} is required`;
-        }
-      } else if (Array.isArray(field.value)) {
-        // For array fields, check if they have items
-        if (!field.value || field.value.length === 0) {
-          newErrors[field.key] = `${field.name} is required`;
-        }
-      } else if (typeof field.value === "string") {
-        // For string fields, check if they're empty after trimming
-        if (!field.value || !field.value.trim()) {
-          newErrors[field.key] = `${field.name} is required`;
-        }
-      } else {
-        // For other types (numbers, booleans), just check if they exist
-        if (field.value === undefined || field.value === null || field.value === "") {
-          newErrors[field.key] = `${field.name} is required`;
-        }
-      }
-    });
+    // requiredFields.forEach((field) => {
+    //   if (field.key === "status") {
+    //     // Status is a boolean, so only check if it's undefined/null
+    //     if (field.value === undefined || field.value === null) {
+    //     newErrors[field.key] = `${field.name} is required`;
+    //     }
+    //   } else if (Array.isArray(field.value)) {
+    //     // For array fields, check if they have items
+    //     if (!field.value || field.value.length === 0) {
+    //       newErrors[field.key] = `${field.name} is required`;
+    //     }
+    //   } else if (typeof field.value === "string") {
+    //     // For string fields, check if they're empty after trimming
+    //     if (!field.value || !field.value.trim()) {
+    //       newErrors[field.key] = `${field.name} is required`;
+    //     }
+    //   } else {
+    //     // For other types (numbers, booleans), just check if they exist
+    //     if (field.value === undefined || field.value === null || field.value === "") {
+    //       newErrors[field.key] = `${field.name} is required`;
+    //     }
+    //   }
+    // });
 
     if (Object.keys(newErrors).length > 0) {
       setError(newErrors);

@@ -171,13 +171,11 @@ export default function Collections() {
                   </p> */}
                   <h1 className="title">
                     <Link href="/shop-filter-canvas" className="link text-white fw-bold font-5">
-                      {finalCategories[2].name?.split(" ").slice(0, 3).join(" ") || "Missing"} <br />
-                      {finalCategories[2].name?.split(" ").slice(3, 6).join(" ") || "Title"}
+                      {finalCategories[2].name || "ROG GAMING MOUSE"}
                     </Link>
                   </h1>
                   <p className="text-white body-text-1">
-                    {finalCategories[2].description?.split(" ").slice(0, 3).join(" ") || "Description"} <br />
-                    {finalCategories[2].description?.split(" ").slice(3, 6).join(" ") || "Missing"}
+                    {finalCategories[2].description || "Description"}
                   </p>
                 </div>
                 <div className="box-btn">
