@@ -366,4 +366,62 @@ const getRelatedRobots = async (req, res) => {
   }
 };
 
-module.exports = { getRecentRobots, getallRobots, getRobotBySlug, filterRobots, getRecentlyViewed, getRelatedRobots };
+// Compare Robots
+const compareRobots = async (req, res) => {
+  try {
+    const { robotIds } = req.body;
+
+    if (!robotIds || !Array.isArray(robotIds)) {
+      return res.status(400).json({
+        success: false,
+        message: "Please provide an array of robot IDs.",
+      });
+    }
+
+    if (robotIds.length === 0 || robotIds.length > 3) {
+      return res.status(400).json({
+        success: false,
+        message: "You can compare between 1 to 3 robots only.",
+      });
+    }
+
+    const robots = await Robot.find({ _id: { $in: robotIds }, status: true })
+      .populate("category", "name")
+      .populate("manufacturer", "name")
+      .populate("color", "name")
+      .populate("powerSource", "name")
+      .populate("navigationType", "name")
+      .populate("sensors", "name")
+      .populate("primaryFunction", "name")
+      .populate("aiSoftwareFeatures", "name")
+      .populate("operatingEnvironment", "name")
+      .populate("terrainCapability", "name")
+      .populate("autonomyLevel", "name")
+      .populate("communicationMethod", "name")
+      .populate("payloadTypesSupported", "name")
+      .select(
+        "title slug description category manufacturer launchYear totalPrice images weight speed range loadCapacity batteryCapacity runtime autonomyLevel aiSoftwareFeatures"
+      );
+
+    if (robots.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "No robots found for the given IDs.",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      count: robots.length,
+      data: robots,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Server Error",
+      error: error.message,
+    });
+  }
+};
+
+module.exports = { getRecentRobots, getallRobots, getRobotBySlug, filterRobots, getRecentlyViewed, getRelatedRobots, compareRobots };

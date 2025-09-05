@@ -5,7 +5,8 @@ const {
   getallBlog,
   getBlogBySlug,
   getRelatedBlogs,
-  getPopularTags
+  getPopularTags,
+  getAdjacentBlogs
 } = require("../../controller/frontend/blogCtrl");
 const router = express.Router();
 
@@ -23,5 +24,7 @@ router.get("/slug/:slug", getBlogBySlug);
 
 // Get related blogs
 router.get("/related/:blogId", getRelatedBlogs);
+
+router.get("/adjacent/:blogId", getAdjacentBlogs);
 
 module.exports = router;
