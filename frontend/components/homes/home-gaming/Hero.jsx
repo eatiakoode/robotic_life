@@ -115,7 +115,7 @@ export default function Hero() {
                     <span className="fade-item fade-item-1 fw-bold text-white title-display font-5" style={{
                       fontSize: '3.5rem',
                       lineHeight: '1.2',
-                      marginBottom: '1.5rem',
+                      marginBottom: '0.50rem',
                       fontWeight: '700',
                       display: 'block'
                     }}>
