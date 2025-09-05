@@ -17,7 +17,7 @@ export default async function BlogDetailsPage2({ params }) {
       <Topbar6 bgColor="bg-main" />
       <Header1 />
       <BlogDetail2 blog={blog} />
-      <RelatedBlogs />
+      <RelatedBlogs blogId={blog.id} />
       <Footer1 />
     </>
   );

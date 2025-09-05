@@ -166,17 +166,18 @@ export default function Collections() {
               </a>
               <div className="content text-start">
                 <div className="box-title">
-                  <p className="tag text-white body-text fw-semibold">
+                  {/* <p className="tag text-white body-text fw-semibold">
                     {finalCategories[2].name || "ROG GAMING MOUSE"}
-                  </p>
+                  </p> */}
                   <h1 className="title">
                     <Link href="/shop-filter-canvas" className="link text-white fw-bold font-5">
-                      {finalCategories[2].description?.split(" ").slice(0, 3).join(" ") || "Precision at Your"} <br />
-                      {finalCategories[2].description?.split(" ").slice(3, 6).join(" ") || "Fingertips"}
+                      {finalCategories[2].name?.split(" ").slice(0, 3).join(" ") || "Missing"} <br />
+                      {finalCategories[2].name?.split(" ").slice(3, 6).join(" ") || "Title"}
                     </Link>
                   </h1>
                   <p className="text-white body-text-1">
-                    {finalCategories[2].description || "Unleash Speed, Accuracy, and Control for the Ultimate Gaming Edge!"}
+                    {finalCategories[2].description?.split(" ").slice(0, 3).join(" ") || "Description"} <br />
+                    {finalCategories[2].description?.split(" ").slice(3, 6).join(" ") || "Missing"}
                   </p>
                 </div>
                 <div className="box-btn">
@@ -184,7 +185,7 @@ export default function Collections() {
                     href="/shop-filter-canvas"
                     className="tf-btn btn-fill btn-white btn-md"
                   >
-                    <span className="text">Shop now</span>
+                    <span className="text">Explore Robots</span>
                     <i className="icon icon-arrowUpRight" />
                   </Link>
                 </div>
