@@ -20,21 +20,31 @@ export const addRobotAPI = async (formData: FormData) => {
   const token = getAuthToken();
   if (!token) throw new Error("User not authenticated!");
 
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_ADMIN_API_URL}api/robot`,
-    {
-      method: "POST",
-      headers: { Authorization: `Bearer ${token}` },
-      body: formData,
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_ADMIN_API_URL}api/robot`,
+      {
+        method: "POST",
+        headers: { Authorization: `Bearer ${token}` },
+        body: formData,
+      }
+    );
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      console.error("Robot creation error:", errorData);
+      throw new Error(errorData.error || errorData.message || "Failed to add Robot");
     }
-  );
 
-  if (!response.ok) {
-    const errorData = await response.json().catch(() => ({}));
-    throw new Error(errorData.message || "Failed to add Robot");
+    return response.json();
+  } catch (error) {
+    // Handle network errors
+    if (error.name === 'TypeError' && error.message.includes('fetch')) {
+      throw new Error("Network error. Please check your connection and try again.");
+    }
+    // Re-throw other errors
+    throw error;
   }
-
-  return response.json();
 };
 
 /**

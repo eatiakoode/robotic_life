@@ -9,7 +9,7 @@ export default function Testimonials() {
     <section className="flat-spacing">
       <div className="container">
         <div className="heading-section text-center wow fadeInUp">
-          <h3 className="heading">Customer Review</h3>
+          <h3 className="heading">Testimonials</h3>
         </div>
         <Swiper
           className="tf-sw-testimonial wow fadeInUp"

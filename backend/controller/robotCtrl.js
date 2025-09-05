@@ -51,7 +51,29 @@ const createRobot = asyncHandler(async (req, res) => {
       data: populatedRobot
     });
   } catch (err) {
-    res.status(400).json({ error: err.message });
+    console.error("Create robot error:", err);
+    
+    // Handle specific validation errors
+    if (err.name === 'ValidationError') {
+      const validationErrors = Object.values(err.errors).map(e => e.message).join(', ');
+      return res.status(400).json({ 
+        error: `Validation failed: ${validationErrors}`,
+        details: err.errors 
+      });
+    }
+    
+    // Handle duplicate key errors
+    if (err.code === 11000) {
+      const field = Object.keys(err.keyPattern)[0];
+      return res.status(400).json({ 
+        error: `A robot with this ${field} already exists. Please use a different ${field}.` 
+      });
+    }
+    
+    // Handle other errors
+    res.status(400).json({ 
+      error: err.message || "Failed to create robot. Please check your data and try again." 
+    });
   }
 });
 

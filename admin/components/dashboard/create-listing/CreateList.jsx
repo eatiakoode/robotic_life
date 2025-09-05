@@ -406,6 +406,21 @@ const CreateList = () => {
       newErrors.dimensions = "At least one dimension (length, width, height, or weight) is required";
     }
 
+    // Validate slug uniqueness (basic check)
+    if (slug && slug.length < 3) {
+      newErrors.slug = "Slug must be at least 3 characters long";
+    }
+
+    // Validate price is a positive number
+    if (price && (isNaN(price) || price <= 0)) {
+      newErrors.price = "Price must be a positive number";
+    }
+
+    // Validate launch year
+    if (launchYear && (isNaN(launchYear) || launchYear < 1900 || launchYear > new Date().getFullYear() + 5)) {
+      newErrors.launchYear = "Launch year must be between 1900 and " + (new Date().getFullYear() + 5);
+    }
+
     if (Object.keys(newErrors).length > 0) {
       console.log("Validation errors:", newErrors);
       setError(newErrors);
@@ -554,7 +569,13 @@ const CreateList = () => {
         console.log(pair[0], pair[1]);
       }
 
-      const res = await createRobot(formData, token);
+      // Add timeout and retry logic
+      const timeoutPromise = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error("Request timeout. Please try again.")), 30000)
+      );
+
+      const apiPromise = createRobot(formData, token);
+      const res = await Promise.race([apiPromise, timeoutPromise]);
       console.log("API Response:", res);
 
       toast.success(res.message || "Robot created successfully!");
@@ -570,10 +591,22 @@ const CreateList = () => {
       
       let errorMessage = "Something went wrong";
       
-      if (err.response?.data?.message) {
+      // Handle different error formats
+      if (err.response?.data?.error) {
+        errorMessage = err.response.data.error;
+      } else if (err.response?.data?.message) {
         errorMessage = err.response.data.message;
       } else if (err.message) {
         errorMessage = err.message;
+      }
+      
+      // Provide more specific error messages for common issues
+      if (errorMessage.includes("validation")) {
+        errorMessage = "Please check all required fields and try again.";
+      } else if (errorMessage.includes("duplicate") || errorMessage.includes("unique")) {
+        errorMessage = "A robot with this title already exists. Please use a different title.";
+      } else if (errorMessage.includes("authentication") || errorMessage.includes("unauthorized")) {
+        errorMessage = "Authentication failed. Please login again.";
       }
       
       setError({ general: errorMessage });

@@ -77,7 +77,7 @@ export default function ShopDefaultGridPage() {
         </div>
       </div>
       <Products1 />
-      <Footer1 />
+      <Footer1 dark />
     </>
   );
 }
