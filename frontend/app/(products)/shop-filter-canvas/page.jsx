@@ -12,15 +12,15 @@ export default function ShopFilterCanvasPage() {
       <Header1 />
       <div
         className="page-title"
-        style={{ backgroundImage: "url(/images/section/page-title.jpg)" }}
+        style={{ backgroundImage: "url(/images/section/detail-card.png)" }}
       >
         <div className="container-full">
           <div className="row">
             <div className="col-12">
-              <h3 className="heading text-center">Robots</h3>
+              <h3 className="heading text-center text-white">Robots</h3>
               <ul className="breadcrumbs d-flex align-items-center justify-content-center">
                 <li>
-                  <Link className="link" href={`/`}>
+                  <Link className="link text-white" href={`/`}>
                     Homepage
                   </Link>
                 </li>

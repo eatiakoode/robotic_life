@@ -131,12 +131,12 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body className="preload-wrapper popup-loader">
         <Context>
-          <RtlToggler />
+          {/* <RtlToggler /> */}
           <div id="wrapper">{children}</div>
-          <CartModal />
+          {/* <CartModal />
           <QuickView />
           <QuickAdd />
-          <Compare />
+          <Compare /> */}
           <MobileMenu />
 
 

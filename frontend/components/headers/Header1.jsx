@@ -26,7 +26,7 @@ export default function Header1({ fullWidth = false }) {
               <Image
                 alt="logo"
                 className="logo"
-                src="/images/logo/theBots.png"
+                src="/images/logo/logoB.png"
                 width={144}
                 height={25}
                 priority
