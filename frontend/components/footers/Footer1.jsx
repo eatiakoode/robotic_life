@@ -98,11 +98,11 @@ export default function Footer1({
                           alt=""
                           src={
                             dark
-                              ? "/images/logo/logo-white.svg"
-                              : "/images/logo/logo.svg"
+                              ? "/images/logo/logoB.png"
+                              : "/images/logo/logoB.png"
                           }
-                          width={127}
-                          height={24}
+                          width={144}
+                          height={25}
                           style={{ width: "auto", height: "auto" }}
                         />
                       </Link>

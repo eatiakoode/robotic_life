@@ -5,7 +5,7 @@ import Header1 from "@/components/headers/Header1";
 import Link from "next/link";
 import Topbar6 from "@/components/headers/Topbar6";
 import About from "@/components/otherPages/About";
-import Team from "@/components/otherPages/Team";
+import Info from "@/components/otherPages/Info";
 import Testimonials from "@/components/otherPages/Testimonials";
 import React from "react";
 
@@ -21,15 +21,15 @@ export default function AboutUsPage() {
       <Header1 />
       <div
         className="page-title"
-        style={{ backgroundImage: "url(/images/section/page-title.jpg)" }}
+        style={{ backgroundImage: "url(/images/section/detail-card.png)" }}
       >
         <div className="container-full">
           <div className="row">
             <div className="col-12">
-              <h3 className="heading text-center">About Us</h3>
+              <h3 className="heading text-center text-white">About Us</h3>
               <ul className="breadcrumbs d-flex align-items-center justify-content-center">
                 <li>
-                  <Link className="link" href={`/`}>
+                  <Link className="link text-white" href={`/`}>
                     Homepage
                   </Link>
                 </li>
@@ -44,10 +44,10 @@ export default function AboutUsPage() {
       </div>
       <About />
       <Features2 parentClass="flat-spacing line-bottom-container" />
-      <Team />
-      <Brands parentClass="flat-spacing-5 bg-surface" />
+      <Info />
+      {/* <Brands parentClass="flat-spacing-5 bg-surface" /> */}
       <Testimonials />
-      <Footer1 />
+      <Footer1 dark />
     </>
   );
 }

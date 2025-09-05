@@ -34,7 +34,7 @@ export default function ShopFilterCanvasPage() {
         </div>
       </div>
       <Products1 />
-      <Footer1 />
+      <Footer1 dark />
     </>
   );
 }

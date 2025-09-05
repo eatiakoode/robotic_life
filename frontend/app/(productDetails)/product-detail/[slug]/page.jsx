@@ -45,7 +45,8 @@ export default async function ProductDetailPage({ params }) {
       <Details1 product={product} />
       <Descriptions1 product={product} />
       <ProductDetailWrapper product={product} slug={slug} />
-      <Footer1 hasPaddingBottom />
+      {/* <Footer1 hasPaddingBottom /> */}
+      <Footer1 dark  />
     </>
   );
 }
