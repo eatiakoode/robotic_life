@@ -152,10 +152,50 @@ const getPopularTags = async (req, res) => {
   }
 };
 
+// Get Adjacent Blogs
+const getAdjacentBlogs = async (req, res) => {
+  try {
+    const { blogId } = req.params;
+
+    const currentBlog = await Blog.findById(blogId).select("title slug createdAt");
+    if (!currentBlog) {
+      return res.status(404).json({ success: false, message: "Blog not found" });
+    }
+
+    const previousBlog = await Blog.findOne({
+      createdAt: { $lt: currentBlog.createdAt },
+      status: true,
+    })
+      .sort({ createdAt: -1 })
+      .select("title slug");
+
+    const nextBlog = await Blog.findOne({
+      createdAt: { $gt: currentBlog.createdAt },
+      status: true,
+    })
+      .sort({ createdAt: 1 })
+      .select("title slug");
+
+    res.status(200).json({
+      success: true,
+      current: currentBlog,
+      previous: previousBlog,
+      next: nextBlog,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Server Error",
+      error: error.message,
+    });
+  }
+};
+
 module.exports = {
   getBlog,
   getallBlog,
   getBlogBySlug,
   getRelatedBlogs,
-  getPopularTags
+  getPopularTags,
+  getAdjacentBlogs
 };
