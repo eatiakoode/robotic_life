@@ -13,7 +13,8 @@ export const useContextElement = () => {
 export default function Context({ children }) {
   const [cartProducts, setCartProducts] = useState([]);
   const [wishList, setWishList] = useState([1, 2, 3]);
-  const [compareItem, setCompareItem] = useState([1, 2, 3]);
+  const [compareItem, setCompareItem] = useState([]);
+  const [compareRobots, setCompareRobots] = useState([]);
   const [quickViewItem, setQuickViewItem] = useState(allProducts[0]);
   const [quickAddItem, setQuickAddItem] = useState(1);
   const [totalPrice, setTotalPrice] = useState(0);
@@ -69,12 +70,98 @@ export default function Context({ children }) {
   };
   const addToCompareItem = (id) => {
     if (!compareItem.includes(id)) {
+      if (compareItem.length >= 3) {
+        // Show notification that limit is reached
+        if (typeof window !== 'undefined') {
+          // You can replace this with a proper toast notification
+          alert('⚠️ You can compare maximum 3 robots at a time. Please remove a robot first.');
+        }
+        return;
+      }
       setCompareItem((pre) => [...pre, id]);
     }
   };
+  
   const removeFromCompareItem = (id) => {
     if (compareItem.includes(id)) {
       setCompareItem((pre) => [...pre.filter((elm) => elm != id)]);
+      // Also remove from compareRobots if it exists
+      setCompareRobots((pre) => [...pre.filter((robot) => robot.id !== id)]);
+    }
+  };
+
+  // Robot comparison functions
+  const addRobotToCompare = (robotData) => {
+    console.log('addRobotToCompare called with:', robotData);
+    console.log('Current compareRobots:', compareRobots);
+    console.log('Current compareItem:', compareItem);
+    
+    if (!robotData || !robotData.id) {
+      console.error('Invalid robot data provided for comparison:', robotData);
+      return;
+    }
+
+    if (!compareRobots.find(robot => robot.id === robotData.id)) {
+      if (compareRobots.length >= 3) {
+        if (typeof window !== 'undefined') {
+          alert('⚠️ You can compare maximum 3 robots at a time. Please remove a robot first.');
+        }
+        return;
+      }
+      console.log('Adding robot to compare lists...');
+      setCompareRobots((pre) => {
+        const newList = [...pre, robotData];
+        console.log('New compareRobots list:', newList);
+        return newList;
+      });
+      setCompareItem((pre) => {
+        const newList = [...pre, robotData.id];
+        console.log('New compareItem list:', newList);
+        return newList;
+      });
+      
+      // Show success message
+      if (typeof window !== 'undefined') {
+        console.log(`✅ Added "${robotData.title}" to comparison (${compareRobots.length + 1}/3)`);
+        // You can replace this with a proper toast notification
+        // For now, we'll just log to console
+      }
+    } else {
+      // Robot already in compare list
+      if (typeof window !== 'undefined') {
+        console.log(`ℹ️ "${robotData.title}" is already in comparison list`);
+      }
+    }
+  };
+
+  const removeRobotFromCompare = (robotId) => {
+    console.log('removeRobotFromCompare called with:', robotId);
+    console.log('Current compareRobots before removal:', compareRobots);
+    console.log('Current compareItem before removal:', compareItem);
+    
+    setCompareRobots((pre) => {
+      const newList = pre.filter((robot) => robot.id !== robotId);
+      console.log('New compareRobots list:', newList);
+      return newList;
+    });
+    
+    setCompareItem((pre) => {
+      const newList = pre.filter((id) => id !== robotId);
+      console.log('New compareItem list:', newList);
+      return newList;
+    });
+  };
+
+  const clearAllCompareRobots = () => {
+    setCompareRobots([]);
+    setCompareItem([]);
+  };
+
+  // Function to open compare modal
+  const openCompareModal = () => {
+    if (typeof window !== 'undefined') {
+      const { openOffcanvasModal } = require('@/utils/modalUtils');
+      openOffcanvasModal('compare');
     }
   };
   const isAddedtoWishlist = (id) => {
@@ -110,6 +197,20 @@ export default function Context({ children }) {
     localStorage.setItem("wishlist", JSON.stringify(wishList));
   }, [wishList]);
 
+  // Persist compare robots to localStorage
+  useEffect(() => {
+    localStorage.setItem("compareRobots", JSON.stringify(compareRobots));
+  }, [compareRobots]);
+
+  // Load compare robots from localStorage on mount
+  useEffect(() => {
+    const savedCompareRobots = JSON.parse(localStorage.getItem("compareRobots") || "[]");
+    if (savedCompareRobots.length > 0) {
+      setCompareRobots(savedCompareRobots);
+      setCompareItem(savedCompareRobots.map(robot => robot.id));
+    }
+  }, []);
+
   const contextElement = {
     cartProducts,
     setCartProducts,
@@ -130,6 +231,13 @@ export default function Context({ children }) {
     compareItem,
     setCompareItem,
     updateQuantity,
+    // Robot comparison
+    compareRobots,
+    setCompareRobots,
+    addRobotToCompare,
+    removeRobotFromCompare,
+    clearAllCompareRobots,
+    openCompareModal,
   };
   return (
     <dataContext.Provider value={contextElement}>

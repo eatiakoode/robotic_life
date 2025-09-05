@@ -18446,4 +18446,169 @@ ul.list-text.type-number {
 
 
 
+/* Robot Compare Table Alignment */
+.tf-compare-table {
+  overflow-x: auto;
+}
+
+.tf-compare-row {
+  display: flex;
+  min-height: 60px;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.tf-compare-row.tf-compare-grid {
+  min-height: auto;
+  border-bottom: 2px solid #dee2e6;
+}
+
+.tf-compare-col {
+  flex: 1;
+  padding: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  border-right: 1px solid #dee2e6;
+  min-width: 200px;
+}
+
+.tf-compare-col:last-child {
+  border-right: none;
+}
+
+.tf-compare-col.d-md-block {
+  background-color: #f8f9fa;
+  font-weight: 600;
+  color: #495057;
+  min-width: 180px;
+  justify-content: flex-start;
+}
+
+.tf-compare-item {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.tf-compare-image {
+  width: 100%;
+  max-width: 200px;
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: 8px;
+  background-color: #f8f9fa;
+}
+
+.tf-compare-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.tf-compare-content {
+  text-align: center;
+  width: 100%;
+}
+
+.tf-compare-content .link {
+  font-weight: 600;
+  color: #181818;
+  text-decoration: none;
+  margin-bottom: 5px;
+  display: block;
+}
+
+.tf-compare-content .desc {
+  color: #6c757d;
+  font-size: 0.875rem;
+  margin: 0;
+}
+
+.tf-compare-field {
+  font-size: 0.9rem;
+  color: #495057;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1200px) {
+  .tf-compare-col {
+    min-width: 180px;
+  }
+  
+  .tf-compare-col.d-md-block {
+    min-width: 160px;
+  }
+  
+  .tf-compare-image {
+    max-width: 180px;
+    height: 180px;
+  }
+}
+
+@media (max-width: 992px) {
+  .tf-compare-col {
+    min-width: 150px;
+    padding: 12px;
+  }
+  
+  .tf-compare-col.d-md-block {
+    min-width: 140px;
+  }
+  
+  .tf-compare-image {
+    max-width: 150px;
+    height: 150px;
+  }
+  
+  .tf-compare-row {
+    min-height: 50px;
+  }
+}
+
+@media (max-width: 768px) {
+  .tf-compare-col {
+    min-width: 120px;
+    padding: 10px;
+  }
+  
+  .tf-compare-col.d-md-block {
+    min-width: 120px;
+    font-size: 0.85rem;
+  }
+  
+  .tf-compare-image {
+    max-width: 120px;
+    height: 120px;
+  }
+  
+  .tf-compare-content .link {
+    font-size: 0.9rem;
+  }
+  
+  .tf-compare-content .desc {
+    font-size: 0.8rem;
+  }
+  
+  .tf-compare-field {
+    font-size: 0.85rem;
+  }
+}
+
+/* For 2 robots - wider columns */
+.tf-compare-table:has(.tf-compare-col:nth-child(3):last-child) .tf-compare-col:not(.d-md-block) {
+  min-width: 250px;
+}
+
+/* For 3 robots - standard columns */
+.tf-compare-table:has(.tf-compare-col:nth-child(4):last-child) .tf-compare-col:not(.d-md-block) {
+  min-width: 200px;
+}
+
 /*# sourceMappingURL=styles.css.map */

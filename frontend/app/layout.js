@@ -133,13 +133,11 @@ export default function RootLayout({ children }) {
         <Context>
           {/* <RtlToggler /> */}
           <div id="wrapper">{children}</div>
-          {/* <CartModal />
+          <CartModal />
           <QuickView />
           <QuickAdd />
-          <Compare /> */}
+          <Compare />
           <MobileMenu />
-
-
           <SearchModal />
           <SizeGuide />
           <Wishlist />

@@ -4,6 +4,9 @@ import Image from "next/image";
 import Link from "next/link";
 import CountdownTimer from "../common/Countdown";
 import { useContextElement } from "@/context/Context";
+import { transformRobotForComparison } from "@/api/robotCompare";
+import { openOffcanvasModal } from "@/utils/modalUtils";
+
 export default function ProductCard1({
   product,
   gridClass = "",
@@ -11,7 +14,6 @@ export default function ProductCard1({
   isNotImageRatio = false,
   radiusClass = "",
 }) {
-
   // Helper function to get a valid image source
   const getValidImageSrc = (imgSrc) => {
     if (!imgSrc || imgSrc === '' || imgSrc === null || imgSrc === undefined) {
@@ -23,14 +25,8 @@ export default function ProductCard1({
   const [currentImage, setCurrentImage] = useState(getValidImageSrc(product.imgSrc));
 
   const {
-    setQuickAddItem,
-    addToWishlist,
-    isAddedtoWishlist,
-    addToCompareItem,
+    addRobotToCompare,
     isAddedtoCompareItem,
-    setQuickViewItem,
-    addProductToCart,
-    isAddedToCartProducts,
   } = useContextElement();
 
   useEffect(() => {
@@ -56,7 +52,6 @@ export default function ProductCard1({
             width={600}
             height={800}
           />
-
           <Image
             className="lazyload img-hover"
             src={getValidImageSrc(product.imgHover)}
@@ -193,62 +188,41 @@ export default function ProductCard1({
         ) : (
           ""
         )}
-        <div className="list-product-btn">
+        <div className="list-btn-main">
           <a
-            onClick={() => addToWishlist(product.id)}
-            className="box-icon wishlist btn-icon-action"
-          >
-            <span className="icon icon-heart" />
-            <span className="tooltip">
-              {isAddedtoWishlist(product.id)
-                ? "Already Wishlished"
-                : "Wishlist"}
-            </span>
-          </a>
-          <a
+            className="btn-main-product"
             href="#compare"
             data-bs-toggle="offcanvas"
             aria-controls="compare"
-            onClick={() => addToCompareItem(product.id)}
-            className="box-icon compare btn-icon-action"
+            onClick={(e) => {
+              e.preventDefault();
+              const robotData = transformRobotForComparison(product);
+              if (robotData && robotData.id) {
+                if (isAddedtoCompareItem(robotData.id)) {
+                  openOffcanvasModal('compare');
+                  return;
+                }
+                addRobotToCompare(robotData);
+                setTimeout(() => {
+                  openOffcanvasModal('compare');
+                }, 100);
+              } else {
+                const productId = product._id || product.id;
+                if (isAddedtoCompareItem(productId)) {
+                  openOffcanvasModal('compare');
+                  return;
+                }
+                addToCompareItem(productId);
+                setTimeout(() => {
+                  openOffcanvasModal('compare');
+                }, 100);
+              }
+            }}
           >
-            <span className="icon icon-gitDiff" />
-            <span className="tooltip">
-              {isAddedtoCompareItem(product.id)
-                ? "Already compared"
-                : "Compare"}
-            </span>
+            {isAddedtoCompareItem(product._id || product.id)
+              ? "Already Compared"
+              : "Add to Compare"}
           </a>
-          <a
-            href="#quickView"
-            onClick={() => setQuickViewItem(product)}
-            data-bs-toggle="modal"
-            className="box-icon quickview tf-btn-loading"
-          >
-            <span className="icon icon-eye" />
-            <span className="tooltip">Quick View</span>
-          </a>
-        </div>
-        <div className="list-btn-main">
-          {product.addToCart == "Quick Add" ? (
-            <a
-              className="btn-main-product"
-              href="#quickAdd"
-              onClick={() => setQuickAddItem(product.id)}
-              data-bs-toggle="modal"
-            >
-              Quick Add
-            </a>
-          ) : (
-            <a
-              className="btn-main-product"
-              onClick={() => addProductToCart(product.id)}
-            >
-              {isAddedToCartProducts(product.id)
-                ? "Already Added"
-                : "ADD TO CART"}
-            </a>
-          )}
         </div>
       </div>
       <div className="card-product-info">
@@ -267,8 +241,8 @@ export default function ProductCard1({
               <li
                 key={index}
                 className={`list-color-item color-swatch ${
-                  currentImage == color.imgSrc ? "active" : ""
-                } ${color.bgColor == "bg-white" ? "line" : ""}`}
+                  getValidImageSrc(currentImage) === getValidImageSrc(color.imgSrc) ? "active" : ""
+                } ${color.bgColor === "bg-white" ? "line" : ""}`}
                 onMouseOver={() => setCurrentImage(getValidImageSrc(color.imgSrc))}
               >
                 <span className={`swatch-value ${color.bgColor}`} />

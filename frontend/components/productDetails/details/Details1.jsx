@@ -6,6 +6,7 @@ import SizeSelect from "../SizeSelect";
 import QuantitySelect from "../QuantitySelect";
 import Image from "next/image";
 import { useContextElement } from "@/context/Context";
+import { transformRobotForComparison } from "@/api/robotCompare";
 import ProductStikyBottom from "../ProductStikyBottom";
 export default function Details1({ product }) {
   const [activeColor, setActiveColor] = useState(
@@ -19,6 +20,7 @@ export default function Details1({ product }) {
     isAddedtoWishlist,
     isAddedtoCompareItem,
     addToCompareItem,
+    addRobotToCompare,
     cartProducts,
     updateQuantity,
   } = useContextElement();
