@@ -369,14 +369,16 @@ const getRelatedRobots = async (req, res) => {
 // Compare Robots
 const compareRobots = async (req, res) => {
   try {
-    const { robotIds } = req.body;
+    const { ids } = req.query;
 
-    if (!robotIds || !Array.isArray(robotIds)) {
+    if (!ids) {
       return res.status(400).json({
         success: false,
-        message: "Please provide an array of robot IDs.",
+        message: "Please provide robot IDs as query params.",
       });
     }
+
+    const robotIds = ids.split(",");
 
     if (robotIds.length === 0 || robotIds.length > 3) {
       return res.status(400).json({
