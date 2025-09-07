@@ -13,7 +13,7 @@ const createTestimonial = async (req, res) => {
 // Get all testimonials
 const getTestimonials = async (req, res) => {
   try {
-    const testimonials = await Testimonial.find({ status: true }).sort({ createdAt: -1 });
+    const testimonials = await Testimonial.find({}).sort({ createdAt: -1 });
     res.status(200).json({ success: true, count: testimonials.length, data: testimonials });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });

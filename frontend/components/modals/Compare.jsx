@@ -17,11 +17,8 @@ export default function Compare() {
   const [forceUpdate, setForceUpdate] = useState(0);
 
   useEffect(() => {
-    console.log('Compare modal useEffect triggered, compareRobots:', compareRobots);
-    
     const fetchRobotData = async () => {
       if (compareRobots.length === 0) {
-        console.log('No robots to compare, clearing items');
         setItems([]);
         return;
       }
@@ -29,7 +26,6 @@ export default function Compare() {
       setLoading(true);
       try {
         // Use the robots already in context, or fetch if needed
-        console.log('Setting items to compareRobots:', compareRobots);
         setItems(compareRobots);
       } catch (error) {
         console.error('Error fetching robot data for compare modal:', error);
@@ -150,7 +146,6 @@ export default function Compare() {
                             onClick={(e) => {
                               e.preventDefault();
                               e.stopPropagation();
-                              console.log('Removing robot:', elm.id);
                               removeRobotFromCompare(elm.id);
                               setForceUpdate(prev => prev + 1);
                             }}

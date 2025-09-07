@@ -25,6 +25,18 @@ const CreateList = () => {
     setLogo(e.target.files[0]);
     setLogoImage("");
   };
+
+  const handleNameChange = (e) => {
+    const value = e.target.value;
+    setName(value);
+    if (value.trim() !== "") setError("");
+    const autoSlug = value
+      .toLowerCase()
+      .trim()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "");
+    setSlug(autoSlug);
+  };
     useEffect(() => {
       if (!id) return;      
       const fetchCategory = async () => {
@@ -43,7 +55,9 @@ const CreateList = () => {
           setParentCategories(Array.isArray(parents) ? parents : []);
           const imgPath = cat.logoImage || cat.logoimage;
           if (imgPath) {
-            setLogoImage((process.env.NEXT_PUBLIC_API_URL || "") + imgPath);
+            const backendUrl = (process.env.NEXT_PUBLIC_BACKEND_API_URL || 'http://localhost:5000').replace(/\/$/, '');
+            const cleanPath = imgPath.startsWith('/') ? imgPath.substring(1) : imgPath;
+            setLogoImage(`${backendUrl}/${cleanPath}`);
           }
         } catch (error) {
           console.error("Error fetching Category:", error);
@@ -127,14 +141,14 @@ const CreateList = () => {
       <div className="col-lg-6 col-xl-6">
         <div className="my_profile_setting_input form-group">
           <label htmlFor="categoryTitle">Category Title</label>
-          <input type="text" className="form-control" id="categoryTitle" value={name} onChange={(e) => setName(e.target.value)} />
+          <input type="text" className="form-control" id="categoryTitle" value={name} onChange={handleNameChange} />
           {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
         </div>
       </div>
       <div className="col-lg-6 col-xl-6">
         <div className="my_profile_setting_input form-group">
           <label htmlFor="categorySlug">Category Slug (SEO URL)</label>
-          <input type="text" className="form-control" id="categorySlug" value={slug} onChange={(e) => setSlug(e.target.value)}  />
+          <input type="text" className="form-control" id="categorySlug" value={slug} disabled />
           {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
         </div>
       </div>

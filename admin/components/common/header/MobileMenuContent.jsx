@@ -332,8 +332,9 @@ const MobileMenuContent = () => {
               width={100}
               height={38}
               className="nav_logo_img img-fluid mt20"
-              src="/assets/images/header-logo2.png"
-              alt="header-logo.png"
+              src="/assets/images/logoB.png"
+              alt="logoB.png"
+              style={{ width: "auto", height: "auto" }}
             />
             {/* <span className="brand-text">WeGrow</span> */}
           </Link>
@@ -355,16 +356,16 @@ const MobileMenuContent = () => {
         <Menu>
         <MenuItem>
             <div
-            onClick={()=>router.push("/")}
+            onClick={()=>router.push("/cmsroboticlife/my-dashboard")}
              
               className={
-                pathname === "/" ? "ui-active" : 'inactive-mobile-menu'
+                pathname === "/cmsroboticlife/my-dashboard" ? "ui-active" : 'inactive-mobile-menu'
               }
             >
-              Home
+              Dashboard
             </div>
           </MenuItem>
-        <MenuItem>
+        {/* <MenuItem>
             <div
             onClick={()=>router.push("/about-us")}
              
@@ -374,7 +375,7 @@ const MobileMenuContent = () => {
             >
               About Us
             </div>
-          </MenuItem>
+          </MenuItem> */}
           {/* <SubMenu
             label="Home"
            
@@ -441,7 +442,7 @@ const MobileMenuContent = () => {
           </SubMenu> */}
           {/* End Pages Listing */}
 
-              <SubMenu
+              {/* <SubMenu
                 label="Property"
                 className={
                   property.some((page) =>
@@ -465,7 +466,7 @@ const MobileMenuContent = () => {
                     </div>
                   </MenuItem>
                 ))}
-              </SubMenu>
+              </SubMenu> */}
 
           {/* End Pages Property */}
 
@@ -522,7 +523,7 @@ const MobileMenuContent = () => {
           </SubMenu> */}
           {/* End pages Pages */}
           
-          <MenuItem>
+          {/* <MenuItem>
             <div
             onClick={()=>router.push("/blogs")}
              
@@ -532,8 +533,8 @@ const MobileMenuContent = () => {
             >
               Blog
             </div>
-          </MenuItem>
-          <MenuItem>
+          </MenuItem> */}
+          {/* <MenuItem>
             <div
             onClick={()=>router.push("/faq")}
              
@@ -543,9 +544,9 @@ const MobileMenuContent = () => {
             >
               Faq
             </div>
-          </MenuItem>
+          </MenuItem> */}
 
-          <MenuItem>
+          {/* <MenuItem>
             <div
             onClick={()=>router.push("/contact")}
              
@@ -555,17 +556,17 @@ const MobileMenuContent = () => {
             >
               Contact
             </div>
-          </MenuItem>
-          <div className="mobile-phone-call mt-3">
+          </MenuItem> */}
+          {/* <div className="mobile-phone-call mt-3">
             <div className="d-flex align-items-start justify-content-start gap-0">
               <span className="flaticon-call pe-2"></span>
               <a href="tel:+917421922000" className="text-decoration-none text-dark">
                 <span className="flaticon-telephone pe-1"></span> +91 742-192-2000
               </a>
             </div>
-          </div>
+          </div> */}
 
-          <div className="mobile-social-icons mt-3">
+          {/* <div className="mobile-social-icons mt-3">
             <div className="d-flex gap-3 ps-2">
               <a href="https://www.facebook.com/WeGrowInfraventurespvtltd/" target="_blank" rel="noopener noreferrer">
                 <i className="fab fa-facebook-f"></i>
@@ -580,7 +581,7 @@ const MobileMenuContent = () => {
                 <i className="fab fa-linkedin-in"></i>
               </a>
             </div>
-          </div>
+          </div> */}
 
           
 

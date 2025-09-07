@@ -8,41 +8,27 @@
 // };
 
 export const addTestimonialAPI = async (formData) => {
-    // const token = localStorage.getItem("token"); // 🔹 Retrieve token
-// console.log("token")
-    // const token =process.env.NEXT_PUBLIC_TOKEN;
     const userData = JSON.parse(localStorage.getItem("user"));
-console.log(userData.name);
-// const token = localStorage.getItem("token"); // 🔹 Retrieve token
-// // console.log("token")
-//     const token =process.env.NEXT_PUBLIC_TOKEN;
-const token =userData.token
+    const token = userData?.token;
 
-  
     if (!token) {
       throw new Error("User not authenticated!");
     }
-//     console.log("formDataapi")
-//     console.log(formData)
-//     for (let [key, value] of formData.entries()) {
-//       console.log(`${key}:`, value);
-//     }
-// console.log("formDataendapi")
     const response = await fetch(process.env.NEXT_PUBLIC_ADMIN_API_URL+"api/testimonial", {
       method: "POST",
       headers: {
-        // "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
       body: formData
     });
   
-    if (!response.status) {
+    if (!response.ok) {
       const errorData = await response.json();
       throw new Error(errorData.message || "Failed to add testimonial");
     }
   
-    return response.json();
+    const data = await response.json();
+    return data;
   };
   
 
@@ -58,7 +44,6 @@ const token =userData.token
       }
       return await response.json();
     } catch (error) {
-      console.error("Error fetching products:", error);
       return []; // Return an empty array in case of an error
     }
   }
@@ -136,9 +121,9 @@ const token =userData.token
       body: testimonial,
     });
   
-    if (!response.status) {
+    if (!response.ok) {
       const errorData = await response.json();
-      throw new Error(errorData.message || "Failed to add testimonial");
+      throw new Error(errorData.message || "Failed to update testimonial");
     }
   
     return response.json();

@@ -5,6 +5,7 @@ export const metadata = {
   description: 'WeGrow - Real Estate',
 };
 
-export default function Page({ params }) {
-  return <EditCategoryClient id={params.id} />;
+export default async function Page({ params }) {
+  const { id } = await params;
+  return <EditCategoryClient id={id} />;
 }

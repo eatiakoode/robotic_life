@@ -159,6 +159,19 @@ const SidebarMenu = () => {
     { id: 2, name: "FAQ List", route: "/cmsroboticlife/my-faq" },
   ];
 
+  const testimonial = [
+    {
+      id: 1,
+      name: "Add Testimonial",
+      route: "/cmsroboticlife/add-testimonial",
+    },
+    {
+      id: 2,
+      name: "Testimonial List",
+      route: "/cmsroboticlife/my-testimonial",
+    },
+  ];
+
   const reviews = [
     { id: 1, name: "My Reviews", route: "/cmsroboticlife/my-review" },
     { id: 2, name: "Visitor Reviews", route: "/cmsroboticlife/my-review" },
@@ -190,10 +203,10 @@ const SidebarMenu = () => {
         <li className="sidebar_header header">
           <Link href="/cmsroboticlife/my-dashboard">
             <SafeImage
-              width={170}
-              height={65}
-              src="/assets/images/robo.svg"
-              alt="logo.svg"
+              width={275}
+              height={100}
+              src="/assets/images/logoB.png"
+              alt="logoB.png"
             />
             {/* <span>WeGrow</span> */}
           </Link>
@@ -396,6 +409,28 @@ const SidebarMenu = () => {
               </ul>
             </li>
             {/* Robot FAQs End */}
+
+            {/* Robot Testimonial Start */}
+            <li
+              className={`treeview ${
+                isParentPageActive(testimonial, pathname) ? "active" : ""
+              }`}
+            >
+              <a data-bs-toggle="collapse" href="#roboTestimonial">
+                <i className="flaticon-home"></i> <span>Testimonials</span>
+                <i className="fa fa-angle-down pull-right"></i>
+              </a>
+              <ul className="treeview-menu collapse" id="roboTestimonial">
+                {testimonial.map((item) => (
+                  <li key={item.id}>
+                    <Link href={item.route}>
+                      <i className="fa fa-circle"></i> {item.name}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </li>
+            {/* Robot Testimonial End */}
 
             {/* Robot Reviews Start */}
             <li

@@ -1,4 +1,5 @@
 const express = require("express");
+const multer = require("multer");
 const {
   createTestimonial,
   getTestimonials,
@@ -9,10 +10,13 @@ const {
 
 const router = express.Router();
 
-router.post("/", createTestimonial);
+// Configure multer for handling FormData
+const upload = multer();
+
+router.post("/", upload.none(), createTestimonial);
 router.get("/", getTestimonials);          
 router.get("/:id", getTestimonialById);
-router.put("/:id", updateTestimonial);       
+router.put("/:id", upload.none(), updateTestimonial);       
 router.delete("/:id", deleteTestimonial);     
 
 module.exports = router;
