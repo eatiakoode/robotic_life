@@ -8,14 +8,16 @@ import { getBlogById, getBlogBySlug } from "@/api/blog";
 import React from "react";
 
 export default async function BlogDetailsPage1({ params }) {
-  const { id } = await params;
+  const { slug } = await params;
 
   // Try to fetch blog by slug first, then by ID as fallback
   let blog = null;
   try {
+    blog = await getBlogBySlug(slug);
     
     if (!blog) {
-      blog = await getBlogById(id);
+      // Fallback: try to fetch by ID if slug doesn't work
+      blog = await getBlogById(slug);
     }
   } catch (error) {
     console.error('Error fetching blog:', error);

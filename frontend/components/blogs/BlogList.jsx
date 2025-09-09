@@ -39,11 +39,10 @@ export default function BlogList() {
 
   const handlePageChange = (page) => {
     fetchBlogs(page);
-    // Scroll to top when page changes
+
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  // Helper function to get image URL
   const getImageUrl = (imagePath) => {
     if (!imagePath) return "/images/blog/blog-details-1.jpg"; // fallback image
     
@@ -62,7 +61,6 @@ export default function BlogList() {
     return `http://localhost:5000/images/blogs/${filename}`;
   };
 
-  // Helper function to format date
   const formatDate = (dateString) => {
     if (!dateString) return "Unknown Date";
     const date = new Date(dateString);

@@ -261,16 +261,16 @@ export default function Products1({ parentClass = "flat-spacing",products ,produ
   // Main filtering function
   const applyFilters = useCallback(async () => {
     // Only run filtering if we have products loaded
-    if (productMain.length === 0) {
+    if (!productMain || productMain.length === 0) {
       return;
     }
 
     let filteredProducts = [...productMain];
     
     // Check if any filters are actually applied
-    const hasFilters = selectedSubCategory || selectedParentCategory || brands.length > 0 || 
+    const hasFilters = selectedSubCategory || selectedParentCategory || (brands && brands.length > 0) || 
                       (color !== "All" && color.name) || (price && price.length === 2) || 
-                      (weight && weight.length === 2 && (weight[0] !== weightBounds[0] || weight[1] !== weightBounds[1]));
+                      (weight && Array.isArray(weight) && weight.length === 2 && (weight[0] !== weightBounds[0] || weight[1] !== weightBounds[1]));
     
     // Only use backend filtering if filters are actually applied
     if (hasFilters) {
@@ -285,7 +285,7 @@ export default function Products1({ parentClass = "flat-spacing",products ,produ
           additionalFilters.category = selectedParentCategory.slug;
         }
         
-        if (brands.length > 0) {
+        if (brands && brands.length > 0) {
           additionalFilters.manufacturers = brands;
         }
         
@@ -298,7 +298,7 @@ export default function Products1({ parentClass = "flat-spacing",products ,produ
           additionalFilters.maxPrice = price[1];
         }
         
-        if (weight && weight.length === 2 && (weight[0] !== weightBounds[0] || weight[1] !== weightBounds[1])) {
+        if (weight && Array.isArray(weight) && weight.length === 2 && (weight[0] !== weightBounds[0] || weight[1] !== weightBounds[1])) {
           additionalFilters.minWeight = weight[0];
           additionalFilters.maxWeight = weight[1];
           additionalFilters.weightUnit = weightUnit;
@@ -327,7 +327,7 @@ export default function Products1({ parentClass = "flat-spacing",products ,produ
     }
 
     // Apply filters sequentially
-    if (brands.length > 0) {
+    if (brands && brands.length > 0) {
       // Reset to first page when filters change
       dispatch({ type: "SET_CURRENT_PAGE", payload: 1 });
       
@@ -380,7 +380,7 @@ export default function Products1({ parentClass = "flat-spacing",products ,produ
     }
 
     // Filter by weight range - ONLY when user actually changes the weight
-    if (weight && weight.length === 2 && (weight[0] !== weightBounds[0] || weight[1] !== weightBounds[1])) {
+    if (weight && Array.isArray(weight) && weight.length === 2 && (weight[0] !== weightBounds[0] || weight[1] !== weightBounds[1])) {
       // Reset to first page when weight filter changes
       dispatch({ type: "SET_CURRENT_PAGE", payload: 1 });
       
@@ -414,7 +414,7 @@ export default function Products1({ parentClass = "flat-spacing",products ,produ
   // Separate useEffect for price bounds calculation when productMain changes
   useEffect(() => {
     setProductMain(products);
-    if (productMain.length > 0) {
+    if (productMain && productMain.length > 0) {
               // Use auto-refresh to ensure price bounds are always current
         refreshPriceBounds(productMain);
       // Also refresh weight bounds
@@ -424,10 +424,10 @@ export default function Products1({ parentClass = "flat-spacing",products ,produ
 
   // Separate useEffect for price bounds calculation when category changes
   useEffect(() => {
-    if (selectedParentCategory && productMain.length > 0) {
+    if (selectedParentCategory && productMain && productMain.length > 0) {
       // When category changes, we need to recalculate price bounds based on category products
       // This will be handled by the applyFilters function which fetches category products
-    } else if (!selectedParentCategory && productMain.length > 0) {
+    } else if (!selectedParentCategory && productMain && productMain.length > 0) {
       // When no category is selected, reset to all products price bounds using auto-refresh
       refreshPriceBounds(productMain);
     }
@@ -594,7 +594,7 @@ export default function Products1({ parentClass = "flat-spacing",products ,produ
   // Periodic price bounds refresh to handle external product updates
   useEffect(() => {
     const interval = setInterval(() => {
-      if (productMain.length > 0) {
+      if (productMain && productMain.length > 0) {
         // Check if we need to refresh price bounds
         const currentPrices = productMain.map(p => p.price).filter(price => price > 0 && !isNaN(price));
         if (currentPrices.length > 0) {

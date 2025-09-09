@@ -63,7 +63,7 @@ export default function Blogs() {
                   </p>
                   <div>
                     <h6 className="title fw-5">
-                      <Link className="link" href={`/blog-detail/${post.id}`}>
+                      <Link className="link" href={`/blog-detail/${post.slug || post.id}`}>
                         {post.title}
                       </Link>
                     </h6>

@@ -61,7 +61,7 @@ export default function BlogDefault() {
                       </div>
                     </div>
                     <h4 className="title fw-5">
-                      <Link className="link" href={`/blog-detail/${post.id}`}>
+                      <Link className="link" href={`/blog-detail/${post.slug || post.id}`}>
                         {post.title}
                       </Link>
                     </h4>
