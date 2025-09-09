@@ -36,14 +36,33 @@ export const addTestimonialAPI = async (formData) => {
     // Fake delay
     await new Promise((resolve) => setTimeout(resolve, 10));
     
-  
     try {
-      const response = await fetch(process.env.NEXT_PUBLIC_ADMIN_API_URL+"api/testimonial"); // Replace with actual API endpoint
-      if (!response.ok) {
-        throw new Error("Failed to fetch products");
+      const userData = JSON.parse(localStorage.getItem("user") || "{}");
+      const token = userData?.token;
+
+      if (!token) {
+        console.warn("No authentication token found for testimonial API");
+        return [];
       }
-      return await response.json();
+
+      const apiUrl = process.env.NEXT_PUBLIC_ADMIN_API_URL || 'http://localhost:5000/';
+      const response = await fetch(apiUrl + "admin/api/testimonial", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        console.error(`Testimonial API error: ${response.status} ${response.statusText}`);
+        return [];
+      }
+      
+      const data = await response.json();
+      return data.data || data || [];
     } catch (error) {
+      console.error("Error fetching testimonials:", error);
       return []; // Return an empty array in case of an error
     }
   }

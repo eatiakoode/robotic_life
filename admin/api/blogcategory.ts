@@ -8,7 +8,7 @@ export const addBlogcategoryAPI = async (title: string) => {
         throw new Error("User not authenticated!");
       }
     
-      const response = await fetch(process.env.NEXT_PUBLIC_ADMIN_API_URL+"api/blogcategory", {
+      const response = await fetch(process.env.NEXT_PUBLIC_ADMIN_API_URL+"admin/api/blogcategory", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -39,7 +39,7 @@ export const addBlogcategoryAPI = async (title: string) => {
           throw new Error("User not authenticated!");
         }
 
-        const response = await fetch(process.env.NEXT_PUBLIC_ADMIN_API_URL+"api/blogcategory", {
+        const response = await fetch(process.env.NEXT_PUBLIC_ADMIN_API_URL+"admin/api/blogcategory", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -83,7 +83,7 @@ export const addBlogcategoryAPI = async (title: string) => {
         throw new Error("User not authenticated!");
       }
     
-      const response = await fetch(process.env.NEXT_PUBLIC_ADMIN_API_URL+`api/blogcategory/${id}`, {
+      const response = await fetch(process.env.NEXT_PUBLIC_ADMIN_API_URL+`admin/api/blogcategory/${id}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
@@ -112,7 +112,7 @@ export const addBlogcategoryAPI = async (title: string) => {
         throw new Error("User not authenticated!");
       }
     
-      const response = await fetch(process.env.NEXT_PUBLIC_ADMIN_API_URL+`api/blogcategory/${id}`, {
+      const response = await fetch(process.env.NEXT_PUBLIC_ADMIN_API_URL+`admin/api/blogcategory/${id}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -139,7 +139,7 @@ export const addBlogcategoryAPI = async (title: string) => {
         throw new Error("User not authenticated!");
       }
     
-      const response = await fetch(process.env.NEXT_PUBLIC_ADMIN_API_URL+`api/blogcategory/${id}`, {
+      const response = await fetch(process.env.NEXT_PUBLIC_ADMIN_API_URL+`admin/api/blogcategory/${id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

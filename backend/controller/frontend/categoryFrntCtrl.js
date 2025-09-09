@@ -57,15 +57,21 @@ const getFilteredRobotsByParentCategory = asyncHandler(async (req, res) => {
 
 
 
-    const robots = await Robot.find({ category: { $in: categoryIds } })
+    const robots = await Robot.find({ 
+        category: { $in: categoryIds },
+        status: true 
+    })
         .populate("color", "name")
         .populate("category", "name slug")
         .populate("manufacturer", "name")
-        .limit(4);
+        .populate("countryOfOrigin", "name")
+        .populate("powerSource", "name");
 
-
-
-    res.status(200).json(robots);
+    res.status(200).json({
+        success: true,
+        count: robots.length,
+        data: robots,
+    });
 });
 
 const getRobotsByCategorySlug = asyncHandler(async (req, res) => {

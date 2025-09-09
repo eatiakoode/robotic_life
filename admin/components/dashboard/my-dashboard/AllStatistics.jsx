@@ -3,7 +3,7 @@
 const AllStatistics = ({
   robot = [],
   manufacturer = [],
-  materials = [],
+  testimonials = [],
   enquery = [],
 }) => {
   const allStatistics = [
@@ -24,9 +24,9 @@ const AllStatistics = ({
     {
       id: 3,
       blockStyle: "style3",
-      icon: "flaticon-layers", 
-      timer: materials.length,
-      name: "Total Materials",
+      icon: "flaticon-star", 
+      timer: testimonials.length,
+      name: "Total Testimonials",
     },
     {
       id: 4,

@@ -1,14 +1,14 @@
 "use client";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-
 import CurrencySelect from "../common/CurrencySelect";
 import LanguageSelect from "../common/LanguageSelect";
 import ToolbarBottom from "../headers/ToolbarBottom";
 import ScrollTop from "../common/ScrollTop";
-import { footerLinks, socialLinks } from "@/data/footerLinks";
+import { quickLinks, socialLinks } from "@/data/footerLinks";
 import axios from "axios";
+
 export default function Footer1({
   border = true,
   dark = false,
@@ -19,45 +19,38 @@ export default function Footer1({
 
   const handleShowMessage = () => {
     setShowMessage(true);
-    setTimeout(() => {
-      setShowMessage(false);
-    }, 2000);
+    setTimeout(() => setShowMessage(false), 2000);
   };
 
   const sendEmail = async (e) => {
-    e.preventDefault(); // Prevent default form submission behavior
+    e.preventDefault();
     const email = e.target.email.value;
-
     try {
       const response = await axios.post(
         "https://express-brevomail.vercel.app/api/contacts",
-        {
-          email,
-        }
+        { email }
       );
-
       if ([200, 201].includes(response.status)) {
-        e.target.reset(); // Reset the form
-        setSuccess(true); // Set success state
+        e.target.reset();
+        setSuccess(true);
         handleShowMessage();
       } else {
-        setSuccess(false); // Handle unexpected responses
+        setSuccess(false);
         handleShowMessage();
       }
     } catch (error) {
       console.error("Error:", error.response?.data || "An error occurred");
-      setSuccess(false); // Set error state
+      setSuccess(false);
       handleShowMessage();
-      e.target.reset(); // Reset the form
+      e.target.reset();
     }
   };
+
   useEffect(() => {
     const headings = document.querySelectorAll(".footer-heading-mobile");
-
     const toggleOpen = (event) => {
       const parent = event.target.closest(".footer-col-block");
       const content = parent.querySelector(".tf-collapse-content");
-
       if (parent.classList.contains("open")) {
         parent.classList.remove("open");
         content.style.height = "0px";
@@ -66,99 +59,106 @@ export default function Footer1({
         content.style.height = content.scrollHeight + 10 + "px";
       }
     };
-
-    headings.forEach((heading) => {
-      heading.addEventListener("click", toggleOpen);
-    });
-
-    // Clean up event listeners when the component unmounts
+    headings.forEach((heading) =>
+      heading.addEventListener("click", toggleOpen)
+    );
     return () => {
-      headings.forEach((heading) => {
-        heading.removeEventListener("click", toggleOpen);
-      });
+      headings.forEach((heading) =>
+        heading.removeEventListener("click", toggleOpen)
+      );
     };
-  }, []); // Empty dependency array means this will run only once on mount
+  }, []);
+
   return (
     <>
       <footer
         id="footer"
         className={`footer ${dark ? "bg-main" : ""} ${
           hasPaddingBottom ? "has-pb" : ""
-        } `}
+        }`}
       >
         <div className={`footer-wrap ${!border ? "border-0" : ""}`}>
           <div className="footer-body">
             <div className="container">
               <div className="row">
+                {/* -------- Logo + About -------- */}
                 <div className="col-lg-4">
                   <div className="footer-infor">
                     <div className="footer-logo">
                       <Link href={`/`}>
                         <Image
-                          alt=""
-                          src={
-                            dark
-                              ? "/images/logo/logoB.png"
-                              : "/images/logo/logoB.png"
-                          }
+                          alt="logo"
+                          src={"/images/logo/logoB.png"}
                           width={144}
                           height={25}
                           style={{ width: "auto", height: "auto" }}
                         />
                       </Link>
                     </div>
-                    <div className="footer-address">
-                      <p>549 Oak St.Crystal Lake, IL 60014</p>
-                      <Link
-                        href={`/contact`}
-                        className={`tf-btn-default fw-6 ${
-                          dark ? "style-white" : ""
-                        } `}
+                    <div className="footer-about">
+                      <p
+                        style={{
+                          maxWidth: "320px",
+                          lineHeight: "1.6",
+                          marginTop: "14px",
+                          fontSize: "14px",
+                          color: "#ccc",
+                        }}
                       >
-                        GET DIRECTION
-                        <i className="icon-arrowUpRight" />
-                      </Link>
+                        Your destination for learning and exploring the
+                        fascinating world of robotics. We provide detailed
+                        insights, research, and resources that make robotics
+                        education simple, engaging, and accessible for everyone
+                        — from curious beginners to passionate learners.
+                      </p>
                     </div>
-                    <ul className="footer-info">
-                      <li>
-                        <i className="icon-mail" />
-                        <p>themesflat@gmail.com</p>
-                      </li>
-                      <li>
-                        <i className="icon-phone" />
-                        <p>315-666-6688</p>
-                      </li>
-                    </ul>
-                    <ul
-                      className={`tf-social-icon  ${
-                        dark ? "style-white" : ""
-                      } `}
-                    >
-                      {socialLinks.map((link, index) => (
-                        <li key={index}>
-                          <a href={link.href} className={link.className}>
-                            <i className={`icon ${link.iconClass}`} />
-                          </a>
-                        </li>
-                      ))}
-                    </ul>
                   </div>
                 </div>
+
+                {/* -------- Quick Links -------- */}
                 <div className="col-lg-4">
                   <div className="footer-menu">
-                    {footerLinks.map((section, sectionIndex) => (
-                      <div className="footer-col-block" key={sectionIndex}>
-                        <div className="footer-heading text-button footer-heading-mobile">
+                    {quickLinks.map((section, sectionIndex) => (
+                      <div
+                        className="footer-col-block"
+                        key={sectionIndex}
+                        style={{ marginBottom: "18px" }}
+                      >
+                        <div
+                          className="footer-heading text-button footer-heading-mobile"
+                          style={{
+                            fontWeight: 600,
+                            fontSize: "16px",
+                            marginBottom: "12px",
+                            color: "#fff",
+                          }}
+                        >
                           {section.heading}
                         </div>
                         <div className="tf-collapse-content">
-                          <ul className="footer-menu-list">
+                          <ul
+                            className="footer-menu-list"
+                            style={{
+                              listStyle: "none",
+                              padding: 0,
+                              margin: 0,
+                            }}
+                          >
                             {section.items.map((item, itemIndex) => (
-                              <li className="text-caption-1" key={itemIndex}>
+                              <li
+                                className="text-caption-1"
+                                key={itemIndex}
+                                style={{ marginBottom: "8px" }}
+                              >
                                 {item.isLink ? (
                                   <Link
                                     href={item.href}
                                     className="footer-menu_item"
+                                    style={{
+                                      fontSize: "14px",
+                                      color: "#ccc",
+                                      textDecoration: "none",
+                                    }}
                                   >
                                     {item.label}
                                   </Link>
@@ -166,6 +166,11 @@ export default function Footer1({
                                   <a
                                     href={item.href}
                                     className="footer-menu_item"
+                                    style={{
+                                      fontSize: "14px",
+                                      color: "#ccc",
+                                      textDecoration: "none",
+                                    }}
                                   >
                                     {item.label}
                                   </a>
@@ -178,166 +183,189 @@ export default function Footer1({
                     ))}
                   </div>
                 </div>
+
+                {/* -------- Stay Connected -------- */}
                 <div className="col-lg-4">
-                  <div className="footer-col-block">
-                    <div className="footer-heading text-button footer-heading-mobile">
-                      Newletter
+                  <div
+                    className="footer-col-block"
+                    style={{ marginBottom: "8px" }}
+                  >
+                    <div
+                      className="footer-heading text-button footer-heading-mobile"
+                      style={{
+                        fontWeight: 600,
+                        fontSize: "16px",
+                        marginBottom: "12px",
+                        color: "#fff",
+                      }}
+                    >
+                      Stay Connected
                     </div>
-                    <div className="tf-collapse-content">
-                      <div className="footer-newsletter">
-                        <p className="text-caption-1">
-                          Sign up for our newsletter and get 10% off your first
-                          purchase
-                        </p>
-                        <div
-                          className={`tfSubscribeMsg  footer-sub-element ${
-                            showMessage ? "active" : ""
-                          }`}
-                        >
-                          {success ? (
-                            <p style={{ color: "rgb(52, 168, 83)" }}>
-                              You have successfully subscribed.
-                            </p>
-                          ) : (
-                            <p style={{ color: "red" }}>Something went wrong</p>
-                          )}
-                        </div>
-                        <form
-                          onSubmit={sendEmail}
-                          className={`form-newsletter subscribe-form ${
-                            dark ? "style-black" : ""
-                          }`}
-                        >
-                          <div className="subscribe-content">
-                            <fieldset className="email">
-                              <input
-                                type="email"
-                                name="email"
-                                className="subscribe-email"
-                                placeholder="Enter your e-mail"
-                                tabIndex={0}
-                                aria-required="true"
-                              />
-                            </fieldset>
-                            <div className="button-submit">
-                              <button
-                                className="subscribe-button"
-                                type="submit"
-                              >
-                                <i className="icon icon-arrowUpRight" />
-                              </button>
-                            </div>
-                          </div>
-                          <div className="subscribe-msg" />
-                        </form>
-                        <div className="tf-cart-checkbox">
-                          <div className="tf-checkbox-wrapp">
-                            <input
-                              className=""
-                              type="checkbox"
-                              id="footer-Form_agree"
-                              name="agree_checkbox"
-                            />
-                            <div>
-                              <i className="icon-check" />
-                            </div>
-                          </div>
-                          <label
-                            className="text-caption-1"
-                            htmlFor="footer-Form_agree"
+
+                    <div className="footer-address">
+                      <p
+                        style={{
+                          marginBottom: "8px",
+                          fontSize: "14px",
+                          lineHeight: "1.6",
+                          color: "#ccc",
+                          maxWidth: "300px",
+                        }}
+                      >
+                        Tower B4, SPAZE ITECH PARK, UN 616, Badshahpur Sohna Rd
+                        Hwy, Sector 49, Gurugram, Haryana 122018
+                      </p>
+                      <Link
+                        href={`/contact`}
+                        className={`tf-btn-default fw-6 ${
+                          dark ? "style-white" : ""
+                        }`}
+                        style={{
+                          display: "inline-flex",
+                          alignItems: "center",
+                          fontSize: "13px",
+                          marginTop: "4px",
+                        }}
+                      >
+                        GET DIRECTION <i className="icon-arrowUpRight" />
+                      </Link>
+                    </div>
+
+                    <ul
+                      className="footer-info"
+                      style={{
+                        listStyle: "none",
+                        padding: 0,
+                        margin: "14px 0",
+                      }}
+                    >
+                      <li
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          marginBottom: "6px",
+                          fontSize: "14px",
+                          color: "#ccc",
+                        }}
+                      >
+                        <i
+                          className="icon-mail"
+                          style={{
+                            marginRight: "10px",
+                            fontSize: "16px",
+                            color: "#aaa",
+                          }}
+                        />
+                        <p style={{ margin: 0 }}>hello@thebotsworld.com</p>
+                      </li>
+                      <li
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          marginBottom: "8px",
+                          fontSize: "14px",
+                          color: "#ccc",
+                        }}
+                      >
+                        <i
+                          className="icon-phone"
+                          style={{
+                            marginRight: "10px",
+                            fontSize: "16px",
+                            color: "#aaa",
+                          }}
+                        />
+                        <p style={{ margin: 0 }}>098993 00017</p>
+                      </li>
+                    </ul>
+
+                    <ul
+                      className={`tf-social-icon ${dark ? "style-white" : ""}`}
+                      style={{
+                        display: "flex",
+                        gap: "12px",
+                        marginTop: "12px",
+                        padding: 0,
+                        listStyle: "none",
+                      }}
+                    >
+                      {socialLinks.map((link, index) => (
+                        <li key={index}>
+                          <a
+                            href={link.href}
+                            className={link.className}
+                            style={{
+                              display: "flex",
+                              justifyContent: "center",
+                              alignItems: "center",
+                              width: "36px",
+                              height: "36px",
+                              borderRadius: "50%",
+                              background: "#222",
+                              color: "#fff",
+                              transition: "all 0.3s ease",
+                            }}
+                            onMouseEnter={(e) =>
+                              (e.currentTarget.style.background = "#007bff")
+                            }
+                            onMouseLeave={(e) =>
+                              (e.currentTarget.style.background = "#222")
+                            }
                           >
-                            By clicking subcribe, you agree to the{" "}
-                            <Link className="fw-6 link" href={`/term-of-use`}>
-                              Terms of Service
-                            </Link>{" "}
-                            and{" "}
-                            <a className="fw-6 link" href="#">
-                              Privacy Policy
-                            </a>
-                            .
-                          </label>
-                        </div>
-                      </div>
-                    </div>
+                            <i className={`icon ${link.iconClass}`} />
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-          <div className="footer-bottom">
+
+          {/* -------- Bottom -------- */}
+          <div
+            className="footer-bottom"
+            style={{ borderTop: "1px solid #333" }}
+          >
             <div className="container">
               <div className="row">
                 <div className="col-12">
-                  <div className="footer-bottom-wrap">
-                    <div className="left">
-                      <p className="text-caption-1">
-                        ©{new Date().getFullYear()} Modave. All Rights Reserved.
-                      </p>
-                      <div className="tf-cur justify-content-end">
-                        <div className="tf-currencies">
-                          <CurrencySelect light={dark ? true : false} />
-                        </div>
-                        <div className="tf-languages">
-                          <LanguageSelect
-                            parentClassName={`image-select center style-default type-languages ${
-                              dark ? "color-white" : ""
-                            }`}
-                          />
-                        </div>
+                  <div
+                    className="footer-bottom-wrap"
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      flexWrap: "wrap",
+                      padding: "16px 0",
+                      color: "#aaa",
+                      fontSize: "13px",
+                    }}
+                  >
+                    <div className="col-12">
+                      <div
+                        className="copyright-widget"
+                        style={{
+                          textAlign: "center",
+                          color: "#ccc",
+                          fontSize: "14px",
+                        }}
+                      >
+                        <span>
+                          © 2025 RoboticLife. All rights reserved | Made With{" "}
+                          <a
+                            target="_blank"
+                            href="https://www.akoode.com/"
+                            style={{ color: "red", textDecoration: "none" }}
+                          >
+                            <i
+                              className="fa fa-heart"
+                              style={{ color: "red" }}
+                            ></i>
+                          </a>
+                        </span>
                       </div>
-                    </div>
-                    <div className="tf-payment">
-                      <p className="text-caption-1">Payment:</p>
-                      <ul>
-                        <li>
-                          <Image
-                            alt=""
-                            src="/images/payment/img-1.png"
-                            width={100}
-                            height={64}
-                          />
-                        </li>
-                        <li>
-                          <Image
-                            alt=""
-                            src="/images/payment/img-2.png"
-                            width={100}
-                            height={64}
-                          />
-                        </li>
-                        <li>
-                          <Image
-                            alt=""
-                            src="/images/payment/img-3.png"
-                            width={100}
-                            height={64}
-                          />
-                        </li>
-                        <li>
-                          <Image
-                            alt=""
-                            src="/images/payment/img-4.png"
-                            width={98}
-                            height={64}
-                          />
-                        </li>
-                        <li>
-                          <Image
-                            alt=""
-                            src="/images/payment/img-5.png"
-                            width={102}
-                            height={64}
-                          />
-                        </li>
-                        <li>
-                          <Image
-                            alt=""
-                            src="/images/payment/img-6.png"
-                            width={98}
-                            height={64}
-                          />
-                        </li>
-                      </ul>
                     </div>
                   </div>
                 </div>
@@ -347,7 +375,7 @@ export default function Footer1({
         </div>
       </footer>
       <ScrollTop hasPaddingBottom={hasPaddingBottom} />
-      <ToolbarBottom />
+      {/* <ToolbarBottom /> */}
     </>
   );
 }

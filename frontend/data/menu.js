@@ -352,13 +352,13 @@ export const blogLinks = [
 
 export const otherPageLinks = [
   { href: "/about-us", name: "About Us" },
-  { href: "/store-list", name: "Store List 1" },
-  { href: "/store-list-02", name: "Store List 2" },
-  { href: "/contact", name: "Contact Us 1" },
-  { href: "/contact-02", name: "Contact Us 2" },
-  { href: "/404", name: "404" },
-  { href: "/FAQs", name: "FAQs" },
-  { href: "/term-of-use", name: "Terms Of Use" },
-  { href: "/coming-soon", name: "Coming Soon" },
-  { href: "/customer-feedback", name: "Customer Feedbacks" },
+  // { href: "/store-list", name: "Store List 1" },
+  // { href: "/store-list-02", name: "Store List 2" },
+  // { href: "/contact", name: "Contact Us 1" },
+  // { href: "/contact-02", name: "Contact Us 2" },
+  // { href: "/404", name: "404" },
+  // { href: "/FAQs", name: "FAQs" },
+  // { href: "/term-of-use", name: "Terms Of Use" },
+  // { href: "/coming-soon", name: "Coming Soon" },
+  // { href: "/customer-feedback", name: "Customer Feedbacks" },
 ];

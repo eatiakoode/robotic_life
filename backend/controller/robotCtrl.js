@@ -27,6 +27,21 @@ const createRobot = asyncHandler(async (req, res) => {
     } else {
       req.body.slug = "";
     }
+
+    // Map frontend field names to backend model field names
+    if (req.body.videoembedcode !== undefined) {
+      req.body.videoEmbedCode = req.body.videoembedcode;
+      delete req.body.videoembedcode;
+    }
+    if (req.body.metatitle !== undefined) {
+      req.body.metaTitle = req.body.metatitle;
+      delete req.body.metatitle;
+    }
+    if (req.body.metadescription !== undefined) {
+      req.body.metaDescription = req.body.metadescription;
+      delete req.body.metadescription;
+    }
+
     const robot = await Robot.create(req.body);
 
     const populatedRobot = await Robot.findById(robot._id)
@@ -182,7 +197,19 @@ const updateRobot = async (req, res) => {
       req.body.slug = slugify(req.body.slug.toLowerCase());
     }
 
-
+    // Map frontend field names to backend model field names
+    if (req.body.videoembedcode !== undefined) {
+      req.body.videoEmbedCode = req.body.videoembedcode;
+      delete req.body.videoembedcode;
+    }
+    if (req.body.metatitle !== undefined) {
+      req.body.metaTitle = req.body.metatitle;
+      delete req.body.metatitle;
+    }
+    if (req.body.metadescription !== undefined) {
+      req.body.metaDescription = req.body.metadescription;
+      delete req.body.metadescription;
+    }
 
     console.log("Final update data:", req.body);
 

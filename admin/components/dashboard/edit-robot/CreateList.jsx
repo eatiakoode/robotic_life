@@ -117,11 +117,20 @@ const EditList = () => {
   const [existingImages, setExistingImages] = useState([]);
 
   const normalizeImagePath = (path) => {
-  if (!path) return "";
-  return path.startsWith("http")
-    ? path
-    : "/" + path.replace(/^public\//, "");
-};
+    if (!path) return "";
+    
+    // If it's already a full URL, return as is
+    if (path.startsWith("http")) {
+      return path;
+    }
+    
+    // Get the backend API URL and construct full image URL
+    const apiUrl = process.env.NEXT_PUBLIC_ADMIN_API_URL || "http://localhost:5000/";
+    const cleanPath = path.replace(/^public\//, "");
+    const fullImageUrl = apiUrl + cleanPath;
+    
+    return fullImageUrl;
+  };
 
   // Load existing robot data when in edit mode
   useEffect(() => {
@@ -243,13 +252,17 @@ const EditList = () => {
           setSelectedAutonomyLevel(robotData.autonomyLevel?._id || robotData.autonomyLevel || "");
           
           // Media
-          setVideoEmbedCode(robotData.videoembedcode || "");
+          setVideoEmbedCode(robotData.videoEmbedCode || "");
           setExistingFeaturedImage(robotData.featuredimage || "");
           setExistingImages(robotData.images || []);
           
+          // Debug image data
+          console.log("Robot image data:", robotData.images);
+          console.log("Featured image data:", robotData.featuredimage);
+          
           // Meta information
-          setMetatitle(robotData.metatitle || "");
-          setMetaDescription(robotData.metadescription || "");
+          setMetatitle(robotData.metaTitle || "");
+          setMetaDescription(robotData.metaDescription || "");
           
           // Status
           setStatus(robotData.status !== undefined ? robotData.status : true);
@@ -499,65 +512,20 @@ const EditList = () => {
       setSlug(finalSlug);
     }
 
-    // Validation list
+    // Validation list - Only essential fields are required
     const requiredFields = [
       { key: "title", value: title, name: "Title" },
-      { key: "slug", value: finalSlug, name: "Slug" },
       { key: "description", value: description, name: "Description" },
-      { key: "status", value: status, name: "Status" },
-      { key: "price", value: price, name: "Total Price" },
-      // { key: "countryid", value: selectedCountry, name: "Country of Origin" },
-      // { key: "categoryid", value: selectedCategory, name: "Category" },
-      // { key: "subcategoryid", value: selectedSubCategory, name: "Sub Category" },
-      // { key: "manufacturerid", value: selectedManufacturer, name: "Manufacturer" },
-      // { key: "launchYear", value: launchYear, name: "Launch Year" },
-      // { key: "length", value: length, name: "Length" },
-      // { key: "width", value: width, name: "Width" },
-      // { key: "height", value: height, name: "Height" },
-      // { key: "weight", value: weight, name: "Weight" },
-      // { key: "batteryCapacity", value: batteryCapacity, name: "Battery Capacity" },
-      // { key: "runtime", value: runtime, name: "Runtime" },
-      // { key: "speed", value: speed, name: "Speed" },
-      // { key: "accuracy", value: accuracy, name: "Accuracy" },
-      // { key: "selectedPower", value: selectedPower, name: "Power Source" },
-      // { key: "videoembedcode", value: videoembedcode, name: "Video Embed Code" },
-      // { key: "selectedPrimaryFunction", value: selectedPrimaryFunction, name: "Primary Function" },
-      // { key: "selectedOperatingEnvironment", value: selectedOperatingEnvironment, name: "Operating Environment" },
-      // { key: "selectedAutonomyLevel", value: selectedAutonomyLevel, name: "Autonomy Level" },
-      // { key: "colors", value: selectedColors.length > 0 ? selectedColors : null, name: "Colors" },
-      // { key: "materials", value: selectedMaterials.length > 0 ? selectedMaterials : null, name: "Materials" },
-      // { key: "navigationTypes", value: selectedNavigationType.length > 0 ? selectedNavigationType : null, name: "Navigation Types" },
-      // { key: "sensors", value: selectedSensor.length > 0 ? selectedSensor : null, name: "Sensors" },
-      // { key: "aiSoftwareFeatures", value: selectedAISoftwareFeature.length > 0 ? selectedAISoftwareFeature : null, name: "AI Software Features" },
-      // { key: "terrainCapability", value: selectedTerrainCapability.length > 0 ? selectedTerrainCapability : null, name: "Terrain Capability" },
-      // { key: "communicationMethod", value: selectedCommunicationMethod.length > 0 ? selectedCommunicationMethod : null, name: "Communication Method" },
-      // { key: "payloadType", value: selectedPayloadType.length > 0 ? selectedPayloadType : null, name: "Payload Type" },
+      { key: "selectedCountry", value: selectedCountry, name: "Country of Origin" },
+      { key: "launchYear", value: launchYear, name: "Launch Year" },
     ];
 
     // Check for empty required fields
-    // requiredFields.forEach((field) => {
-    //   if (field.key === "status") {
-    //     // Status is a boolean, so only check if it's undefined/null
-    //     if (field.value === undefined || field.value === null) {
-    //     newErrors[field.key] = `${field.name} is required`;
-    //     }
-    //   } else if (Array.isArray(field.value)) {
-    //     // For array fields, check if they have items
-    //     if (!field.value || field.value.length === 0) {
-    //       newErrors[field.key] = `${field.name} is required`;
-    //     }
-    //   } else if (typeof field.value === "string") {
-    //     // For string fields, check if they're empty after trimming
-    //     if (!field.value || !field.value.trim()) {
-    //       newErrors[field.key] = `${field.name} is required`;
-    //     }
-    //   } else {
-    //     // For other types (numbers, booleans), just check if they exist
-    //     if (field.value === undefined || field.value === null || field.value === "") {
-    //       newErrors[field.key] = `${field.name} is required`;
-    //     }
-    //   }
-    // });
+    requiredFields.forEach((field) => {
+      if (!field.value || (typeof field.value === "string" && !field.value.trim())) {
+        newErrors[field.key] = `${field.name} is required`;
+      }
+    });
 
     if (Object.keys(newErrors).length > 0) {
       setError(newErrors);
@@ -583,7 +551,9 @@ const EditList = () => {
       formData.append("status", status ? "true" : "false");
       formData.append("totalPrice", price?.toString() || "");
       formData.append("countryOfOrigin", selectedCountry || "");
-      formData.append("category", selectedCategory || "");
+      // Use subcategory ID if selected, otherwise use parent category ID
+      const categoryToSave = selectedSubCategory || selectedCategory;
+      formData.append("category", categoryToSave || "");
       formData.append("subcategoryid", selectedSubCategory || "");
       formData.append("manufacturer", selectedManufacturer || "");
       formData.append("launchYear", launchYear?.toString() || "");
@@ -758,7 +728,7 @@ const EditList = () => {
         {/* Robot status start */}
         <div className="col-lg-6">
           <div className="my_profile_setting_input form-group">
-            <label htmlFor="roboStatus">Status *</label>
+            <label htmlFor="roboStatus">Status</label>
             <select
               id="roboStatus"
               className="form-select"
@@ -775,7 +745,7 @@ const EditList = () => {
         {/* Robot category start */}
         <div className="col-lg-6 col-xl-6">
           <div className="my_profile_setting_input ui_kit_select_search form-group">
-            <label>Category *</label>
+            <label>Category</label>
             <select
               id="categorySelect"
               className="selectpicker form-select"
@@ -826,7 +796,7 @@ const EditList = () => {
         {/* Robot manufacturer start */}
         <div className="col-lg-6 col-xl-6">
           <div className="my_profile_setting_input ui_kit_select_search form-group">
-            <label>Manufacturer *</label>
+            <label>Manufacturer</label>
             <select
               id="manufacturerSelect"
               className="selectpicker form-select"
@@ -902,7 +872,7 @@ const EditList = () => {
         {/* Robot price start */}
         <div className="col-lg-6">
           <div className="my_profile_setting_input form-group">
-            <label htmlFor="roboPrice">Total Price *</label>
+            <label htmlFor="roboPrice">Total Price</label>
             <input
               type="text"
               className="form-control"
@@ -939,7 +909,7 @@ const EditList = () => {
             {/* Dimensions Start */}
             <div className="col-lg-12">
               <div className="my_profile_setting_input form-group">
-                <label htmlFor="dimensions">Dimensions *</label>
+                <label htmlFor="dimensions">Dimensions</label>
                 {/* Dimension row start */}
                 <div className="row">
                   {/* Length start */}
@@ -1043,7 +1013,7 @@ const EditList = () => {
                 <div className="row">
                   {/* Weight start */}
                   <div className="col-lg-6 mb-2">
-                    <label htmlFor="weight">Weight *</label>
+                    <label htmlFor="weight">Weight</label>
                     <div className="position-relative">
                       <input
                         type="number"
@@ -1078,7 +1048,7 @@ const EditList = () => {
                   {/* Power Source start */}
                   <div className="col-lg-6 col-xl-6">
                     <div className="my_profile_setting_input ui_kit_select_search form-group">
-            <label htmlFor="powerSelect">Power Source *</label>
+            <label htmlFor="powerSelect">Power Source</label>
                       <select
                         id="powerSelect"
                         className="selectpicker form-select"
@@ -1102,7 +1072,7 @@ const EditList = () => {
 
                   {/* Battery Capacity start */}
                   <div className="col-lg-6 mb-2">
-                    <label htmlFor="batteryCapacity">Battery Capacity *</label>
+                    <label htmlFor="batteryCapacity">Battery Capacity</label>
                     <div className="position-relative">
                       <input
                         type="number"
@@ -1169,7 +1139,7 @@ const EditList = () => {
 
                   {/* Runtime start */}
                   <div className="col-lg-6 mb-2">
-                    <label htmlFor="runtime">Runtime *</label>
+                    <label htmlFor="runtime">Runtime</label>
                     <div className="position-relative">
                       <input
                         type="number"
@@ -1237,7 +1207,7 @@ const EditList = () => {
 
                   {/* Speed start */}
                   <div className="col-lg-6 mb-2">
-                    <label htmlFor="speed">Speed *</label>
+                    <label htmlFor="speed">Speed</label>
                     <div className="position-relative">
                       <input
                         type="number"
@@ -1313,7 +1283,7 @@ const EditList = () => {
 
                   {/* Accuracy start */}
                   <div className="col-lg-6 mb-2">
-                    <label htmlFor="accuracy">Accuracy *</label>
+                    <label htmlFor="accuracy">Accuracy</label>
                     <div className="position-relative">
                       <input
                         type="number"
@@ -1381,7 +1351,7 @@ const EditList = () => {
                   {/* Color start */}
                   <div className="col-lg-6 col-xl-6">
                     <div className="my_profile_setting_input ui_kit_select_search form-group">
-            <label htmlFor="colorSelect">Color *</label>
+            <label htmlFor="colorSelect">Color</label>
                       <div className="position-relative">
                         <select
                           id="colorSelect"
@@ -1469,7 +1439,7 @@ const EditList = () => {
                   {/* Material Select start */}
                   <div className="col-lg-6 col-xl-6">
                     <div className="my_profile_setting_input ui_kit_select_search form-group">
-                      <label htmlFor="materialSelect">Material *</label>
+                      <label htmlFor="materialSelect">Material</label>
                       <div className="position-relative">
                         <select
                           id="materialSelect"
@@ -1566,7 +1536,7 @@ const EditList = () => {
               {/* Navigation Types start */}
               <div className="col-lg-6 col-xl-6">
                 <div className="my_profile_setting_input ui_kit_select_search form-group">
-                  <label htmlFor="navigationTypeSelect">Navigation Type *</label>
+                  <label htmlFor="navigationTypeSelect">Navigation Type</label>
                   <div className="position-relative">
                     <select
                       id="navigationTypeSelect"
@@ -1657,7 +1627,7 @@ const EditList = () => {
               {/* Sensors start */}
               <div className="col-lg-6 col-xl-6">
                 <div className="my_profile_setting_input ui_kit_select_search form-group">
-                  <label htmlFor="sensorSelect">Sensors *</label>
+                  <label htmlFor="sensorSelect">Sensors</label>
                   <div className="position-relative">
                     <select
                       id="sensorSelect"
@@ -1748,7 +1718,7 @@ const EditList = () => {
               {/* AI Software Features start */}
               <div className="col-lg-6 col-xl-6">
                 <div className="my_profile_setting_input ui_kit_select_search form-group">
-                  <label htmlFor="aiSoftwareSelect">AI Software Features *</label>
+                  <label htmlFor="aiSoftwareSelect">AI Software Features</label>
                   <div className="position-relative">
                     <select
                       id="aiSoftwareSelect"
@@ -1839,7 +1809,7 @@ const EditList = () => {
               {/* Primary Function start */}
               <div className="col-lg-6 col-xl-6">
                 <div className="my_profile_setting_input ui_kit_select_search form-group">
-            <label htmlFor="primaryFunctionSelect">Primary Function *</label>
+            <label htmlFor="primaryFunctionSelect">Primary Function</label>
                   <select
                     id="primaryFunctionSelect"
                     className="selectpicker form-select"
@@ -1864,7 +1834,7 @@ const EditList = () => {
               {/* Operating Environment start */}
               <div className="col-lg-6 col-xl-6">
                 <div className="my_profile_setting_input ui_kit_select_search form-group">
-            <label htmlFor="operatingEnvironmentSelect">Operating Environment *</label>
+            <label htmlFor="operatingEnvironmentSelect">Operating Environment</label>
                   <select
                     id="operatingEnvironmentSelect"
                     className="selectpicker form-select"
@@ -1889,7 +1859,7 @@ const EditList = () => {
               {/* Autonomy Level start */}
               <div className="col-lg-6 col-xl-6">
                 <div className="my_profile_setting_input ui_kit_select_search form-group">
-            <label htmlFor="autonomyLevelSelect">Autonomy Level *</label>
+            <label htmlFor="autonomyLevelSelect">Autonomy Level</label>
                   <select
                     id="autonomyLevelSelect"
                     className="selectpicker form-select"
@@ -1914,7 +1884,7 @@ const EditList = () => {
               {/* Terrain Capability start */}
               <div className="col-lg-6 col-xl-6">
                 <div className="my_profile_setting_input ui_kit_select_search form-group">
-                  <label htmlFor="terrainCapabilitySelect">Terrain Capability *</label>
+                  <label htmlFor="terrainCapabilitySelect">Terrain Capability</label>
                   <div className="position-relative">
                     <select
                       id="terrainCapabilitySelect"
@@ -2005,7 +1975,7 @@ const EditList = () => {
               {/* Communication Method start */}
               <div className="col-lg-6 col-xl-6">
                 <div className="my_profile_setting_input ui_kit_select_search form-group">
-                  <label htmlFor="communicationMethodSelect">Communication Method *</label>
+                  <label htmlFor="communicationMethodSelect">Communication Method</label>
                   <div className="position-relative">
                     <select
                       id="communicationMethodSelect"
@@ -2096,7 +2066,7 @@ const EditList = () => {
               {/* Payload Type start */}
               <div className="col-lg-6 col-xl-6">
                 <div className="my_profile_setting_input ui_kit_select_search form-group">
-                  <label htmlFor="payloadTypeSelect">Payload Type *</label>
+                  <label htmlFor="payloadTypeSelect">Payload Type</label>
                   <div className="position-relative">
                     <select
                       id="payloadTypeSelect"
@@ -2190,7 +2160,7 @@ const EditList = () => {
         {/* Video embed code start */}
         <div className="col-lg-12">
           <div className="my_profile_setting_input form-group">
-            <label htmlFor="videoEmbedCode">Video Embed Code *</label>
+            <label htmlFor="videoEmbedCode">Video Embed Code</label>
             <textarea
               id="videoEmbedCode"
               className="form-control"
@@ -2236,7 +2206,7 @@ const EditList = () => {
         </div>
 
         {/* Featured image start */}
-        {/* <div className="col-lg-12">
+        <div className="col-lg-12">
           <div className="my_profile_setting_input form-group">
             <label htmlFor="featuredImage">Featured Image</label>
             <input
@@ -2249,12 +2219,29 @@ const EditList = () => {
             {existingFeaturedImage && !featuredimage && (
               <div className="mt-2">
                 <p>Current featured image:</p>
-                <Image
+                <img
                   src={normalizeImagePath(existingFeaturedImage)}
                   alt="Featured"
-                  width={200}
-                  height={150}
-                  style={{ objectFit: "cover", borderRadius: "8px" }}
+                  style={{ 
+                    width: '200px', 
+                    height: '150px', 
+                    objectFit: "cover", 
+                    borderRadius: "8px",
+                    border: '1px solid #ddd'
+                  }}
+                  onError={(e) => {
+                    e.target.style.display = 'none';
+                    const container = e.target.parentElement;
+                    if (container) {
+                      container.innerHTML = `
+                        <div style="text-align: center; color: #6c757d; padding: 20px; border: 1px solid #ddd; border-radius: 8px; width: 200px; height: 150px; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                          <i class="fas fa-image" style="font-size: 24px; margin-bottom: 8px;"></i>
+                          <div style="font-size: 12px;">Featured image not found</div>
+                          <div style="font-size: 10px; color: #adb5bd; word-break: break-all;">${existingFeaturedImage}</div>
+                        </div>
+                      `;
+                    }
+                  }}
                 />
               </div>
             )}
@@ -2264,7 +2251,7 @@ const EditList = () => {
               </div>
             )}
           </div>
-        </div> */}
+        </div>
 
         {/* Multiple images start */}
         <div className="col-lg-12">
@@ -2280,21 +2267,58 @@ const EditList = () => {
             />
             
             {/* Display existing images */}
-            {/* {existingImages.length > 0 && (
+            {existingImages.length > 0 && (
               <div className="mt-3">
-                <h6>Existing Images:</h6>
+                <div className="d-flex justify-content-between align-items-center mb-2">
+                  <div>
+                    <h6 className="mb-0">Existing Images:</h6>
+                    <small className="text-muted">Images showing "Image not found" are missing from the server</small>
+                  </div>
+                  <button
+                    type="button"
+                    className="btn btn-outline-danger btn-sm"
+                    onClick={() => {
+                      if (window.confirm("Are you sure you want to remove all existing images? This will delete them from the database.")) {
+                        setExistingImages([]);
+                      }
+                    }}
+                  >
+                    <i className="fas fa-trash me-1"></i>Clear All
+                  </button>
+                </div>
                 <div className="row">
-                  {existingImages.map((img, index) => (
+                  {existingImages.map((img, index) => {
+                    const imagePath = normalizeImagePath(img);
+                    return (
                     <div key={index} className="col-md-3 mb-3">
                       <div className="position-relative">
-                        <Image
-                          src={normalizeImagePath(img)}
-                          alt={`Existing ${index}`}
-                          width={200}
-                          height={150}
-                          style={{ objectFit: "cover", borderRadius: "8px" }}
-                          className="w-100"
-                        />
+                        <div className="image-container" style={{ width: '200px', height: '150px', border: '1px solid #ddd', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#f8f9fa' }}>
+                          <img
+                            src={imagePath}
+                            alt={`Existing ${index}`}
+                            style={{ 
+                              width: '100%', 
+                              height: '100%', 
+                              objectFit: "cover", 
+                              borderRadius: "8px",
+                              display: 'block'
+                            }}
+                            onError={(e) => {
+                              // Replace with placeholder content
+                              e.target.style.display = 'none';
+                              const container = e.target.parentElement;
+                              if (container) {
+                                container.innerHTML = `
+                                  <div style="text-align: center; color: #6c757d; padding: 20px; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                                    <i class="fas fa-image" style="font-size: 24px; margin-bottom: 8px;"></i>
+                                    <div style="font-size: 12px;">Image not found</div>
+                                    <div style="font-size: 10px; color: #adb5bd; word-break: break-all;">${img}</div>
+                                  </div>
+                                `;
+                              }
+                            }}
+                          />
+                        </div>
                         <button
                           type="button"
                           className="btn btn-danger btn-sm position-absolute top-0 end-0 m-1"
@@ -2304,10 +2328,11 @@ const EditList = () => {
                         </button>
                       </div>
                     </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </div>
-            )} */}
+            )}
 
             {/* Display new selected images */}
             {robotSelectedImgs.length > 0 && (

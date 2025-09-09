@@ -37,8 +37,22 @@ export default function Products() {
       if (response.ok) {
         const data = await response.json();
         
-        if (Array.isArray(data)) {
-          const transformedRobots = data.map(robot => {
+        // Handle both new format { success: true, data: [...] } and old format [...]
+        let robotsData = [];
+        if (data.success && Array.isArray(data.data)) {
+          // New format: { success: true, data: [...] }
+          robotsData = data.data;
+        } else if (Array.isArray(data)) {
+          // Old format: direct array
+          robotsData = data;
+        } else {
+          console.error('Robots data is not in expected format:', data);
+          setRobots([]);
+          return;
+        }
+        
+        if (robotsData.length > 0) {
+          const transformedRobots = robotsData.map(robot => {
             const imgSrc = robot.images && robot.images.length > 0 ? 
               (robot.images[0].startsWith('public/') ? 
                 `${backendUrl}/${robot.images[0].replace('public/', '')}` : 
@@ -98,7 +112,7 @@ export default function Products() {
           });
           setRobots(transformedRobots);
         } else {
-          console.error('Robots data is not an array:', data);
+          // No robots found for this category
           setRobots([]);
         }
       } else {
@@ -124,7 +138,7 @@ export default function Products() {
         <div className="container">
           <div className="heading-section-4 wow fadeInUp">
             <div className="heading-left">
-              <h3 className="heading font-5 fw-bold">Best Sellers</h3>
+              <h3 className="heading font-5 fw-bold">Popular Categories</h3>
               <ul className="tab-product style-2 justify-content-sm-center mb-0" role="tablist">
                 {[...Array(6)].map((_, index) => (
                   <React.Fragment key={index}>
@@ -170,13 +184,13 @@ export default function Products() {
         <div className="container">
           <div className="heading-section-4 wow fadeInUp">
             <div className="heading-left">
-              <h3 className="heading font-5 fw-bold">Best Sellers</h3>
+              <h3 className="heading font-5 fw-bold">Popular Categories</h3>
               <div className="text-center">
                 <p className="text-danger">Error loading categories or no categories available.</p>
               </div>
             </div>
             <Link href="/shop-filter-canvas" className="btn-line">
-              View All Products
+              View All Robots
             </Link>
           </div>
         </div>
@@ -189,7 +203,7 @@ export default function Products() {
       <div className="container">
         <div className="heading-section-4 wow fadeInUp">
           <div className="heading-left">
-            <h3 className="heading font-5 fw-bold">Best Sellers</h3>
+            <h3 className="heading font-5 fw-bold">Popular Categories</h3>
             <ul
               className="tab-product style-2 justify-content-sm-center mb-0"
               role="tablist"
@@ -216,7 +230,7 @@ export default function Products() {
             </ul>
           </div>
           <Link href="/shop-filter-canvas" className="btn-line">
-            View All Products
+            View All Robots
           </Link>
         </div>
         <div className="flat-animate-tab">

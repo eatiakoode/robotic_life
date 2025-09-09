@@ -104,76 +104,39 @@ export default function Details1({ product }) {
                     {/* Basic Information Content (without heading) */}
                     <div className="tf-product-info-specifications mb_20">
                       <div className="specification-group mb_10">
-                        <div className="row">
-                          <div className="col-md-6">
-                            <div className="spec-item mb_6">
-                              <span className="text-caption-1 fw-bold">Manufacturer:</span>
-                              <span className="text-caption-1 text-1 ms-2">
-                                {product.manufacturer?.name || product.manufacturer?.title || (typeof product.manufacturer === 'string' ? product.manufacturer : 'N/A')}
-                              </span>
-                    </div>
-                            <div className="spec-item mb_6">
-                              <span className="text-caption-1 fw-bold">Launch Year:</span>
-                              <span className="text-caption-1 text-1 ms-2">
-                                {product.launchYear || 'N/A'}
+                        <div className="spec-item mb_6">
+                          <span className="text-caption-1 fw-bold">Manufacturer:</span>
+                          <span className="text-caption-1 text-1 ms-2">
+                            {product.manufacturer?.name || product.manufacturer?.title || (typeof product.manufacturer === 'string' ? product.manufacturer : 'N/A')}
                           </span>
-                          </div>
                         </div>
-                          <div className="col-md-6">
-                            <div className="spec-item mb_6">
-                              <span className="text-caption-1 fw-bold">Version:</span>
-                              <span className="text-caption-1 text-1 ms-2">
-                                {product.version || 'N/A'}
-                              </span>
-                            </div>
-                            <div className="spec-item mb_6">
-                              <span className="text-caption-1 fw-bold">Country of Origin:</span>
-                              <span className="text-caption-1 text-1 ms-2">
-                                {(() => {
-                                  if (!product.countryOfOrigin) return 'United States'; // Default fallback
-                                  if (typeof product.countryOfOrigin === 'string') return product.countryOfOrigin;
-                                  if (product.countryOfOrigin.title) return product.countryOfOrigin.title;
-                                  if (product.countryOfOrigin.name) return product.countryOfOrigin.name;
-                                  return 'United States'; // Default fallback
-                                })()}
-                              </span>
-                            </div>
-                          </div>
+                        <div className="spec-item mb_6">
+                          <span className="text-caption-1 fw-bold">Launch Year:</span>
+                          <span className="text-caption-1 text-1 ms-2">
+                            {product.launchYear || 'N/A'}
+                          </span>
+                        </div>
+                        <div className="spec-item mb_6">
+                          <span className="text-caption-1 fw-bold">Version:</span>
+                          <span className="text-caption-1 text-1 ms-2">
+                            {product.version || 'N/A'}
+                          </span>
+                        </div>
+                        <div className="spec-item mb_6">
+                          <span className="text-caption-1 fw-bold">Country of Origin:</span>
+                          <span className="text-caption-1 text-1 ms-2">
+                            {(() => {
+                              if (!product.countryOfOrigin) return 'United States'; // Default fallback
+                              if (typeof product.countryOfOrigin === 'string') return product.countryOfOrigin;
+                              if (product.countryOfOrigin.title) return product.countryOfOrigin.title;
+                              if (product.countryOfOrigin.name) return product.countryOfOrigin.name;
+                              return 'United States'; // Default fallback
+                            })()}
+                          </span>
                         </div>
                       </div>
                     </div>
 
-                    {/* Delivery, return, warranty, and store information removed as requested */}
-                    <ul className="tf-product-info-sku">
-                      <li>
-                        <p className="text-caption-1">Robot ID:</p>
-                        <p className="text-caption-1 text-1">{product.id || 'N/A'}</p>
-                      </li>
-                      <li>
-                        <p className="text-caption-1">Manufacturer:</p>
-                        <p className="text-caption-1 text-1">{product.manufacturer?.name || product.manufacturer?.title || (typeof product.manufacturer === 'string' ? product.manufacturer : 'N/A')}</p>
-                      </li>
-                      <li>
-                        <p className="text-caption-1">Status:</p>
-                        <p className="text-caption-1 text-1">Available</p>
-                      </li>
-                      <li>
-                        <p className="text-caption-1">Category:</p>
-                        <p className="text-caption-1">
-                          <a href="#" className="text-1 link">
-                            {product.category?.name || product.category?.title || (typeof product.category === 'string' ? product.category : 'Robot')}
-                          </a>
-                        </p>
-                      </li>
-                      <li>
-                        <p className="text-caption-1">Launch Year:</p>
-                        <p className="text-caption-1 text-1">{product.launchYear || 'N/A'}</p>
-                      </li>
-                      <li>
-                        <p className="text-caption-1">Version:</p>
-                        <p className="text-caption-1 text-1">{product.version || 'N/A'}</p>
-                      </li>
-                    </ul>
                     {/* Payment methods section removed as requested */}
                   </div>
                 </div>

@@ -1,11 +1,11 @@
 import { productMain } from "@/data/products";
 
 export const initialState = {
-  price: [0, 100000], // Will be updated dynamically based on actual product prices
-  priceBounds: [0, 100000], // The actual min/max prices from products
-  weight: [0, 1000], // Weight range in g (grams as default)
-  weightBounds: [0, 1000], // The actual min/max weights from products
-  weightUnit: "g", // Default weight unit: g (grams)
+  price: [0, 50000000], // Will be updated dynamically based on actual product prices
+  priceBounds: [0, 50000000], // The actual min/max prices from products
+  weight: [0, 5000], // Weight range in kg (kilograms as default)
+  weightBounds: [0, 5000], // The actual min/max weights from products
+  weightUnit: "kg", // Default weight unit: kg (kilograms)
   size: "All",
   availability: "All",
   color: "All",

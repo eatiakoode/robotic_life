@@ -376,22 +376,12 @@ const CreateList = () => {
 
     const newErrors = {};
 
-    // Updated validation - only check truly required fields
+    // Updated validation - only essential fields are required
     const requiredFields = [
       { key: "title", value: title, name: "Title" },
       { key: "description", value: description, name: "Description" },
-      { key: "status", value: status, name: "Status" },
-      { key: "price", value: price, name: "Total Price" },
       { key: "selectedCountry", value: selectedCountry, name: "Country of Origin" },
-      { key: "selectedCategory", value: selectedCategory, name: "Category" },
-      // { key: "selectedSubCategory", value: selectedSubCategory, name: "Sub Category" },
-      { key: "selectedManufacturer", value: selectedManufacturer, name: "Manufacturer" },
       { key: "launchYear", value: launchYear, name: "Launch Year" },
-      { key: "selectedPower", value: selectedPower, name: "Power Source" },
-      { key: "selectedPrimaryFunction", value: selectedPrimaryFunction, name: "Primary Function" },
-      { key: "selectedOperatingEnvironment", value: selectedOperatingEnvironment, name: "Operating Environment" },
-      { key: "selectedAutonomyLevel", value: selectedAutonomyLevel, name: "Autonomy Level" },
-      { key: "videoembedcode", value: videoembedcode, name: "Video Embed Code" },
     ];
 
     // Check for empty required fields
@@ -450,7 +440,9 @@ const CreateList = () => {
       formData.append("status", status ? "true" : "false");
       formData.append("totalPrice", price);
       formData.append("countryOfOrigin", selectedCountry);
-      formData.append("category", selectedCategory);
+      // Use subcategory ID if selected, otherwise use parent category ID
+      const categoryToSave = selectedSubCategory || selectedCategory;
+      formData.append("category", categoryToSave);
       formData.append("subcategoryid", selectedSubCategory);
       formData.append("manufacturer", selectedManufacturer);
       formData.append("launchYear", launchYear);
@@ -683,7 +675,7 @@ const CreateList = () => {
         {/* robot status start */}
         <div className="col-lg-6">
           <div className="my_profile_setting_input form-group">
-            <label htmlFor="roboStatus">Status *</label>
+            <label htmlFor="roboStatus">Status</label>
             <select
               id="roboStatus"
               className={`form-select ${error.status ? 'is-invalid' : ''}`}
@@ -702,7 +694,7 @@ const CreateList = () => {
         {/* robot category start */}
         <div className="col-lg-6 col-xl-6">
           <div className="my_profile_setting_input ui_kit_select_search form-group">
-            <label>Category *</label>
+            <label>Category</label>
             <select
               id="categorySelect"
               className={`selectpicker form-select ${error.selectedCategory ? 'is-invalid' : ''}`}
@@ -754,7 +746,7 @@ const CreateList = () => {
         {/* robot manufacturer start */}
         <div className="col-lg-6 col-xl-6">
           <div className="my_profile_setting_input ui_kit_select_search form-group">
-            <label>Manufacturer *</label>
+            <label>Manufacturer</label>
             <select
               id="manufacturerSelect"
               className={`selectpicker form-select ${error.selectedManufacturer ? 'is-invalid' : ''}`}
@@ -836,7 +828,7 @@ const CreateList = () => {
         {/* robot price start */}
         <div className="col-lg-6">
           <div className="my_profile_setting_input form-group">
-            <label htmlFor="roboPrice">Total Price *</label>
+            <label htmlFor="roboPrice">Total Price</label>
             <input
               type="text"
               className={`form-control ${error.price ? 'is-invalid' : ''}`}
@@ -1023,7 +1015,7 @@ const CreateList = () => {
                   {/* Power Source start */}
                   <div className="col-lg-6 col-xl-6">
                     <div className="my_profile_setting_input ui_kit_select_search form-group">
-                      <label htmlFor="powerSelect">Power Source *</label>
+                      <label htmlFor="powerSelect">Power Source</label>
                       <select
                         id="powerSelect"
                         className={`selectpicker form-select ${error.selectedPower ? 'is-invalid' : ''}`}
@@ -2207,7 +2199,7 @@ const CreateList = () => {
               {/* Primary Function start */}
               <div className="col-lg-6 col-xl-6">
                 <div className="my_profile_setting_input ui_kit_select_search form-group">
-                  <label htmlFor="primaryFunction">Primary Function *</label>
+                  <label htmlFor="primaryFunction">Primary Function</label>
                   <select
                     id="primaryFunction"
                     className={`selectpicker form-select ${error.selectedPrimaryFunction ? 'is-invalid' : ''}`}
@@ -2263,7 +2255,7 @@ const CreateList = () => {
               {/* Autonomy Level start */}
               <div className="col-lg-6 col-xl-6">
                 <div className="my_profile_setting_input ui_kit_select_search form-group">
-                  <label htmlFor="autonomyLevel">Autonomy Level *</label>
+                  <label htmlFor="autonomyLevel">Autonomy Level</label>
                   <select
                     id="autonomyLevel"
                     className={`selectpicker form-select ${error.selectedAutonomyLevel ? 'is-invalid' : ''}`}
@@ -2295,7 +2287,7 @@ const CreateList = () => {
               {/* End .col */}
               <div className="col-lg-12">
                 <div className="my_profile_setting_textarea">
-                  <label htmlFor="videoEmbedCode">Video Embed code *</label>
+                  <label htmlFor="videoEmbedCode">Video Embed code</label>
                   <textarea
                     id="videoEmbedCode"
                     className={`form-control ${error.videoembedcode ? 'is-invalid' : ''}`}

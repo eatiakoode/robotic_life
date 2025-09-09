@@ -756,7 +756,7 @@ video {
 }
 
 .bg-grey {
-  background-color: #e0d3c5 !important;
+  background-color: #808080 !important;
 }
 
 .bg-grey-2 {
@@ -804,11 +804,39 @@ video {
 }
 
 .bg-beige {
-  background-color: #ccbba7 !important;
+  background-color: #e0d3c5 !important;
 }
 
 .bg-beige-2 {
   background-color: #f6efdd !important;
+}
+
+.bg-yellow {
+  background-color: #ffd700 !important;
+}
+
+.bg-orange {
+  background-color: #ff8c00 !important;
+}
+
+.bg-purple {
+  background-color: #800080 !important;
+}
+
+.bg-pink {
+  background-color: #ffc0cb !important;
+}
+
+.bg-black {
+  background-color: #000000 !important;
+}
+
+.bg-white {
+  background-color: #ffffff !important;
+}
+
+.bg-brown {
+  background-color: #8b4513 !important;
 }
 
 .bg-beige-1 {
@@ -4893,6 +4921,38 @@ input.style-line-bottom::placeholder {
 .form-newsletter-subscribe-2 #subscribe-content {
   display: grid;
   gap: 10px;
+}
+
+/*------------ Radio Button Styling ---------------- */
+input[type="radio"] {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  width: 16px;
+  height: 16px;
+  border: 2px solid #ddd;
+  border-radius: 50%;
+  background-color: white;
+  cursor: pointer;
+  position: relative;
+  margin-right: 8px;
+}
+
+input[type="radio"]:checked {
+  border-color: #007bff;
+  background-color: #007bff;
+}
+
+input[type="radio"]:checked::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: white;
 }
 
 /*------------ nice select ---------------- */

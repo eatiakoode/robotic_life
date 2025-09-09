@@ -29,6 +29,23 @@ const CreateList = () => {
   const [blogcategories, setBlogcategories] = useState([]);
   const [selectedBlogcategory, setSelectedBlogcategory] = useState("");
 
+  // Image path normalization function
+  const normalizeImagePath = (path) => {
+    if (!path) return "";
+    
+    // If it's already a full URL, return as is
+    if (path.startsWith("http")) {
+      return path;
+    }
+    
+    // Get the backend API URL and construct full image URL
+    const apiUrl = process.env.NEXT_PUBLIC_ADMIN_API_URL || "http://localhost:5000/";
+    const cleanPath = path.replace(/^public\//, "");
+    const fullImageUrl = apiUrl + cleanPath;
+    
+    return fullImageUrl;
+  };
+
   // Upload handler
   const uploadLogo = (e) => {
     setLogoImage("");
@@ -73,7 +90,8 @@ const CreateList = () => {
         setSelectedBlogcategory(blogData.blogcategory || "");
 
         if (blogData.logoimage) {
-          setLogoImage(process.env.NEXT_PUBLIC_API_URL + blogData.logoimage);
+          const normalizedPath = normalizeImagePath(blogData.logoimage);
+          setLogoImage(normalizedPath);
         }
       } catch (error) {
         console.error("Error fetching Blog:", error);
@@ -159,9 +177,19 @@ const CreateList = () => {
               htmlFor="image1"
               style={
                 logoimage
-                  ? { backgroundImage: `url(${logoimage})` }
+                  ? { 
+                      backgroundImage: `url(${logoimage})`,
+                      backgroundSize: 'cover',
+                      backgroundPosition: 'center',
+                      backgroundRepeat: 'no-repeat'
+                    }
                   : logo
-                  ? { backgroundImage: `url(${URL.createObjectURL(logo)})` }
+                  ? { 
+                      backgroundImage: `url(${URL.createObjectURL(logo)})`,
+                      backgroundSize: 'cover',
+                      backgroundPosition: 'center',
+                      backgroundRepeat: 'no-repeat'
+                    }
                   : undefined
               }
             >

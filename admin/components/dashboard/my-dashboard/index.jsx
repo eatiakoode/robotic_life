@@ -2,11 +2,12 @@ import Header from "../../common/header/dashboard/Header";
 import SidebarMenu from "../../common/header/dashboard/SidebarMenu";
 import MobileMenu from "../../common/header/MobileMenu";
 import Activities from "./Activities"; 
+import RecentEnquiryActivities from "./RecentEnquiryActivities";
 import AllStatistics from "./AllStatistics";
 import StatisticsChart from "./StatisticsChart";
 import CopyRight from "../../common/footer/CopyRight";
 
-const MyDashboard = ({ robot, manufacturer, materials, enquery }) => {
+const MyDashboard = ({ robot, manufacturer, testimonials, enquery }) => {
   return (
     <>
       {/* <!-- Main Header Nav --> */}
@@ -64,7 +65,7 @@ const MyDashboard = ({ robot, manufacturer, materials, enquery }) => {
                 <AllStatistics
                   robot={robot}
                   manufacturer={manufacturer}
-                  materials={materials}
+                  testimonials={testimonials}
                   enquery={enquery}
                 />
               </div>
@@ -81,7 +82,7 @@ const MyDashboard = ({ robot, manufacturer, materials, enquery }) => {
                 <div className="col-xl-5">
                   <div className="recent_job_activity">
                     <h4 className="title mb-4">Recent Activities</h4>
-                    {/* <Activities /> */}
+                    <RecentEnquiryActivities />
                   </div>
                 </div>
               </div>

@@ -26,6 +26,8 @@ import DemoModal from "@/components/modals/DemoModal";
 import Categories from "@/components/modals/Categories";
 import RtlToggler from "@/components/common/RtlToggler";
 import AccountSidebar from "@/components/modals/AccountSidebar";
+import "font-awesome/css/font-awesome.min.css";
+
 
 export default function RootLayout({ children }) {
   const pathname = usePathname();
@@ -133,15 +135,15 @@ export default function RootLayout({ children }) {
         <Context>
           {/* <RtlToggler /> */}
           <div id="wrapper">{children}</div>
-          <CartModal />
+          {/* <CartModal />
           <QuickView />
-          <QuickAdd />
+          <QuickAdd /> */}
           <Compare />
           <MobileMenu />
           <SearchModal />
-          <SizeGuide />
+          {/* <SizeGuide />
           <Wishlist />
-          <DemoModal />
+          <DemoModal /> */}
           <Categories />
           <AccountSidebar />
         </Context>

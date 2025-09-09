@@ -42,7 +42,7 @@ export default function BlogDefaultPage() {
         </div>
       </div>
       <BlogDefault />
-      <Footer1 />
+      <Footer1 dark />
     </>
   );
 }

@@ -29,19 +29,40 @@ export const addEnquiryAPI = async (title: string) => {
     // Fake delay
     await new Promise((resolve) => setTimeout(resolve, 10));
     
-  
     try {
-      const response = await fetch(process.env.NEXT_PUBLIC_ADMIN_API_URL+"api/enquiry?limit="+filter.limit+"&skip="+filter.page,
-        {
-          next: { revalidate: 60 }
-        }); // Replace with actual API endpoint
-      if (!response.ok) {
-        throw new Error("Failed to fetch products");
+      const userData = JSON.parse(localStorage.getItem("user") || "{}");
+      const token = userData?.token;
+
+      if (!token) {
+        console.warn("No authentication token found for enquiry API");
+        return { items: [], totalCount: 0 };
       }
-      return await response.json();
+
+      const apiUrl = process.env.NEXT_PUBLIC_ADMIN_API_URL || 'http://localhost:5000/';
+      const response = await fetch(apiUrl + "admin/api/enquiry", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        next: { revalidate: 60 }
+      });
+
+      if (!response.ok) {
+        console.error(`Enquiry API error: ${response.status} ${response.statusText}`);
+        return { items: [], totalCount: 0 };
+      }
+      
+      const data = await response.json();
+      
+      // Transform the response to match expected format
+      return {
+        items: data.data || [],
+        totalCount: data.count || 0
+      };
     } catch (error) {
-      console.error("Error fetching products:", error);
-      return []; // Return an empty array in case of an error
+      console.error("Error fetching enquiries:", error);
+      return { items: [], totalCount: 0 }; // Return an empty object in case of an error
     }
   }
 

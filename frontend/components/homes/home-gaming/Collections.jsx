@@ -76,6 +76,25 @@ export default function Collections() {
 
   const finalCategories = displayCategories && displayCategories.length > 0 ? displayCategories : fallbackCategories;
 
+  // Function to get the category filter URL
+  const getCategoryFilterUrl = (category) => {
+    try {
+      if (category && category.slug) {
+        // Check if this is a subcategory (has a parent) or parent category
+        const isSubcategory = category.parent && category.parent !== null;
+        const categoryType = isSubcategory ? 'subcategory' : 'parent';
+        
+        return `/shop-filter-canvas?category=${category.slug}&type=${categoryType}`;
+      } else {
+        console.warn('Category missing slug:', category);
+        return '/shop-filter-canvas';
+      }
+    } catch (error) {
+      console.error('Error generating category filter URL:', error);
+      return '/shop-filter-canvas';
+    }
+  };
+
   if (loading) {
     return (
       <section className="flat-spacing">
@@ -133,7 +152,7 @@ export default function Collections() {
                   </div>
                   <div className="box-btn">
                     <Link
-                      href="/shop-filter-canvas"
+                      href={getCategoryFilterUrl(category)}
                       className="btn-line style-white has-icon"
                     >
                       Explore Robots & Research
@@ -180,7 +199,7 @@ export default function Collections() {
                 </div>
                 <div className="box-btn">
                   <Link
-                    href="/shop-filter-canvas"
+                    href={getCategoryFilterUrl(finalCategories[2])}
                     className="tf-btn btn-fill btn-white btn-md"
                   >
                     <span className="text">Explore Robots</span>

@@ -178,9 +178,61 @@ export default function FilterModal({ allProps }) {
         }
         .weight-unit-option input[type="radio"] {
           margin-right: 8px;
+          appearance: none;
+          -webkit-appearance: none;
+          -moz-appearance: none;
+          width: 16px;
+          height: 16px;
+          border: 2px solid #ddd;
+          border-radius: 50%;
+          background-color: white;
+          cursor: pointer;
+          position: relative;
+        }
+        .weight-unit-option input[type="radio"]:checked {
+          border-color: #007bff;
+          background-color: #007bff;
+        }
+        .weight-unit-option input[type="radio"]:checked::after {
+          content: '';
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          width: 6px;
+          height: 6px;
+          border-radius: 50%;
+          background-color: white;
         }
         .weight-unit-option span {
           cursor: pointer;
+        }
+        .fieldset-item input[type="radio"] {
+          appearance: none;
+          -webkit-appearance: none;
+          -moz-appearance: none;
+          width: 16px;
+          height: 16px;
+          border: 2px solid #ddd;
+          border-radius: 50%;
+          background-color: white;
+          cursor: pointer;
+          position: relative;
+        }
+        .fieldset-item input[type="radio"]:checked {
+          border-color: #007bff;
+          background-color: #007bff;
+        }
+        .fieldset-item input[type="radio"]:checked::after {
+          content: '';
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          width: 6px;
+          height: 6px;
+          border-radius: 50%;
+          background-color: white;
         }
       `}</style>
       <div className="canvas-wrapper">
@@ -266,7 +318,7 @@ export default function FilterModal({ allProps }) {
 
             <RangeSlider
               min={allProps.priceBounds?.[0] || 0}
-              max={allProps.priceBounds?.[1] || 100000}
+              max={allProps.priceBounds?.[1] || 50000000}
               value={allProps.price}
               onInput={debouncedSetPrice}
             />
@@ -293,7 +345,7 @@ export default function FilterModal({ allProps }) {
               </div>
             </div>
             <div className="price-range-info">
-              Available range: ${allProps.priceBounds?.[0] || 0} - ${allProps.priceBounds?.[1] || 100000}
+              Available range: ${allProps.priceBounds?.[0] || 0} - ${allProps.priceBounds?.[1] || 50000000}
             </div>
           </div>
           <div className="widget-facet facet-weight">
@@ -301,7 +353,7 @@ export default function FilterModal({ allProps }) {
 
             <RangeSlider
               min={allProps.weightBounds?.[0] || 0}
-              max={allProps.weightBounds?.[1] || 1000}
+              max={allProps.weightBounds?.[1] || 5000}
               value={allProps.weight}
               onInput={debouncedSetWeight}
             />
@@ -326,7 +378,7 @@ export default function FilterModal({ allProps }) {
               </div>
             </div>
             <div className="weight-range-info">
-              Available range: {allProps.weightBounds?.[0] || 0} - {allProps.weightBounds?.[1] || 1000} {allProps.weightUnit}
+              Available range: {allProps.weightBounds?.[0] || 0} - {allProps.weightBounds?.[1] || 5000} {allProps.weightUnit}
             </div>
             
             {/* Weight Unit Selector */}

@@ -8,7 +8,7 @@ import React from "react";
 export default function CompareProductsPage() {
   return (
     <>
-      <Topbar6 bgColor="bg-main" />
+      {/* <Topbar6 bgColor="bg-main" /> */}
       <Header1 />
       <div
         className="page-title"
@@ -39,7 +39,7 @@ export default function CompareProductsPage() {
       </div>
       <RobotCompare />
 
-      <Footer1 />
+      <Footer1 dark/>
     </>
   );
 }

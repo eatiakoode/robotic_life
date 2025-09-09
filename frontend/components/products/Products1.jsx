@@ -13,7 +13,7 @@ import { getFilteredProducts } from "@/api/filtering";
 import { getParentCategories, getRobotsByCategorySlug } from "@/api/category";
 import FilterMeta from "./FilterMeta";
 
-export default function Products1({ parentClass = "flat-spacing" }) {
+export default function Products1({ parentClass = "flat-spacing",products ,productMainget}) {
   const searchParams = useSearchParams();
   const [activeLayout, setActiveLayout] = useState(1);
   const [state, dispatch] = useReducer(reducer, initialState);
@@ -55,28 +55,28 @@ export default function Products1({ parentClass = "flat-spacing" }) {
         ? dispatch({ type: "SET_COLOR", payload: "All" })
         : dispatch({ type: "SET_COLOR", payload: value });
     },
-    setSize: (value) => {
-      value == size
-        ? dispatch({ type: "SET_SIZE", payload: "All" })
-        : dispatch({ type: "SET_SIZE", payload: value });
-    },
-    setAvailability: (value) => {
-      value == availability
-        ? dispatch({ type: "SET_AVAILABILITY", payload: "All" })
-        : dispatch({ type: "SET_AVAILABILITY", payload: value });
-    },
+    // setSize: (value) => {
+    //   value == size
+    //     ? dispatch({ type: "SET_SIZE", payload: "All" })
+    //     : dispatch({ type: "SET_SIZE", payload: value });
+    // },
+    // setAvailability: (value) => {
+    //   value == availability
+    //     ? dispatch({ type: "SET_AVAILABILITY", payload: "All" })
+    //     : dispatch({ type: "SET_AVAILABILITY", payload: value });
+    // },
 
-    setBrands: (newBrand) => {
-      const updated = [...brands].includes(newBrand)
-        ? [...brands].filter((elm) => elm != newBrand)
-        : [...brands, newBrand];
-      dispatch({ type: "SET_BRANDS", payload: updated });
-    },
-    removeBrand: (newBrand) => {
-      const updated = [...brands].filter((brand) => brand != newBrand);
+    // setBrands: (newBrand) => {
+    //   const updated = [...brands].includes(newBrand)
+    //     ? [...brands].filter((elm) => elm != newBrand)
+    //     : [...brands, newBrand];
+    //   dispatch({ type: "SET_BRANDS", payload: updated });
+    // },
+    // removeBrand: (newBrand) => {
+    //   const updated = [...brands].filter((brand) => brand != newBrand);
 
-      dispatch({ type: "SET_BRANDS", payload: updated });
-    },
+    //   dispatch({ type: "SET_BRANDS", payload: updated });
+    // },
     setParentCategory: (category) =>
       dispatch({ type: "SET_PARENT_CATEGORY", payload: category }),
     setSubCategory: (category) =>
@@ -103,15 +103,19 @@ export default function Products1({ parentClass = "flat-spacing" }) {
         const newMinPrice = Math.floor(Math.min(...prices));
         const newMaxPrice = Math.ceil(Math.max(...prices));
         
+        // Set maximum price limit to $50,000,000
+        const maxPriceLimit = 50000000;
+        const cappedMaxPrice = Math.min(newMaxPrice, maxPriceLimit);
+        
         // Check if current bounds need to be expanded
         const currentMin = priceBounds[0];
         const currentMax = priceBounds[1];
         
         // Only update if there's an actual change to prevent infinite loops
-        if (newMinPrice < currentMin || newMaxPrice > currentMax) {
-          // Expand bounds to include all products
+        if (newMinPrice < currentMin || cappedMaxPrice > currentMax) {
+          // Expand bounds to include all products, but cap at maximum limit
           const expandedMin = Math.min(currentMin, newMinPrice);
-          const expandedMax = Math.max(currentMax, newMaxPrice);
+          const expandedMax = Math.max(currentMax, cappedMaxPrice);
           
           // Check if the new bounds are actually different from current bounds
           if (expandedMin !== currentMin || expandedMax !== currentMax) {
@@ -148,15 +152,19 @@ export default function Products1({ parentClass = "flat-spacing" }) {
         const newMinWeight = Math.floor(Math.min(...weights));
         const newMaxWeight = Math.ceil(Math.max(...weights));
         
+        // Set maximum weight limit to 5000kg (5000000g)
+        const maxWeightLimit = 5000000; // 5000kg in grams
+        const cappedMaxWeight = Math.min(newMaxWeight, maxWeightLimit);
+        
         // Check if current bounds need to be expanded
         const currentMin = weightBounds[0];
         const currentMax = weightBounds[1];
         
         // Only update if there's an actual change to prevent infinite loops
-        if (newMinWeight < currentMin || newMaxWeight > currentMax) {
-          // Expand bounds to include all products
+        if (newMinWeight < currentMin || cappedMaxWeight > currentMax) {
+          // Expand bounds to include all products, but cap at maximum limit
           const expandedMin = Math.min(currentMin, newMinWeight);
-          const expandedMax = Math.max(currentMax, newMaxWeight);
+          const expandedMax = Math.max(currentMax, cappedMaxWeight);
           
           // Check if the new bounds are actually different from current bounds
           if (expandedMin !== currentMin || expandedMax !== currentMax) {
@@ -259,56 +267,63 @@ export default function Products1({ parentClass = "flat-spacing" }) {
 
     let filteredProducts = [...productMain];
     
-    // Always use backend filtering for consistency (same as search bar logic)
-    try {
-      // Prepare filters for backend
-      const additionalFilters = {};
-      
-      // Add category if selected (prioritize subcategory over parent category)
-      if (selectedSubCategory) {
-        additionalFilters.category = selectedSubCategory.slug;
-      } else if (selectedParentCategory) {
-        additionalFilters.category = selectedParentCategory.slug;
-      }
-      
-      if (brands.length > 0) {
-        additionalFilters.manufacturers = brands;
-      }
-      
-      if (color !== "All" && color.name) {
-        additionalFilters.colors = [color.name];
-      }
-      
-      if (price && price.length === 2) {
-        additionalFilters.minPrice = price[0];
-        additionalFilters.maxPrice = price[1];
-      }
-      
-      if (weight && weight.length === 2 && (weight[0] !== weightBounds[0] || weight[1] !== weightBounds[1])) {
-        additionalFilters.minWeight = weight[0];
-        additionalFilters.maxWeight = weight[1];
-        additionalFilters.weightUnit = weightUnit;
-      }
-      
-      // Use backend filtering (same as search bar)
-      const backendResults = await getFilteredProducts(additionalFilters);
-      
-      if (backendResults && backendResults.length >= 0) {
-        filteredProducts = backendResults;
+    // Check if any filters are actually applied
+    const hasFilters = selectedSubCategory || selectedParentCategory || brands.length > 0 || 
+                      (color !== "All" && color.name) || (price && price.length === 2) || 
+                      (weight && weight.length === 2 && (weight[0] !== weightBounds[0] || weight[1] !== weightBounds[1]));
+    
+    // Only use backend filtering if filters are actually applied
+    if (hasFilters) {
+      try {
+        // Prepare filters for backend
+        const additionalFilters = {};
         
-        // Still apply client-side filters that aren't supported by backend
-        if (size !== "All" && size !== "Free Size") {
-          filteredProducts = filteredProducts.filter((elm) =>
-            elm.filterSizes.includes(size)
-          );
+        // Add category if selected (prioritize subcategory over parent category)
+        if (selectedSubCategory) {
+          additionalFilters.category = selectedSubCategory.slug;
+        } else if (selectedParentCategory) {
+          additionalFilters.category = selectedParentCategory.slug;
         }
         
-        dispatch({ type: "SET_FILTERED", payload: filteredProducts });
-        return;
+        if (brands.length > 0) {
+          additionalFilters.manufacturers = brands;
+        }
+        
+        if (color !== "All" && color.name) {
+          additionalFilters.colors = [color.name];
+        }
+        
+        if (price && price.length === 2) {
+          additionalFilters.minPrice = price[0];
+          additionalFilters.maxPrice = price[1];
+        }
+        
+        if (weight && weight.length === 2 && (weight[0] !== weightBounds[0] || weight[1] !== weightBounds[1])) {
+          additionalFilters.minWeight = weight[0];
+          additionalFilters.maxWeight = weight[1];
+          additionalFilters.weightUnit = weightUnit;
+        }
+        
+        // Use backend filtering (same as search bar)
+        const backendResults = await getFilteredProducts(additionalFilters);
+        
+        if (backendResults && backendResults.length >= 0) {
+          filteredProducts = backendResults;
+          
+          // Still apply client-side filters that aren't supported by backend
+          if (size !== "All" && size !== "Free Size") {
+            filteredProducts = filteredProducts.filter((elm) =>
+              elm.filterSizes.includes(size)
+            );
+          }
+          
+          dispatch({ type: "SET_FILTERED", payload: filteredProducts });
+          return;
+        }
+      } catch (error) {
+        // Backend filtering failed, fallback to client-side
+        console.log('Backend filtering failed, using client-side filtering:', error);
       }
-    } catch (error) {
-      // Backend filtering failed, fallback to client-side
-      console.log('Backend filtering failed, using client-side filtering:', error);
     }
 
     // Apply filters sequentially
@@ -322,13 +337,13 @@ export default function Products1({ parentClass = "flat-spacing" }) {
       });
     }
 
-    if (availability !== "All") {
+    if (availability !== "All" && availability && availability.value !== undefined) {
       filteredProducts = filteredProducts.filter(
         (elm) => availability.value === elm.inStock
       );
     }
 
-    if (color !== "All") {
+    if (color !== "All" && color && color.name) {
       filteredProducts = filteredProducts.filter((elm) => {
         const hasColor = elm.filterColor && elm.filterColor.includes(color.name);
         return hasColor;
@@ -387,7 +402,6 @@ export default function Products1({ parentClass = "flat-spacing" }) {
     dispatch({ type: "SET_FILTERED", payload: filteredProducts });
   }, [productMain, price, weight, weightUnit, availability, color, size, brands, activeFilterOnSale, selectedParentCategory, selectedSubCategory]);
 
-  // Main filtering useEffect - removed productMain from dependencies to prevent infinite loop
   useEffect(() => {
     // Don't run applyFilters if we're still loading category from URL
     if (!urlCategoryLoaded) {
@@ -399,6 +413,7 @@ export default function Products1({ parentClass = "flat-spacing" }) {
 
   // Separate useEffect for price bounds calculation when productMain changes
   useEffect(() => {
+    setProductMain(products);
     if (productMain.length > 0) {
               // Use auto-refresh to ensure price bounds are always current
         refreshPriceBounds(productMain);
@@ -424,6 +439,7 @@ export default function Products1({ parentClass = "flat-spacing" }) {
     const categoryName = searchParams.get('categoryName');
     const categoryType = searchParams.get('type');
     
+    
     // Reset URL category loaded state when URL changes
     setUrlCategoryLoaded(false);
     
@@ -436,19 +452,20 @@ export default function Products1({ parentClass = "flat-spacing" }) {
           dispatch({ type: "SET_PARENT_CATEGORY", payload: null });
           dispatch({ type: "SET_SUB_CATEGORY", payload: null });
           
-          // Use the same backend filtering logic as search bar
-          const filters = {
-            category: categorySlug
-          };
+          // Use the category-specific API endpoint for better filtering
+          const rawResults = await getRobotsByCategorySlug(categorySlug);
           
-          const filteredResults = await getFilteredProducts(filters);
           
-          if (filteredResults && filteredResults.length > 0) {
-            // Set the robots as the main products (already transformed by getFilteredProducts)
-            setProductMain(filteredResults);
+          if (rawResults && Array.isArray(rawResults) && rawResults.length > 0) {
+            // Transform the raw backend data to frontend format using existing function
+            const transformedResults = transformRobotData(rawResults);
+            
+            
+            // Set the robots as the main products
+            setProductMain(transformedResults);
             
             // Set filtered products
-            dispatch({ type: "SET_FILTERED", payload: filteredResults });
+            dispatch({ type: "SET_FILTERED", payload: transformedResults });
             
             // Create a category object for the state
             const categoryObj = {
@@ -466,14 +483,30 @@ export default function Products1({ parentClass = "flat-spacing" }) {
             }
             
             // Auto-refresh price bounds for the category products
-            refreshPriceBounds(filteredResults);
-            refreshWeightBounds(filteredResults);
+            refreshPriceBounds(transformedResults);
+            refreshWeightBounds(transformedResults);
             
             setUrlCategoryLoaded(true);
           } else {
             // No robots found for this category
+            console.log(`No robots found for category: ${categorySlug}`);
             setProductMain([]);
             dispatch({ type: "SET_FILTERED", payload: [] });
+            
+            // Still set the category in state for UI display
+            const categoryObj = {
+              _id: categorySlug,
+              slug: categorySlug,
+              name: categoryName || categorySlug,
+              type: categoryType || 'parent'
+            };
+            
+            if (categoryType === 'subcategory') {
+              dispatch({ type: "SET_SUB_CATEGORY", payload: categoryObj });
+            } else {
+              dispatch({ type: "SET_PARENT_CATEGORY", payload: categoryObj });
+            }
+            
             setUrlCategoryLoaded(true);
           }
         } catch (error) {
@@ -596,21 +629,9 @@ export default function Products1({ parentClass = "flat-spacing" }) {
                 <span className="icon icon-filter" />
                 <span className="text">Filters</span>
               </a>
-              <div
-                onClick={allProps.toggleFilterWithOnSale}
-                className={`d-none d-lg-flex shop-sale-text ${
-                  activeFilterOnSale ? "active" : ""
-                }`}
-              >
-                <i className="icon icon-checkCircle" />
-                <p className="text-caption-1">Shop sale items only</p>
-              </div>
             </div>
             <ul className="tf-control-layout">
-              <LayoutHandler
-                setActiveLayout={setActiveLayout}
-                activeLayout={activeLayout}
-              />
+              {/* Layout toggle removed but container kept for original positioning */}
             </ul>
             <div className="tf-control-sorting">
               <p className="d-none d-lg-block text-caption-1">Sort by:</p>
@@ -690,7 +711,7 @@ export default function Products1({ parentClass = "flat-spacing" }) {
                 <p className="mt-3">Loading products from backend...</p>
               </div>
             ) : activeLayout == 1 ? (
-              <div className="tf-list-layout wrapper-shop" id="listLayout">
+              <div className="tf-list-layout wrapper-shop eati" id="listLayout">
                 <Listview 
                   products={sorted} 
                   currentPage={currentPage}

@@ -59,6 +59,22 @@ export default function Collections2() {
   // Use API data if available, otherwise fallback to static data
   const displayCategories = subcategories && subcategories.length > 0 ? subcategories.slice(0, 3) : staticCollections17;
 
+  // Function to get the category filter URL
+  const getCategoryFilterUrl = (category) => {
+    try {
+      if (category && category.slug) {
+        // This is a subcategory, so we filter by subcategory only
+        return `/shop-filter-canvas?category=${category.slug}&type=subcategory`;
+      } else {
+        console.warn('Category missing slug:', category);
+        return '/shop-filter-canvas';
+      }
+    } catch (error) {
+      console.error('Error generating category filter URL:', error);
+      return '/shop-filter-canvas';
+    }
+  };
+
   return (
     <section className="flat-spacing">
       <div className="container">
@@ -109,7 +125,7 @@ export default function Collections2() {
                   <div className="box-title">
                     <h5 className="title">
                       <Link
-                        href="/shop-filter-canvas"
+                        href={getCategoryFilterUrl(category)}
                         className="link text-white fw-bold"
                       >
                         {category.name || category.title || 'Category'}
@@ -121,7 +137,7 @@ export default function Collections2() {
                   </div>
                   <div className="box-btn">
                     <Link
-                      href="/shop-filter-canvas"
+                      href={getCategoryFilterUrl(category)}
                       className="tf-btn btn-fill btn-white btn-md"
                     >
                       <span className="text">Explore Now</span>

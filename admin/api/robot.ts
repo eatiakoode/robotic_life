@@ -22,7 +22,7 @@ export const addRobotAPI = async (formData: FormData) => {
 
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_ADMIN_API_URL}api/robot`,
+      `${process.env.NEXT_PUBLIC_ADMIN_API_URL}admin/api/robot`,
       {
         method: "POST",
         headers: { Authorization: `Bearer ${token}` },
@@ -82,7 +82,7 @@ export async function getRobotTableData(
     const skip = Math.max(0, (defaultFilter.page - 1) * defaultFilter.limit);
     const limit = Math.max(1, defaultFilter.limit);
 
-    const url = `${process.env.NEXT_PUBLIC_ADMIN_API_URL}api/robot?limit=${limit}&skip=${skip}`;
+    const url = `${process.env.NEXT_PUBLIC_ADMIN_API_URL}admin/api/robot?limit=${limit}&skip=${skip}`;
 
     const response = await fetch(url, {
       method: "GET",
@@ -170,7 +170,7 @@ export const deleteRobotAPI = async (id: string) => {
   if (!token) throw new Error("User not authenticated!");
 
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_ADMIN_API_URL}api/robot/${id}`,
+    `${process.env.NEXT_PUBLIC_ADMIN_API_URL}admin/api/robot/${id}`,
     {
       method: "DELETE",
       headers: {
@@ -196,7 +196,7 @@ export const getRobotById = async (id: string, passedToken?: string) => {
   if (!token) throw new Error("User not authenticated!");
 
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_ADMIN_API_URL}api/robot/${id}`,
+    `${process.env.NEXT_PUBLIC_ADMIN_API_URL}admin/api/robot/${id}`,
     {
       method: "GET",
       headers: { Authorization: `Bearer ${token}` },
@@ -220,7 +220,7 @@ export const updateRobotAPI = async (id: string, formData, passedToken?: string)
   console.log("formData data");
   console.log(formData);
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_ADMIN_API_URL}api/robot/${id}`,
+    `${process.env.NEXT_PUBLIC_ADMIN_API_URL}admin/api/robot/${id}`,
     {
       method: "PUT",
       headers: { Authorization: `Bearer ${token}` },
@@ -248,7 +248,7 @@ export const deleteRobotSingleImagesAPI = async (payload: {
   if (!token) throw new Error("User not authenticated!");
 
   const response = await fetch(
-      `${process.env.NEXT_PUBLIC_ADMIN_API_URL}api/robot/image`,
+      `${process.env.NEXT_PUBLIC_ADMIN_API_URL}admin/api/robot/image`,
     {
       method: "POST",
       headers: {

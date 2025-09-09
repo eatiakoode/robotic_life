@@ -18,7 +18,7 @@ export default async function BlogDetailsPage2({ params }) {
       <Header1 />
       <BlogDetail2 blog={blog} />
       <RelatedBlogs blogId={blog.id} />
-      <Footer1 />
+      <Footer1 dark />
     </>
   );
 }

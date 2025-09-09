@@ -209,7 +209,6 @@ export const getRobotsByCategorySlug = async (categorySlug) => {
 
 
 
-
   // Try multiple backend URLs
   const urlsToTry = [BACKEND_API_URL, ...FALLBACK_URLS];
 
@@ -293,6 +292,68 @@ export const getRobotsByCategorySlug = async (categorySlug) => {
     }
   }
 
+
+  return [];
+};
+
+// Get robots by parent category slug (includes all subcategories)
+export const getRobotsByParentCategory = async (parentSlug) => {
+  // Validate parentSlug
+  if (!parentSlug) {
+    console.warn('⚠️ No parentSlug provided to getRobotsByParentCategory');
+    return [];
+  }
+
+  // Try multiple backend URLs
+  const urlsToTry = [BACKEND_API_URL, ...FALLBACK_URLS];
+
+  for (const baseUrl of urlsToTry) {
+    try {
+      const apiUrl = `${baseUrl}/frontend/api/category/filter/${parentSlug}`;
+      
+      // Add timeout to prevent hanging requests
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+
+      const response = await fetch(apiUrl, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        signal: controller.signal
+      });
+
+      clearTimeout(timeoutId);
+
+      if (response.ok) {
+        const data = await response.json();
+
+        // Handle different response formats
+        let robots = [];
+        if (data.success && data.data && Array.isArray(data.data)) {
+          // Backend returns { success: true, data: [...] }
+          robots = data.data;
+        } else if (Array.isArray(data)) {
+          // Backend returns array directly
+          robots = data;
+        } else {
+          continue; // Try next URL
+        }
+
+        return robots;
+      } else {
+        const errorText = await response.text();
+        console.warn(`Failed to fetch robots for parent category ${parentSlug}:`, errorText);
+      }
+    } catch (error) {
+      if (error.name === 'AbortError') {
+        console.warn(`Request timeout for parent category ${parentSlug}`);
+      } else {
+        console.warn(`Error fetching robots for parent category ${parentSlug}:`, error);
+      }
+      continue; // Try next URL
+    }
+  }
 
   return [];
 };

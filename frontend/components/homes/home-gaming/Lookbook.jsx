@@ -43,7 +43,7 @@ export default function LookBook() {
         width={1920}
         height={692}
       />
-      <div className="lookbook-item position5">
+      {/* <div className="lookbook-item position5">
         <div className="dropdown dropup-center dropdown-custom">
           <div
             role="dialog"
@@ -57,7 +57,7 @@ export default function LookBook() {
             <LookbookProduct product={lookbookProducts[10]} />
           </div>
         </div>
-      </div>
+      </div> */}
     </section>
   );
 }

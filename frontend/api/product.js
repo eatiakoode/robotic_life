@@ -3,6 +3,29 @@
 // Backend API base URL
 const BACKEND_API_URL = process.env.NEXT_PUBLIC_BACKEND_API_URL || 'http://localhost:5000';
 
+// Helper function to normalize image URLs
+const normalizeImageUrl = (imagePath, baseUrl = BACKEND_API_URL) => {
+  if (!imagePath) return `${baseUrl}/images/products/default.jpg`;
+  
+  // If it's already a full URL, return as is
+  if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
+    return imagePath;
+  }
+  
+  // If it starts with 'public/', remove it and add baseUrl
+  if (imagePath.startsWith('public/')) {
+    return `${baseUrl}/${imagePath.replace('public/', '')}`;
+  }
+  
+  // If it starts with '/', it's already a proper path
+  if (imagePath.startsWith('/')) {
+    return `${baseUrl}${imagePath}`;
+  }
+  
+  // Otherwise, add baseUrl and ensure it starts with /
+  return `${baseUrl}/${imagePath.startsWith('/') ? imagePath.slice(1) : imagePath}`;
+};
+
 // Helper function to map color names to CSS classes
 const getColorClass = (colorName) => {
   if (!colorName) return 'bg-primary';
@@ -19,13 +42,13 @@ const getColorClass = (colorName) => {
     'pink': 'bg-pink',
     'black': 'bg-black',
     'white': 'bg-white',
-    'gray': 'bg-grey', // Use bg-grey instead of bg-gray
-    'grey': 'bg-grey',
+    'gray': 'bg-grey', // Now properly shows grey color
+    'grey': 'bg-grey', // Now properly shows grey color
     'brown': 'bg-brown',
     'silver': 'bg-grey', // Use grey for silver
     'gold': 'bg-yellow', // Use yellow for gold
     'default': 'bg-primary',
-    'beige': 'bg-primary', // Use primary for beige
+    'beige': 'bg-beige', // Now uses proper beige color
     'light blue': 'bg-blue',
     'light green': 'bg-primary',
     'light pink': 'bg-pink',
@@ -93,16 +116,10 @@ export const getAllProducts = async () => {
               title: product.title || 'Untitled Product',
               price: convertedPrice, // Safe price conversion with fallback
               imgSrc: product.images && product.images[0] ? 
-                (product.images[0].startsWith('public/') ? 
-                  `${baseUrl}/${product.images[0].replace('public/', '')}` : 
-                  `${baseUrl}/${product.images[0]}`
-                ) : 
+                normalizeImageUrl(product.images[0], baseUrl) : 
                 `${baseUrl}/images/products/default.jpg`,
               imgHover: product.images && product.images[1] ? 
-                (product.images[1].startsWith('public/') ? 
-                  `${baseUrl}/${product.images[1].replace('public/', '')}` : 
-                  `${baseUrl}/${product.images[1]}`
-                ) : 
+                normalizeImageUrl(product.images[1], baseUrl) : 
                 // If no second image, use the same image for hover (no broken hover effect)
                 (product.images && product.images[0] ? 
                   (product.images[0].startsWith('public/') ? 
@@ -126,10 +143,7 @@ export const getAllProducts = async () => {
                   // Use different images for different colors if available
                   const imageIndex = colorIndex < (product.images?.length || 0) ? colorIndex : 0;
                   const imageSrc = product.images && product.images[imageIndex] ? 
-                    (product.images[imageIndex].startsWith('public/') ? 
-                      `${baseUrl}/${product.images[imageIndex].replace('public/', '')}` : 
-                      `${baseUrl}/${product.images[imageIndex]}`
-                    ) : 
+                    normalizeImageUrl(product.images[imageIndex], baseUrl) : 
                     `${baseUrl}/images/products/default.jpg`;
                   
                   return {
@@ -161,6 +175,8 @@ export const getAllProducts = async () => {
               launchYear: product.launchYear || null,
               version: product.version || '',
               videoEmbedCode: product.videoEmbedCode || product.videoembedcode || '',
+            metaTitle: product.metaTitle || product.metatitle || '',
+            metaDescription: product.metaDescription || product.metadescription || '',
               
               // Dimensions and specifications
               dimensions: product.dimensions || {},
@@ -240,16 +256,10 @@ export const getRobotBySlug = async (slug) => {
             title: robot.title || 'Untitled Robot',
             price: convertedPrice,
             imgSrc: robot.images && robot.images[0] ? 
-              (robot.images[0].startsWith('public/') ? 
-                `${baseUrl}/${robot.images[0].replace('public/', '')}` : 
-                `${baseUrl}/${robot.images[0]}`
-              ) : 
+              normalizeImageUrl(robot.images[0], baseUrl) : 
               `${baseUrl}/images/products/default.jpg`,
             imgHover: robot.images && robot.images[1] ? 
-              (robot.images[1].startsWith('public/') ? 
-                `${baseUrl}/${robot.images[1].replace('public/', '')}` : 
-                `${baseUrl}/${robot.images[1]}`
-              ) : 
+              normalizeImageUrl(robot.images[1], baseUrl) : 
               (robot.images && robot.images[0] ? 
                 (robot.images[0].startsWith('public/') ? 
                   `${baseUrl}/${robot.images[0].replace('public/', '')}` : 
@@ -275,7 +285,9 @@ export const getRobotBySlug = async (slug) => {
             slug: robot.slug || '',
             launchYear: robot.launchYear || null,
             version: robot.version || '',
-            videoEmbedCode: robot.videoEmbedCode || '',
+            videoEmbedCode: robot.videoEmbedCode || robot.videoembedcode || '',
+            metaTitle: robot.metaTitle || robot.metatitle || '',
+            metaDescription: robot.metaDescription || robot.metadescription || '',
             
             // Dimensions and specifications
             dimensions: robot.dimensions || {},
@@ -297,10 +309,7 @@ export const getRobotBySlug = async (slug) => {
                 // Use different images for different colors if available
                 const imageIndex = colorIndex < (robot.images?.length || 0) ? colorIndex : 0;
                 const imageSrc = robot.images && robot.images[imageIndex] ? 
-                  (robot.images[imageIndex].startsWith('public/') ? 
-                    `${baseUrl}/${robot.images[imageIndex].replace('public/', '')}` : 
-                    `${baseUrl}/${robot.images[imageIndex]}`
-                  ) : 
+                  normalizeImageUrl(robot.images[imageIndex], baseUrl) : 
                   `${baseUrl}/images/products/default.jpg`;
                 
                 return {
@@ -329,9 +338,7 @@ export const getRobotBySlug = async (slug) => {
             // Images array for slider
             images: robot.images && robot.images.length > 0 ? 
               robot.images.map(img => 
-                img.startsWith('public/') ? 
-                  `${baseUrl}/${img.replace('public/', '')}` : 
-                  `${baseUrl}/${img}`
+                normalizeImageUrl(img, baseUrl)
               ) : 
               [`${baseUrl}/images/products/default.jpg`],
             
@@ -447,16 +454,10 @@ export const searchProducts = async (query, filters = {}) => {
               title: product.title || 'Untitled Product',
               price: convertedPrice,
               imgSrc: product.images && product.images[0] ? 
-                (product.images[0].startsWith('public/') ? 
-                  `${baseUrl}/${product.images[0].replace('public/', '')}` : 
-                  `${baseUrl}/${product.images[0]}`
-                ) : 
+                normalizeImageUrl(product.images[0], baseUrl) : 
                 `${baseUrl}/images/products/default.jpg`,
               imgHover: product.images && product.images[1] ? 
-                (product.images[1].startsWith('public/') ? 
-                  `${baseUrl}/${product.images[1].replace('public/', '')}` : 
-                  `${baseUrl}/${product.images[1]}`
-                ) : 
+                normalizeImageUrl(product.images[1], baseUrl) : 
                 (product.images && product.images[0] ? 
                   (product.images[0].startsWith('public/') ? 
                     `${baseUrl}/${product.images[0].replace('public/', '')}` : 
@@ -476,22 +477,12 @@ export const searchProducts = async (query, filters = {}) => {
               // Colors array for ProductCard component
               colors: product.color && product.color.length > 0 ? 
                 product.color.map(colorItem => ({
-                  imgSrc: product.images && product.images[0] ? 
-                    (product.images[0].startsWith('public/') ? 
-                      `http://localhost:5000/${product.images[0].replace('public/', '')}` : 
-                      `http://localhost:5000/${product.images[0]}`
-                    ) : 
-                    `http://localhost:5000/images/products/default.jpg`,
+                  imgSrc: normalizeImageUrl(product.images?.[0], baseUrl),
                   bgColor: getColorClass(colorItem.name),
                   name: colorItem.name || 'Default'
                 })) : 
                 [{
-                  imgSrc: product.images && product.images[0] ? 
-                    (product.images[0].startsWith('public/') ? 
-                      `http://localhost:5000/${product.images[0].replace('public/', '')}` : 
-                      `http://localhost:5000/${product.images[0]}`
-                    ) : 
-                    `http://localhost:5000/images/products/default.jpg`,
+                  imgSrc: normalizeImageUrl(product.images?.[0], baseUrl),
                   bgColor: getColorClass('Default'),
                   name: 'Default'
                 }],
@@ -506,6 +497,8 @@ export const searchProducts = async (query, filters = {}) => {
               launchYear: product.launchYear || null,
               version: product.version || '',
               videoEmbedCode: product.videoEmbedCode || product.videoembedcode || '',
+            metaTitle: product.metaTitle || product.metatitle || '',
+            metaDescription: product.metaDescription || product.metadescription || '',
               
               // Dimensions and specifications
               dimensions: product.dimensions || {},
@@ -612,16 +605,10 @@ export const getProductsByCategory = async (category, additionalFilters = {}) =>
               title: product.title || 'Untitled Product',
               price: convertedPrice, // Safe price conversion with fallback
               imgSrc: product.images && product.images[0] ? 
-                (product.images[0].startsWith('public/') ? 
-                  `${baseUrl}/${product.images[0].replace('public/', '')}` : 
-                  `${baseUrl}/${product.images[0]}`
-                ) : 
+                normalizeImageUrl(product.images[0], baseUrl) : 
                 `${baseUrl}/images/products/default.jpg`,
               imgHover: product.images && product.images[1] ? 
-                (product.images[1].startsWith('public/') ? 
-                  `${baseUrl}/${product.images[1].replace('public/', '')}` : 
-                  `${baseUrl}/${product.images[1]}`
-                ) : 
+                normalizeImageUrl(product.images[1], baseUrl) : 
                 // If no second image, use the same image for hover (no broken hover effect)
                 (product.images && product.images[0] ? 
                   (product.images[0].startsWith('public/') ? 
@@ -645,10 +632,7 @@ export const getProductsByCategory = async (category, additionalFilters = {}) =>
                   // Use different images for different colors if available
                   const imageIndex = colorIndex < (product.images?.length || 0) ? colorIndex : 0;
                   const imageSrc = product.images && product.images[imageIndex] ? 
-                    (product.images[imageIndex].startsWith('public/') ? 
-                      `${baseUrl}/${product.images[imageIndex].replace('public/', '')}` : 
-                      `${baseUrl}/${product.images[imageIndex]}`
-                    ) : 
+                    normalizeImageUrl(product.images[imageIndex], baseUrl) : 
                     `${baseUrl}/images/products/default.jpg`;
                   
                   return {
@@ -680,6 +664,8 @@ export const getProductsByCategory = async (category, additionalFilters = {}) =>
               launchYear: product.launchYear || null,
               version: product.version || '',
               videoEmbedCode: product.videoEmbedCode || product.videoembedcode || '',
+            metaTitle: product.metaTitle || product.metatitle || '',
+            metaDescription: product.metaDescription || product.metadescription || '',
               
               // Dimensions and specifications
               dimensions: product.dimensions || {},
@@ -757,16 +743,10 @@ export const getRelatedProducts = async (slug) => {
               title: product.title || 'Untitled Product',
               price: convertedPrice,
               imgSrc: product.images && product.images[0] ? 
-                (product.images[0].startsWith('public/') ? 
-                  `${baseUrl}/${product.images[0].replace('public/', '')}` : 
-                  `${baseUrl}/${product.images[0]}`
-                ) : 
+                normalizeImageUrl(product.images[0], baseUrl) : 
                 `${baseUrl}/images/products/default.jpg`,
               imgHover: product.images && product.images[1] ? 
-                (product.images[1].startsWith('public/') ? 
-                  `${baseUrl}/${product.images[1].replace('public/', '')}` : 
-                  `${baseUrl}/${product.images[1]}`
-                ) : 
+                normalizeImageUrl(product.images[1], baseUrl) : 
                 (product.images && product.images[0] ? 
                   (product.images[0].startsWith('public/') ? 
                     `${baseUrl}/${product.images[0].replace('public/', '')}` : 
@@ -789,10 +769,7 @@ export const getRelatedProducts = async (slug) => {
                   // Use different images for different colors if available
                   const imageIndex = colorIndex < (product.images?.length || 0) ? colorIndex : 0;
                   const imageSrc = product.images && product.images[imageIndex] ? 
-                    (product.images[imageIndex].startsWith('public/') ? 
-                      `${baseUrl}/${product.images[imageIndex].replace('public/', '')}` : 
-                      `${baseUrl}/${product.images[imageIndex]}`
-                    ) : 
+                    normalizeImageUrl(product.images[imageIndex], baseUrl) : 
                     `${baseUrl}/images/products/default.jpg`;
                   
                   return {
@@ -824,6 +801,8 @@ export const getRelatedProducts = async (slug) => {
               launchYear: product.launchYear || null,
               version: product.version || '',
               videoEmbedCode: product.videoEmbedCode || product.videoembedcode || '',
+            metaTitle: product.metaTitle || product.metatitle || '',
+            metaDescription: product.metaDescription || product.metadescription || '',
               
               // Dimensions and specifications
               dimensions: product.dimensions || {},
@@ -911,16 +890,10 @@ export const getRecentlyViewed = async (ids) => {
               title: product.title || 'Untitled Product',
               price: convertedPrice,
               imgSrc: product.images && product.images[0] ? 
-                (product.images[0].startsWith('public/') ? 
-                  `${baseUrl}/${product.images[0].replace('public/', '')}` : 
-                  `${baseUrl}/${product.images[0]}`
-                ) : 
+                normalizeImageUrl(product.images[0], baseUrl) : 
                 `${baseUrl}/images/products/default.jpg`,
               imgHover: product.images && product.images[1] ? 
-                (product.images[1].startsWith('public/') ? 
-                  `${baseUrl}/${product.images[1].replace('public/', '')}` : 
-                  `${baseUrl}/${product.images[1]}`
-                ) : 
+                normalizeImageUrl(product.images[1], baseUrl) : 
                 (product.images && product.images[0] ? 
                   (product.images[0].startsWith('public/') ? 
                     `${baseUrl}/${product.images[0].replace('public/', '')}` : 
@@ -943,10 +916,7 @@ export const getRecentlyViewed = async (ids) => {
                   // Use different images for different colors if available
                   const imageIndex = colorIndex < (product.images?.length || 0) ? colorIndex : 0;
                   const imageSrc = product.images && product.images[imageIndex] ? 
-                    (product.images[imageIndex].startsWith('public/') ? 
-                      `${baseUrl}/${product.images[imageIndex].replace('public/', '')}` : 
-                      `${baseUrl}/${product.images[imageIndex]}`
-                    ) : 
+                    normalizeImageUrl(product.images[imageIndex], baseUrl) : 
                     `${baseUrl}/images/products/default.jpg`;
                   
                   return {
@@ -978,6 +948,8 @@ export const getRecentlyViewed = async (ids) => {
               launchYear: product.launchYear || null,
               version: product.version || '',
               videoEmbedCode: product.videoEmbedCode || product.videoembedcode || '',
+            metaTitle: product.metaTitle || product.metatitle || '',
+            metaDescription: product.metaDescription || product.metadescription || '',
               
               // Dimensions and specifications
               dimensions: product.dimensions || {},

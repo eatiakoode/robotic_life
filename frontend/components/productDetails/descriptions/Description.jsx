@@ -7,51 +7,48 @@ export default function Description({ product }) {
       <div className="specification-grid">
         <div className="row">
                     {/* Dimensions */}
-          {product?.dimensions && (
+          {product?.dimensions && product.dimensions.length?.value && product.dimensions.width?.value && product.dimensions.height?.value && (
             <div className="col-lg-4 col-md-6 mb-4">
               <div className="spec-card">
                 <h6 className="spec-title">Dimensions</h6>
                 <p className="spec-content">
-                  {product.dimensions.length?.value && product.dimensions.width?.value && product.dimensions.height?.value 
-                    ? `Height: ${product.dimensions.height.value} ${product.dimensions.height.unit || 'cm'}; Width: ${product.dimensions.width.value} ${product.dimensions.width.unit || 'cm'}; Length: ${product.dimensions.length.value} ${product.dimensions.length.unit || 'cm'}`
-                    : 'N/A'
-                  }
+                  Height: {product.dimensions.height.value} {product.dimensions.height.unit || 'cm'}; Width: {product.dimensions.width.value} {product.dimensions.width.unit || 'cm'}; Length: {product.dimensions.length.value} {product.dimensions.length.unit || 'cm'}
                 </p>
               </div>
             </div>
           )}
 
           {/* Speed */}
-          {product?.speed && (
+          {product?.speed && product.speed.value && (
             <div className="col-lg-4 col-md-6 mb-4">
               <div className="spec-card">
                 <h6 className="spec-title">Speed</h6>
                 <p className="spec-content">
-                  {product.speed.value ? `${product.speed.value} ${product.speed.unit || 'km/h'}` : 'N/A'}
+                  {product.speed.value} {product.speed.unit || 'km/h'}
                 </p>
               </div>
             </div>
           )}
 
           {/* Runtime */}
-          {product?.runtime && (
+          {product?.runtime && product.runtime.value && (
             <div className="col-lg-4 col-md-6 mb-4">
               <div className="spec-card">
                 <h6 className="spec-title">Runtime</h6>
                 <p className="spec-content">
-                  {product.runtime.value ? `${product.runtime.value} ${product.runtime.unit || 'h'}` : 'N/A'}
+                  {product.runtime.value} {product.runtime.unit || 'h'}
                 </p>
               </div>
             </div>
           )}
 
           {/* Charging Time */}
-          {product?.batteryChargeTime && (
+          {product?.batteryChargeTime && product.batteryChargeTime.value && (
             <div className="col-lg-4 col-md-6 mb-4">
               <div className="spec-card">
                 <h6 className="spec-title">Charging Time</h6>
                 <p className="spec-content">
-                  {product.batteryChargeTime.value ? `${product.batteryChargeTime.value} ${product.batteryChargeTime.unit || 'hours'}` : 'N/A'}
+                  {product.batteryChargeTime.value} {product.batteryChargeTime.unit || 'hours'}
                 </p>
               </div>
             </div>
@@ -74,12 +71,12 @@ export default function Description({ product }) {
 
 
           {/* Battery Capacity */}
-          {product?.batteryCapacity && (
+          {product?.batteryCapacity && product.batteryCapacity.value && (
             <div className="col-lg-4 col-md-6 mb-4">
               <div className="spec-card">
                 <h6 className="spec-title">Battery Capacity</h6>
                 <p className="spec-content">
-                  {product.batteryCapacity.value ? `${product.batteryCapacity.value} ${product.batteryCapacity.unit || 'mAh'}` : 'N/A'}
+                  {product.batteryCapacity.value} {product.batteryCapacity.unit || 'mAh'}
                 </p>
               </div>
             </div>
@@ -90,78 +87,75 @@ export default function Description({ product }) {
 
 
           {/* Weight */}
-          {product?.weight && (
+          {product?.weight && product.weight.value && (
             <div className="col-lg-4 col-md-6 mb-4">
               <div className="spec-card">
                 <h6 className="spec-title">Weight</h6>
                 <p className="spec-content">
-                  {product.weight.value ? `${product.weight.value} ${product.weight.unit || 'g'}` : 'N/A'}
+                  {product.weight.value} {product.weight.unit || 'g'}
                 </p>
               </div>
             </div>
           )}
 
           {/* Load Capacity */}
-          {product?.loadCapacity && (
+          {product?.loadCapacity && product.loadCapacity.value && (
             <div className="col-lg-4 col-md-6 mb-4">
               <div className="spec-card">
                 <h6 className="spec-title">Load Capacity</h6>
                 <p className="spec-content">
-                  {product.loadCapacity.value ? `${product.loadCapacity.value} ${product.loadCapacity.unit || 'kg'}` : 'N/A'}
+                  {product.loadCapacity.value} {product.loadCapacity.unit || 'kg'}
                 </p>
               </div>
             </div>
           )}
 
           {/* Range */}
-          {product?.range && (
+          {product?.range && product.range.value && (
             <div className="col-lg-4 col-md-6 mb-4">
               <div className="spec-card">
                 <h6 className="spec-title">Range</h6>
                 <p className="spec-content">
-                  {product.range.value ? `${product.range.value} ${product.range.unit || 'm'}` : 'N/A'}
+                  {product.range.value} {product.range.unit || 'm'}
                 </p>
               </div>
-        </div>
+            </div>
           )}
 
           {/* Accuracy */}
-          {product?.accuracy && (
+          {product?.accuracy && product.accuracy.value && (
             <div className="col-lg-4 col-md-6 mb-4">
               <div className="spec-card">
                 <h6 className="spec-title">Accuracy</h6>
                 <p className="spec-content">
-                  {product.accuracy.value ? `${product.accuracy.value} ${product.accuracy.unit || 'cm'}` : 'N/A'}
+                  {product.accuracy.value} {product.accuracy.unit || 'cm'}
                 </p>
               </div>
             </div>
           )}
 
           {/* Power Source */}
-          {product?.powerSource && (
+          {product?.powerSource && (product.powerSource?.name || product.powerSource?.title) && (
             <div className="col-lg-4 col-md-6 mb-4">
               <div className="spec-card">
                 <h6 className="spec-title">Power Source</h6>
                 <p className="spec-content">
-                  {product.powerSource?.name || product.powerSource?.title || 'Unknown'}
-        </p>
-      </div>
-        </div>
+                  {product.powerSource?.name || product.powerSource?.title}
+                </p>
+              </div>
+            </div>
           )}
 
           {/* Operating Temperature */}
-          {product?.operatingTemperature && (
+          {product?.operatingTemperature && product.operatingTemperature.min && product.operatingTemperature.max && (
             <div className="col-lg-4 col-md-6 mb-4">
               <div className="spec-card">
                 <h6 className="spec-title">Operating Temperature</h6>
                 <p className="spec-content">
-                  {product.operatingTemperature.min && product.operatingTemperature.max 
-                    ? `${product.operatingTemperature.min}°C to ${product.operatingTemperature.max}°C`
-                    : 'N/A'
-                  }
+                  {product.operatingTemperature.min}°C to {product.operatingTemperature.max}°C
                 </p>
-          </div>
-          </div>
+              </div>
+            </div>
           )}
 
           {/* Materials */}
@@ -177,15 +171,15 @@ export default function Description({ product }) {
           )}
 
           {/* Version */}
-          {product?.version && (
+          {product?.version && product.version.trim() && (
             <div className="col-lg-4 col-md-6 mb-4">
               <div className="spec-card">
                 <h6 className="spec-title">Version</h6>
                 <p className="spec-content">
                   {product.version}
                 </p>
-          </div>
-        </div>
+              </div>
+            </div>
           )}
         </div>
       </div>

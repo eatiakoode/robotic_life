@@ -43,7 +43,7 @@ export default function BlogListPage() {
         </div>
       </div>
       <BlogList />
-      <Footer1 />
+      <Footer1 dark/>
     </>
   );
 }

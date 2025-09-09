@@ -50,13 +50,28 @@ const useCategories = () => {
         
         if (data.success && data.data && Array.isArray(data.data)) {
           // Transform the data to match the expected format
-          const transformedCategories = data.data.map((category, index) => ({
-            _id: category._id || `category-${index + 1}`,
-            name: category.name || 'Category',
-            description: category.description || 'No description available',
-            logoimage: category.logoimage || null,
-            slug: category.slug || 'category'
-          }));
+          const transformedCategories = data.data.map((category, index) => {
+            try {
+              return {
+                _id: category._id || `category-${index + 1}`,
+                name: category.name || 'Category',
+                description: category.description || 'No description available',
+                logoimage: category.logoimage || null,
+                slug: category.slug || 'category',
+                parent: category.parent || null
+              };
+            } catch (error) {
+              console.error('Error transforming category:', category, error);
+              return {
+                _id: `category-${index + 1}`,
+                name: 'Category',
+                description: 'No description available',
+                logoimage: null,
+                slug: 'category',
+                parent: null
+              };
+            }
+          });
           
 
           setCategories(transformedCategories);

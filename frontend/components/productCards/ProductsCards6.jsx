@@ -14,6 +14,12 @@ export default function ProductsCards6({ product }) {
     if (!imgSrc || imgSrc === '' || imgSrc === null || imgSrc === undefined) {
       return '/images/products/product-1.jpg'; // Default fallback image
     }
+    
+    // If it's a relative path, ensure it starts with /
+    if (!imgSrc.startsWith('http') && !imgSrc.startsWith('/')) {
+      return `/${imgSrc}`;
+    }
+    
     return imgSrc;
   };
 

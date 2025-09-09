@@ -86,9 +86,9 @@ export default function Products2() {
       <section className="flat-spacing">
         <div className="container">
           <div className="heading-section-2 type-2 wow fadeInUp">
-            <h3 className="heading font-5 fw-bold">Features Product</h3>
+            <h3 className="heading font-5 fw-bold">Featured Robots</h3>
             <Link href={`/shop-filter-canvas`} className="btn-line">
-              View All Products
+              View All Robots
             </Link>
           </div>
           <div className="text-center py-5">
@@ -106,9 +106,9 @@ export default function Products2() {
       <section className="flat-spacing">
         <div className="container">
           <div className="heading-section-2 type-2 wow fadeInUp">
-            <h3 className="heading font-5 fw-bold">Features Product</h3>
+            <h3 className="heading font-5 fw-bold">Featured Robots</h3>
             <Link href={`/shop-filter-canvas`} className="btn-line">
-              View All Products
+              View All Robots
             </Link>
           </div>
           <div className="text-center py-5">
@@ -129,9 +129,9 @@ export default function Products2() {
     <section className="flat-spacing">
       <div className="container">
         <div className="heading-section-2 type-2 wow fadeInUp">
-          <h3 className="heading font-5 fw-bold">Features Product</h3>
+          <h3 className="heading font-5 fw-bold">Featured Robots</h3>
           <Link href={`/shop-filter-canvas`} className="btn-line">
-            View All Products
+            View All Robots
           </Link>
         </div>
         {transformedRobots.length > 0 ? (

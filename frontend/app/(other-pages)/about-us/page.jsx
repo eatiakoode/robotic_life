@@ -10,8 +10,8 @@ import Testimonials from "@/components/otherPages/Testimonials";
 import React from "react";
 
 export const metadata = {
-  title: "About Us || Modave - Multipurpose React Nextjs eCommerce Template",
-  description: "Modave - Multipurpose React Nextjs eCommerce Template",
+  title: "About Us || TheBotsWorld ",
+  description: "TheBotsWorld - Your Trusted Platform in Robotics Education",
 };
 
 export default function AboutUsPage() {

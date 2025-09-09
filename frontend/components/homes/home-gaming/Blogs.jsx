@@ -6,7 +6,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useBlogs } from "@/hooks/useBlogs";
 
-export default function Blogs() {
+export default function  Blogs() {
   const { blogs, loading, error } = useBlogs();
 
 
