@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const unitValueSchema = new mongoose.Schema(
   {
     value: { type: Number, required: false },
-    unit: { type: String, required: false, trim: true }
+    unit: { type: String, required: false, trim: true },
   },
   { _id: false }
 );
@@ -11,7 +11,7 @@ const rangeUnitSchema = new mongoose.Schema(
   {
     min: { type: Number, required: false },
     max: { type: Number, required: false },
-    unit: { type: String, required: false, trim: true }
+    unit: { type: String, required: false, trim: true },
   },
   { _id: false }
 );
@@ -36,37 +36,39 @@ const RobotSchema = new mongoose.Schema(
     manufacturer: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Manufacturer",
-      required: true
+      required: true,
     },
     countryOfOrigin: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Country",
-      required: true
+      required: true,
     },
     launchYear: {
       type: Number,
       min: 1900,
       max: new Date().getFullYear() + 5,
-      required: true
+      required: true,
     },
     totalPrice: {
       type: Number,
     },
     version: {
       type: String,
-      trim: true
+      trim: true,
     },
-    images: [{
-      type: String,
-    }],
+    images: [
+      {
+        type: String,
+      },
+    ],
     videoEmbedCode: {
       type: String,
-      trim: true
+      trim: true,
     },
     dimensions: {
       length: unitValueSchema,
       width: unitValueSchema,
-      height: unitValueSchema
+      height: unitValueSchema,
     },
     weight: unitValueSchema,
     batteryCapacity: unitValueSchema,
@@ -77,7 +79,7 @@ const RobotSchema = new mongoose.Schema(
     powerSource: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "PowerSource",
-      required: true
+      required: true,
     },
     runtime: unitValueSchema,
     speed: unitValueSchema,
@@ -85,181 +87,198 @@ const RobotSchema = new mongoose.Schema(
     color: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Color"
-      }
+        ref: "Color",
+      },
     ],
     material: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Material"
-      }
+        ref: "Material",
+      },
     ],
-    navigationType: [{
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "NavigationType"
-    }],
-    sensors: [{
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Sensor"
-    }],
+    navigationType: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "NavigationType",
+      },
+    ],
+    sensors: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Sensor",
+      },
+    ],
     primaryFunction: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "PrimaryFunction"
+      ref: "PrimaryFunction",
     },
-    aiSoftwareFeatures: [{
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "AiSoftwareFeature"
-    }],
+    aiSoftwareFeatures: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "AiSoftwareFeature",
+      },
+    ],
     operatingEnvironment: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "OperatingEnvironment"
+      ref: "OperatingEnvironment",
     },
-    terrainCapability: [{
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "TerrainCapability"
-    }],
+    terrainCapability: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "TerrainCapability",
+      },
+    ],
     autonomyLevel: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "AutonomyLevel"
+      ref: "AutonomyLevel",
     },
-    communicationMethod: [{
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "CommunicationMethod"
-    }],
-    payloadTypesSupported: [{
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "PayloadType"
-    }],
+    communicationMethod: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "CommunicationMethod",
+      },
+    ],
+    payloadTypesSupported: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "PayloadType",
+      },
+    ],
     metaTitle: {
       type: String,
     },
     metaDescription: {
       type: String,
 
-    totalPrice: { type: Number },
-    version: { type: String, trim: true },
+      totalPrice: { type: Number },
+      version: { type: String, trim: true },
 
-    // Specifications
-    specifications: {
-      dimensions: {
-        length: unitValueSchema,
-        width: unitValueSchema,
-        height: unitValueSchema,
+      // Specifications
+      specifications: {
+        dimensions: {
+          length: unitValueSchema,
+          width: unitValueSchema,
+          height: unitValueSchema,
+        },
+        weight: unitValueSchema,
+        speed: unitValueSchema,
+        runtime: unitValueSchema,
+        range: unitValueSchema,
+        loadCapacity: unitValueSchema,
+        accuracy: unitValueSchema,
+        powerSource: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "PowerSource",
+        },
+        batteryCapacity: unitValueSchema,
+        batteryChargeTime: unitValueSchema,
+        operatingTemperature: rangeUnitSchema,
+        noiseLevel: unitValueSchema,
+        energyConsumption: unitValueSchema,
+        materials: [{ type: mongoose.Schema.Types.ObjectId, ref: "Material" }],
+        color: [{ type: mongoose.Schema.Types.ObjectId, ref: "Color" }],
+        durability: {
+          ipRating: { type: String, trim: true },
+          milStdCompliance: { type: String, trim: true },
+          radiationShielding: { type: String, trim: true },
+        },
+        maintenanceInfo: {
+          mtbf: unitValueSchema,
+          maintenanceInterval: unitValueSchema,
+        },
       },
-      weight: unitValueSchema,
-      speed: unitValueSchema,
-      runtime: unitValueSchema,
-      range: unitValueSchema,
-      loadCapacity: unitValueSchema,
-      accuracy: unitValueSchema,
-      powerSource: { type: mongoose.Schema.Types.ObjectId, ref: "PowerSource" },
-      batteryCapacity: unitValueSchema,
-      batteryChargeTime: unitValueSchema,
-      operatingTemperature: rangeUnitSchema,
-      noiseLevel: unitValueSchema,
-      energyConsumption: unitValueSchema,
-      materials: [{ type: mongoose.Schema.Types.ObjectId, ref: "Material" }],
-      color: [{ type: mongoose.Schema.Types.ObjectId, ref: "Color" }],
-      durability: {
-        ipRating: { type: String, trim: true },
-        milStdCompliance: { type: String, trim: true },
-        radiationShielding: { type: String, trim: true },
+      status: {
+        type: Boolean,
+        default: true,
+        required: true,
       },
-      maintenanceInfo: {
-        mtbf: unitValueSchema,
-        maintenanceInterval: unitValueSchema,
-      },
-
-    },
-    status: {
-      type: Boolean,
-      default: true,
-      required: true
-    },
-    recentlyViewed: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Robot"
-  }],
-
-    // Capabilities
-    capabilities: {
-      autonomyLevel: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "AutonomyLevel",
-      },
-      navigationTypes: [
-        { type: mongoose.Schema.Types.ObjectId, ref: "NavigationType" },
+      recentlyViewed: [
+        {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Robot",
+        },
       ],
-      communicationMethods: [
-        { type: mongoose.Schema.Types.ObjectId, ref: "CommunicationMethod" },
-      ],
-      features: [String], // unique features
-      primaryFunction: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "PrimaryFunction",
+
+      // Capabilities
+      capabilities: {
+        autonomyLevel: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "AutonomyLevel",
+        },
+        navigationTypes: [
+          { type: mongoose.Schema.Types.ObjectId, ref: "NavigationType" },
+        ],
+        communicationMethods: [
+          { type: mongoose.Schema.Types.ObjectId, ref: "CommunicationMethod" },
+        ],
+        features: [String], // unique features
+        primaryFunction: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "PrimaryFunction",
+        },
+        interoperability: [String],
+        loadHandling: {
+          grippingStrength: unitValueSchema,
+          articulationPrecision: unitValueSchema,
+        },
+        communicationRange: unitValueSchema,
       },
-      interoperability: [String],
-      loadHandling: {
-        grippingStrength: unitValueSchema,
-        articulationPrecision: unitValueSchema
+
+      // Payloads & Attachments
+      payloadsAndAttachments: {
+        maxPayloadWeight: unitValueSchema,
+        payloadTypes: [
+          { type: mongoose.Schema.Types.ObjectId, ref: "PayloadType" },
+        ],
+        attachments: [String], // names of tools, weapons, modules
+        hotSwappable: { type: Boolean, default: false },
+        accessoryPorts: [String],
       },
-      communicationRange: unitValueSchema
-    },
 
-    // Payloads & Attachments
-    payloadsAndAttachments: {
-      maxPayloadWeight: unitValueSchema,
-      payloadTypes: [
-        { type: mongoose.Schema.Types.ObjectId, ref: "PayloadType" },
-      ],
-      attachments: [String], // names of tools, weapons, modules
-      hotSwappable: { type: Boolean, default: false },
-      accessoryPorts: [String]
-    },
-
-    // Sensors & Software
-    sensorsAndSoftware: {
-      sensors: [{ type: mongoose.Schema.Types.ObjectId, ref: "Sensor" }],
-      aiSoftwareFeatures: [
-        { type: mongoose.Schema.Types.ObjectId, ref: "AiSoftwareFeature" },
-      ],
-      operatingSystem: { type: String, trim: true },
-      firmwareVersion: { type: String, trim: true },
-      securityFeatures: [String],
-      dataLogging: {
-        storageCapacity: unitValueSchema,
-        loggingInterval: unitValueSchema
-      }
-    },
-
-    // Operational Environment & Applications
-    operationalEnvironmentAndApplications: {
-      operatingEnvironment: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "OperatingEnvironment",
+      // Sensors & Software
+      sensorsAndSoftware: {
+        sensors: [{ type: mongoose.Schema.Types.ObjectId, ref: "Sensor" }],
+        aiSoftwareFeatures: [
+          { type: mongoose.Schema.Types.ObjectId, ref: "AiSoftwareFeature" },
+        ],
+        operatingSystem: { type: String, trim: true },
+        firmwareVersion: { type: String, trim: true },
+        securityFeatures: [String],
+        dataLogging: {
+          storageCapacity: unitValueSchema,
+          loggingInterval: unitValueSchema,
+        },
       },
-      terrainCapabilities: [
-        { type: mongoose.Schema.Types.ObjectId, ref: "TerrainCapability" },
-      ],
-      applications: [String], // military, industrial, medical, etc.
-      mobilityConstraints: {
-        maxSlope: unitValueSchema,
-        maxStepHeight: unitValueSchema,
-        maxWaterDepth: unitValueSchema
+
+      // Operational Environment & Applications
+      operationalEnvironmentAndApplications: {
+        operatingEnvironment: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "OperatingEnvironment",
+        },
+        terrainCapabilities: [
+          { type: mongoose.Schema.Types.ObjectId, ref: "TerrainCapability" },
+        ],
+        applications: [String], // military, industrial, medical, etc.
+        mobilityConstraints: {
+          maxSlope: unitValueSchema,
+          maxStepHeight: unitValueSchema,
+          maxWaterDepth: unitValueSchema,
+        },
+        enduranceExtremeConditions: [String], // radiation, low gravity, deep sea
+        deploymentLogistics: [String],
       },
-      enduranceExtremeConditions: [String], // radiation, low gravity, deep sea
-      deploymentLogistics: [String]
+
+      // Media
+      images: [{ type: String }],
+      videoEmbedCode: { type: String, trim: true },
+
+      // Meta details
+      metaTitle: { type: String },
+      metaDescription: { type: String },
+      status: { type: Boolean, default: true, required: true },
+      recentlyViewed: [{ type: mongoose.Schema.Types.ObjectId, ref: "Robot" }],
     },
-
-    // Media 
-    images: [{ type: String }],
-    videoEmbedCode: { type: String, trim: true },
-
-    // Meta details
-    metaTitle: { type: String },
-    metaDescription: { type: String },
-    status: { type: Boolean, default: true, required: true },
-    recentlyViewed: [{ type: mongoose.Schema.Types.ObjectId, ref: "Robot" }],
   },
   { timestamps: true }
 );
