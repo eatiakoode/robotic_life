@@ -1,9 +1,7 @@
-// api/robot.ts
 
-// 🔑 Safe helper for getting token (SSR compatible)
 function getAuthToken(): string | null {
   if (typeof window === "undefined") {
-    return null; // No localStorage during SSR
+    return null;
   }
   try {
     const userData = JSON.parse(localStorage.getItem("user") || "{}");
@@ -13,9 +11,8 @@ function getAuthToken(): string | null {
   }
 }
 
-/**
- * Add new robot
- */
+//  Add new robot
+
 export const addRobotAPI = async (formData: FormData) => {
   const token = getAuthToken();
   if (!token) throw new Error("User not authenticated!");
@@ -47,10 +44,7 @@ export const addRobotAPI = async (formData: FormData) => {
   }
 };
 
-/**
- * Get robot table data with pagination
- * ✅ SSR safe (returns empty if no token on server-side)
- */
+//  Get robot table data with pagination
 export async function getRobotTableData(
   filter?: { limit?: number; page?: number },
   passedToken?: string

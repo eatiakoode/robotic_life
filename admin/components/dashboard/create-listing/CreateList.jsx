@@ -27,23 +27,30 @@ import { toast } from "react-toastify";
 
 const CreateList = () => {
   const router = useRouter();
-  
+
   // --- State Hooks ---
+
+  // --- Basic Information ---
   const [title, setTitle] = useState("");
   const [slug, setSlug] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
   const [error, setError] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-
   const [countries, setCountries] = useState([]);
   const [selectedCountry, setSelectedCountry] = useState("");
-  const [states, setStates] = useState([]);
+  const [version, setVersion] = useState("");
+  const [manufacturers, setManufacturers] = useState([]);
+  const [selectedManufacturer, setSelectedManufacturer] = useState("");
+  const [launchYear, setLaunchYear] = useState("");
 
   const [power, setPower] = useState([]);
   const [selectedPower, setSelectedPower] = useState("");
 
-  const [launchYear, setLaunchYear] = useState("");
+  const [noiseLevel, setNoiseLevel] = useState("");
+  const [noiseLevelUnit, setNoiseLevelUnit] = useState("dB");
+  const [energyConsumption, setEnergyConsumption] = useState("");
+  const [energyConsumptionUnit, setEnergyConsumptionUnit] = useState("Wh");
   const [weight, setWeight] = useState("");
   const [weightUnit, setWeightUnit] = useState("g");
   const [height, setHeight] = useState("");
@@ -52,7 +59,16 @@ const CreateList = () => {
   const [lengthUnit, setLengthUnit] = useState("cm");
   const [width, setWidth] = useState("");
   const [widthUnit, setWidthUnit] = useState("cm");
-  const [version, setVersion] = useState("");
+  const [wingspan, setWingspan] = useState("");
+  const [wingspanUnit, setWingspanUnit] = useState("cm");
+  const [ipRating, setIpRating] = useState("");
+  const [milStdCompliance, setMilStdCompliance] = useState("");
+  const [radiationShielding, setRadiationShielding] = useState("");
+  const [mtbf, setMtbf] = useState("");
+  const [mtbfUnit, setMtbfUnit] = useState("h");
+  const [maintenanceInterval, setMaintenanceInterval] = useState("");
+  const [maintenanceIntervalUnit, setMaintenanceIntervalUnit] = useState("h");
+
   const [patentNumber, setPatentNumber] = useState("");
   const [loadCapacity, setLoadCapacity] = useState("");
   const [batteryCapacity, setBatteryCapacity] = useState("");
@@ -68,10 +84,11 @@ const CreateList = () => {
   const [accuracyUnit, setAccuracyUnit] = useState("cm");
   const [operatingTemperatureMin, setOperatingTemperatureMin] = useState("");
   const [operatingTemperatureMax, setOperatingTemperatureMax] = useState("");
-  const [operatingTemperatureUnit, setOperatingTemperatureUnit] = useState("°C");
+  const [operatingTemperatureUnit, setOperatingTemperatureUnit] =
+    useState("°C");
   const [chargingTime, setChargingTime] = useState("");
   const [chargingTimeUnit, setChargingTimeUnit] = useState("h");
-  
+
   const [selectedColors, setSelectedColors] = useState([]);
   const [colors, setColors] = useState([]);
   const [materials, setMaterials] = useState([]);
@@ -80,17 +97,23 @@ const CreateList = () => {
   const [selectedNavigationType, setSelectedNavigationType] = useState([]);
   const [sensors, setSensors] = useState([]);
   const [selectedSensor, setSelectedSensor] = useState([]);
-  const [selectedAISoftwareFeature, setSelectedAISoftwareFeature] = useState([]);
+  const [selectedAISoftwareFeature, setSelectedAISoftwareFeature] = useState(
+    []
+  );
   const [aiSoftwareFeatures, setAISoftwareFeatures] = useState([]);
   const [primaryFunctions, setPrimaryFunctions] = useState([]);
   const [primaryFunction, setPrimaryFunction] = useState([]);
   const [selectedPrimaryFunction, setSelectedPrimaryFunction] = useState("");
   const [operatingEnvironment, setOperatingEnvironment] = useState([]);
-  const [selectedOperatingEnvironment, setSelectedOperatingEnvironment] = useState("");
+  const [selectedOperatingEnvironment, setSelectedOperatingEnvironment] =
+    useState("");
   const [terrainCapabilities, setTerrainCapabilities] = useState([]);
-  const [selectedTerrainCapability, setSelectedTerrainCapability] = useState([]);
+  const [selectedTerrainCapability, setSelectedTerrainCapability] = useState(
+    []
+  );
   const [communicationMethods, setCommunicationMethods] = useState([]);
-  const [selectedCommunicationMethod, setSelectedCommunicationMethod] = useState([]);
+  const [selectedCommunicationMethod, setSelectedCommunicationMethod] =
+    useState([]);
   const [autonomyLevel, setAutonomyLevel] = useState([]);
   const [selectedAutonomyLevel, setSelectedAutonomyLevel] = useState("");
   const [payloadTypes, setPayloadTypes] = useState([]);
@@ -100,8 +123,6 @@ const CreateList = () => {
   const [selectedCategory, setSelectedCategory] = useState("");
   const [subCategories, setSubCategories] = useState([]);
   const [selectedSubCategory, setSelectedSubCategory] = useState("");
-  const [manufacturers, setManufacturers] = useState([]);
-  const [selectedManufacturer, setSelectedManufacturer] = useState("");
 
   const [videoembedcode, setVideoEmbedCode] = useState("");
   const [nearby, setNearBy] = useState("");
@@ -185,8 +206,8 @@ const CreateList = () => {
           Array.isArray(manufacturerRes?.items)
             ? manufacturerRes.items
             : Array.isArray(manufacturerRes)
-              ? manufacturerRes
-              : []
+            ? manufacturerRes
+            : []
         );
         setPower(Array.isArray(powerRes) ? powerRes : powerRes?.data || []);
         setColors(Array.isArray(colorRes) ? colorRes : colorRes?.data || []);
@@ -236,8 +257,8 @@ const CreateList = () => {
       const generatedSlug = title
         .toLowerCase()
         .trim()
-        .replace(/[^a-z0-9\s-]/g, "") 
-        .replace(/\s+/g, "-"); 
+        .replace(/[^a-z0-9\s-]/g, "")
+        .replace(/\s+/g, "-");
       setSlug(generatedSlug);
     } else {
       setSlug("");
@@ -364,7 +385,7 @@ const CreateList = () => {
   // --- Submit ---
   const addRobo = async (e) => {
     e.preventDefault();
-    
+
     if (isSubmitting) {
       console.log("Already submitting, please wait...");
       return;
@@ -380,20 +401,40 @@ const CreateList = () => {
     const requiredFields = [
       { key: "title", value: title, name: "Title" },
       { key: "description", value: description, name: "Description" },
-      { key: "selectedCountry", value: selectedCountry, name: "Country of Origin" },
+      {
+        key: "selectedCountry",
+        value: selectedCountry,
+        name: "Country of Origin",
+      },
       { key: "launchYear", value: launchYear, name: "Launch Year" },
     ];
 
     // Check for empty required fields
     requiredFields.forEach((field) => {
-      if (!field.value || (typeof field.value === "string" && !field.value.trim())) {
+      if (
+        !field.value ||
+        (typeof field.value === "string" && !field.value.trim())
+      ) {
         newErrors[field.key] = `${field.name} is required`;
       }
     });
 
     // Validate at least some specifications are provided
     if (!length && !width && !height && !weight) {
-      newErrors.dimensions = "At least one dimension (length, width, height, or weight) is required";
+      newErrors.dimensions =
+        "At least one dimension (length, width, height, or weight) is required";
+    }
+
+    // Validate at least some durability features are provided
+    if (!ipRating && !milStdCompliance && !radiationShielding) {
+      newErrors.durability =
+        "At least one durability feature (IP Rating, MIL-STD Compliance, or Radiation Shielding) is required";
+    }
+
+    // Validate at least some maintenance features are provided
+    if (!mtbf && !maintenanceInterval) {
+      newErrors.maintenance =
+        "At least one maintenance information (MTBF or Maintenance Interval) is required";
     }
 
     // Validate slug uniqueness (basic check)
@@ -407,8 +448,15 @@ const CreateList = () => {
     }
 
     // Validate launch year
-    if (launchYear && (isNaN(launchYear) || launchYear < 1900 || launchYear > new Date().getFullYear() + 5)) {
-      newErrors.launchYear = "Launch year must be between 1900 and " + (new Date().getFullYear() + 5);
+    if (
+      launchYear &&
+      (isNaN(launchYear) ||
+        launchYear < 1900 ||
+        launchYear > new Date().getFullYear() + 5)
+    ) {
+      newErrors.launchYear =
+        "Launch year must be between 1900 and " +
+        (new Date().getFullYear() + 5);
     }
 
     if (Object.keys(newErrors).length > 0) {
@@ -423,7 +471,7 @@ const CreateList = () => {
       console.log("Getting user data from localStorage...");
       const userData = JSON.parse(localStorage.getItem("user"));
       const token = userData?.token;
-      
+
       if (!token) {
         toast.error("User not authenticated. Please login again.");
         setIsSubmitting(false);
@@ -455,7 +503,8 @@ const CreateList = () => {
       // Optional fields
       if (version) formData.append("version", version.trim());
       if (metatitle) formData.append("metatitle", metatitle.trim());
-      if (metadescription) formData.append("metadescription", metadescription.trim());
+      if (metadescription)
+        formData.append("metadescription", metadescription.trim());
 
       // Dimensions with validation
       if (length) {
@@ -475,6 +524,30 @@ const CreateList = () => {
       if (weight) {
         formData.append("weight.value", String(weight));
         formData.append("weight.unit", weightUnit);
+      }
+
+      // noiseLevel
+      if (noiseLevel) {
+        formData.append("noiseLevel.value", String(noiseLevel));
+        formData.append("noiseLevel.unit", noiseLevelUnit);
+      }
+
+      // energyConsumption
+      if (energyConsumption) {
+        formData.append("energyConsumption.value", String(energyConsumption));
+        formData.append("energyConsumption.unit", energyConsumptionUnit);
+      }
+
+      // mtbf
+      if (mtbf) {
+        formData.append("mtbf.value", String(mtbf));
+        formData.append("mtbf.unit", mtbfUnit);
+      }
+
+      // maintenance Interval
+      if (maintenanceInterval) {
+        formData.append("maintenanceInterval.value", String(maintenanceInterval));
+        formData.append("maintenanceInterval.unit", maintenanceIntervalUnit);
       }
 
       // Other specifications (optional)
@@ -509,10 +582,16 @@ const CreateList = () => {
 
       // Operating Temperature
       if (operatingTemperatureMin) {
-        formData.append("operatingTemperature.min", String(operatingTemperatureMin));
+        formData.append(
+          "operatingTemperature.min",
+          String(operatingTemperatureMin)
+        );
       }
       if (operatingTemperatureMax) {
-        formData.append("operatingTemperature.max", String(operatingTemperatureMax));
+        formData.append(
+          "operatingTemperature.max",
+          String(operatingTemperatureMax)
+        );
       }
       if (operatingTemperatureMin || operatingTemperatureMax) {
         formData.append("operatingTemperature.unit", operatingTemperatureUnit);
@@ -523,25 +602,37 @@ const CreateList = () => {
         selectedColors.forEach((color) => formData.append("color", color));
       }
       if (selectedMaterials.length > 0) {
-        selectedMaterials.forEach((material) => formData.append("material", material));
+        selectedMaterials.forEach((material) =>
+          formData.append("material", material)
+        );
       }
       if (selectedNavigationType.length > 0) {
-        selectedNavigationType.forEach((nav) => formData.append("navigationType", nav));
+        selectedNavigationType.forEach((nav) =>
+          formData.append("navigationType", nav)
+        );
       }
       if (selectedSensor.length > 0) {
         selectedSensor.forEach((s) => formData.append("sensors", s));
       }
       if (selectedAISoftwareFeature.length > 0) {
-        selectedAISoftwareFeature.forEach((a) => formData.append("aiSoftwareFeatures", a));
+        selectedAISoftwareFeature.forEach((a) =>
+          formData.append("aiSoftwareFeatures", a)
+        );
       }
       if (selectedTerrainCapability.length > 0) {
-        selectedTerrainCapability.forEach((t) => formData.append("terrainCapability", t));
+        selectedTerrainCapability.forEach((t) =>
+          formData.append("terrainCapability", t)
+        );
       }
       if (selectedCommunicationMethod.length > 0) {
-        selectedCommunicationMethod.forEach((c) => formData.append("communicationMethod", c));
+        selectedCommunicationMethod.forEach((c) =>
+          formData.append("communicationMethod", c)
+        );
       }
       if (selectedPayloadType.length > 0) {
-        selectedPayloadType.forEach((p) => formData.append("payloadTypesSupported", p));
+        selectedPayloadType.forEach((p) =>
+          formData.append("payloadTypesSupported", p)
+        );
       }
 
       // Images
@@ -549,7 +640,7 @@ const CreateList = () => {
         console.log("Adding featured image:", featuredimage.name);
         formData.append("images", featuredimage);
       }
-      
+
       robotSelectedImgs.forEach((file, index) => {
         console.log(`Adding additional image ${index + 1}:`, file.name);
         formData.append("images", file);
@@ -562,8 +653,11 @@ const CreateList = () => {
       }
 
       // Add timeout and retry logic
-      const timeoutPromise = new Promise((_, reject) => 
-        setTimeout(() => reject(new Error("Request timeout. Please try again.")), 30000)
+      const timeoutPromise = new Promise((_, reject) =>
+        setTimeout(
+          () => reject(new Error("Request timeout. Please try again.")),
+          30000
+        )
       );
 
       const apiPromise = createRobot(formData, token);
@@ -578,11 +672,11 @@ const CreateList = () => {
       console.error("Error details:", {
         message: err.message,
         response: err.response?.data,
-        status: err.response?.status
+        status: err.response?.status,
       });
-      
+
       let errorMessage = "Something went wrong";
-      
+
       // Handle different error formats
       if (err.response?.data?.error) {
         errorMessage = err.response.data.error;
@@ -591,16 +685,23 @@ const CreateList = () => {
       } else if (err.message) {
         errorMessage = err.message;
       }
-      
+
       // Provide more specific error messages for common issues
       if (errorMessage.includes("validation")) {
         errorMessage = "Please check all required fields and try again.";
-      } else if (errorMessage.includes("duplicate") || errorMessage.includes("unique")) {
-        errorMessage = "A robot with this title already exists. Please use a different title.";
-      } else if (errorMessage.includes("authentication") || errorMessage.includes("unauthorized")) {
+      } else if (
+        errorMessage.includes("duplicate") ||
+        errorMessage.includes("unique")
+      ) {
+        errorMessage =
+          "A robot with this title already exists. Please use a different title.";
+      } else if (
+        errorMessage.includes("authentication") ||
+        errorMessage.includes("unauthorized")
+      ) {
         errorMessage = "Authentication failed. Please login again.";
       }
-      
+
       setError({ general: errorMessage });
       toast.error(errorMessage);
     } finally {
@@ -624,7 +725,7 @@ const CreateList = () => {
             <label htmlFor="roboTitle">Robot Title *</label>
             <input
               type="text"
-              className={`form-control ${error.title ? 'is-invalid' : ''}`}
+              className={`form-control ${error.title ? "is-invalid" : ""}`}
               id="roboTitle"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
@@ -658,7 +759,9 @@ const CreateList = () => {
             <label htmlFor="roboDescription">Description *</label>
             <textarea
               id="roboDescription"
-              className={`form-control ${error.description ? 'is-invalid' : ''}`}
+              className={`form-control ${
+                error.description ? "is-invalid" : ""
+              }`}
               rows="7"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
@@ -678,15 +781,17 @@ const CreateList = () => {
             <label htmlFor="roboStatus">Status</label>
             <select
               id="roboStatus"
-              className={`form-select ${error.status ? 'is-invalid' : ''}`}
+              className={`form-select ${error.status ? "is-invalid" : ""}`}
               value={status}
-              onChange={(e) => setStatus(e.target.value === 'true')}
+              onChange={(e) => setStatus(e.target.value === "true")}
               required
             >
               <option value={true}>Active</option>
               <option value={false}>Inactive</option>
             </select>
-            {error.status && <span className="text-danger">{error.status}</span>}
+            {error.status && (
+              <span className="text-danger">{error.status}</span>
+            )}
           </div>
         </div>
         {/* robot status ends */}
@@ -697,7 +802,9 @@ const CreateList = () => {
             <label>Category</label>
             <select
               id="categorySelect"
-              className={`selectpicker form-select ${error.selectedCategory ? 'is-invalid' : ''}`}
+              className={`selectpicker form-select ${
+                error.selectedCategory ? "is-invalid" : ""
+              }`}
               value={selectedCategory}
               onChange={handleCategoryChange}
               data-live-search="true"
@@ -738,7 +845,6 @@ const CreateList = () => {
                 </option>
               ))}
             </select>
-
           </div>
         </div>
         {/* robot sub category ends */}
@@ -749,7 +855,9 @@ const CreateList = () => {
             <label>Manufacturer</label>
             <select
               id="manufacturerSelect"
-              className={`selectpicker form-select ${error.selectedManufacturer ? 'is-invalid' : ''}`}
+              className={`selectpicker form-select ${
+                error.selectedManufacturer ? "is-invalid" : ""
+              }`}
               value={selectedManufacturer}
               onChange={handleManufacturerChange}
               data-live-search="true"
@@ -776,7 +884,9 @@ const CreateList = () => {
             <label htmlFor="countrySelect">Country of Origin *</label>
             <select
               id="countrySelect"
-              className={`selectpicker form-select ${error.selectedCountry ? 'is-invalid' : ''}`}
+              className={`selectpicker form-select ${
+                error.selectedCountry ? "is-invalid" : ""
+              }`}
               value={selectedCountry}
               onChange={handleCountryChange}
               data-live-search="true"
@@ -803,7 +913,7 @@ const CreateList = () => {
             <label htmlFor="launchYear">Launch Year *</label>
             <select
               id="launchYear"
-              className={`form-control ${error.launchYear ? 'is-invalid' : ''}`}
+              className={`form-control ${error.launchYear ? "is-invalid" : ""}`}
               value={launchYear}
               onChange={(e) => setLaunchYear(e.target.value)}
               required
@@ -831,7 +941,7 @@ const CreateList = () => {
             <label htmlFor="roboPrice">Total Price</label>
             <input
               type="text"
-              className={`form-control ${error.price ? 'is-invalid' : ''}`}
+              className={`form-control ${error.price ? "is-invalid" : ""}`}
               id="roboPrice"
               value={price}
               onChange={(e) => setPrice(e.target.value)}
@@ -859,7 +969,8 @@ const CreateList = () => {
         </div>
         {/* robot version ends */}
 
-        {/* specifications start */}
+        {/* --- specifications start--- */}
+
         <div className=" mt30 ">
           <div className="col-lg-12">
             <h3 className="mb30">Specifications</h3>
@@ -872,7 +983,9 @@ const CreateList = () => {
             <div className="col-lg-12">
               <div className="my_profile_setting_input form-group">
                 <label htmlFor="dimensions">Dimensions</label>
-                {/* dimension row start */}
+
+                {/* --- dimension row start --- */}
+
                 <div className="row">
                   {/* Length start */}
                   <div className="col-lg-6 position-relative mb-2">
@@ -900,7 +1013,7 @@ const CreateList = () => {
                       onChange={(e) => setLengthUnit(e.target.value)}
                     >
                       <option value="cm">cm</option>
-                      <option value="mm">mm</option>
+                      <option value="m">m</option>
                       <option value="inch">inch</option>
                       <option value="ft">ft</option>
                     </select>
@@ -933,7 +1046,7 @@ const CreateList = () => {
                       onChange={(e) => setWidthUnit(e.target.value)}
                     >
                       <option value="cm">cm</option>
-                      <option value="mm">mm</option>
+                      <option value="m">m</option>
                       <option value="inch">inch</option>
                       <option value="ft">ft</option>
                     </select>
@@ -972,8 +1085,162 @@ const CreateList = () => {
                     </select>
                   </div>
                   {/* Height ends */}
+
+                  {/* wingspan start */}
+                  <div className="col-lg-6 position-relative mb-2">
+                    <input
+                      type="number"
+                      className="form-control pe-5"
+                      placeholder="Enter Robot Wingspan"
+                      value={wingspan}
+                      onChange={(e) => setWingspan(e.target.value)}
+                    />
+                    <select
+                      className="form-select position-absolute end-0 border-0 bg-transparent"
+                      style={{
+                        width: "auto",
+                        height: "auto",
+                        top: "50%",
+                        transform: "translateY(-50%)",
+                        paddingRight: "30px",
+                        paddingLeft: "8px",
+                        appearance: "none",
+                        WebkitAppearance: "none",
+                        MozAppearance: "none",
+                      }}
+                      value={lengthUnit}
+                      onChange={(e) => setLengthUnit(e.target.value)}
+                    >
+                      <option value="cm">cm</option>
+                      <option value="m">m</option>
+                    </select>
+                  </div>
+                  {/* wingspan ends */}
                 </div>
-                {/* dimension row ends */}
+
+                {/* --- dimension row ends --- */}
+
+                {/* --- durability row starts --- */}
+
+                <label htmlFor="durability">Durability</label>
+
+                {/* --- durability start --- */}
+
+                <div className="row">
+                  {/* ipRating start */}
+                  <div className="col-lg-6 position-relative mb-2">
+                    <input
+                      type="text"
+                      className="form-control pe-5"
+                      placeholder="Enter Robot IP Rating"
+                      value={ipRating}
+                      onChange={(e) => setIpRating(e.target.value)}
+                    />
+                  </div>
+                  {/* ipRating ends */}
+
+                  {/* milStdCompliance start */}
+                  <div className="col-lg-6 position-relative mb-2">
+                    <input
+                      type="text"
+                      className="form-control pe-5"
+                      placeholder="Enter Robot MIL-STD Compliance"
+                      value={milStdCompliance}
+                      onChange={(e) => setMilStdCompliance(e.target.value)}
+                    />
+                  </div>
+                  {/* milStdCompliance ends */}
+
+                  {/* radiationShielding start */}
+                  <div className="col-lg-6 position-relative mb-2">
+                    <input
+                      type="text"
+                      className="form-control pe-5"
+                      placeholder="Enter Robot Radiation Shielding"
+                      value={radiationShielding}
+                      onChange={(e) => setRadiationShielding(e.target.value)}
+                    />
+                  </div>
+                  {/* radiationShielding ends */}
+                </div>
+
+                {/* --- durability ends --- */}
+
+                {/* --- durability row ends --- */}
+
+                {/* --- maintenance row starts --- */}
+
+                <label htmlFor="maintenanceInfo">Maintenance Information</label>
+
+                {/* --- maintenance start --- */}
+
+                <div className="row">
+                  {/* mtbf start */}
+                  <div className="col-lg-6 position-relative mb-2">
+                    <input
+                      type="text"
+                      className="form-control pe-5"
+                      placeholder="Enter Robot Mean Time Between Failures (MTBF)"
+                      value={mtbf}
+                      onChange={(e) => setMtbf(e.target.value)}
+                    />
+                    <select
+                      className="form-select position-absolute end-0 border-0 bg-transparent"
+                      style={{
+                        width: "auto",
+                        height: "auto",
+                        top: "50%",
+                        transform: "translateY(-50%)",
+                        paddingRight: "30px",
+                        paddingLeft: "8px",
+                        appearance: "none",
+                        WebkitAppearance: "none",
+                        MozAppearance: "none",
+                      }}
+                      value={mtbfUnit}
+                      onChange={(e) => setMtbfUnit(e.target.value)}
+                    >
+                      <option value="h">h</option>
+                    </select>
+                  </div>
+                  {/* mtbf ends */}
+
+                  {/* maintenance Interval start */}
+                  <div className="col-lg-6 position-relative mb-2">
+                    <input
+                      type="text"
+                      className="form-control pe-5"
+                      placeholder="Enter Robot Maintenance Interval"
+                      value={maintenanceInterval}
+                      onChange={(e) => setMaintenanceInterval(e.target.value)}
+                    />
+                    <select
+                      className="form-select position-absolute end-0 border-0 bg-transparent"
+                      style={{
+                        width: "auto",
+                        height: "auto",
+                        top: "50%",
+                        transform: "translateY(-50%)",
+                        paddingRight: "30px",
+                        paddingLeft: "8px",
+                        appearance: "none",
+                        WebkitAppearance: "none",
+                        MozAppearance: "none",
+                      }}
+                      value={maintenanceIntervalUnit}
+                      onChange={(e) => setMaintenanceIntervalUnit(e.target.value)}
+                    >
+                      <option value="h">h</option>
+                      <option value="days">days</option>
+                      <option value="months">months</option>
+                    </select>
+                  </div>
+                  {/* maintenance Interval ends */}
+                </div>
+
+                {/* --- durability ends --- */}
+
+                {/* --- durability row ends --- */}
 
                 {/* another row starts */}
                 <div className="row">
@@ -1018,7 +1285,9 @@ const CreateList = () => {
                       <label htmlFor="powerSelect">Power Source</label>
                       <select
                         id="powerSelect"
-                        className={`selectpicker form-select ${error.selectedPower ? 'is-invalid' : ''}`}
+                        className={`selectpicker form-select ${
+                          error.selectedPower ? "is-invalid" : ""
+                        }`}
                         value={selectedPower}
                         onChange={handlePowerChange}
                         data-live-search="true"
@@ -1033,7 +1302,9 @@ const CreateList = () => {
                         ))}
                       </select>
                       {error.selectedPower && (
-                        <span className="text-danger">{error.selectedPower}</span>
+                        <span className="text-danger">
+                          {error.selectedPower}
+                        </span>
                       )}
                     </div>
                   </div>
@@ -1338,6 +1609,78 @@ const CreateList = () => {
                     </div>
                   </div>
                   {/* Range ends */}
+
+                  {/* noise level start */}
+                  <div className="col-lg-6 mb-2">
+                    <label htmlFor="noiseLevel">Noise Level</label>
+                    <div className="position-relative">
+                      <input
+                        type="number"
+                        className="form-control pe-5"
+                        placeholder="Enter Robot Noise Level"
+                        value={noiseLevel}
+                        onChange={(e) => setNoiseLevel(e.target.value)}
+                      />
+                      <select
+                        className="form-select position-absolute end-0 border-0 bg-transparent"
+                        style={{
+                          width: "auto",
+                          height: "auto",
+                          top: "50%",
+                          transform: "translateY(-50%)",
+                          paddingRight: "30px",
+                          paddingLeft: "8px",
+                          appearance: "none",
+                          WebkitAppearance: "none",
+                          MozAppearance: "none",
+                        }}
+                        value={noiseLevelUnit}
+                        onChange={(e) => setNoiseLevelUnit(e.target.value)}
+                      >
+                        <option value="dB">dB</option>
+                        <option value="dB(A)">dB(A)</option>
+                      </select>
+                    </div>
+                  </div>
+                  {/* noise level ends */}
+
+                  {/* energy consumption start */}
+                  <div className="col-lg-6 mb-2">
+                    <label htmlFor="energyConsumption">
+                      Energy Consumption
+                    </label>
+                    <div className="position-relative">
+                      <input
+                        type="number"
+                        className="form-control pe-5"
+                        placeholder="Enter Robot Energy Consumption"
+                        value={energyConsumption}
+                        onChange={(e) => setEnergyConsumption(e.target.value)}
+                      />
+                      <select
+                        className="form-select position-absolute end-0 border-0 bg-transparent"
+                        style={{
+                          width: "auto",
+                          height: "auto",
+                          top: "50%",
+                          transform: "translateY(-50%)",
+                          paddingRight: "30px",
+                          paddingLeft: "8px",
+                          appearance: "none",
+                          WebkitAppearance: "none",
+                          MozAppearance: "none",
+                        }}
+                        value={energyConsumptionUnit}
+                        onChange={(e) =>
+                          setEnergyConsumptionUnit(e.target.value)
+                        }
+                      >
+                        <option value="Wh">Wh</option>
+                        <option value="kWh">kWh</option>
+                      </select>
+                    </div>
+                  </div>
+                  {/* energy consumption ends */}
 
                   {/* Color start */}
                   <div className="col-lg-6 col-xl-6">
@@ -2202,7 +2545,9 @@ const CreateList = () => {
                   <label htmlFor="primaryFunction">Primary Function</label>
                   <select
                     id="primaryFunction"
-                    className={`selectpicker form-select ${error.selectedPrimaryFunction ? 'is-invalid' : ''}`}
+                    className={`selectpicker form-select ${
+                      error.selectedPrimaryFunction ? "is-invalid" : ""
+                    }`}
                     value={selectedPrimaryFunction}
                     onChange={handlePrimaryFunctionChange}
                     data-live-search="true"
@@ -2217,7 +2562,9 @@ const CreateList = () => {
                     ))}
                   </select>
                   {error.selectedPrimaryFunction && (
-                    <span className="text-danger">{error.selectedPrimaryFunction}</span>
+                    <span className="text-danger">
+                      {error.selectedPrimaryFunction}
+                    </span>
                   )}
                 </div>
               </div>
@@ -2231,7 +2578,9 @@ const CreateList = () => {
                   </label>
                   <select
                     id="operatingEnvironment"
-                    className={`selectpicker form-select ${error.selectedOperatingEnvironment ? 'is-invalid' : ''}`}
+                    className={`selectpicker form-select ${
+                      error.selectedOperatingEnvironment ? "is-invalid" : ""
+                    }`}
                     value={selectedOperatingEnvironment}
                     onChange={handleOperatingEnvironmentChange}
                     data-live-search="true"
@@ -2246,7 +2595,9 @@ const CreateList = () => {
                     ))}
                   </select>
                   {error.selectedOperatingEnvironment && (
-                    <span className="text-danger">{error.selectedOperatingEnvironment}</span>
+                    <span className="text-danger">
+                      {error.selectedOperatingEnvironment}
+                    </span>
                   )}
                 </div>
               </div>
@@ -2258,7 +2609,9 @@ const CreateList = () => {
                   <label htmlFor="autonomyLevel">Autonomy Level</label>
                   <select
                     id="autonomyLevel"
-                    className={`selectpicker form-select ${error.selectedAutonomyLevel ? 'is-invalid' : ''}`}
+                    className={`selectpicker form-select ${
+                      error.selectedAutonomyLevel ? "is-invalid" : ""
+                    }`}
                     value={selectedAutonomyLevel}
                     onChange={handleAutonomyLevelChange}
                     data-live-search="true"
@@ -2273,7 +2626,9 @@ const CreateList = () => {
                     ))}
                   </select>
                   {error.selectedAutonomyLevel && (
-                    <span className="text-danger">{error.selectedAutonomyLevel}</span>
+                    <span className="text-danger">
+                      {error.selectedAutonomyLevel}
+                    </span>
                   )}
                 </div>
               </div>
@@ -2290,7 +2645,9 @@ const CreateList = () => {
                   <label htmlFor="videoEmbedCode">Video Embed code</label>
                   <textarea
                     id="videoEmbedCode"
-                    className={`form-control ${error.videoembedcode ? 'is-invalid' : ''}`}
+                    className={`form-control ${
+                      error.videoembedcode ? "is-invalid" : ""
+                    }`}
                     rows="7"
                     value={videoembedcode}
                     onChange={(e) => setVideoEmbedCode(e.target.value)}
@@ -2316,10 +2673,10 @@ const CreateList = () => {
                     style={
                       featuredimage !== null
                         ? {
-                          backgroundImage: `url(${URL.createObjectURL(
-                            featuredimage
-                          )})`,
-                        }
+                            backgroundImage: `url(${URL.createObjectURL(
+                              featuredimage
+                            )})`,
+                          }
                         : undefined
                     }
                     htmlFor="featuredimage"
@@ -2336,29 +2693,29 @@ const CreateList = () => {
                 <ul className="mb-0">
                   {robotSelectedImgs.length > 0
                     ? robotSelectedImgs?.map((item, index) => (
-                      <li key={index} className="list-inline-item">
-                        <div className="portfolio_item">
-                          <Image
-                            width={200}
-                            height={200}
-                            className="img-fluid cover"
-                            src={URL.createObjectURL(item)}
-                            alt="fp1.jpg"
-                          />
-                          <div
-                            className="edu_stats_list"
-                            data-bs-toggle="tooltip"
-                            data-bs-placement="top"
-                            title="Delete"
-                            data-original-title="Delete"
-                          >
-                            <a onClick={() => deleteImage(item.name)}>
-                              <span className="flaticon-garbage"></span>
-                            </a>
+                        <li key={index} className="list-inline-item">
+                          <div className="portfolio_item">
+                            <Image
+                              width={200}
+                              height={200}
+                              className="img-fluid cover"
+                              src={URL.createObjectURL(item)}
+                              alt="fp1.jpg"
+                            />
+                            <div
+                              className="edu_stats_list"
+                              data-bs-toggle="tooltip"
+                              data-bs-placement="top"
+                              title="Delete"
+                              data-original-title="Delete"
+                            >
+                              <a onClick={() => deleteImage(item.name)}>
+                                <span className="flaticon-garbage"></span>
+                              </a>
+                            </div>
                           </div>
-                        </div>
-                      </li>
-                    ))
+                        </li>
+                      ))
                     : undefined}
                   {/* End li */}
                 </ul>
@@ -2424,12 +2781,14 @@ const CreateList = () => {
             <button
               className="btn btn1 float-start"
               type="button"
-              onClick={() => (window.location.href = "/cmsroboticlife/my-dashboard")}
+              onClick={() =>
+                (window.location.href = "/cmsroboticlife/my-dashboard")
+              }
             >
               Back
             </button>
-            <button 
-              className="btn btn2 float-end" 
+            <button
+              className="btn btn2 float-end"
               type="submit"
               disabled={isSubmitting}
             >
