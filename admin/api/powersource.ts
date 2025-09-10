@@ -3,14 +3,13 @@ import axios from "axios";
 
 const normalizeAdminBase = (base: string) => {
   let normalized = (base || "").trim();
-  if (!normalized) return "/admin/";
+  if (!normalized) return "";
   if (!normalized.endsWith("/")) normalized += "/";
-  if (!/\/admin\/$/.test(normalized)) normalized += "admin/";
   return normalized;
 };
 
 const ADMIN_BASE = normalizeAdminBase(process.env.NEXT_PUBLIC_ADMIN_API_URL as string);
-const API_BASE_URL = ADMIN_BASE + "api/powersource";
+const API_BASE_URL = ADMIN_BASE + "admin/api/powersource";
 
 // Add a new power source (Admin only)
 export const addPowerSourceAPI = async (title: string) => {

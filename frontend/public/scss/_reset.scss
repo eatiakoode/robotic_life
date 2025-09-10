@@ -584,7 +584,7 @@ video {
     background-color: #eeae76 !important;
 }
 .bg-grey {
-    background-color: #e0d3c5 !important;
+    background-color: #808080 !important;
 }
 .bg-grey-2 {
     background-color: #d7cfc4 !important;
@@ -621,11 +621,129 @@ video {
     background-color: #d14244 !important;
 }
 .bg-beige {
-    background-color: #ccbba7 !important;
+    background-color: #e0d3c5 !important;
 }
 
 .bg-beige-2 {
     background-color: #f6efdd !important;
+}
+
+.bg-yellow {
+    background-color: #ffd700 !important;
+}
+
+.bg-orange {
+    background-color: #ff8c00 !important;
+}
+
+.bg-purple {
+    background-color: #800080 !important;
+}
+
+.bg-pink {
+    background-color: #ffc0cb !important;
+}
+
+.bg-black {
+    background-color: #000000 !important;
+}
+
+.bg-white {
+    background-color: #ffffff !important;
+}
+
+.bg-brown {
+    background-color: #8b4513 !important;
+}
+
+/* Specific rules for color swatches */
+.list-color-product .list-color-item .swatch-value.bg-grey {
+    background-color: #808080 !important;
+}
+
+.list-color-product .list-color-item .swatch-value.bg-beige {
+    background-color: #e0d3c5 !important;
+}
+
+.list-color-product .list-color-item .swatch-value.bg-red {
+    background-color: #dc2a35 !important;
+}
+
+.list-color-product .list-color-item .swatch-value.bg-blue {
+    background-color: var(--blue) !important;
+}
+
+.list-color-product .list-color-item .swatch-value.bg-yellow {
+    background-color: #ffd700 !important;
+}
+
+.list-color-product .list-color-item .swatch-value.bg-orange {
+    background-color: #ff8c00 !important;
+}
+
+.list-color-product .list-color-item .swatch-value.bg-purple {
+    background-color: #800080 !important;
+}
+
+.list-color-product .list-color-item .swatch-value.bg-pink {
+    background-color: #ffc0cb !important;
+}
+
+.list-color-product .list-color-item .swatch-value.bg-black {
+    background-color: #000000 !important;
+}
+
+.list-color-product .list-color-item .swatch-value.bg-white {
+    background-color: #ffffff !important;
+}
+
+.list-color-product .list-color-item .swatch-value.bg-brown {
+    background-color: #8b4513 !important;
+}
+
+/* Specific rules for ColorSelect component */
+.variant-picker-item .variant-picker-values .color-btn .btn-checkbox.bg-grey {
+    background-color: #808080 !important;
+}
+
+.variant-picker-item .variant-picker-values .color-btn .btn-checkbox.bg-beige {
+    background-color: #e0d3c5 !important;
+}
+
+.variant-picker-item .variant-picker-values .color-btn .btn-checkbox.bg-red {
+    background-color: #dc2a35 !important;
+}
+
+.variant-picker-item .variant-picker-values .color-btn .btn-checkbox.bg-blue {
+    background-color: var(--blue) !important;
+}
+
+.variant-picker-item .variant-picker-values .color-btn .btn-checkbox.bg-yellow {
+    background-color: #ffd700 !important;
+}
+
+.variant-picker-item .variant-picker-values .color-btn .btn-checkbox.bg-orange {
+    background-color: #ff8c00 !important;
+}
+
+.variant-picker-item .variant-picker-values .color-btn .btn-checkbox.bg-purple {
+    background-color: #800080 !important;
+}
+
+.variant-picker-item .variant-picker-values .color-btn .btn-checkbox.bg-pink {
+    background-color: #ffc0cb !important;
+}
+
+.variant-picker-item .variant-picker-values .color-btn .btn-checkbox.bg-black {
+    background-color: #000000 !important;
+}
+
+.variant-picker-item .variant-picker-values .color-btn .btn-checkbox.bg-white {
+    background-color: #ffffff !important;
+}
+
+.variant-picker-item .variant-picker-values .color-btn .btn-checkbox.bg-brown {
+    background-color: #8b4513 !important;
 }
 
 .bg-beige-1 {

@@ -196,30 +196,44 @@ const manufacturerImgResize = async (req) => {
   return processedFilenames;
 };
 
-const robotImgResize = async (req) => {
-  if (!req.files || !Array.isArray(req.files)) return [];
+const robotImgUpload = async (req) => {
+  if (!req.files || Object.keys(req.files).length === 0) return [];
 
   const processedFilenames = [];
-
   const outputDir = path.join("public", "images", "robot");
+
   if (!fs.existsSync(outputDir)) {
     fs.mkdirSync(outputDir, { recursive: true });
   }
 
+  // Handle multiple image fields
+  const allFiles = [];
+  Object.keys(req.files).forEach(fieldName => {
+    if (Array.isArray(req.files[fieldName])) {
+      allFiles.push(...req.files[fieldName]);
+    } else {
+      allFiles.push(req.files[fieldName]);
+    }
+  });
+
   await Promise.all(
-    req.files.map(async (file) => {
-      const filename = file.filename; // multer gives unique name
-      const outputPath = path.join(outputDir, filename);
+    allFiles.map(async (file) => {
+      try {
+        const filename = file.filename;
+        const outputPath = path.join(outputDir, filename);
 
-      await sharp(file.path)
-        .resize(750, 450)
-        .toFormat("jpeg")
-        .jpeg({ quality: 90 })
-        .toFile(outputPath);
+        // Simply copy the file without any processing - preserve original image
+        fs.copyFileSync(file.path, outputPath);
 
-      fs.unlinkSync(file.path); // remove temp uploaded file
+        // Remove temp uploaded file
+        fs.unlinkSync(file.path);
 
-      processedFilenames.push(filename);
+        processedFilenames.push(filename);
+      } catch (error) {
+        console.error("Error processing robot image:", file.originalname, error);
+        // Keep the original file if processing fails
+        processedFilenames.push(file.filename);
+      }
     })
   );
 
@@ -250,7 +264,13 @@ const sliderImgResize = async (files) => {
 
       try {
         await sharp(file.path)
-          .resize(1920, 600) // 👈 typical banner ratio
+          .resize({
+            width: 1920,
+            height: 756,
+            fit: "cover",
+            background: { r: 0, g: 0, b: 0, alpha: 1 },
+            // position: "center"
+          })
           .toFormat("jpeg")
           .jpeg({ quality: 90 })
           .toFile(outputPath);
@@ -318,7 +338,7 @@ const categoryImgResize = async (req) => {
       } else {
         // Pad to square 260x260 while preserving full image inside the canvas
         const isPng = ext === ".png";
-        const pipeline = sharp(file.path).resize(260, 260, {
+        const pipeline = sharp(file.path).resize({
           fit: "contain",
           background: isPng ? { r: 255, g: 255, b: 255, alpha: 0 } : { r: 255, g: 255, b: 255, alpha: 1 },
         });
@@ -1423,4 +1443,4 @@ const processUploadedPDFsadd = async (req) => {
 
   return processedFilenames;
 };
-module.exports = { uploadPhoto, productImgResize, blogImgResize, manufacturerImgResize, robotImgResize,sliderImgResize, featuredImageResize, sitePlanResize, masterPlanResize, photoUploadMiddleware, testimonialImgResize, propertySelectedImgsResize, cityImgResize, processFloorPlanImages, photoUploadMiddleware1, processFloorPlanImagesGet, amenityImgResize, bannerImageResize, aboutImageResize, gallerySelectedImgsResize, groupFilesByFieldname, groupFilesByFieldname2, processLandingPlanGet, processLandingPlan, processUploadedPDFs, processFloorPlanImagesAdd, featuredImageResizeAdd, featuredImageResizeAddSite, propertySelectedImgsResizeadd, processUploadedPDFsadd, featuredImageResizeAddMaster, locationImgResize, categoryImgResize };
+module.exports = { uploadPhoto, productImgResize, blogImgResize, manufacturerImgResize, robotImgUpload, sliderImgResize, featuredImageResize, sitePlanResize, masterPlanResize, photoUploadMiddleware, testimonialImgResize, propertySelectedImgsResize, cityImgResize, processFloorPlanImages, photoUploadMiddleware1, processFloorPlanImagesGet, amenityImgResize, bannerImageResize, aboutImageResize, gallerySelectedImgsResize, groupFilesByFieldname, groupFilesByFieldname2, processLandingPlanGet, processLandingPlan, processUploadedPDFs, processFloorPlanImagesAdd, featuredImageResizeAdd, featuredImageResizeAddSite, propertySelectedImgsResizeadd, processUploadedPDFsadd, featuredImageResizeAddMaster, locationImgResize, categoryImgResize };

@@ -4,7 +4,7 @@ import MobileMenu from "../../common/header/MobileMenu";
 import CreateList from "./CreateList";
 import CopyRight from "../../common/footer/CopyRight";
 
-const index = () => {
+const index = ({ id }) => {
   return (
     <>
       {/* <!-- Main Header Nav --> */}
@@ -63,7 +63,7 @@ const index = () => {
                         <h3 className="mb30">Create Listing</h3>
                       </div>
 
-                      <CreateList />
+                      <CreateList id={id} />
                     </div>
                   </div>
                 </div>

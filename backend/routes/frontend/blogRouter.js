@@ -3,11 +3,28 @@ const express = require("express");
 const {
   getBlog,
   getallBlog,
-  getBlogSlug
+  getBlogBySlug,
+  getRelatedBlogs,
+  getPopularTags,
+  getAdjacentBlogs
 } = require("../../controller/frontend/blogCtrl");
 const router = express.Router();
-router.get("/byid/:id", getBlog);
-router.get("/list", getallBlog);
-router.get("/slug/:slug", getBlogSlug);
+
+// Get popular tags
+router.get("/tags", getPopularTags);
+
+// Get blog by ID
+router.get("/:id", getBlog);
+
+// Get all blogs
+router.get("/", getallBlog);
+
+// Get blog by slug
+router.get("/slug/:slug", getBlogBySlug);
+
+// Get related blogs
+router.get("/related/:blogId", getRelatedBlogs);
+
+router.get("/adjacent/:blogId", getAdjacentBlogs);
 
 module.exports = router;

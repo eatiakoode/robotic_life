@@ -4,7 +4,13 @@ import "../public/scss/main.scss";
 import "photoswipe/style.css";
 import "react-range-slider-input/dist/style.css";
 import "../public/css/image-compare-viewer.min.css";
+import "@fortawesome/fontawesome-svg-core/styles.css";
 import { useEffect, useState } from "react";
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faRobot, faBookOpen, faFlask, faUsers } from '@fortawesome/free-solid-svg-icons';
+
+// Add icons to the library
+library.add(faRobot, faBookOpen, faFlask, faUsers);
 import ScrollTop from "@/components/common/ScrollTop";
 import Context from "@/context/Context";
 import CartModal from "@/components/modals/CartModal";
@@ -12,7 +18,7 @@ import QuickView from "@/components/modals/QuickView";
 import QuickAdd from "@/components/modals/QuickAdd";
 import Compare from "@/components/modals/Compare";
 import MobileMenu from "@/components/modals/MobileMenu";
-import NewsLetterModal from "@/components/modals/NewsLetterModal";
+
 import SearchModal from "@/components/modals/SearchModal";
 import SizeGuide from "@/components/modals/SizeGuide";
 import Wishlist from "@/components/modals/Wishlist";
@@ -20,6 +26,8 @@ import DemoModal from "@/components/modals/DemoModal";
 import Categories from "@/components/modals/Categories";
 import RtlToggler from "@/components/common/RtlToggler";
 import AccountSidebar from "@/components/modals/AccountSidebar";
+import "font-awesome/css/font-awesome.min.css";
+
 
 export default function RootLayout({ children }) {
   const pathname = usePathname();
@@ -125,19 +133,17 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body className="preload-wrapper popup-loader">
         <Context>
-          <RtlToggler />
+          {/* <RtlToggler /> */}
           <div id="wrapper">{children}</div>
-          <CartModal />
+          {/* <CartModal />
           <QuickView />
-          <QuickAdd />
+          <QuickAdd /> */}
           <Compare />
           <MobileMenu />
-
-          <NewsLetterModal />
           <SearchModal />
-          <SizeGuide />
+          {/* <SizeGuide />
           <Wishlist />
-          <DemoModal />
+          <DemoModal /> */}
           <Categories />
           <AccountSidebar />
         </Context>

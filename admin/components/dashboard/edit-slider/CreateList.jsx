@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { getSliderById, updateSliderAPI } from "@/api/slider";
 import { toast } from 'react-toastify';
+import { SafeImage } from "../../../utils/imageUtils";
 
 const CreateList = () => {
   const params = useParams();
@@ -107,12 +108,54 @@ const CreateList = () => {
               <p className="text-muted">Current images:</p>
               <div className="d-flex gap-2">
                 {existingImages.map((img, index) => (
-                  <img
+                  <div
                     key={index}
-                    src={`${process.env.NEXT_PUBLIC_API_URL}${img}`}
-                    alt={`Slider image ${index + 1}`}
-                    style={{ width: '60px', height: '60px', objectFit: 'cover' }}
-                  />
+                    style={{
+                      width: 60,
+                      height: 60,
+                      overflow: "hidden",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      border: "1px solid #e5e5e5",
+                      borderRadius: "4px"
+                    }}
+                  >
+                    <img
+                      src={(() => {
+                        const backendUrl = (process.env.NEXT_PUBLIC_BACKEND_API_URL || 'http://localhost:5000').replace(/\/$/, '');
+                        
+                        if (img.startsWith('http')) {
+                          return img;
+                        }
+                        
+                        // Fix double slash issue by ensuring proper URL construction
+                        const cleanPath = img.startsWith('/') ? img.substring(1) : img;
+                        const fullUrl = `${backendUrl}/${cleanPath}`;
+                        console.log(`Edit form - Constructing image URL:`, {
+                          originalPath: img,
+                          cleanPath: cleanPath,
+                          backendUrl: backendUrl,
+                          fullUrl: fullUrl
+                        });
+                        return fullUrl;
+                      })()}
+                      alt={`Slider image ${index + 1}`}
+                      width={60}
+                      height={60}
+                      style={{ 
+                        width: "100%", 
+                        height: "100%", 
+                        objectFit: "contain",
+                        objectPosition: "center"
+                      }}
+                      onError={(e) => {
+                        console.log(`Edit form - Image failed to load: ${e.target.src}`);
+                        const backendUrl = (process.env.NEXT_PUBLIC_BACKEND_API_URL || 'http://localhost:5000').replace(/\/$/, '');
+                        e.target.src = `${backendUrl}/public/assets/images/thumbnail.webp`;
+                      }}
+                    />
+                  </div>
                 ))}
               </div>
             </div>

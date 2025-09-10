@@ -20,21 +20,31 @@ export const addRobotAPI = async (formData: FormData) => {
   const token = getAuthToken();
   if (!token) throw new Error("User not authenticated!");
 
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_ADMIN_API_URL}api/robot`,
-    {
-      method: "POST",
-      headers: { Authorization: `Bearer ${token}` },
-      body: formData,
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_ADMIN_API_URL}admin/api/robot`,
+      {
+        method: "POST",
+        headers: { Authorization: `Bearer ${token}` },
+        body: formData,
+      }
+    );
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      console.error("Robot creation error:", errorData);
+      throw new Error(errorData.error || errorData.message || "Failed to add Robot");
     }
-  );
 
-  if (!response.ok) {
-    const errorData = await response.json().catch(() => ({}));
-    throw new Error(errorData.message || "Failed to add Robot");
+    return response.json();
+  } catch (error) {
+    // Handle network errors
+    if (error.name === 'TypeError' && error.message.includes('fetch')) {
+      throw new Error("Network error. Please check your connection and try again.");
+    }
+    // Re-throw other errors
+    throw error;
   }
-
-  return response.json();
 };
 
 /**
@@ -72,7 +82,7 @@ export async function getRobotTableData(
     const skip = Math.max(0, (defaultFilter.page - 1) * defaultFilter.limit);
     const limit = Math.max(1, defaultFilter.limit);
 
-    const url = `${process.env.NEXT_PUBLIC_ADMIN_API_URL}api/robot?limit=${limit}&skip=${skip}`;
+    const url = `${process.env.NEXT_PUBLIC_ADMIN_API_URL}admin/api/robot?limit=${limit}&skip=${skip}`;
 
     const response = await fetch(url, {
       method: "GET",
@@ -160,7 +170,7 @@ export const deleteRobotAPI = async (id: string) => {
   if (!token) throw new Error("User not authenticated!");
 
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_ADMIN_API_URL}api/robot/${id}`,
+    `${process.env.NEXT_PUBLIC_ADMIN_API_URL}admin/api/robot/${id}`,
     {
       method: "DELETE",
       headers: {
@@ -186,7 +196,7 @@ export const getRobotById = async (id: string, passedToken?: string) => {
   if (!token) throw new Error("User not authenticated!");
 
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_ADMIN_API_URL}api/robot/${id}`,
+    `${process.env.NEXT_PUBLIC_ADMIN_API_URL}admin/api/robot/${id}`,
     {
       method: "GET",
       headers: { Authorization: `Bearer ${token}` },
@@ -210,7 +220,7 @@ export const updateRobotAPI = async (id: string, formData, passedToken?: string)
   console.log("formData data");
   console.log(formData);
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_ADMIN_API_URL}api/robot/${id}`,
+    `${process.env.NEXT_PUBLIC_ADMIN_API_URL}admin/api/robot/${id}`,
     {
       method: "PUT",
       headers: { Authorization: `Bearer ${token}` },

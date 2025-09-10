@@ -5,23 +5,35 @@ import Link from "next/link";
 import CountdownTimer from "../common/Countdown";
 
 import { useContextElement } from "@/context/Context";
+import { transformRobotForComparison } from "@/api/robotCompare";
+import { openOffcanvasModal } from "@/utils/modalUtils";
+
 export default function ProductsCards6({ product }) {
-  const [currentImage, setCurrentImage] = useState(product.imgSrc);
+  // Helper function to get a valid image source
+  const getValidImageSrc = (imgSrc) => {
+    if (!imgSrc || imgSrc === '' || imgSrc === null || imgSrc === undefined) {
+      return '/images/products/product-1.jpg'; // Default fallback image
+    }
+    
+    // If it's a relative path, ensure it starts with /
+    if (!imgSrc.startsWith('http') && !imgSrc.startsWith('/')) {
+      return `/${imgSrc}`;
+    }
+    
+    return imgSrc;
+  };
+
+  const [currentImage, setCurrentImage] = useState(getValidImageSrc(product.imgSrc));
 
   const {
-    setQuickAddItem,
-    addToWishlist,
-    isAddedtoWishlist,
-    addToCompareItem,
+    addRobotToCompare,
     isAddedtoCompareItem,
-    setQuickViewItem,
-    addProductToCart,
-    isAddedToCartProducts,
   } = useContextElement();
 
   useEffect(() => {
-    setCurrentImage(product.imgSrc);
+    setCurrentImage(getValidImageSrc(product.imgSrc));
   }, [product]);
+
   return (
     <div
       className="card-product style-list"
@@ -29,20 +41,22 @@ export default function ProductsCards6({ product }) {
       data-brand="gucci"
     >
       <div className="card-product-wrapper">
-        <Link href={`/product-detail/${product.id}`} className="product-img">
+        <Link href={`/product-detail/${product.slug && product.slug.trim() ? product.slug : product.id}`} className="product-img">
           <Image
             className="lazyload img-product"
-            src={currentImage}
-            alt={product.title}
+            src={getValidImageSrc(currentImage)}
+            alt={product.title || 'Robot'}
             width={600}
             height={800}
+            style={{ position: 'relative', zIndex: 0 }}
           />
           <Image
             className="lazyload img-hover"
-            src={product.imgHover}
-            alt={product.title}
+            src={getValidImageSrc(product.imgHover)}
+            alt={product.title || 'Robot'}
             width={600}
             height={800}
+            style={{ position: 'absolute', inset: 0, zIndex: 1 }}
           />
         </Link>
         {product.isOnSale && (
@@ -52,7 +66,7 @@ export default function ProductsCards6({ product }) {
         )}
       </div>
       <div className="card-product-info">
-        <Link href={`/product-detail/${product.id}`} className="title link">
+        <Link href={`/product-detail/${product.slug && product.slug.trim() ? product.slug : product.id}`} className="title link">
           {product.title}
         </Link>
         <span className="price current-price">
@@ -62,9 +76,7 @@ export default function ProductsCards6({ product }) {
           ${product.price?.toFixed(2)}
         </span>
         <p className="description text-secondary text-line-clamp-2">
-          The garments labelled as Committed are products that have been
-          produced using sustainable fibres or processes, reducing their
-          environmental impact.
+          {product.description || 'No description available'}
         </p>
         <div className="variant-wrap-list">
           {product.colors && (
@@ -73,14 +85,14 @@ export default function ProductsCards6({ product }) {
                 <li
                   key={index}
                   className={`list-color-item color-swatch ${
-                    currentImage == color.imgSrc ? "active" : ""
+                    getValidImageSrc(currentImage) === getValidImageSrc(color.imgSrc) ? "active" : ""
                   } `}
-                  onMouseOver={() => setCurrentImage(color.imgSrc)}
+                  onMouseOver={() => setCurrentImage(getValidImageSrc(color.imgSrc))}
                 >
                   <span className={`swatch-value ${color.bgColor}`} />
                   <Image
                     className="lazyload"
-                    src={color.imgSrc}
+                    src={getValidImageSrc(color.imgSrc)}
                     alt="color variant"
                     width={600}
                     height={800}
@@ -100,47 +112,41 @@ export default function ProductsCards6({ product }) {
           )}
           <div className="list-product-btn">
             <a
-              onClick={() => addProductToCart(product.id)}
-              className="btn-main-product"
-            >
-              {isAddedToCartProducts(product.id)
-                ? "Already Added"
-                : "Add To cart"}
-            </a>
-            <a
-              onClick={() => addToWishlist(product.id)}
-              className="box-icon wishlist btn-icon-action"
-            >
-              <span className="icon icon-heart" />
-              <span className="tooltip">
-                {isAddedtoWishlist(product.id)
-                  ? "Already Wishlished"
-                  : "Wishlist"}
-              </span>
-            </a>
-            <a
               href="#compare"
               data-bs-toggle="offcanvas"
               aria-controls="compare"
-              onClick={() => addToCompareItem(product.id)}
-              className="box-icon compare btn-icon-action"
+              onClick={(e) => {
+                e.preventDefault();
+                const robotData = transformRobotForComparison(product);
+                if (robotData && robotData.id) {
+                  if (isAddedtoCompareItem(robotData.id)) {
+                    openOffcanvasModal('compare');
+                    return;
+                  }
+                  addRobotToCompare(robotData);
+                  setTimeout(() => {
+                    openOffcanvasModal('compare');
+                  }, 100);
+                } else {
+                  // Fallback to old product comparison logic if not a robot
+                  const productId = product._id || product.id;
+                  if (isAddedtoCompareItem(productId)) {
+                    openOffcanvasModal('compare');
+                    return;
+                  }
+                  // Assuming there is a generic addToCompareItem function
+                  // in your context for non-robot products.
+                  // If not, you might need to handle this case differently.
+                  // For now, let's assume this function exists.
+                  // addToCompareItem(productId);
+                  // openOffcanvasModal('compare');
+                }
+              }}
+              className="btn-main-product"
             >
-              <span className="icon icon-gitDiff" />
-              <span className="tooltip">
-                {" "}
-                {isAddedtoCompareItem(product.id)
-                  ? "Already compared"
-                  : "Compare"}
-              </span>
-            </a>
-            <a
-              href="#quickView"
-              onClick={() => setQuickViewItem(product)}
-              data-bs-toggle="modal"
-              className="box-icon quickview tf-btn-loading"
-            >
-              <span className="icon icon-eye" />
-              <span className="tooltip">Quick View</span>
+              {isAddedtoCompareItem(product._id || product.id)
+                ? "Already Compared"
+                : "Add to Compare"}
             </a>
           </div>
         </div>

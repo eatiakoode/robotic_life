@@ -109,7 +109,7 @@ export default function Sidebar2() {
                   </div>
                 </div>
                 <h6 className="title fw-5">
-                  <Link className="link" href={`/blog-detail/${post.id}`}>
+                  <Link className="link" href={`/blog-detail/${post.slug || post.id}`}>
                     {post.description.split(" ").slice(0, 8).join(" ")}
                   </Link>
                 </h6>

@@ -20,6 +20,21 @@ var blogSchema = new mongoose.Schema(
       // unique: true,
       index: true,
     },
+    contentTitle: {
+      type: String,
+      default: "",
+      index: true,
+    },
+    contentParagraphs: {
+      type: String,
+      default: "",
+      index: true,
+    },
+    tags: {
+      type: [String],
+      default: [],
+      index: true,
+    },
     logoimage: {
       type: String,
       // required: true,

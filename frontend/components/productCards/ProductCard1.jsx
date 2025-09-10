@@ -4,6 +4,9 @@ import Image from "next/image";
 import Link from "next/link";
 import CountdownTimer from "../common/Countdown";
 import { useContextElement } from "@/context/Context";
+import { transformRobotForComparison } from "@/api/robotCompare";
+import { openOffcanvasModal } from "@/utils/modalUtils";
+
 export default function ProductCard1({
   product,
   gridClass = "",
@@ -11,21 +14,23 @@ export default function ProductCard1({
   isNotImageRatio = false,
   radiusClass = "",
 }) {
-  const [currentImage, setCurrentImage] = useState(product.imgSrc);
+  // Helper function to get a valid image source
+  const getValidImageSrc = (imgSrc) => {
+    if (!imgSrc || imgSrc === '' || imgSrc === null || imgSrc === undefined) {
+      return '/images/products/product-1.jpg'; // Default fallback image
+    }
+    return imgSrc;
+  };
+
+  const [currentImage, setCurrentImage] = useState(getValidImageSrc(product.imgSrc));
 
   const {
-    setQuickAddItem,
-    addToWishlist,
-    isAddedtoWishlist,
-    addToCompareItem,
+    addRobotToCompare,
     isAddedtoCompareItem,
-    setQuickViewItem,
-    addProductToCart,
-    isAddedToCartProducts,
   } = useContextElement();
 
   useEffect(() => {
-    setCurrentImage(product.imgSrc);
+    setCurrentImage(getValidImageSrc(product.imgSrc));
   }, [product]);
 
   return (
@@ -39,19 +44,18 @@ export default function ProductCard1({
           isNotImageRatio ? "aspect-ratio-0" : ""
         } ${radiusClass} `}
       >
-        <Link href={`/product-detail/${product.id}`} className="product-img">
+        <Link href={`/product-detail/${product.slug && product.slug.trim() ? product.slug : product.id}`} className="product-img">
           <Image
             className="lazyload img-product"
-            src={currentImage}
-            alt={product.title}
+            src={getValidImageSrc(currentImage)}
+            alt={product.title || 'Robot'}
             width={600}
             height={800}
           />
-
           <Image
             className="lazyload img-hover"
-            src={product.imgHover}
-            alt={product.title}
+            src={getValidImageSrc(product.imgHover)}
+            alt={product.title || 'Robot'}
             width={600}
             height={800}
           />
@@ -184,66 +188,45 @@ export default function ProductCard1({
         ) : (
           ""
         )}
-        <div className="list-product-btn">
+        <div className="list-btn-main">
           <a
-            onClick={() => addToWishlist(product.id)}
-            className="box-icon wishlist btn-icon-action"
-          >
-            <span className="icon icon-heart" />
-            <span className="tooltip">
-              {isAddedtoWishlist(product.id)
-                ? "Already Wishlished"
-                : "Wishlist"}
-            </span>
-          </a>
-          <a
+            className="btn-main-product"
             href="#compare"
             data-bs-toggle="offcanvas"
             aria-controls="compare"
-            onClick={() => addToCompareItem(product.id)}
-            className="box-icon compare btn-icon-action"
+            onClick={(e) => {
+              e.preventDefault();
+              const robotData = transformRobotForComparison(product);
+              if (robotData && robotData.id) {
+                if (isAddedtoCompareItem(robotData.id)) {
+                  openOffcanvasModal('compare');
+                  return;
+                }
+                addRobotToCompare(robotData);
+                setTimeout(() => {
+                  openOffcanvasModal('compare');
+                }, 100);
+              } else {
+                const productId = product._id || product.id;
+                if (isAddedtoCompareItem(productId)) {
+                  openOffcanvasModal('compare');
+                  return;
+                }
+                addToCompareItem(productId);
+                setTimeout(() => {
+                  openOffcanvasModal('compare');
+                }, 100);
+              }
+            }}
           >
-            <span className="icon icon-gitDiff" />
-            <span className="tooltip">
-              {isAddedtoCompareItem(product.id)
-                ? "Already compared"
-                : "Compare"}
-            </span>
+            {isAddedtoCompareItem(product._id || product.id)
+              ? "Already Compared"
+              : "Add to Compare"}
           </a>
-          <a
-            href="#quickView"
-            onClick={() => setQuickViewItem(product)}
-            data-bs-toggle="modal"
-            className="box-icon quickview tf-btn-loading"
-          >
-            <span className="icon icon-eye" />
-            <span className="tooltip">Quick View</span>
-          </a>
-        </div>
-        <div className="list-btn-main">
-          {product.addToCart == "Quick Add" ? (
-            <a
-              className="btn-main-product"
-              href="#quickAdd"
-              onClick={() => setQuickAddItem(product.id)}
-              data-bs-toggle="modal"
-            >
-              Quick Add
-            </a>
-          ) : (
-            <a
-              className="btn-main-product"
-              onClick={() => addProductToCart(product.id)}
-            >
-              {isAddedToCartProducts(product.id)
-                ? "Already Added"
-                : "ADD TO CART"}
-            </a>
-          )}
         </div>
       </div>
       <div className="card-product-info">
-        <Link href={`/product-detail/${product.id}`} className="title link">
+        <Link href={`/product-detail/${product.slug && product.slug.trim() ? product.slug : product.id}`} className="title link">
           {product.title}
         </Link>
         <span className="price">
@@ -258,14 +241,14 @@ export default function ProductCard1({
               <li
                 key={index}
                 className={`list-color-item color-swatch ${
-                  currentImage == color.imgSrc ? "active" : ""
-                } ${color.bgColor == "bg-white" ? "line" : ""}`}
-                onMouseOver={() => setCurrentImage(color.imgSrc)}
+                  getValidImageSrc(currentImage) === getValidImageSrc(color.imgSrc) ? "active" : ""
+                } ${color.bgColor === "bg-white" ? "line" : ""}`}
+                onMouseOver={() => setCurrentImage(getValidImageSrc(color.imgSrc))}
               >
                 <span className={`swatch-value ${color.bgColor}`} />
                 <Image
                   className="lazyload"
-                  src={color.imgSrc}
+                  src={getValidImageSrc(color.imgSrc)}
                   alt="color variant"
                   width={600}
                   height={800}

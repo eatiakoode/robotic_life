@@ -11,8 +11,6 @@ const SearchBox = ({
   const [searchValue, setSearchValue] = useState('');
   const [isSearching, setIsSearching] = useState(false);
 
-  // Debug logging
-  console.log('SearchBox render:', { onSearch: typeof onSearch, placeholder, searchValue });
 
   // Debounced search to prevent excessive API calls
   const debouncedSearch = useMemo(() => {
@@ -20,11 +18,8 @@ const SearchBox = ({
     return (value) => {
       clearTimeout(timeoutId);
       timeoutId = setTimeout(() => {
-        console.log('Debounced search executing with value:', value);
         if (onSearch && typeof onSearch === 'function') {
           onSearch(value);
-        } else {
-          console.error('onSearch is not a function:', onSearch);
         }
       }, 300);
     };
@@ -32,18 +27,14 @@ const SearchBox = ({
 
   const handleInputChange = useCallback((e) => {
     const value = e.target.value;
-    console.log('Search input change:', value);
     setSearchValue(value);
     debouncedSearch(value);
   }, [debouncedSearch]);
 
   const handleSubmit = useCallback((e) => {
     e.preventDefault();
-    console.log('Search form submit:', searchValue);
     if (onSearch && typeof onSearch === 'function') {
       onSearch(searchValue);
-    } else {
-      console.error('onSearch is not a function on submit:', onSearch);
     }
   }, [searchValue, onSearch]);
 

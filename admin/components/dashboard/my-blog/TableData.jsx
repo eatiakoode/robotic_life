@@ -20,7 +20,7 @@ const TableData = ({ features = [], loading = false, error = null, onRefresh }) 
         onRefresh();
       }
     } catch (error) {
-      toast.error("Failed to delete AI/Software Feature.");
+      toast.error("Failed to delete Blog.");
     }
   };
 
@@ -97,7 +97,7 @@ const TableData = ({ features = [], loading = false, error = null, onRefresh }) 
             </button>
           </li>
           <li className="list-inline-item" title="Delete">
-            <a href="#" onClick={() => deleteBlogFeature(item._id)}>
+            <a href="#" onClick={() => deleteBlog(item._id)}>
               <span className="flaticon-garbage"></span>
             </a>
           </li>

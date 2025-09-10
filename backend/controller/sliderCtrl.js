@@ -14,7 +14,7 @@ const createSlider = asyncHandler(async (req, res) => {
             console.log("Processed images:", processedImages);
             if (processedImages.length > 0) {
                 req.body.images = processedImages.map(
-                    (img) => "public/images/slider/" + img
+                    (img) => "images/slider/" + img
                 );
                 console.log("Final images array:", req.body.images);
             }
@@ -35,9 +35,34 @@ const createSlider = asyncHandler(async (req, res) => {
 // Get all sliders
 const getSliders = async (req, res) => {
     try {
-        const sliders = await Slider.find().sort({ createdAt: -1 }); // latest first
-        res.status(200).json({ success: true, data: sliders });
+        console.log("getSliders called with query:", req.query);
+        const { limit = 10, skip = 0 } = req.query;
+        
+        // Convert string parameters to numbers
+        const limitNum = parseInt(limit);
+        const skipNum = parseInt(skip);
+        
+        console.log("Fetching sliders with limit:", limitNum, "skip:", skipNum);
+        
+        const sliders = await Slider.find()
+            .sort({ createdAt: -1 }) // latest first
+            .limit(limitNum)
+            .skip(skipNum);
+            
+        // Get total count for pagination
+        const totalCount = await Slider.countDocuments();
+        
+        console.log("Found sliders:", sliders.length, "Total count:", totalCount);
+        
+        res.status(200).json({ 
+            success: true, 
+            data: sliders,
+            totalCount,
+            currentPage: Math.floor(skipNum / limitNum) + 1,
+            totalPages: Math.ceil(totalCount / limitNum)
+        });
     } catch (err) {
+        console.error("Error fetching sliders:", err);
         res.status(500).json({ success: false, error: err.message });
     }
 };
@@ -67,7 +92,7 @@ const updateSlider = asyncHandler(async (req, res) => {
             console.log("Processed update images:", processedImages);
             if (processedImages.length > 0) {
                 req.body.images = processedImages.map(
-                    (img) => "public/images/slider/" + img
+                    (img) => "images/slider/" + img
                 );
                 console.log("Final update images array:", req.body.images);
             }

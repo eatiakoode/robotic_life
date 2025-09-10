@@ -108,6 +108,7 @@ const CreateList = () => {
   const [specifications, setSpecifications] = useState("");
   const [metatitle, setMetatitle] = useState("");
   const [metadescription, setMetaDescription] = useState("");
+  const [status, setStatus] = useState(true); // true = Active, false = Inactive
   const [featuredimage, setFeaturedImage] = useState(null);
   const [robotSelectedImgs, setRobotSelectedImgs] = useState([]);
 
@@ -375,21 +376,12 @@ const CreateList = () => {
 
     const newErrors = {};
 
-    // Updated validation - only check truly required fields
+    // Updated validation - only essential fields are required
     const requiredFields = [
       { key: "title", value: title, name: "Title" },
       { key: "description", value: description, name: "Description" },
-      { key: "price", value: price, name: "Total Price" },
       { key: "selectedCountry", value: selectedCountry, name: "Country of Origin" },
-      { key: "selectedCategory", value: selectedCategory, name: "Category" },
-      { key: "selectedSubCategory", value: selectedSubCategory, name: "Sub Category" },
-      { key: "selectedManufacturer", value: selectedManufacturer, name: "Manufacturer" },
       { key: "launchYear", value: launchYear, name: "Launch Year" },
-      { key: "selectedPower", value: selectedPower, name: "Power Source" },
-      { key: "selectedPrimaryFunction", value: selectedPrimaryFunction, name: "Primary Function" },
-      { key: "selectedOperatingEnvironment", value: selectedOperatingEnvironment, name: "Operating Environment" },
-      { key: "selectedAutonomyLevel", value: selectedAutonomyLevel, name: "Autonomy Level" },
-      { key: "videoembedcode", value: videoembedcode, name: "Video Embed Code" },
     ];
 
     // Check for empty required fields
@@ -402,6 +394,21 @@ const CreateList = () => {
     // Validate at least some specifications are provided
     if (!length && !width && !height && !weight) {
       newErrors.dimensions = "At least one dimension (length, width, height, or weight) is required";
+    }
+
+    // Validate slug uniqueness (basic check)
+    if (slug && slug.length < 3) {
+      newErrors.slug = "Slug must be at least 3 characters long";
+    }
+
+    // Validate price is a positive number
+    if (price && (isNaN(price) || price <= 0)) {
+      newErrors.price = "Price must be a positive number";
+    }
+
+    // Validate launch year
+    if (launchYear && (isNaN(launchYear) || launchYear < 1900 || launchYear > new Date().getFullYear() + 5)) {
+      newErrors.launchYear = "Launch year must be between 1900 and " + (new Date().getFullYear() + 5);
     }
 
     if (Object.keys(newErrors).length > 0) {
@@ -430,9 +437,12 @@ const CreateList = () => {
       formData.append("title", title.trim());
       formData.append("slug", slug);
       formData.append("description", description.trim());
+      formData.append("status", status ? "true" : "false");
       formData.append("totalPrice", price);
       formData.append("countryOfOrigin", selectedCountry);
-      formData.append("category", selectedCategory);
+      // Use subcategory ID if selected, otherwise use parent category ID
+      const categoryToSave = selectedSubCategory || selectedCategory;
+      formData.append("category", categoryToSave);
       formData.append("subcategoryid", selectedSubCategory);
       formData.append("manufacturer", selectedManufacturer);
       formData.append("launchYear", launchYear);
@@ -551,7 +561,13 @@ const CreateList = () => {
         console.log(pair[0], pair[1]);
       }
 
-      const res = await createRobot(formData, token);
+      // Add timeout and retry logic
+      const timeoutPromise = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error("Request timeout. Please try again.")), 30000)
+      );
+
+      const apiPromise = createRobot(formData, token);
+      const res = await Promise.race([apiPromise, timeoutPromise]);
       console.log("API Response:", res);
 
       toast.success(res.message || "Robot created successfully!");
@@ -567,10 +583,22 @@ const CreateList = () => {
       
       let errorMessage = "Something went wrong";
       
-      if (err.response?.data?.message) {
+      // Handle different error formats
+      if (err.response?.data?.error) {
+        errorMessage = err.response.data.error;
+      } else if (err.response?.data?.message) {
         errorMessage = err.response.data.message;
       } else if (err.message) {
         errorMessage = err.message;
+      }
+      
+      // Provide more specific error messages for common issues
+      if (errorMessage.includes("validation")) {
+        errorMessage = "Please check all required fields and try again.";
+      } else if (errorMessage.includes("duplicate") || errorMessage.includes("unique")) {
+        errorMessage = "A robot with this title already exists. Please use a different title.";
+      } else if (errorMessage.includes("authentication") || errorMessage.includes("unauthorized")) {
+        errorMessage = "Authentication failed. Please login again.";
       }
       
       setError({ general: errorMessage });
@@ -644,10 +672,29 @@ const CreateList = () => {
         </div>
         {/* robot description ends */}
 
+        {/* robot status start */}
+        <div className="col-lg-6">
+          <div className="my_profile_setting_input form-group">
+            <label htmlFor="roboStatus">Status</label>
+            <select
+              id="roboStatus"
+              className={`form-select ${error.status ? 'is-invalid' : ''}`}
+              value={status}
+              onChange={(e) => setStatus(e.target.value === 'true')}
+              required
+            >
+              <option value={true}>Active</option>
+              <option value={false}>Inactive</option>
+            </select>
+            {error.status && <span className="text-danger">{error.status}</span>}
+          </div>
+        </div>
+        {/* robot status ends */}
+
         {/* robot category start */}
         <div className="col-lg-6 col-xl-6">
           <div className="my_profile_setting_input ui_kit_select_search form-group">
-            <label>Category *</label>
+            <label>Category</label>
             <select
               id="categorySelect"
               className={`selectpicker form-select ${error.selectedCategory ? 'is-invalid' : ''}`}
@@ -674,16 +721,15 @@ const CreateList = () => {
         {/* Sub Category Field */}
         <div className="col-lg-6 col-xl-6">
           <div className="my_profile_setting_input ui_kit_select_search form-group">
-            <label>Sub Category *</label>
+            <label>Sub Category</label>
             <select
               id="subCategorySelect"
-              className={`selectpicker form-select ${error.selectedSubCategory ? 'is-invalid' : ''}`}
+              className="selectpicker form-select"
               value={selectedSubCategory}
               onChange={handleSubCategoryChange}
               data-live-search="true"
               data-width="100%"
               disabled={!selectedCategory || subCategories.length === 0}
-              required
             >
               <option value="">-- Select Sub Category --</option>
               {subCategories.map((sub) => (
@@ -692,9 +738,7 @@ const CreateList = () => {
                 </option>
               ))}
             </select>
-            {error.selectedSubCategory && (
-              <span className="text-danger">{error.selectedSubCategory}</span>
-            )}
+
           </div>
         </div>
         {/* robot sub category ends */}
@@ -702,7 +746,7 @@ const CreateList = () => {
         {/* robot manufacturer start */}
         <div className="col-lg-6 col-xl-6">
           <div className="my_profile_setting_input ui_kit_select_search form-group">
-            <label>Manufacturer *</label>
+            <label>Manufacturer</label>
             <select
               id="manufacturerSelect"
               className={`selectpicker form-select ${error.selectedManufacturer ? 'is-invalid' : ''}`}
@@ -784,7 +828,7 @@ const CreateList = () => {
         {/* robot price start */}
         <div className="col-lg-6">
           <div className="my_profile_setting_input form-group">
-            <label htmlFor="roboPrice">Total Price *</label>
+            <label htmlFor="roboPrice">Total Price</label>
             <input
               type="text"
               className={`form-control ${error.price ? 'is-invalid' : ''}`}
@@ -971,7 +1015,7 @@ const CreateList = () => {
                   {/* Power Source start */}
                   <div className="col-lg-6 col-xl-6">
                     <div className="my_profile_setting_input ui_kit_select_search form-group">
-                      <label htmlFor="powerSelect">Power Source *</label>
+                      <label htmlFor="powerSelect">Power Source</label>
                       <select
                         id="powerSelect"
                         className={`selectpicker form-select ${error.selectedPower ? 'is-invalid' : ''}`}
@@ -2155,7 +2199,7 @@ const CreateList = () => {
               {/* Primary Function start */}
               <div className="col-lg-6 col-xl-6">
                 <div className="my_profile_setting_input ui_kit_select_search form-group">
-                  <label htmlFor="primaryFunction">Primary Function *</label>
+                  <label htmlFor="primaryFunction">Primary Function</label>
                   <select
                     id="primaryFunction"
                     className={`selectpicker form-select ${error.selectedPrimaryFunction ? 'is-invalid' : ''}`}
@@ -2211,7 +2255,7 @@ const CreateList = () => {
               {/* Autonomy Level start */}
               <div className="col-lg-6 col-xl-6">
                 <div className="my_profile_setting_input ui_kit_select_search form-group">
-                  <label htmlFor="autonomyLevel">Autonomy Level *</label>
+                  <label htmlFor="autonomyLevel">Autonomy Level</label>
                   <select
                     id="autonomyLevel"
                     className={`selectpicker form-select ${error.selectedAutonomyLevel ? 'is-invalid' : ''}`}
@@ -2243,7 +2287,7 @@ const CreateList = () => {
               {/* End .col */}
               <div className="col-lg-12">
                 <div className="my_profile_setting_textarea">
-                  <label htmlFor="videoEmbedCode">Video Embed code *</label>
+                  <label htmlFor="videoEmbedCode">Video Embed code</label>
                   <textarea
                     id="videoEmbedCode"
                     className={`form-control ${error.videoembedcode ? 'is-invalid' : ''}`}

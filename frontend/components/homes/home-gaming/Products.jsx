@@ -12,16 +12,9 @@ export default function Products() {
   const [robots, setRobots] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Debug logging
-  console.log('🔍 Products component - categories:', categories);
-  console.log('🔍 Products component - categoriesLoading:', categoriesLoading);
-  console.log('🔍 Products component - categoriesError:', categoriesError);
-  console.log('🔍 Products component - activeCategory:', activeCategory);
-
   // Set first category as active when categories are loaded
   useEffect(() => {
     if (categories.length > 0 && !activeCategory) {
-      console.log('🔍 Setting first category as active:', categories[0]);
       setActiveCategory(categories[0]);
     }
   }, [categories, activeCategory]);
@@ -29,7 +22,6 @@ export default function Products() {
   // Fetch robots when active category changes
   useEffect(() => {
     if (activeCategory) {
-      console.log('🔍 Fetching robots for category:', activeCategory);
       fetchRobotsByCategory(activeCategory.slug);
     }
   }, [activeCategory]);
@@ -40,32 +32,96 @@ export default function Products() {
       const backendUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
       const apiUrl = `${backendUrl}/frontend/api/category/filter/${categorySlug}`;
       
-      console.log('🔍 Fetching robots from:', apiUrl);
-      
       const response = await fetch(apiUrl);
-      
-      console.log('🔍 Robots response status:', response.status);
-      console.log('🔍 Robots response ok:', response.ok);
       
       if (response.ok) {
         const data = await response.json();
-        console.log('🔍 Robots data received:', data);
-        console.log('🔍 Robots data type:', typeof data);
-        console.log('🔍 Robots data length:', Array.isArray(data) ? data.length : 'Not an array');
         
-        if (Array.isArray(data)) {
-          setRobots(data);
+        // Handle both new format { success: true, data: [...] } and old format [...]
+        let robotsData = [];
+        if (data.success && Array.isArray(data.data)) {
+          // New format: { success: true, data: [...] }
+          robotsData = data.data;
+        } else if (Array.isArray(data)) {
+          // Old format: direct array
+          robotsData = data;
         } else {
-          console.error('🔍 Robots data is not an array:', data);
+          console.error('Robots data is not in expected format:', data);
+          setRobots([]);
+          return;
+        }
+        
+        if (robotsData.length > 0) {
+          const transformedRobots = robotsData.map(robot => {
+            const imgSrc = robot.images && robot.images.length > 0 ? 
+              (robot.images[0].startsWith('public/') ? 
+                `${backendUrl}/${robot.images[0].replace('public/', '')}` : 
+                `${backendUrl}/${robot.images[0]}`
+              ) : 
+              `/images/products/product-1.jpg`; // Fallback image for imgSrc
+
+            const imgHover = robot.images && robot.images.length > 1 ? 
+              (robot.images[1].startsWith('public/') ? 
+                `${backendUrl}/${robot.images[1].replace('public/', '')}` : 
+                `${backendUrl}/${robot.images[1]}`
+              ) : 
+              imgSrc; // Use imgSrc as fallback for imgHover
+
+            let colors = [];
+            if (robot.color && Array.isArray(robot.color) && robot.color.length > 0) {
+              colors = robot.color.map(colorItem => ({
+                imgSrc: imgSrc,
+                bgColor: colorItem.name ? `bg-${colorItem.name.toLowerCase().replace(/\s+/g, '-')}` : 'bg-primary',
+                name: colorItem.name || 'Default'
+              }));
+            } else if (robot.color && typeof robot.color === 'object' && robot.color.name) {
+              colors = [{
+                imgSrc: imgSrc,
+                bgColor: `bg-${robot.color.name.toLowerCase().replace(/\s+/g, '-')}`,
+                name: robot.color.name
+              }];
+            } else if (robot.color && typeof robot.color === 'string' && robot.color.trim() !== '') {
+              colors = [{
+                imgSrc: imgSrc,
+                bgColor: `bg-${robot.color.toLowerCase().replace(/\s+/g, '-')}`,
+                name: robot.color
+              }];
+            } else {
+              colors = [{
+                imgSrc: imgSrc,
+                bgColor: 'bg-secondary',
+                name: 'No Color Data'
+              }];
+            }
+            
+            return {
+              ...robot,
+              id: robot._id,
+              imgSrc: imgSrc,
+              imgHover: imgHover,
+              price: robot.totalPrice || 0,
+              inStock: true,
+              oldPrice: null,
+              rating: 5,
+              isOnSale: false,
+              sizes: null,
+              wowDelay: "0.1s",
+              colors: colors,
+              tabFilterOptions: [activeCategory?.name || '']
+            };
+          });
+          setRobots(transformedRobots);
+        } else {
+          // No robots found for this category
           setRobots([]);
         }
       } else {
         const errorText = await response.text();
-        console.error('🔍 Robots error response:', errorText);
+        console.error('Robots error response:', errorText);
         setRobots([]);
       }
     } catch (error) {
-      console.error('❌ Error fetching robots:', error);
+      console.error('Error fetching robots:', error);
       setRobots([]);
     } finally {
       setLoading(false);
@@ -73,20 +129,18 @@ export default function Products() {
   };
 
   const handleCategoryClick = (category) => {
-    console.log('🔍 Category clicked:', category);
     setActiveCategory(category);
   };
 
-  // Show loading state while fetching categories
   if (categoriesLoading) {
     return (
       <section>
         <div className="container">
           <div className="heading-section-4 wow fadeInUp">
             <div className="heading-left">
-              <h3 className="heading font-5 fw-bold">Best Sellers</h3>
+              <h3 className="heading font-5 fw-bold">Popular Categories</h3>
               <ul className="tab-product style-2 justify-content-sm-center mb-0" role="tablist">
-                {[1, 2, 3, 4, 5, 6].map((index) => (
+                {[...Array(6)].map((_, index) => (
                   <React.Fragment key={index}>
                     <li className="nav-tab-item">
                       <a href="#" className="active">
@@ -98,15 +152,15 @@ export default function Products() {
                 ))}
               </ul>
             </div>
-            <Link href={`/shop-filter-canvas`} className="btn-line">
-              View All Products
+            <Link href="/shop-filter-canvas" className="btn-line">
+              View All Robots
             </Link>
           </div>
           <div className="flat-animate-tab">
             <div className="tab-content">
               <div className="tab-pane active show tabFilter filtered" id="newArrivals2" role="tabpanel">
                 <div className="tf-grid-layout tf-col-2 lg-col-3 xl-col-4">
-                  {[1, 2, 3, 4].map((index) => (
+                  {[...Array(4)].map((_, index) => (
                     <div key={index} className="card-product wow fadeInUp">
                       <div className="card-product-wrapper">
                         <div className="product-img" style={{ height: '300px', backgroundColor: '#f5f5f5', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -124,41 +178,19 @@ export default function Products() {
     );
   }
 
-  // Show error state if categories failed to load
-  if (categoriesError) {
+  if (categoriesError || !categories || categories.length === 0) {
     return (
       <section>
         <div className="container">
           <div className="heading-section-4 wow fadeInUp">
             <div className="heading-left">
-              <h3 className="heading font-5 fw-bold">Best Sellers</h3>
+              <h3 className="heading font-5 fw-bold">Popular Categories</h3>
               <div className="text-center">
-                <p className="text-danger">Error loading categories: {categoriesError}</p>
+                <p className="text-danger">Error loading categories or no categories available.</p>
               </div>
             </div>
-            <Link href={`/shop-filter-canvas`} className="btn-line">
-              View All Products
-            </Link>
-          </div>
-        </div>
-      </section>
-    );
-  }
-
-  // Show message if no categories
-  if (!categories || categories.length === 0) {
-    return (
-      <section>
-        <div className="container">
-          <div className="heading-section-4 wow fadeInUp">
-            <div className="heading-left">
-              <h3 className="heading font-5 fw-bold">Best Sellers</h3>
-              <div className="text-center">
-                <p>No categories available.</p>
-              </div>
-            </div>
-            <Link href={`/shop-filter-canvas`} className="btn-line">
-              View All Products
+            <Link href="/shop-filter-canvas" className="btn-line">
+              View All Robots
             </Link>
           </div>
         </div>
@@ -171,16 +203,16 @@ export default function Products() {
       <div className="container">
         <div className="heading-section-4 wow fadeInUp">
           <div className="heading-left">
-            <h3 className="heading font-5 fw-bold">Best Sellers</h3>
+            <h3 className="heading font-5 fw-bold">Popular Categories</h3>
             <ul
               className="tab-product style-2 justify-content-sm-center mb-0"
               role="tablist"
             >
               {categories.map((category, index) => (
-                <React.Fragment key={category._id || `category-${index}`}>
+                <React.Fragment key={category._id}>
                   <li className="nav-tab-item">
                     <a
-                      href={`#`}
+                      href="#"
                       className={activeCategory && activeCategory._id === category._id ? "active" : ""}
                       onClick={(e) => {
                         e.preventDefault();
@@ -197,8 +229,8 @@ export default function Products() {
               ))}
             </ul>
           </div>
-          <Link href={`/shop-filter-canvas`} className="btn-line">
-            View All Products
+          <Link href="/shop-filter-canvas" className="btn-line">
+            View All Robots
           </Link>
         </div>
         <div className="flat-animate-tab">
@@ -208,95 +240,52 @@ export default function Products() {
               id="newArrivals2"
               role="tabpanel"
             >
-              <div className="tf-grid-layout tf-col-2 lg-col-3 xl-col-4">
+              <Swiper
+                dir="ltr"
+                className="swiper tf-sw-latest"
+                spaceBetween={15}
+                modules={[Pagination]}
+                slidesPerView={4}
+                pagination={{
+                  clickable: true,
+                  el: ".spd25",
+                }}
+                breakpoints={{
+                  0: { slidesPerView: 2 },
+                  575: {
+                    slidesPerView: 2,
+                  },
+                  768: {
+                    slidesPerView: 3,
+                    spaceBetween: 30,
+                  },
+                  992: {
+                    slidesPerView: 4,
+                    spaceBetween: 30,
+                  },
+                }}
+              >
                 {loading ? (
-                  // Loading state for robots
-                  [1, 2, 3, 4].map((index) => (
-                    <div key={index} className="card-product wow fadeInUp">
-                      <div className="card-product-wrapper">
-                        <div className="product-img" style={{ height: '300px', backgroundColor: '#f5f5f5', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                          <span>Loading robots...</span>
+                  [...Array(4)].map((_, index) => (
+                    <SwiperSlide className="swiper-slide" key={index}>
+                      <div className="card-product wow fadeInUp">
+                        <div className="card-product-wrapper">
+                          <div className="product-img" style={{ height: '300px', backgroundColor: '#f5f5f5', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                            <span>Loading...</span>
+                          </div>
                         </div>
                       </div>
-                    </div>
+                    </SwiperSlide>
                   ))
-                ) : robots.length > 0 ? (
-                  // Display robots
-                  robots.map((robot, i) => {
-                    const imageSrc = robot.images && robot.images.length > 0 ? `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/${robot.images[0]}` : '/images/products/product-1.jpg';
-                    
-                    // Debug: Log the robot color data
-                    console.log('🔍 Robot:', robot.title);
-                    console.log('🔍 Color field:', robot.color);
-                    console.log('🔍 Color type:', typeof robot.color);
-                    console.log('🔍 Color isArray:', Array.isArray(robot.color));
-                    console.log('🔍 Color keys:', robot.color ? Object.keys(robot.color) : 'No color data');
-                    
-                    // Construct proper colors array from robot data
-                    let colors = [];
-                    if (robot.color && Array.isArray(robot.color) && robot.color.length > 0) {
-                      // If color is an array of objects with color data
-                      console.log('🔍 Processing color as array');
-                      colors = robot.color.map(colorItem => ({
-                        imgSrc: imageSrc,
-                        bgColor: colorItem.name ? `bg-${colorItem.name.toLowerCase().replace(/\s+/g, '-')}` : 'bg-primary',
-                        name: colorItem.name || 'Default'
-                      }));
-                    } else if (robot.color && typeof robot.color === 'object' && robot.color.name) {
-                      // If color is a single object
-                      console.log('🔍 Processing color as single object');
-                      colors = [{
-                        imgSrc: imageSrc,
-                        bgColor: `bg-${robot.color.name.toLowerCase().replace(/\s+/g, '-')}`,
-                        name: robot.color.name
-                      }];
-                    } else if (robot.color && typeof robot.color === 'string' && robot.color.trim() !== '') {
-                      // If color is a string
-                      console.log('🔍 Processing color as string');
-                      colors = [{
-                        imgSrc: imageSrc,
-                        bgColor: `bg-${robot.color.toLowerCase().replace(/\s+/g, '-')}`,
-                        name: robot.color
-                      }];
-                    } else {
-                      console.log('🔍 No valid color data found, using default');
-                    }
-                    
-                    // If no colors found, provide a default but make it clear it's a fallback
-                    if (colors.length === 0) {
-                      console.log('🔍 Using fallback color for', robot.title);
-                      colors = [{
-                        imgSrc: imageSrc,
-                        bgColor: 'bg-secondary', // Use different color to indicate it's a fallback
-                        name: 'No Color Data'
-                      }];
-                    }
-                    
-                    console.log('🔍 Final colors for', robot.title, ':', colors);
-
-                    return (
-                      <ProductCard1 
-                        key={robot._id || i} 
-                        product={{
-                          id: robot._id || i,
-                          title: robot.title || 'Robot',
-                          imgSrc: imageSrc,
-                          imgHover: imageSrc, // Use same image for hover to avoid empty string error
-                          price: parseFloat(robot.totalPrice) || 0, // Convert to number to fix toFixed error
-                          colors: colors, // Provide color data to avoid empty string errors
-                          tabFilterOptions: [activeCategory?.name || ''],
-                          wowDelay: `${i * 0.1}s`
-                        }}
-                      />
-                    );
-                  })
                 ) : (
-                  // No robots found
-                  <div className="col-12 text-center">
-                    <p>No robots found for this category.</p>
-                  </div>
+                  robots.map((product, i) => (
+                    <SwiperSlide className="swiper-slide" key={product._id || i}>
+                      <ProductCard1 product={product} isNotImageRatio />
+                    </SwiperSlide>
+                  ))
                 )}
-              </div>
+                <div className="sw-pagination-latest sw-dots type-circle justify-content-center spd25" />
+              </Swiper>
             </div>
           </div>
         </div>

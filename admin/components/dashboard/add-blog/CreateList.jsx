@@ -19,6 +19,9 @@ const CreateList = () => {
   const [selectedBlogcategory, setSelectedBlogcategory] = useState("");
   const [metatitle, setMetatitle] = useState([]);
   const [metadescription, setMetaDescription] = useState([]);
+  const [contentTitle, setContentTitle] = useState("");
+  const [contentParagraphs, setContentParagraphs] = useState("");
+  const [tags, setTags] = useState("");
   const [isSubmitting, setisSubmitting] = useState("");
   useEffect(() => {
     const fetchBlogcategories = async () => {
@@ -75,6 +78,14 @@ const CreateList = () => {
       setError("Slug is required");
       return;
     }
+    if (!description.trim()) {
+      setError("Description is required");
+      return;
+    }
+    if (!selectedBlogcategory) {
+      setError("Blog category is required");
+      return;
+    }
 
     setError("");
 
@@ -87,6 +98,9 @@ const CreateList = () => {
       formData.append("date", date);
       formData.append("metatitle", metatitle);
       formData.append("metadescription", metadescription);
+      formData.append("contentTitle", contentTitle);
+      formData.append("contentParagraphs", contentParagraphs);
+      formData.append("tags", tags);
       formData.append("blogcategory", selectedBlogcategory);
       if (logo) {
         formData.append("logo", logo);
@@ -105,9 +119,14 @@ const CreateList = () => {
       setTitle("");
       setDescription("");
       setSlug("");
+      setContentTitle("");
+      setContentParagraphs("");
+      setTags("");
       setLogo(null);
     } catch (error) {
       setError(error.message);
+    } finally {
+      setisSubmitting(false);
     }
   };
 
@@ -142,7 +161,7 @@ const CreateList = () => {
         {/* End .col */}
         <div className="col-lg-6 col-xl-6">
           <div className="my_profile_setting_input ui_kit_select_search form-group">
-            <label htmlFor="BlogcategorySelect">Select Blog category</label>
+            <label htmlFor="BlogcategorySelect">Select Blog category *</label>
             <select
               id="BlogcategorySelect"
               className="selectpicker form-select"
@@ -162,7 +181,7 @@ const CreateList = () => {
         </div>
         <div className="col-lg-6 col-xl-6">
           <div className="my_profile_setting_input form-group">
-            <label htmlFor="blogTitle">Blog Title</label>
+            <label htmlFor="blogTitle">Blog Title *</label>
             <input
               type="text"
               className="form-control"
@@ -216,7 +235,7 @@ const CreateList = () => {
         {/* End .col */}
         <div className="col-lg-12">
           <div className="my_profile_setting_textarea form-group">
-            <label htmlFor="blogDescription">Description</label>
+            <label htmlFor="blogDescription">Description *</label>
             <textarea
               id="blogDescription"
               className="form-control"
@@ -228,6 +247,52 @@ const CreateList = () => {
             {error.description && (
               <span className="text-danger">{error.description}</span>
             )}
+          </div>
+        </div>
+
+        {/* Content Title */}
+        <div className="col-lg-12">
+          <div className="my_profile_setting_input form-group">
+            <label htmlFor="contentTitle">Content Title</label>
+            <input
+              type="text"
+              className="form-control"
+              id="contentTitle"
+              value={contentTitle}
+              onChange={(e) => setContentTitle(e.target.value)}
+              placeholder="Enter content title"
+            />
+          </div>
+        </div>
+
+        {/* Content Paragraphs */}
+        <div className="col-lg-12">
+          <div className="my_profile_setting_textarea form-group">
+            <label htmlFor="contentParagraphs">Content Paragraphs</label>
+            <textarea
+              id="contentParagraphs"
+              className="form-control"
+              rows="10"
+              value={contentParagraphs}
+              onChange={(e) => setContentParagraphs(e.target.value)}
+              placeholder="Enter detailed content paragraphs"
+            ></textarea>
+          </div>
+        </div>
+
+        {/* Tags */}
+        <div className="col-lg-12">
+          <div className="my_profile_setting_input form-group">
+            <label htmlFor="blogTags">Tags</label>
+            <input
+              type="text"
+              className="form-control"
+              id="blogTags"
+              value={tags}
+              onChange={(e) => setTags(e.target.value)}
+              placeholder="Enter tags separated by commas (e.g., robotics, AI, technology)"
+            />
+            <small className="text-muted">Separate multiple tags with commas</small>
           </div>
         </div>
 

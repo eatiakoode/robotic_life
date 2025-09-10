@@ -4,14 +4,14 @@ import { useEffect, useState } from "react";
 import MyDashboard from "@/components/dashboard/my-dashboard";
 import { getRobotTableData } from "@/api/robot";
 import { getManufacturerTableData } from "@/api/manufacturer";
-import { getMaterialTableData } from "@/api/material";
-// import { getEnquiryTableData } from "@/api/enquiry";
+import { getTestimonialTableData } from "@/api/testimonial";
+import { getEnquiryTableData } from "@/api/enquiry";
 
 export default function DashboardClient() {
   const [data, setData] = useState({
     robot: [],
     manufacturer: [],
-    materials: [],
+    testimonials: [],
     enquery: [],
   });
 
@@ -28,20 +28,27 @@ export default function DashboardClient() {
 
         const filter = { limit: 1000, page: 1 };
 
-        // Run API calls in parallel (currently only robot)
-        const [robotRes, manufacturerRes, materialRes/*, enquiryRes */] =
-          await Promise.all([
+        // Run API calls in parallel with error handling
+        const [robotRes, manufacturerRes, testimonialRes, enquiryRes] =
+          await Promise.allSettled([
             getRobotTableData(filter, token),
             getManufacturerTableData(filter, token),
-            getMaterialTableData(filter, token),
-            // getEnquiryTableData(filter, token),
+            getTestimonialTableData(),
+            getEnquiryTableData(filter),
           ]);
-          console.log("API responses:", {manufacturerRes});
+          
+          console.log("API responses:", {
+            robot: robotRes.status,
+            manufacturer: manufacturerRes.status,
+            testimonial: testimonialRes.status,
+            enquiry: enquiryRes.status
+          });
+          
         setData({
-          robot: robotRes?.items || [],
-          manufacturer: manufacturerRes || [],
-          materials: materialRes?.items || [],
-           enquery: [], // enquiryRes?.items || [],
+          robot: robotRes.status === 'fulfilled' ? (robotRes.value?.items || []) : [],
+          manufacturer: manufacturerRes.status === 'fulfilled' ? (manufacturerRes.value || []) : [],
+          testimonials: testimonialRes.status === 'fulfilled' ? (testimonialRes.value || []) : [],
+          enquery: enquiryRes.status === 'fulfilled' ? (enquiryRes.value?.items || []) : [],
         });
       } catch (error) {
         console.error("Dashboard fetch error:", error);

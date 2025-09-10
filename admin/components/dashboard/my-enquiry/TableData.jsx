@@ -1,100 +1,151 @@
 "use client"; // Add this at the top
 
-import { getEnquiryTableData,deleteEnquiryAPI } from "@/api/enquiry";
+import { getEnquiryTableData, deleteEnquiryAPI, updateEnquiryAPI } from "@/api/enquiry";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { toast } from 'react-toastify';
+import { toast } from "react-toastify";
 
-const TableData = ({enquiryList,setEnquiryList}) => {
-    const router = useRouter();
-  
-    
-    const deleteEnquiry = async (id) => {
-        const isConfirmed = window.confirm("Are you sure you want to delete this city?");
-        if (!isConfirmed) return;
-    
-        try {
-          const data = await deleteEnquiryAPI(id); // 🔹 Call the API function
-          
-          // alert(data.message);
-           toast.success(data.message);
-          setEnquiryList((prevEnquiryList) => prevEnquiryList.filter((enquiry) => enquiry._id !== id));
-          //setTitle(""); // ✅ Reset input after success
-        } catch (error) {
-          alert("Failed to delete city.");
-          //setError(error.message); // ❌ Show error if request fails
-        }
-      };
-  let theadConent = [
-    "Name",
-    "Email",
-    "Phone",
-    "Subject",
-    "Message",
-    "Meeting Date Time",
-    "Date",
-    "Action",
-  ];
+const TableData = ({ enquiryList, setEnquiryList }) => {
+  const router = useRouter();
+
+  const deleteEnquiry = async (id) => {
+    const isConfirmed = window.confirm(
+      "Are you sure you want to delete this enquiry?"
+    );
+    if (!isConfirmed) return;
+
+    try {
+      const data = await deleteEnquiryAPI(id); // 🔹 Call the API function
+
+      toast.success(data.message || "Enquiry deleted successfully");
+      setEnquiryList((prevEnquiryList) =>
+        prevEnquiryList.filter((enquiry) => enquiry._id !== id)
+      );
+    } catch (error) {
+      console.error("Delete error:", error);
+      toast.error(error.message || "Failed to delete enquiry");
+    }
+  };
+
+  const updateEnquiryStatus = async (id, newStatus) => {
+    try {
+      const enquiry = enquiryList.find(e => e._id === id);
+      if (!enquiry) return;
+
+      const updatedEnquiry = { ...enquiry, status: newStatus };
+      const data = await updateEnquiryAPI(id, updatedEnquiry);
+
+      toast.success(data.message || "Enquiry status updated successfully");
+      setEnquiryList((prevEnquiryList) =>
+        prevEnquiryList.map((enquiry) =>
+          enquiry._id === id ? { ...enquiry, status: newStatus } : enquiry
+        )
+      );
+    } catch (error) {
+      console.error("Update error:", error);
+      toast.error(error.message || "Failed to update enquiry status");
+    }
+  };
+  let theadConent = ["Name", "Email", "Message", "Status", "Date", "Action"];
   let tbodyContent = enquiryList?.map((item) => (
-    <tr key={item._id}>
-      <td scope="row">
-              <h4>{item.name}</h4>
+    <tr key={item._id} style={{ height: '60px' }}>
+      <td scope="row" style={{ verticalAlign: 'middle', padding: '12px 8px' }}>
+        <div style={{ fontSize: '14px', fontWeight: '600', color: '#333' }}>{item.name}</div>
       </td>
-      {/* End td */}
-      <td>{item.email}</td>
-      <td>{item.phone}</td>
-       <td>{item.subject}</td>
-        <td>{item.message}</td>
-        <td> {new Date(item.date).toLocaleString('en-US', {
-            month: 'short',
-            day: '2-digit',
-            year: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit',
-            hour12: true // optional, set to false for 24-hour format
-          })}</td>
-        <td>{new Date(item.createdAt).toLocaleDateString('en-US', {
-          month: 'short',
-          day: '2-digit',
-          year: 'numeric',
-        })}</td>
-      {/* End td */}
-
-     
-      {/* End td */}
-
-     
-
-      <td>
-        <ul className="view_edit_delete_list mb0">
-          
-          {/* End li */}
-
-          <li
-            className="list-inline-item"
-            data-toggle="tooltip"
-            data-placement="top"
-            title="Delete"
-          >
-            <a href="#"  onClick={() => deleteEnquiry(item._id)}>
-              <span className="flaticon-garbage"></span>
-            </a>
-          </li>
-        </ul>
+      <td style={{ verticalAlign: 'middle', padding: '12px 8px' }}>
+        <div style={{ fontSize: '13px', color: '#666' }}>{item.email}</div>
       </td>
-      {/* End td */}
+      <td style={{ verticalAlign: 'middle', padding: '12px 8px', maxWidth: '200px' }}>
+        <div style={{ 
+          fontSize: '13px', 
+          color: '#333',
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+          whiteSpace: 'nowrap',
+          maxWidth: '180px'
+        }}>
+          {item.message}
+        </div>
+      </td>
+      <td style={{ verticalAlign: 'middle', textAlign: 'center', padding: '12px 8px' }}>
+        <select 
+          value={item.status || 'new'}
+          onChange={(e) => updateEnquiryStatus(item._id, e.target.value)}
+          style={{ 
+            border: '1px solid #ddd',
+            borderRadius: '4px',
+            padding: '4px 8px',
+            fontSize: '12px',
+            fontWeight: '500',
+            cursor: 'pointer',
+            minWidth: '90px',
+            backgroundColor: '#fff',
+            color: '#333'
+          }}
+        >
+          <option value="new">New</option>
+          <option value="in-progress">In Progress</option>
+          <option value="resolved">Resolved</option>
+        </select>
+      </td>
+      <td style={{ verticalAlign: 'middle', padding: '12px 8px' }}>
+        <div style={{ fontSize: '12px', color: '#666' }}>
+          {new Date(item.createdAt).toLocaleString("en-US", {
+            month: "short",
+            day: "2-digit",
+            year: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: true,
+          })}
+        </div>
+      </td>
+      <td style={{ verticalAlign: 'middle', textAlign: 'center', padding: '12px 8px' }}>
+        <button
+          onClick={() => deleteEnquiry(item._id)}
+          style={{
+            background: 'none',
+            border: 'none',
+            cursor: 'pointer',
+            padding: '4px',
+            borderRadius: '4px',
+            color: '#dc3545'
+          }}
+          title="Delete"
+        >
+          <span className="flaticon-garbage" style={{ fontSize: '16px' }}></span>
+        </button>
+      </td>
     </tr>
   ));
-// useEffect(() => {
-//     fetchEnquiryData();
-//   }, []); 
+  // useEffect(() => {
+  //     fetchEnquiryData();
+  //   }, []);
   return (
     <>
-      <table className="table">
+      <table className="table" style={{ 
+        tableLayout: 'fixed',
+        borderCollapse: 'collapse',
+        width: '100%',
+        backgroundColor: '#fff'
+      }}>
         <thead className="thead-light">
-          <tr>
+          <tr style={{ height: '50px' }}>
             {theadConent.map((value, i) => (
-              <th scope="col" key={i}>
+              <th 
+                scope="col" 
+                key={i}
+                style={{ 
+                  verticalAlign: 'middle',
+                  textAlign: value === 'Status' || value === 'Action' ? 'center' : 'left',
+                  fontWeight: '600',
+                  fontSize: '14px',
+                  padding: '12px 8px',
+                  borderBottom: '2px solid #dee2e6',
+                  backgroundColor: '#f8f9fa',
+                  color: '#495057'
+                }}
+              >
                 {value}
               </th>
             ))}

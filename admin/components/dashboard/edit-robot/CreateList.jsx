@@ -109,6 +109,7 @@ const EditList = () => {
   const [specifications, setSpecifications] = useState([]);
   const [metatitle, setMetatitle] = useState("");
   const [metadescription, setMetaDescription] = useState("");
+  const [status, setStatus] = useState(true); // true = Active, false = Inactive
 
   const [featuredimage, setFeaturedImage] = useState(null);
   const [existingFeaturedImage, setExistingFeaturedImage] = useState("");
@@ -116,11 +117,20 @@ const EditList = () => {
   const [existingImages, setExistingImages] = useState([]);
 
   const normalizeImagePath = (path) => {
-  if (!path) return "";
-  return path.startsWith("http")
-    ? path
-    : "/" + path.replace(/^public\//, "");
-};
+    if (!path) return "";
+    
+    // If it's already a full URL, return as is
+    if (path.startsWith("http")) {
+      return path;
+    }
+    
+    // Get the backend API URL and construct full image URL
+    const apiUrl = process.env.NEXT_PUBLIC_ADMIN_API_URL || "http://localhost:5000/";
+    const cleanPath = path.replace(/^public\//, "");
+    const fullImageUrl = apiUrl + cleanPath;
+    
+    return fullImageUrl;
+  };
 
   // Load existing robot data when in edit mode
   useEffect(() => {
@@ -242,13 +252,20 @@ const EditList = () => {
           setSelectedAutonomyLevel(robotData.autonomyLevel?._id || robotData.autonomyLevel || "");
           
           // Media
-          setVideoEmbedCode(robotData.videoembedcode || "");
+          setVideoEmbedCode(robotData.videoEmbedCode || "");
           setExistingFeaturedImage(robotData.featuredimage || "");
           setExistingImages(robotData.images || []);
           
+          // Debug image data
+          console.log("Robot image data:", robotData.images);
+          console.log("Featured image data:", robotData.featuredimage);
+          
           // Meta information
-          setMetatitle(robotData.metatitle || "");
-          setMetaDescription(robotData.metadescription || "");
+          setMetatitle(robotData.metaTitle || "");
+          setMetaDescription(robotData.metaDescription || "");
+          
+          // Status
+          setStatus(robotData.status !== undefined ? robotData.status : true);
           
           // If category is selected, load subcategories
           if (robotData.category?._id || robotData.category) {
@@ -352,14 +369,14 @@ const EditList = () => {
       .replace(/\s+/g, "-");
   };
 
-  // Auto-generate slug from title - Updated logic
+  // Auto-generate slug from title - Updated logic for both create and edit modes
   useEffect(() => {
-    if (!isEditMode && title) {
-      // Only auto-generate in create mode
+    if (title) {
+      // Always generate slug when title changes (both create and edit modes)
       const generatedSlug = generateSlug(title);
       setSlug(generatedSlug);
     }
-  }, [title, isEditMode]);
+  }, [title]);
 
   // --- Handlers ---
   const handleCountryChange = async (e) => {
@@ -489,45 +506,18 @@ const EditList = () => {
     e.preventDefault();
     const newErrors = {};
 
-    // Ensure slug is generated if empty
-    let finalSlug = slug?.trim();
-    if (!finalSlug && title?.trim()) {
-      finalSlug = generateSlug(title);
+    // Always generate slug from title to ensure consistency
+    let finalSlug = title?.trim() ? generateSlug(title) : "";
+    if (finalSlug !== slug) {
       setSlug(finalSlug);
     }
 
-    // Validation list
+    // Validation list - Only essential fields are required
     const requiredFields = [
       { key: "title", value: title, name: "Title" },
-      { key: "slug", value: finalSlug, name: "Slug" },
       { key: "description", value: description, name: "Description" },
-      { key: "price", value: price, name: "Total Price" },
-      { key: "countryid", value: selectedCountry, name: "Country of Origin" },
-      { key: "categoryid", value: selectedCategory, name: "Category" },
-      // { key: "subcategoryid", value: selectedSubCategory, name: "Sub Category" },
-      { key: "manufacturerid", value: selectedManufacturer, name: "Manufacturer" },
+      { key: "selectedCountry", value: selectedCountry, name: "Country of Origin" },
       { key: "launchYear", value: launchYear, name: "Launch Year" },
-      { key: "length", value: length, name: "Length" },
-      { key: "width", value: width, name: "Width" },
-      { key: "height", value: height, name: "Height" },
-      { key: "weight", value: weight, name: "Weight" },
-      { key: "batteryCapacity", value: batteryCapacity, name: "Battery Capacity" },
-      { key: "runtime", value: runtime, name: "Runtime" },
-      { key: "speed", value: speed, name: "Speed" },
-      { key: "accuracy", value: accuracy, name: "Accuracy" },
-      { key: "selectedPower", value: selectedPower, name: "Power Source" },
-      { key: "videoembedcode", value: videoembedcode, name: "Video Embed Code" },
-      { key: "selectedPrimaryFunction", value: selectedPrimaryFunction, name: "Primary Function" },
-      { key: "selectedOperatingEnvironment", value: selectedOperatingEnvironment, name: "Operating Environment" },
-      { key: "selectedAutonomyLevel", value: selectedAutonomyLevel, name: "Autonomy Level" },
-      { key: "colors", value: selectedColors.length > 0 ? selectedColors : null, name: "Colors" },
-      { key: "materials", value: selectedMaterials.length > 0 ? selectedMaterials : null, name: "Materials" },
-      { key: "navigationTypes", value: selectedNavigationType.length > 0 ? selectedNavigationType : null, name: "Navigation Types" },
-      { key: "sensors", value: selectedSensor.length > 0 ? selectedSensor : null, name: "Sensors" },
-      { key: "aiSoftwareFeatures", value: selectedAISoftwareFeature.length > 0 ? selectedAISoftwareFeature : null, name: "AI Software Features" },
-      { key: "terrainCapability", value: selectedTerrainCapability.length > 0 ? selectedTerrainCapability : null, name: "Terrain Capability" },
-      { key: "communicationMethod", value: selectedCommunicationMethod.length > 0 ? selectedCommunicationMethod : null, name: "Communication Method" },
-      { key: "payloadType", value: selectedPayloadType.length > 0 ? selectedPayloadType : null, name: "Payload Type" },
     ];
 
     // Check for empty required fields
@@ -558,9 +548,12 @@ const EditList = () => {
       formData.append("title", title?.trim() || "");
       formData.append("slug", finalSlug || "");
       formData.append("description", description?.trim() || "");
+      formData.append("status", status ? "true" : "false");
       formData.append("totalPrice", price?.toString() || "");
       formData.append("countryOfOrigin", selectedCountry || "");
-      formData.append("category", selectedCategory || "");
+      // Use subcategory ID if selected, otherwise use parent category ID
+      const categoryToSave = selectedSubCategory || selectedCategory;
+      formData.append("category", categoryToSave || "");
       formData.append("subcategoryid", selectedSubCategory || "");
       formData.append("manufacturer", selectedManufacturer || "");
       formData.append("launchYear", launchYear?.toString() || "");
@@ -632,10 +625,13 @@ const EditList = () => {
       });
 
       // In edit mode, append existing images that should be kept
-      if (isEditMode) {
-        existingImages.forEach((img, index) => {
-          formData.append(`existingImages[${index}]`, img);
-        });
+      if (isEditMode && existingImages.length > 0) {
+        formData.append("existingImages", JSON.stringify(existingImages));
+      }
+      
+      // In edit mode, append existing featured image if no new one is selected
+      if (isEditMode && existingFeaturedImage && !featuredimage) {
+        formData.append("existingFeaturedImage", existingFeaturedImage);
       }
 
       // Debug: Log what's being sent
@@ -679,7 +675,7 @@ const EditList = () => {
         {/* Robot title start */}
         <div className="col-lg-6">
           <div className="my_profile_setting_input form-group">
-            <label htmlFor="roboTitle">Robot Title</label>
+            <label htmlFor="roboTitle">Robot Title *</label>
             <input
               type="text"
               className="form-control"
@@ -695,15 +691,18 @@ const EditList = () => {
         {/* Robot slug start */}
         <div className="col-lg-6">
           <div className="my_profile_setting_input form-group">
-            <label htmlFor="roboSlug">Robot Slug</label>
+            <label htmlFor="roboSlug">Robot Slug <span className="text-muted">(Auto-generated)</span></label>
             <input
               type="text"
               className="form-control"
               id="roboSlug"
               value={slug}
-              onChange={(e) => setSlug(e.target.value)}
+
               placeholder="Auto-generated slug"
+              disabled={true}
+              style={{ backgroundColor: '#f8f9fa', cursor: 'not-allowed' }}
             />
+            <small className="text-muted">Slug is automatically generated from the title</small>
             {error.slug && <span className="text-danger">{error.slug}</span>}
           </div>
         </div>
@@ -711,7 +710,7 @@ const EditList = () => {
         {/* Robot description start */}
         <div className="col-lg-12">
           <div className="my_profile_setting_textarea form-group">
-            <label htmlFor="roboDescription">Description</label>
+            <label htmlFor="roboDescription">Description *</label>
             <textarea
               id="roboDescription"
               className="form-control"
@@ -723,6 +722,23 @@ const EditList = () => {
             {error.description && (
               <span className="text-danger">{error.description}</span>
             )}
+          </div>
+        </div>
+
+        {/* Robot status start */}
+        <div className="col-lg-6">
+          <div className="my_profile_setting_input form-group">
+            <label htmlFor="roboStatus">Status</label>
+            <select
+              id="roboStatus"
+              className="form-select"
+              value={status}
+              onChange={(e) => setStatus(e.target.value === 'true')}
+            >
+              <option value={true}>Active</option>
+              <option value={false}>Inactive</option>
+            </select>
+            {error.status && <span className="text-danger">{error.status}</span>}
           </div>
         </div>
 
@@ -805,7 +821,7 @@ const EditList = () => {
         {/* Robot country start */}
         <div className="col-lg-6 col-xl-6">
           <div className="my_profile_setting_input ui_kit_select_search form-group">
-            <label htmlFor="countrySelect">Country of Origin</label>
+            <label htmlFor="countrySelect">Country of Origin *</label>
             <select
               id="countrySelect"
               className="selectpicker form-select"
@@ -830,7 +846,7 @@ const EditList = () => {
         {/* Robot launch year start */}
         <div className="col-lg-6">
           <div className="my_profile_setting_input form-group">
-            <label htmlFor="launchYear">Launch Year</label>
+            <label htmlFor="launchYear">Launch Year *</label>
             <select
               id="launchYear"
               className="form-control"
@@ -901,7 +917,7 @@ const EditList = () => {
                     <input
                       type="number"
                       className="form-control pe-5"
-                      placeholder="Enter Robot Length"
+                      placeholder="Enter Robot Length *"
                       value={length}
                       onChange={(e) => setLength(e.target.value)}
                     />
@@ -933,7 +949,7 @@ const EditList = () => {
                     <input
                       type="number"
                       className="form-control pe-5"
-                      placeholder="Enter Robot Width"
+                      placeholder="Enter Robot Width *"
                       value={width}
                       onChange={(e) => setWidth(e.target.value)}
                     />
@@ -965,7 +981,7 @@ const EditList = () => {
                     <input
                       type="number"
                       className="form-control pe-5"
-                      placeholder="Enter Robot Height"
+                      placeholder="Enter Robot Height *"
                       value={height}
                       onChange={(e) => setHeight(e.target.value)}
                     />
@@ -1002,7 +1018,7 @@ const EditList = () => {
                       <input
                         type="number"
                         className="form-control pe-5"
-                        placeholder="Enter Robot Weight"
+                        placeholder="Enter Robot Weight *"
                         value={weight}
                         onChange={(e) => setWeight(e.target.value)}
                       />
@@ -1032,7 +1048,7 @@ const EditList = () => {
                   {/* Power Source start */}
                   <div className="col-lg-6 col-xl-6">
                     <div className="my_profile_setting_input ui_kit_select_search form-group">
-                      <label htmlFor="powerSelect">Power Source</label>
+            <label htmlFor="powerSelect">Power Source</label>
                       <select
                         id="powerSelect"
                         className="selectpicker form-select"
@@ -1061,7 +1077,7 @@ const EditList = () => {
                       <input
                         type="number"
                         className="form-control pe-5"
-                        placeholder="Enter Battery Capacity"
+                        placeholder="Enter Battery Capacity *"
                         value={batteryCapacity}
                         onChange={(e) => setBatteryCapacity(e.target.value)}
                       />
@@ -1128,7 +1144,7 @@ const EditList = () => {
                       <input
                         type="number"
                         className="form-control pe-5"
-                        placeholder="Enter Robot Runtime"
+                        placeholder="Enter Robot Runtime *"
                         value={runtime}
                         onChange={(e) => setRuntime(e.target.value)}
                       />
@@ -1196,7 +1212,7 @@ const EditList = () => {
                       <input
                         type="number"
                         className="form-control pe-5"
-                        placeholder="Enter Robot Speed"
+                        placeholder="Enter Robot Speed *"
                         value={speed}
                         onChange={(e) => setSpeed(e.target.value)}
                       />
@@ -1272,7 +1288,7 @@ const EditList = () => {
                       <input
                         type="number"
                         className="form-control pe-5"
-                        placeholder="Enter Robot Accuracy"
+                        placeholder="Enter Robot Accuracy *"
                         value={accuracy}
                         onChange={(e) => setAccuracy(e.target.value)}
                       />
@@ -1335,7 +1351,7 @@ const EditList = () => {
                   {/* Color start */}
                   <div className="col-lg-6 col-xl-6">
                     <div className="my_profile_setting_input ui_kit_select_search form-group">
-                      <label htmlFor="colorSelect">Color</label>
+            <label htmlFor="colorSelect">Color</label>
                       <div className="position-relative">
                         <select
                           id="colorSelect"
@@ -1793,7 +1809,7 @@ const EditList = () => {
               {/* Primary Function start */}
               <div className="col-lg-6 col-xl-6">
                 <div className="my_profile_setting_input ui_kit_select_search form-group">
-                  <label htmlFor="primaryFunctionSelect">Primary Function</label>
+            <label htmlFor="primaryFunctionSelect">Primary Function</label>
                   <select
                     id="primaryFunctionSelect"
                     className="selectpicker form-select"
@@ -1818,7 +1834,7 @@ const EditList = () => {
               {/* Operating Environment start */}
               <div className="col-lg-6 col-xl-6">
                 <div className="my_profile_setting_input ui_kit_select_search form-group">
-                  <label htmlFor="operatingEnvironmentSelect">Operating Environment</label>
+            <label htmlFor="operatingEnvironmentSelect">Operating Environment</label>
                   <select
                     id="operatingEnvironmentSelect"
                     className="selectpicker form-select"
@@ -1843,7 +1859,7 @@ const EditList = () => {
               {/* Autonomy Level start */}
               <div className="col-lg-6 col-xl-6">
                 <div className="my_profile_setting_input ui_kit_select_search form-group">
-                  <label htmlFor="autonomyLevelSelect">Autonomy Level</label>
+            <label htmlFor="autonomyLevelSelect">Autonomy Level</label>
                   <select
                     id="autonomyLevelSelect"
                     className="selectpicker form-select"
@@ -2190,7 +2206,7 @@ const EditList = () => {
         </div>
 
         {/* Featured image start */}
-        {/* <div className="col-lg-12">
+        <div className="col-lg-12">
           <div className="my_profile_setting_input form-group">
             <label htmlFor="featuredImage">Featured Image</label>
             <input
@@ -2203,12 +2219,29 @@ const EditList = () => {
             {existingFeaturedImage && !featuredimage && (
               <div className="mt-2">
                 <p>Current featured image:</p>
-                <Image
+                <img
                   src={normalizeImagePath(existingFeaturedImage)}
                   alt="Featured"
-                  width={200}
-                  height={150}
-                  style={{ objectFit: "cover", borderRadius: "8px" }}
+                  style={{ 
+                    width: '200px', 
+                    height: '150px', 
+                    objectFit: "cover", 
+                    borderRadius: "8px",
+                    border: '1px solid #ddd'
+                  }}
+                  onError={(e) => {
+                    e.target.style.display = 'none';
+                    const container = e.target.parentElement;
+                    if (container) {
+                      container.innerHTML = `
+                        <div style="text-align: center; color: #6c757d; padding: 20px; border: 1px solid #ddd; border-radius: 8px; width: 200px; height: 150px; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                          <i class="fas fa-image" style="font-size: 24px; margin-bottom: 8px;"></i>
+                          <div style="font-size: 12px;">Featured image not found</div>
+                          <div style="font-size: 10px; color: #adb5bd; word-break: break-all;">${existingFeaturedImage}</div>
+                        </div>
+                      `;
+                    }
+                  }}
                 />
               </div>
             )}
@@ -2218,7 +2251,7 @@ const EditList = () => {
               </div>
             )}
           </div>
-        </div> */}
+        </div>
 
         {/* Multiple images start */}
         <div className="col-lg-12">
@@ -2234,21 +2267,58 @@ const EditList = () => {
             />
             
             {/* Display existing images */}
-            {/* {existingImages.length > 0 && (
+            {existingImages.length > 0 && (
               <div className="mt-3">
-                <h6>Existing Images:</h6>
+                <div className="d-flex justify-content-between align-items-center mb-2">
+                  <div>
+                    <h6 className="mb-0">Existing Images:</h6>
+                    <small className="text-muted">Images showing "Image not found" are missing from the server</small>
+                  </div>
+                  <button
+                    type="button"
+                    className="btn btn-outline-danger btn-sm"
+                    onClick={() => {
+                      if (window.confirm("Are you sure you want to remove all existing images? This will delete them from the database.")) {
+                        setExistingImages([]);
+                      }
+                    }}
+                  >
+                    <i className="fas fa-trash me-1"></i>Clear All
+                  </button>
+                </div>
                 <div className="row">
-                  {existingImages.map((img, index) => (
+                  {existingImages.map((img, index) => {
+                    const imagePath = normalizeImagePath(img);
+                    return (
                     <div key={index} className="col-md-3 mb-3">
                       <div className="position-relative">
-                        <Image
-                          src={normalizeImagePath(img)}
-                          alt={`Existing ${index}`}
-                          width={200}
-                          height={150}
-                          style={{ objectFit: "cover", borderRadius: "8px" }}
-                          className="w-100"
-                        />
+                        <div className="image-container" style={{ width: '200px', height: '150px', border: '1px solid #ddd', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#f8f9fa' }}>
+                          <img
+                            src={imagePath}
+                            alt={`Existing ${index}`}
+                            style={{ 
+                              width: '100%', 
+                              height: '100%', 
+                              objectFit: "cover", 
+                              borderRadius: "8px",
+                              display: 'block'
+                            }}
+                            onError={(e) => {
+                              // Replace with placeholder content
+                              e.target.style.display = 'none';
+                              const container = e.target.parentElement;
+                              if (container) {
+                                container.innerHTML = `
+                                  <div style="text-align: center; color: #6c757d; padding: 20px; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                                    <i class="fas fa-image" style="font-size: 24px; margin-bottom: 8px;"></i>
+                                    <div style="font-size: 12px;">Image not found</div>
+                                    <div style="font-size: 10px; color: #adb5bd; word-break: break-all;">${img}</div>
+                                  </div>
+                                `;
+                              }
+                            }}
+                          />
+                        </div>
                         <button
                           type="button"
                           className="btn btn-danger btn-sm position-absolute top-0 end-0 m-1"
@@ -2258,10 +2328,11 @@ const EditList = () => {
                         </button>
                       </div>
                     </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </div>
-            )} */}
+            )}
 
             {/* Display new selected images */}
             {robotSelectedImgs.length > 0 && (

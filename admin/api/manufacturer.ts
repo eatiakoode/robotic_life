@@ -16,7 +16,7 @@ const token =userData.token
       throw new Error("User not authenticated!");
     }
 
-    const response = await fetch(process.env.NEXT_PUBLIC_ADMIN_API_URL+"api/manufacturer", {
+    const response = await fetch(process.env.NEXT_PUBLIC_ADMIN_API_URL+"admin/api/manufacturer", {
       method: "POST",
       headers: {
         // "Content-Type": "application/json",
@@ -44,14 +44,16 @@ const token =userData.token
 
     await new Promise((resolve) => setTimeout(resolve, 10));
     try {
-      const userData = JSON.parse(localStorage.getItem("user"));
+      const userData = JSON.parse(localStorage.getItem("user") || "{}");
       const token = userData?.token;
-      
+
       if (!token) {
-        throw new Error("User not authenticated!");
+        console.warn("No authentication token found for manufacturer API");
+        return [];
       }
 
-      const response = await fetch(process.env.NEXT_PUBLIC_ADMIN_API_URL+"api/manufacturer?limit="+defaultFilter.limit+"&skip="+defaultFilter.page, {
+      const apiUrl = process.env.NEXT_PUBLIC_ADMIN_API_URL || 'http://localhost:5000/';
+      const response = await fetch(apiUrl+"admin/api/manufacturer?limit="+defaultFilter.limit+"&skip="+defaultFilter.page, {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -60,7 +62,8 @@ const token =userData.token
       
       console.log("Manufacturer response:", response);
       if (!response.ok) {
-        throw new Error("Failed to fetch manufacturers");
+        console.error(`Manufacturer API error: ${response.status} ${response.statusText}`);
+        return [];
       }
       
       const data = await response.json();
@@ -121,7 +124,7 @@ const token =userData.token
       throw new Error("User not authenticated!");
     }
 
-    const response = await fetch(process.env.NEXT_PUBLIC_ADMIN_API_URL+`api/manufacturer/${id}`, {
+    const response = await fetch(process.env.NEXT_PUBLIC_ADMIN_API_URL+`admin/api/manufacturer/${id}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

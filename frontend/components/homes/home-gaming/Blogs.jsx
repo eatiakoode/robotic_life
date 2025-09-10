@@ -6,11 +6,8 @@ import Link from "next/link";
 import Image from "next/image";
 import { useBlogs } from "@/hooks/useBlogs";
 
-export default function Blogs() {
+export default function  Blogs() {
   const { blogs, loading, error } = useBlogs();
-
-
-  
   // Transform backend blog data to match the expected format
   const transformedBlogs = blogs.map((blog, index) => {
     // Fix the image URL - backend stores just filename, need full path
@@ -29,16 +26,11 @@ export default function Blogs() {
       }
     }
     
-    console.log(`Blog ${index}:`, { 
-      original: blog.logoimage, 
-      transformed: imageSrc,
-      title: blog.title,
-      hasImage: !!blog.logoimage,
-      finalUrl: imageSrc
-    });
+
     
     return {
       id: blog._id || blog.id || index + 1,
+      slug: blog.slug || blog._id || blog.id || index + 1, // Use slug for routing, fallback to ID
       imageSrc: imageSrc,
       alt: blog.title || "Blog Image",
       date: blog.createdAt ? new Date(blog.createdAt).toLocaleDateString('en-US', { 
@@ -56,7 +48,7 @@ export default function Blogs() {
         <div className="container">
           <div className="heading-section-2 align-items-center type-2 wow fadeInUp">
             <h3 className="heading font-5 fw-bold">News &amp; Reviews</h3>
-            <Link href={`/shop-filter-canvas`} className="btn-line">
+            <Link href={`/shop-collection`} className="btn-line">
               View All
             </Link>
           </div>
@@ -96,7 +88,7 @@ export default function Blogs() {
         <div className="container">
           <div className="heading-section-2 align-items-center type-2 wow fadeInUp">
             <h3 className="heading font-5 fw-bold">News &amp; Reviews</h3>
-            <Link href={`/shop-filter-canvas`} className="btn-line">
+            <Link href={`/shop-collection`} className="btn-line">
               View All
             </Link>
           </div>
@@ -126,7 +118,7 @@ export default function Blogs() {
                   className="wg-blog style-abs hover-image wow fadeInUp"
                   data-wow-delay={post.delay}
                 >
-                  <Link href={`/blog-detail/${post.id}`} className="image">
+                  <Link href={`/blog-detail/${post.slug}`} className="image">
                     <img
                       className="lazyload"
                       data-src={post.imageSrc}
@@ -135,11 +127,10 @@ export default function Blogs() {
                       width={630}
                       height={472}
                       onError={(e) => {
-                        console.log('Image failed to load:', post.imageSrc);
                         e.target.src = "/images/blog/gaming-1.jpg"; // Fallback image
                       }}
                       onLoad={() => {
-                        console.log('Image loaded successfully:', post.imageSrc);
+                        // Image loaded successfully
                       }}
                     />
                   </Link>
@@ -150,7 +141,7 @@ export default function Blogs() {
                     <h4 className="title fw-5">
                       <Link
                         className="link text-white"
-                        href={`/blog-detail/${post.id}`}
+                        href={`/blog-detail/${post.slug}`}
                       >
                         {post.title}
                       </Link>
@@ -172,7 +163,7 @@ export default function Blogs() {
       <div className="container">
         <div className="heading-section-2 align-items-center type-2 wow fadeInUp">
           <h3 className="heading font-5 fw-bold">News &amp; Reviews</h3>
-          <Link href={`/shop-filter-canvas`} className="btn-line">
+          <Link href={`/shop-collection`} className="btn-line">
             View All
           </Link>
         </div>
@@ -204,7 +195,7 @@ export default function Blogs() {
                 className="wg-blog style-abs hover-image wow fadeInUp"
                 data-wow-delay={post.delay}
               >
-                <Link href={`/blog-detail/${post.id}`} className="image">
+                <Link href={`/blog-detail/${post.slug}`} className="image">
                   <img
                     className="lazyload"
                     data-src={post.imageSrc}
@@ -213,11 +204,10 @@ export default function Blogs() {
                     width={630}
                     height={472}
                     onError={(e) => {
-                      console.log('Image failed to load:', post.imageSrc);
                       e.target.src = "/images/blog/gaming-1.jpg"; // Fallback image
                     }}
                     onLoad={() => {
-                      console.log('Image loaded successfully:', post.imageSrc);
+                      // Image loaded successfully
                     }}
                   />
                 </Link>
@@ -228,7 +218,7 @@ export default function Blogs() {
                   <h4 className="title fw-5">
                     <Link
                       className="link text-white"
-                      href={`/blog-detail/${post.id}`}
+                      href={`/blog-detail/${post.slug}`}
                     >
                       {post.title}
                     </Link>

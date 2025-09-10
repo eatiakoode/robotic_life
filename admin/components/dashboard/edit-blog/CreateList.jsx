@@ -23,8 +23,28 @@ const CreateList = () => {
   const [logoimage, setLogoImage] = useState(null);
   const [metatitle, setMetatitle] = useState("");
   const [metadescription, setMetaDescription] = useState("");
+  const [contentTitle, setContentTitle] = useState("");
+  const [contentParagraphs, setContentParagraphs] = useState("");
+  const [tags, setTags] = useState("");
   const [blogcategories, setBlogcategories] = useState([]);
   const [selectedBlogcategory, setSelectedBlogcategory] = useState("");
+
+  // Image path normalization function
+  const normalizeImagePath = (path) => {
+    if (!path) return "";
+    
+    // If it's already a full URL, return as is
+    if (path.startsWith("http")) {
+      return path;
+    }
+    
+    // Get the backend API URL and construct full image URL
+    const apiUrl = process.env.NEXT_PUBLIC_ADMIN_API_URL || "http://localhost:5000/";
+    const cleanPath = path.replace(/^public\//, "");
+    const fullImageUrl = apiUrl + cleanPath;
+    
+    return fullImageUrl;
+  };
 
   // Upload handler
   const uploadLogo = (e) => {
@@ -64,10 +84,14 @@ const CreateList = () => {
         setDate(blogData.date || "");
         setMetatitle(blogData.metatitle || "");
         setMetaDescription(blogData.metadescription || "");
+        setContentTitle(blogData.contentTitle || "");
+        setContentParagraphs(blogData.contentParagraphs || "");
+        setTags(Array.isArray(blogData.tags) ? blogData.tags.join(", ") : (blogData.tags || ""));
         setSelectedBlogcategory(blogData.blogcategory || "");
 
         if (blogData.logoimage) {
-          setLogoImage(process.env.NEXT_PUBLIC_API_URL + blogData.logoimage);
+          const normalizedPath = normalizeImagePath(blogData.logoimage);
+          setLogoImage(normalizedPath);
         }
       } catch (error) {
         console.error("Error fetching Blog:", error);
@@ -114,6 +138,9 @@ const CreateList = () => {
       formData.append("status", status);
       formData.append("metatitle", metatitle);
       formData.append("metadescription", metadescription);
+      formData.append("contentTitle", contentTitle);
+      formData.append("contentParagraphs", contentParagraphs);
+      formData.append("tags", tags);
       if (logo) {
         formData.append("logo", logo);
       }
@@ -150,9 +177,19 @@ const CreateList = () => {
               htmlFor="image1"
               style={
                 logoimage
-                  ? { backgroundImage: `url(${logoimage})` }
+                  ? { 
+                      backgroundImage: `url(${logoimage})`,
+                      backgroundSize: 'cover',
+                      backgroundPosition: 'center',
+                      backgroundRepeat: 'no-repeat'
+                    }
                   : logo
-                  ? { backgroundImage: `url(${URL.createObjectURL(logo)})` }
+                  ? { 
+                      backgroundImage: `url(${URL.createObjectURL(logo)})`,
+                      backgroundSize: 'cover',
+                      backgroundPosition: 'center',
+                      backgroundRepeat: 'no-repeat'
+                    }
                   : undefined
               }
             >
@@ -167,7 +204,7 @@ const CreateList = () => {
         {/* Blog Category */}
         <div className="col-lg-6 col-xl-6">
           <div className="my_profile_setting_input ui_kit_select_search form-group">
-            <label htmlFor="BlogcategorySelect">Select Blog category</label>
+            <label htmlFor="BlogcategorySelect">Select Blog category *</label>
             <select
               id="BlogcategorySelect"
               className="selectpicker form-select"
@@ -189,7 +226,7 @@ const CreateList = () => {
         {/* Blog Title */}
         <div className="col-lg-6 col-xl-6">
           <div className="my_profile_setting_input form-group">
-            <label htmlFor="BlogTitle">Blog Title</label>
+            <label htmlFor="BlogTitle">Blog Title *</label>
             <input
               type="text"
               className="form-control"
@@ -245,7 +282,7 @@ const CreateList = () => {
         {/* Description */}
         <div className="col-lg-12">
           <div className="my_profile_setting_textarea form-group">
-            <label htmlFor="BlogDescription">Description</label>
+            <label htmlFor="BlogDescription">Description *</label>
             <textarea
               id="BlogDescription"
               className="form-control"
@@ -254,6 +291,52 @@ const CreateList = () => {
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Enter Blog description"
             ></textarea>
+          </div>
+        </div>
+
+        {/* Content Title */}
+        <div className="col-lg-12">
+          <div className="my_profile_setting_input form-group">
+            <label htmlFor="contentTitle">Content Title</label>
+            <input
+              type="text"
+              className="form-control"
+              id="contentTitle"
+              value={contentTitle}
+              onChange={(e) => setContentTitle(e.target.value)}
+              placeholder="Enter content title"
+            />
+          </div>
+        </div>
+
+        {/* Content Paragraphs */}
+        <div className="col-lg-12">
+          <div className="my_profile_setting_textarea form-group">
+            <label htmlFor="contentParagraphs">Content Paragraphs</label>
+            <textarea
+              id="contentParagraphs"
+              className="form-control"
+              rows="10"
+              value={contentParagraphs}
+              onChange={(e) => setContentParagraphs(e.target.value)}
+              placeholder="Enter detailed content paragraphs"
+            ></textarea>
+          </div>
+        </div>
+
+        {/* Tags */}
+        <div className="col-lg-12">
+          <div className="my_profile_setting_input form-group">
+            <label htmlFor="blogTags">Tags</label>
+            <input
+              type="text"
+              className="form-control"
+              id="blogTags"
+              value={tags}
+              onChange={(e) => setTags(e.target.value)}
+              placeholder="Enter tags separated by commas (e.g., robotics, AI, technology)"
+            />
+            <small className="text-muted">Separate multiple tags with commas</small>
           </div>
         </div>
 

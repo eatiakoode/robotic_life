@@ -42,12 +42,13 @@ export default function Products2() {
   const transformedRobots = robots.map(robot => ({
     id: robot._id,
     title: robot.title,
+    slug: robot.slug, // Add slug field
     price: parseFloat(robot.totalPrice) || 0, // Only totalPrice, no old price
     imgSrc: robot.images && robot.images.length > 0 
       ? (robot.images[0].startsWith('http') 
           ? robot.images[0] 
           : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}${robot.images[0].startsWith('/') ? robot.images[0] : `/${robot.images[0]}`}`)
-      : '/images/placeholder-robot.svg',
+      : '/images/product/placeholder.jpg',
     imgHover: robot.images && robot.images.length > 1 
       ? (robot.images[1].startsWith('http') 
           ? robot.images[1] 
@@ -56,7 +57,7 @@ export default function Products2() {
         ? (robot.images[0].startsWith('http') 
             ? robot.images[0] 
             : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}${robot.images[0].startsWith('/') ? robot.images[0] : `/${robot.images[0]}`}`)
-        : '/images/placeholder-robot.svg',
+        : '/images/product/placeholder.jpg',
     colors: robot.color && robot.color.length > 0 ? robot.color.map(color => ({
       bgColor: getColorClass(color.name),
       colorName: color.name || 'Unknown',
@@ -64,7 +65,7 @@ export default function Products2() {
         ? (robot.images[0].startsWith('http') 
             ? robot.images[0] 
             : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}${robot.images[0].startsWith('/') ? robot.images[0] : `/${robot.images[0]}`}`)
-        : '/images/placeholder-robot.svg'
+        : '/images/product/placeholder.jpg'
     })) : (robot.images && robot.images.length > 0 ? [{
       bgColor: 'bg-primary',
       colorName: 'Default',
@@ -85,9 +86,9 @@ export default function Products2() {
       <section className="flat-spacing">
         <div className="container">
           <div className="heading-section-2 type-2 wow fadeInUp">
-            <h3 className="heading font-5 fw-bold">Features Product</h3>
+            <h3 className="heading font-5 fw-bold">Featured Robots</h3>
             <Link href={`/shop-filter-canvas`} className="btn-line">
-              View All Products
+              View All Robots
             </Link>
           </div>
           <div className="text-center py-5">
@@ -105,9 +106,9 @@ export default function Products2() {
       <section className="flat-spacing">
         <div className="container">
           <div className="heading-section-2 type-2 wow fadeInUp">
-            <h3 className="heading font-5 fw-bold">Features Product</h3>
+            <h3 className="heading font-5 fw-bold">Featured Robots</h3>
             <Link href={`/shop-filter-canvas`} className="btn-line">
-              View All Products
+              View All Robots
             </Link>
           </div>
           <div className="text-center py-5">
@@ -128,9 +129,9 @@ export default function Products2() {
     <section className="flat-spacing">
       <div className="container">
         <div className="heading-section-2 type-2 wow fadeInUp">
-          <h3 className="heading font-5 fw-bold">Features Product</h3>
+          <h3 className="heading font-5 fw-bold">Featured Robots</h3>
           <Link href={`/shop-filter-canvas`} className="btn-line">
-            View All Products
+            View All Robots
           </Link>
         </div>
         {transformedRobots.length > 0 ? (

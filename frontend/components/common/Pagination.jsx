@@ -1,12 +1,17 @@
 "use client";
 import React, { useState } from "react";
 
-export default function Pagination({ totalPages = 3 }) {
-  const [currentPage, setCurrentPage] = useState(1);
+export default function Pagination({ 
+  totalPages = 1, 
+  currentPage = 1, 
+  onPageChange = () => {},
+  totalItems = 0,
+  itemsPerPage = 10 
+}) {
 
   const handlePageClick = (page) => {
     if (page >= 1 && page <= totalPages) {
-      setCurrentPage(page);
+      onPageChange(page);
     }
   };
 
@@ -27,6 +32,17 @@ export default function Pagination({ totalPages = 3 }) {
 
   return (
     <>
+      {/* Pagination Info */}
+      <div className="pagination-info" style={{ 
+        textAlign: 'center', 
+        marginBottom: '20px', 
+        color: '#6c757d',
+        fontSize: '14px'
+      }}>
+        Showing {Math.min((currentPage - 1) * itemsPerPage + 1, totalItems)} to {Math.min(currentPage * itemsPerPage, totalItems)} of {totalItems} blogs
+      </div>
+      
+      {/* Pagination Controls */}
       <li onClick={() => handlePageClick(currentPage - 1)}>
         <a
           className={`pagination-item text-button ${

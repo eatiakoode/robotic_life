@@ -233,13 +233,13 @@ export const demoItems = [
 ];
 
 export const shopLayout = [
-  { href: "/shop-default-grid", name: "Default Grid" },
-  { href: "/shop-default-list", name: "Default List" },
-  { href: "/shop-fullwidth-list", name: "Full Width List" },
-  { href: "/shop-fullwidth-grid", name: "Full Width Grid" },
-  { href: "/shop-left-sidebar", name: "Left Sidebar" },
-  { href: "/shop-right-sidebar", name: "Right Sidebar" },
-  { href: "/shop-filter-dropdown", name: "Filter Dropdown" },
+  // { href: "/shop-default-grid", name: "Default Grid" },
+  // { href: "/shop-default-list", name: "Default List" },
+  // { href: "/shop-fullwidth-list", name: "Full Width List" },
+  // { href: "/shop-fullwidth-grid", name: "Full Width Grid" },
+  // { href: "/shop-left-sidebar", name: "Left Sidebar" },
+  // { href: "/shop-right-sidebar", name: "Right Sidebar" },
+  // { href: "/shop-filter-dropdown", name: "Filter Dropdown" },
   { href: "/shop-filter-canvas", name: "Filter Canvas" },
 ];
 
@@ -266,13 +266,13 @@ export const productStyles = [
 ];
 
 export const otherShopMenus = [
-  { href: "/wish-list", name: "Wish List" },
+  // { href: "/wish-list", name: "Wish List" },
   { href: "/search-result", name: "Search Result" },
-  { href: "/shopping-cart", name: "Shopping Cart" },
-  { href: "/login", name: "Login/Register" },
-  { href: "/forget-password", name: "Forget Password" },
-  { href: "/order-tracking", name: "Order Tracking" },
-  { href: "/my-account", name: "My Account" },
+  // { href: "/shopping-cart", name: "Shopping Cart" },
+  // { href: "/login", name: "Login/Register" },
+  // { href: "/forget-password", name: "Forget Password" },
+  // { href: "/order-tracking", name: "Order Tracking" },
+  // { href: "/my-account", name: "My Account" },
 ];
 
 export const productLinks = [
@@ -352,13 +352,13 @@ export const blogLinks = [
 
 export const otherPageLinks = [
   { href: "/about-us", name: "About Us" },
-  { href: "/store-list", name: "Store List 1" },
-  { href: "/store-list-02", name: "Store List 2" },
-  { href: "/contact", name: "Contact Us 1" },
-  { href: "/contact-02", name: "Contact Us 2" },
-  { href: "/404", name: "404" },
-  { href: "/FAQs", name: "FAQs" },
-  { href: "/term-of-use", name: "Terms Of Use" },
-  { href: "/coming-soon", name: "Coming Soon" },
-  { href: "/customer-feedback", name: "Customer Feedbacks" },
+  // { href: "/store-list", name: "Store List 1" },
+  // { href: "/store-list-02", name: "Store List 2" },
+  // { href: "/contact", name: "Contact Us 1" },
+  // { href: "/contact-02", name: "Contact Us 2" },
+  // { href: "/404", name: "404" },
+  // { href: "/FAQs", name: "FAQs" },
+  // { href: "/term-of-use", name: "Terms Of Use" },
+  // { href: "/coming-soon", name: "Coming Soon" },
+  // { href: "/customer-feedback", name: "Customer Feedbacks" },
 ];

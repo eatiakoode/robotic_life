@@ -34,19 +34,29 @@ import { buildApiUrl, getAuthHeaders } from './config';
     await new Promise((resolve) => setTimeout(resolve, 10));
     try {
       const headers = getAuthHeaders();
-      const apiUrl = buildApiUrl(`api/slider?limit=${defaultFilter.limit}&skip=${defaultFilter.page}`);
+      // Calculate skip value: (page - 1) * limit
+      const skip = (defaultFilter.page - 1) * defaultFilter.limit;
+      const apiUrl = buildApiUrl(`api/slider?limit=${defaultFilter.limit}&skip=${skip}`);
+      
+      console.log("Fetching sliders from:", apiUrl);
+      console.log("Using headers:", headers);
 
       const response = await fetch(apiUrl, {
         method: "GET",
         headers,
       });
       
-      console.log("Slider response:", response);
+      console.log("Slider response status:", response.status);
+      console.log("Slider response ok:", response.ok);
+      
       if (!response.ok) {
-        throw new Error("Failed to fetch sliders");
+        const errorText = await response.text();
+        console.error("Slider API error response:", errorText);
+        throw new Error(`Failed to fetch sliders: ${response.status} ${response.statusText}`);
       }
       
       const data = await response.json();
+      console.log("Slider API response data:", data);
       
       // Handle different response formats
       if (Array.isArray(data)) {
@@ -64,10 +74,11 @@ import { buildApiUrl, getAuthHeaders } from './config';
         }
       }
       
+      console.warn("No slider data found in response:", data);
       return [];
     } catch (error) {
       console.error("Error fetching sliders:", error);
-      return [];
+      throw error; // Re-throw to let the hook handle it
     }
   }
 

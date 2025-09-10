@@ -11,9 +11,9 @@ export default function About() {
             <div className="about-us-features wow fadeInLeft">
               <Image
                 className="lazyload"
-                data-src="/images/banner/about-us.jpg"
+                data-src="/images/banner/about-us.png"
                 alt="image-team"
-                src="/images/banner/about-us.jpg"
+                src="/images/banner/about-us.png"
                 width={930}
                 height={618}
               />
@@ -22,7 +22,7 @@ export default function About() {
           <div className="col-md-6">
             <div className="about-us-content">
               <h3 className="title wow fadeInUp">
-                Modave – Offering rare and beautiful items worldwide
+                TheBotsWorld – Your Gateway to Robotics Knowledge
               </h3>
               <div className="widget-tabs style-3">
                 <ul className="widget-menu-tab wow fadeInUp">
@@ -60,14 +60,17 @@ export default function About() {
                     } `}
                   >
                     <p>
-                      Welcome to Modave Store, your premier destination for
-                      fashion-forward clothing and accessories. We pride
-                      ourselves on offering a curated selection of rare and
-                      beautiful items sourced both locally and globally. Our
-                      mission is to bring you the latest trends and timeless
-                      styles, ensuring every piece reflects quality and
-                      elegance. Discover the perfect addition to your wardrobe
-                      at Modave Store.
+                      Welcome to TheBotsWorld, a dedicated platform created to
+                      provide comprehensive information about robots. From the
+                      latest innovations and upcoming technologies to historical
+                      breakthroughs and real-world applications, we aim to cover
+                      every aspect of robotics in one place.
+                    </p>
+                    <p>
+                      Whether you’re a student, researcher, hobbyist, or just
+                      curious about the future of robots, TheBotsWorld is your
+                      go-to destination for well-structured and reliable
+                      knowledge.
                     </p>
                   </div>
                   <div
@@ -76,14 +79,12 @@ export default function About() {
                     } `}
                   >
                     <p>
-                      Welcome to Modave Store, your premier destination for
-                      fashion-forward clothing and accessories. We pride
-                      ourselves on offering a curated selection of rare and
-                      beautiful items sourced both locally and globally. Our
-                      mission is to bring you the latest trends and timeless
-                      styles, ensuring every piece reflects quality and
-                      elegance. Discover the perfect addition to your wardrobe
-                      at Modave Store.
+                      Our vision is to make robotics education accessible to
+                      everyone. We believe that robots are not just machines,
+                      but a major driving force shaping the future of
+                      industries, healthcare, defense, and everyday life. By
+                      sharing accurate and detailed insights, we want to inspire
+                      the next generation of innovators.
                     </p>
                   </div>
                   <div
@@ -91,37 +92,61 @@ export default function About() {
                       activeTab == 3 ? "active" : ""
                     } `}
                   >
-                    <p>
-                      Welcome to Modave Store, your premier destination for
-                      fashion-forward clothing and accessories. We pride
-                      ourselves on offering a curated selection of rare and
-                      beautiful items sourced both locally and globally. Our
-                      mission is to bring you the latest trends and timeless
-                      styles, ensuring every piece reflects quality and
-                      elegance. Discover the perfect addition to your wardrobe
-                      at Modave Store.
-                    </p>
+                    <ul>
+                      <li>
+                        🌍 <strong>Comprehensive Coverage</strong> – From
+                        humanoid robots to industrial machines, AI-driven bots,
+                        and upcoming concepts.
+                      </li>
+                      <li>
+                        📖 <strong>Educational Approach</strong> –
+                        Easy-to-understand explanations designed for learners at
+                        all levels.
+                      </li>
+                      <li>
+                        🔍 <strong>Updated Content</strong> – Constantly adding
+                        new information about the latest trends and technologies
+                        in robotics.
+                      </li>
+                      <li>
+                        🤖 <strong>One-Stop Resource</strong> – No distractions,
+                        no e-commerce — just pure robotics knowledge.
+                      </li>
+                    </ul>
                   </div>
                   <div
                     className={`widget-content-inner ${
                       activeTab == 4 ? "active" : ""
                     } `}
                   >
-                    <p>
-                      Welcome to Modave Store, your premier destination for
-                      fashion-forward clothing and accessories. We pride
-                      ourselves on offering a curated selection of rare and
-                      beautiful items sourced both locally and globally. Our
-                      mission is to bring you the latest trends and timeless
-                      styles, ensuring every piece reflects quality and
-                      elegance. Discover the perfect addition to your wardrobe
-                      at Modave Store.
-                    </p>
+                    <p>At TheBotsWorld, we are committed to:</p>
+                    <ul className="list-disc list-inside ml-5 !list-disc">
+                      <li>
+                        Delivering{" "}
+                        <strong>
+                          authentic and research–backed information
+                        </strong>
+                        .
+                      </li>
+                      <li>
+                        Keeping our content{" "}
+                        <strong>free of commercial influence</strong>.
+                      </li>
+                      <li>
+                        Encouraging{" "}
+                        <strong>curiosity and exploration in robotics</strong>.
+                      </li>
+                      <li>
+                        Supporting{" "}
+                        <strong>students, educators, and enthusiasts</strong>{" "}
+                        with reliable resources.
+                      </li>
+                    </ul>
                   </div>
                 </div>
               </div>
-              <a href="#" className="tf-btn btn-fill wow fadeInUp">
-                <span className="text text-button">Read More</span>
+              <a href="/" className="tf-btn btn-fill wow fadeInUp">
+                <span className="text text-button">Explore Robots</span>
               </a>
             </div>
           </div>

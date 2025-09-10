@@ -79,25 +79,31 @@ const TableData = ({ sliders = [], loading = false, error = null, onRefresh }) =
   let tbodyContent = sliders.map((item) => (
     <tr key={item._id || Math.random()}>
       {/* Image */}
-      <td className="align-middle text-center" style={{ width: 110 }}>
+      <td className="align-middle text-start" style={{ width: 130 }}>
         <div
           className="thumb"
           style={{
-            width: 90,
-            height: 90,
+            width: 100,
+            height: 100,
             overflow: "hidden",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            margin: "0 auto",
+            border: "1px solid #e5e5e5",
+            borderRadius: "4px"
           }}
         >
-          <SafeImage
+          <Image
             width={90}
             height={90}
             className="img-whp cover"
-            src={item?.images && item.images.length > 0 ? item.images[0] : null}
+            src={
+              item?.images && item.images.length > 0
+                ? `${process.env.NEXT_PUBLIC_API_URL}${item.images[0]}`
+                : `${process.env.NEXT_PUBLIC_API_URL}public/assets/images/thumbnail.webp`
+            }
             alt={`${item?.title || 'Slider'}`}
+            unoptimized
             style={{ width: "100%", height: "100%", objectFit: "contain" }}
           />
         </div>
