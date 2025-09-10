@@ -159,7 +159,7 @@ const RobotSchema = new mongoose.Schema(
     images: [{ type: String }],
     videoEmbedCode: { type: String, trim: true },
 
-    // Meta
+    // Meta details
     metaTitle: { type: String },
     metaDescription: { type: String },
     status: { type: Boolean, default: true, required: true },
