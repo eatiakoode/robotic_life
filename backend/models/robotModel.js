@@ -68,7 +68,7 @@ const RobotSchema = new mongoose.Schema(
       autonomyLevel: { type: mongoose.Schema.Types.ObjectId, ref: "AutonomyLevel" },
       navigationTypes: [{ type: mongoose.Schema.Types.ObjectId, ref: "NavigationType" }],
       communicationMethods: [{ type: mongoose.Schema.Types.ObjectId, ref: "CommunicationMethod" }],
-      features: [String], // free text for unique features
+      features: [String], 
       primaryFunction: { type: mongoose.Schema.Types.ObjectId, ref: "PrimaryFunction" },
       interoperability: [String],
       loadHandling: {

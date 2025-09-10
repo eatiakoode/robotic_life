@@ -133,13 +133,13 @@ export const getAllProducts = async () => {
               
               // Dynamic fields from backend
               filterBrands: product.manufacturer ? [product.manufacturer.name] : ['Default Brand'],
-              filterColor: product.color && product.color.length > 0 ? 
-                product.color.map(c => c.name) : ['Default Color'],
+              filterColor: product.specifications?.color && product.specifications?.color.length > 0 ? 
+                product.specifications?.color.map(c => c.name) : ['Default Color'],
               filterSizes: ['Default Size'], // Robots don't have sizes like clothes
               
               // Colors array for ProductCard component
-              colors: product.color && product.color.length > 0 ? 
-                product.color.map((colorItem, colorIndex) => {
+              colors: product.specifications?.color && product.specifications?.color.length > 0 ? 
+                product.specifications?.color.map((colorItem, colorIndex) => {
                   // Use different images for different colors if available
                   const imageIndex = colorIndex < (product.images?.length || 0) ? colorIndex : 0;
                   const imageSrc = product.images && product.images[imageIndex] ? 
@@ -179,18 +179,18 @@ export const getAllProducts = async () => {
             metaDescription: product.metaDescription || product.metadescription || '',
               
               // Dimensions and specifications
-              dimensions: product.dimensions || {},
-              weight: product.weight || {},
-              batteryCapacity: product.batteryCapacity || {},
-              batteryChargeTime: product.batteryChargeTime || {},
-              loadCapacity: product.loadCapacity || {},
-              operatingTemperature: product.operatingTemperature || {},
-              range: product.range || {},
-              powerSource: product.powerSource || {},
-              runtime: product.runtime || {},
-              speed: product.speed || {},
-              accuracy: product.accuracy || {},
-              material: product.material || []
+              dimensions: product.specifications?.dimensions || {},
+              weight: product.specifications?.weight || {},
+              batteryCapacity: product.specifications?.batteryCapacity || {},
+              batteryChargeTime: product.specifications?.batteryChargeTime || {},
+              loadCapacity: product.specifications?.loadCapacity || {},
+              operatingTemperature: product.specifications?.operatingTemperature || {},
+              range: product.specifications?.range || {},
+              powerSource: product.specifications?.powerSource || {},
+              runtime: product.specifications?.runtime || {},
+              speed: product.specifications?.speed || {},
+              accuracy: product.specifications?.accuracy || {},
+              material: product.specifications?.materials || []
             };
          });
         
@@ -272,8 +272,8 @@ export const getRobotBySlug = async (slug) => {
             
             // Dynamic fields from backend
             filterBrands: robot.manufacturer ? [robot.manufacturer.name] : ['Default Brand'],
-            filterColor: robot.color && robot.color.length > 0 ? 
-              robot.color.map(c => c.name) : ['Default Color'],
+            filterColor: robot.specifications?.color && robot.specifications?.color.length > 0 ? 
+              robot.specifications?.color.map(c => c.name) : ['Default Color'],
             filterSizes: ['Default Size'],
             
             // Additional robot-specific fields
@@ -290,22 +290,22 @@ export const getRobotBySlug = async (slug) => {
             metaDescription: robot.metaDescription || robot.metadescription || '',
             
             // Dimensions and specifications
-            dimensions: robot.dimensions || {},
-            weight: robot.weight || {},
-            batteryCapacity: robot.batteryCapacity || {},
-            batteryChargeTime: robot.batteryChargeTime || {},
-            loadCapacity: robot.loadCapacity || {},
-            operatingTemperature: robot.operatingTemperature || {},
-            range: robot.range || {},
-            powerSource: robot.powerSource || {},
-            runtime: robot.runtime || {},
-            speed: robot.speed || {},
-            accuracy: robot.accuracy || {},
-            material: robot.material || [],
+            dimensions: robot.specifications?.dimensions || {},
+            weight: robot.specifications?.weight || {},
+            batteryCapacity: robot.specifications?.batteryCapacity || {},
+            batteryChargeTime: robot.specifications?.batteryChargeTime || {},
+            loadCapacity: robot.specifications?.loadCapacity || {},
+            operatingTemperature: robot.specifications?.operatingTemperature || {},
+            range: robot.specifications?.range || {},
+            powerSource: robot.specifications?.powerSource || {},
+            runtime: robot.specifications?.runtime || {},
+            speed: robot.specifications?.speed || {},
+            accuracy: robot.specifications?.accuracy || {},
+            material: robot.specifications?.materials || [],
             
             // Colors array for ColorSelect component
-            colors: robot.color && robot.color.length > 0 ? 
-              robot.color.map((colorItem, colorIndex) => {
+            colors: robot.specifications?.color && robot.specifications?.color.length > 0 ? 
+              robot.specifications?.color.map((colorItem, colorIndex) => {
                 // Use different images for different colors if available
                 const imageIndex = colorIndex < (robot.images?.length || 0) ? colorIndex : 0;
                 const imageSrc = robot.images && robot.images[imageIndex] ? 
@@ -345,15 +345,15 @@ export const getRobotBySlug = async (slug) => {
             // Additional populated fields
             manufacturer: robot.manufacturer,
             countryOfOrigin: robot.countryOfOrigin,
-            navigationType: robot.navigationType,
-            sensors: robot.sensors,
-            primaryFunction: robot.primaryFunction,
-            aiSoftwareFeatures: robot.aiSoftwareFeatures,
-            operatingEnvironment: robot.operatingEnvironment,
-            terrainCapability: robot.terrainCapability,
-            autonomyLevel: robot.autonomyLevel,
-            communicationMethod: robot.communicationMethod,
-            payloadTypesSupported: robot.payloadTypesSupported
+            navigationType: robot.capabilities?.navigationTypes,
+            sensors: robot.sensorsAndSoftware?.sensors,
+            primaryFunction: robot.capabilities?.primaryFunction,
+            aiSoftwareFeatures: robot.sensorsAndSoftware?.aiSoftwareFeatures,
+            operatingEnvironment: robot.operationalEnvironmentAndApplications?.operatingEnvironment,
+            terrainCapability: robot.operationalEnvironmentAndApplications?.terrainCapabilities,
+            autonomyLevel: robot.capabilities?.autonomyLevel,
+            communicationMethod: robot.capabilities?.communicationMethods,
+            payloadTypesSupported: robot.payloadsAndAttachments?.payloadTypes
           };
           
 
@@ -470,13 +470,13 @@ export const searchProducts = async (query, filters = {}) => {
               
               // Dynamic fields from backend
               filterBrands: product.manufacturer ? [product.manufacturer.name] : ['Default Brand'],
-              filterColor: product.color && product.color.length > 0 ? 
-                product.color.map(c => c.name) : ['Default Color'],
+              filterColor: product.specifications?.color && product.specifications?.color.length > 0 ? 
+                product.specifications?.color.map(c => c.name) : ['Default Color'],
               filterSizes: ['Default Size'],
               
               // Colors array for ProductCard component
-              colors: product.color && product.color.length > 0 ? 
-                product.color.map(colorItem => ({
+              colors: product.specifications?.color && product.specifications?.color.length > 0 ? 
+                product.specifications?.color.map(colorItem => ({
                   imgSrc: normalizeImageUrl(product.images?.[0], baseUrl),
                   bgColor: getColorClass(colorItem.name),
                   name: colorItem.name || 'Default'
@@ -501,18 +501,18 @@ export const searchProducts = async (query, filters = {}) => {
             metaDescription: product.metaDescription || product.metadescription || '',
               
               // Dimensions and specifications
-              dimensions: product.dimensions || {},
-              weight: product.weight || {},
-              batteryCapacity: product.batteryCapacity || {},
-              batteryChargeTime: product.batteryChargeTime || {},
-              loadCapacity: product.loadCapacity || {},
-              operatingTemperature: product.operatingTemperature || {},
-              range: product.range || {},
-              powerSource: product.powerSource || {},
-              runtime: product.runtime || {},
-              speed: product.speed || {},
-              accuracy: product.accuracy || {},
-              material: product.material || []
+              dimensions: product.specifications?.dimensions || {},
+              weight: product.specifications?.weight || {},
+              batteryCapacity: product.specifications?.batteryCapacity || {},
+              batteryChargeTime: product.specifications?.batteryChargeTime || {},
+              loadCapacity: product.specifications?.loadCapacity || {},
+              operatingTemperature: product.specifications?.operatingTemperature || {},
+              range: product.specifications?.range || {},
+              powerSource: product.specifications?.powerSource || {},
+              runtime: product.specifications?.runtime || {},
+              speed: product.specifications?.speed || {},
+              accuracy: product.specifications?.accuracy || {},
+              material: product.specifications?.materials || []
             };
           });
           
@@ -622,13 +622,13 @@ export const getProductsByCategory = async (category, additionalFilters = {}) =>
               
               // Dynamic fields from backend
               filterBrands: product.manufacturer ? [product.manufacturer.name] : ['Default Brand'],
-              filterColor: product.color && product.color.length > 0 ? 
-                product.color.map(c => c.name) : ['Default Color'],
+              filterColor: product.specifications?.color && product.specifications?.color.length > 0 ? 
+                product.specifications?.color.map(c => c.name) : ['Default Color'],
               filterSizes: ['Default Size'], // Robots don't have sizes like clothes
               
               // Colors array for ProductCard component
-              colors: product.color && product.color.length > 0 ? 
-                product.color.map((colorItem, colorIndex) => {
+              colors: product.specifications?.color && product.specifications?.color.length > 0 ? 
+                product.specifications?.color.map((colorItem, colorIndex) => {
                   // Use different images for different colors if available
                   const imageIndex = colorIndex < (product.images?.length || 0) ? colorIndex : 0;
                   const imageSrc = product.images && product.images[imageIndex] ? 
@@ -668,18 +668,18 @@ export const getProductsByCategory = async (category, additionalFilters = {}) =>
             metaDescription: product.metaDescription || product.metadescription || '',
               
               // Dimensions and specifications
-              dimensions: product.dimensions || {},
-              weight: product.weight || {},
-              batteryCapacity: product.batteryCapacity || {},
-              batteryChargeTime: product.batteryChargeTime || {},
-              loadCapacity: product.loadCapacity || {},
-              operatingTemperature: product.operatingTemperature || {},
-              range: product.range || {},
-              powerSource: product.powerSource || {},
-              runtime: product.runtime || {},
-              speed: product.speed || {},
-              accuracy: product.accuracy || {},
-              material: product.material || []
+              dimensions: product.specifications?.dimensions || {},
+              weight: product.specifications?.weight || {},
+              batteryCapacity: product.specifications?.batteryCapacity || {},
+              batteryChargeTime: product.specifications?.batteryChargeTime || {},
+              loadCapacity: product.specifications?.loadCapacity || {},
+              operatingTemperature: product.specifications?.operatingTemperature || {},
+              range: product.specifications?.range || {},
+              powerSource: product.specifications?.powerSource || {},
+              runtime: product.specifications?.runtime || {},
+              speed: product.specifications?.speed || {},
+              accuracy: product.specifications?.accuracy || {},
+              material: product.specifications?.materials || []
             };
           });
           
@@ -759,13 +759,13 @@ export const getRelatedProducts = async (slug) => {
               
               // Dynamic fields from backend
               filterBrands: product.manufacturer ? [product.manufacturer.name] : ['Default Brand'],
-              filterColor: product.color && product.color.length > 0 ? 
-                product.color.map(c => c.name) : ['Default Color'],
+              filterColor: product.specifications?.color && product.specifications?.color.length > 0 ? 
+                product.specifications?.color.map(c => c.name) : ['Default Color'],
               filterSizes: ['Default Size'],
               
               // Colors array for ProductCard component
-              colors: product.color && product.color.length > 0 ? 
-                product.color.map((colorItem, colorIndex) => {
+              colors: product.specifications?.color && product.specifications?.color.length > 0 ? 
+                product.specifications?.color.map((colorItem, colorIndex) => {
                   // Use different images for different colors if available
                   const imageIndex = colorIndex < (product.images?.length || 0) ? colorIndex : 0;
                   const imageSrc = product.images && product.images[imageIndex] ? 
@@ -805,18 +805,18 @@ export const getRelatedProducts = async (slug) => {
             metaDescription: product.metaDescription || product.metadescription || '',
               
               // Dimensions and specifications
-              dimensions: product.dimensions || {},
-              weight: product.weight || {},
-              batteryCapacity: product.batteryCapacity || {},
-              batteryChargeTime: product.batteryChargeTime || {},
-              loadCapacity: product.loadCapacity || {},
-              operatingTemperature: product.operatingTemperature || {},
-              range: product.range || {},
-              powerSource: product.powerSource || {},
-              runtime: product.runtime || {},
-              speed: product.speed || {},
-              accuracy: product.accuracy || {},
-              material: product.material || []
+              dimensions: product.specifications?.dimensions || {},
+              weight: product.specifications?.weight || {},
+              batteryCapacity: product.specifications?.batteryCapacity || {},
+              batteryChargeTime: product.specifications?.batteryChargeTime || {},
+              loadCapacity: product.specifications?.loadCapacity || {},
+              operatingTemperature: product.specifications?.operatingTemperature || {},
+              range: product.specifications?.range || {},
+              powerSource: product.specifications?.powerSource || {},
+              runtime: product.specifications?.runtime || {},
+              speed: product.specifications?.speed || {},
+              accuracy: product.specifications?.accuracy || {},
+              material: product.specifications?.materials || []
             };
           });
           
@@ -906,13 +906,13 @@ export const getRecentlyViewed = async (ids) => {
               
               // Dynamic fields from backend
               filterBrands: product.manufacturer ? [product.manufacturer.name] : ['Default Brand'],
-              filterColor: product.color && product.color.length > 0 ? 
-                product.color.map(c => c.name) : ['Default Color'],
+              filterColor: product.specifications?.color && product.specifications?.color.length > 0 ? 
+                product.specifications?.color.map(c => c.name) : ['Default Color'],
               filterSizes: ['Default Size'],
               
               // Colors array for ProductCard component
-              colors: product.color && product.color.length > 0 ? 
-                product.color.map((colorItem, colorIndex) => {
+              colors: product.specifications?.color && product.specifications?.color.length > 0 ? 
+                product.specifications?.color.map((colorItem, colorIndex) => {
                   // Use different images for different colors if available
                   const imageIndex = colorIndex < (product.images?.length || 0) ? colorIndex : 0;
                   const imageSrc = product.images && product.images[imageIndex] ? 
@@ -952,18 +952,18 @@ export const getRecentlyViewed = async (ids) => {
             metaDescription: product.metaDescription || product.metadescription || '',
               
               // Dimensions and specifications
-              dimensions: product.dimensions || {},
-              weight: product.weight || {},
-              batteryCapacity: product.batteryCapacity || {},
-              batteryChargeTime: product.batteryChargeTime || {},
-              loadCapacity: product.loadCapacity || {},
-              operatingTemperature: product.operatingTemperature || {},
-              range: product.range || {},
-              powerSource: product.powerSource || {},
-              runtime: product.runtime || {},
-              speed: product.speed || {},
-              accuracy: product.accuracy || {},
-              material: product.material || []
+              dimensions: product.specifications?.dimensions || {},
+              weight: product.specifications?.weight || {},
+              batteryCapacity: product.specifications?.batteryCapacity || {},
+              batteryChargeTime: product.specifications?.batteryChargeTime || {},
+              loadCapacity: product.specifications?.loadCapacity || {},
+              operatingTemperature: product.specifications?.operatingTemperature || {},
+              range: product.specifications?.range || {},
+              powerSource: product.specifications?.powerSource || {},
+              runtime: product.specifications?.runtime || {},
+              speed: product.specifications?.speed || {},
+              accuracy: product.specifications?.accuracy || {},
+              material: product.specifications?.materials || []
             };
           });
           

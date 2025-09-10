@@ -7,8 +7,8 @@ const Manufacturer = require("../../models/manufacturerModel");
 // Get Most Recent Robots
 const getRecentRobots = asyncHandler(async (req, res) => {
   const robots = await Robot.find()
-    .select("title slug images totalPrice color description category manufacturer")
-    .populate("color", "name status")
+    .select("title slug images totalPrice specifications.color description category manufacturer")
+    .populate("specifications.color", "name status")
     .populate("category", "name slug")
     .populate("manufacturer", "name")
     .sort({ createdAt: -1 })
@@ -21,12 +21,12 @@ const getRecentRobots = asyncHandler(async (req, res) => {
 const getallRobots = asyncHandler(async (req, res) => {
   try {
     const getallRobots = await Robot.find()
-      .select("title slug description totalPrice images category manufacturer color powerSource material launchYear version videoEmbedCode dimensions weight batteryCapacity loadCapacity operatingTemperature range runtime speed accuracy")
+      .select("title slug description totalPrice images category manufacturer specifications.color specifications.powerSource specifications.materials launchYear version videoEmbedCode specifications.dimensions specifications.weight specifications.batteryCapacity specifications.loadCapacity specifications.operatingTemperature specifications.range specifications.runtime specifications.speed specifications.accuracy")
       .populate("category", "name slug")
       .populate("manufacturer", "name")
-      .populate("color", "name")
-      .populate("powerSource", "name")
-      .populate("material", "name")
+      .populate("specifications.color", "name")
+      .populate("specifications.powerSource", "name")
+      .populate("specifications.materials", "name")
       .lean();
 
     res.json({
@@ -48,18 +48,18 @@ const getRobotBySlug = asyncHandler(async (req, res) => {
       .populate("category", "name slug parent")
       .populate("manufacturer", "name")
       .populate("countryOfOrigin", "title")
-      .populate("powerSource", "name")
-      .populate("color", "name")
-      .populate("material", "name")
-      .populate("navigationType", "name")
-      .populate("sensors", "name")
-      .populate("primaryFunction", "name")
-      .populate("aiSoftwareFeatures", "name")
-      .populate("operatingEnvironment", "name")
-      .populate("terrainCapability", "name")
-      .populate("autonomyLevel", "name")
-      .populate("communicationMethod", "name")
-      .populate("payloadTypesSupported", "name")
+      .populate("specifications.powerSource", "name")
+      .populate("specifications.color", "name")
+      .populate("specifications.materials", "name")
+      .populate("capabilities.navigationTypes", "name")
+      .populate("sensorsAndSoftware.sensors", "name")
+      .populate("capabilities.primaryFunction", "name")
+      .populate("sensorsAndSoftware.aiSoftwareFeatures", "name")
+      .populate("operationalEnvironmentAndApplications.operatingEnvironment", "name")
+      .populate("operationalEnvironmentAndApplications.terrainCapabilities", "name")
+      .populate("capabilities.autonomyLevel", "name")
+      .populate("capabilities.communicationMethods", "name")
+      .populate("payloadsAndAttachments.payloadTypes", "name")
       .lean();
 
     if (!robot) {
@@ -260,7 +260,7 @@ const filterRobots = async (req, res) => {
 
         if (colorDocs && colorDocs.length > 0) {
           const colorIds = colorDocs.map(doc => doc._id);
-          filter.color = { $in: colorIds };
+          filter["specifications.color"] = { $in: colorIds };
         } else {
           return res.status(200).json({
             success: true,
@@ -274,7 +274,7 @@ const filterRobots = async (req, res) => {
     let robots = await Robot.find(filter)
       .populate("category", "name slug")
       .populate("manufacturer", "name")
-      .populate("color", "name")
+      .populate("specifications.color", "name")
       .lean();
 
     res.status(200).json({
@@ -308,8 +308,8 @@ const getRecentlyViewed = asyncHandler(async (req, res) => {
     ids = [...new Set(ids)].slice(0, 2);
 
     const robots = await Robot.find({ _id: { $in: ids } })
-      .select("title slug images totalPrice color")
-      .populate("color", "name")
+      .select("title slug images totalPrice specifications.color")
+      .populate("specifications.color", "name")
       .lean();
 
     res.json({
@@ -345,8 +345,8 @@ const getRelatedRobots = async (req, res) => {
       _id: { $ne: robot._id },
       status: true
     })
-      .select("title totalPrice images color slug")
-      .populate("color", "name")
+      .select("title totalPrice images specifications.color slug")
+      .populate("specifications.color", "name")
       .limit(4)
       .lean()
 
@@ -390,19 +390,19 @@ const compareRobots = async (req, res) => {
     const robots = await Robot.find({ _id: { $in: robotIds }, status: true })
       .populate("category", "name")
       .populate("manufacturer", "name")
-      .populate("color", "name")
-      .populate("powerSource", "name")
-      .populate("navigationType", "name")
-      .populate("sensors", "name")
-      .populate("primaryFunction", "name")
-      .populate("aiSoftwareFeatures", "name")
-      .populate("operatingEnvironment", "name")
-      .populate("terrainCapability", "name")
-      .populate("autonomyLevel", "name")
-      .populate("communicationMethod", "name")
-      .populate("payloadTypesSupported", "name")
+      .populate("specifications.color", "name")
+      .populate("specifications.powerSource", "name")
+      .populate("capabilities.navigationTypes", "name")
+      .populate("sensorsAndSoftware.sensors", "name")
+      .populate("capabilities.primaryFunction", "name")
+      .populate("sensorsAndSoftware.aiSoftwareFeatures", "name")
+      .populate("operationalEnvironmentAndApplications.operatingEnvironment", "name")
+      .populate("operationalEnvironmentAndApplications.terrainCapabilities", "name")
+      .populate("capabilities.autonomyLevel", "name")
+      .populate("capabilities.communicationMethods", "name")
+      .populate("payloadsAndAttachments.payloadTypes", "name")
       .select(
-        "title slug description category manufacturer launchYear totalPrice images weight speed range loadCapacity batteryCapacity runtime autonomyLevel aiSoftwareFeatures"
+        "title slug description category manufacturer launchYear totalPrice images specifications.weight specifications.speed specifications.range specifications.loadCapacity specifications.batteryCapacity specifications.runtime capabilities.autonomyLevel sensorsAndSoftware.aiSoftwareFeatures"
       );
 
     if (robots.length === 0) {

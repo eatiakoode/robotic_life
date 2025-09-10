@@ -61,11 +61,11 @@ const getFilteredRobotsByParentCategory = asyncHandler(async (req, res) => {
         category: { $in: categoryIds },
         status: true 
     })
-        .populate("color", "name")
+        .populate("specifications.color", "name")
         .populate("category", "name slug")
         .populate("manufacturer", "name")
         .populate("countryOfOrigin", "name")
-        .populate("powerSource", "name");
+        .populate("specifications.powerSource", "name");
 
     res.status(200).json({
         success: true,
