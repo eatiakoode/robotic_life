@@ -28,22 +28,27 @@ const createRobot = asyncHandler(async (req, res) => {
       .populate("category", "name")
       .populate("manufacturer", "name")
       .populate("countryOfOrigin", "name")
-      .populate("powerSource", "name")
-      .populate("color", "name")
-      .populate("material", "name")
-      .populate("navigationType", "name")
-      .populate("sensors", "name")
-      .populate("primaryFunction", "name")
-      .populate("aiSoftwareFeatures", "name")
-      .populate("operatingEnvironment", "name")
-      .populate("terrainCapability", "name")
-      .populate("autonomyLevel", "name")
-      .populate("communicationMethod", "name")
-      .populate("payloadTypesSupported", "name");
-
+      .populate("specifications.powerSource", "name")
+      .populate("specifications.materials", "name")
+      .populate("specifications.color", "name")
+      .populate("capabilities.autonomyLevel", "name")
+      .populate("capabilities.navigationTypes", "name")
+      .populate("capabilities.communicationMethods", "name")
+      .populate("capabilities.primaryFunction", "name")
+      .populate("payloadsAndAttachments.payloadTypes", "name")
+      .populate("sensorsAndSoftware.sensors", "name")
+      .populate("sensorsAndSoftware.aiSoftwareFeatures", "name")
+      .populate(
+        "operationalEnvironmentAndApplications.operatingEnvironment",
+        "name"
+      )
+      .populate(
+        "operationalEnvironmentAndApplications.terrainCapabilities",
+        "name"
+      );
     res.status(201).json({
       message: "Robot created successfully",
-      data: populatedRobot
+      data: populatedRobot,
     });
   } catch (err) {
     res.status(400).json({ error: err.message });
