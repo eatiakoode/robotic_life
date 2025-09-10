@@ -155,7 +155,7 @@ const RobotSchema = new mongoose.Schema(
       deploymentLogistics: [String]
     },
 
-    // Media
+    // Media 
     images: [{ type: String }],
     videoEmbedCode: { type: String, trim: true },
 
