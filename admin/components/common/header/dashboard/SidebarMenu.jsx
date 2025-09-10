@@ -7,6 +7,7 @@ import {
   isSinglePageActive,
 } from "../../../../utils/daynamicNavigation";
 import { SafeImage } from "../../../../utils/imageUtils";
+import { SafeImage } from "../../../../utils/imageUtils";
 import { usePathname } from "next/navigation";
 
 const SidebarMenu = () => {

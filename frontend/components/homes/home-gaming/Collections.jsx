@@ -145,6 +145,15 @@ export default function Collections() {
                         {line2}
                       </Link> */}
                       {category.name || "ACCESSORIES"}
+                    </p>
+                    <h3 className="title">
+                      <Link
+                        href={`/shop-default-grid`}
+                        className="link text-white fw-bold font-5"
+                      >
+                        {category.description?.split(' ').slice(0, 3).join(' ') || "Ultimate Audio"} <br />
+                        {category.description?.split(' ').slice(3).join(' ') || "Experience"}
+                      </Link>
                     </h3>
                     <p className="text-white body-text-1">
                       {category.description || "Clear sound, all-day comfort."}

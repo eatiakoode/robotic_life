@@ -55,28 +55,28 @@ export default function Products1({ parentClass = "flat-spacing",products ,produ
         ? dispatch({ type: "SET_COLOR", payload: "All" })
         : dispatch({ type: "SET_COLOR", payload: value });
     },
-    // setSize: (value) => {
-    //   value == size
-    //     ? dispatch({ type: "SET_SIZE", payload: "All" })
-    //     : dispatch({ type: "SET_SIZE", payload: value });
-    // },
-    // setAvailability: (value) => {
-    //   value == availability
-    //     ? dispatch({ type: "SET_AVAILABILITY", payload: "All" })
-    //     : dispatch({ type: "SET_AVAILABILITY", payload: value });
-    // },
+    setSize: (value) => {
+      value == size
+        ? dispatch({ type: "SET_SIZE", payload: "All" })
+        : dispatch({ type: "SET_SIZE", payload: value });
+    },
+    setAvailability: (value) => {
+      value == availability
+        ? dispatch({ type: "SET_AVAILABILITY", payload: "All" })
+        : dispatch({ type: "SET_AVAILABILITY", payload: value });
+    },
 
-    // setBrands: (newBrand) => {
-    //   const updated = [...brands].includes(newBrand)
-    //     ? [...brands].filter((elm) => elm != newBrand)
-    //     : [...brands, newBrand];
-    //   dispatch({ type: "SET_BRANDS", payload: updated });
-    // },
-    // removeBrand: (newBrand) => {
-    //   const updated = [...brands].filter((brand) => brand != newBrand);
+    setBrands: (newBrand) => {
+      const updated = [...brands].includes(newBrand)
+        ? [...brands].filter((elm) => elm != newBrand)
+        : [...brands, newBrand];
+      dispatch({ type: "SET_BRANDS", payload: updated });
+    },
+    removeBrand: (newBrand) => {
+      const updated = [...brands].filter((brand) => brand != newBrand);
 
-    //   dispatch({ type: "SET_BRANDS", payload: updated });
-    // },
+      dispatch({ type: "SET_BRANDS", payload: updated });
+    },
     setParentCategory: (category) =>
       dispatch({ type: "SET_PARENT_CATEGORY", payload: category }),
     setSubCategory: (category) =>

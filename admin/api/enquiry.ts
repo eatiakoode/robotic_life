@@ -7,7 +7,7 @@ export const addEnquiryAPI = async (title: string) => {
     throw new Error("User not authenticated!");
   }
 
-  const response = await fetch(process.env.NEXT_PUBLIC_ADMIN_API_URL + "api/enquiry", {
+  const response = await fetch(process.env.NEXT_PUBLIC_ADMIN_API_URL + "admin/api/enquiry", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -83,7 +83,7 @@ export const deleteEnquiryAPI = async (id: string) => {
     throw new Error("User not authenticated!");
   }
 
-  const response = await fetch(process.env.NEXT_PUBLIC_ADMIN_API_URL + `api/enquiry/${id}`, {
+  const response = await fetch(process.env.NEXT_PUBLIC_ADMIN_API_URL + `admin/api/enquiry/${id}`, {
     method: "DELETE",
     headers: {
       "Content-Type": "application/json",
@@ -119,7 +119,7 @@ export const getEnquiryById = async (id: string) => {
     throw new Error("User not authenticated!");
   }
 
-  const response = await fetch(process.env.NEXT_PUBLIC_ADMIN_API_URL + `api/enquiry/${id}`, {
+  const response = await fetch(process.env.NEXT_PUBLIC_ADMIN_API_URL + `admin/api/enquiry/${id}`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -153,7 +153,7 @@ export const updateEnquiryAPI = async (id, enquiry) => {
     throw new Error("User not authenticated!");
   }
 
-  const response = await fetch(process.env.NEXT_PUBLIC_ADMIN_API_URL + `api/enquiry/${id}`, {
+  const response = await fetch(process.env.NEXT_PUBLIC_ADMIN_API_URL + `admin/api/enquiry/${id}`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",

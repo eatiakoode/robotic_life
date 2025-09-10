@@ -23,6 +23,7 @@ const fallbackSlides = [
     description: "Enjoy effortless connectivity and crystal-clear audio on the go.",
     buttonText: "Explore Collection",
     buttonLink: "/shop-filter-canvas",
+    buttonLink: "/shop-filter-canvas",
     images: ["/images/slider/slider-gaming-2.jpg"]
   },
   {
@@ -30,6 +31,7 @@ const fallbackSlides = [
     title: "Immerse Yourself", 
     description: "Experience rich, high-fidelity sound for music, gaming, and calls.",
     buttonText: "Explore Collection",
+    buttonLink: "/shop-filter-canvas",
     buttonLink: "/shop-filter-canvas",
     images: ["/images/slider/slider-gaming-3.jpg"]
   }
@@ -132,7 +134,7 @@ export default function Hero() {
                   </div>
                   <div className="fade-item fade-item-3 box-btn-slider">
                     <Link
-                      href={slide.buttonLink || "/shop-default-grid"}
+                      href={slide.buttonLink || "/shop-filter-canvas"}
                       className="tf-btn btn-fill btn-white"
                       style={{
                         padding: '15px 30px',

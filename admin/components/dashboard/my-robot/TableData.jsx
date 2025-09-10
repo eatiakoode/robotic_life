@@ -182,45 +182,47 @@ const TableData = ({ robots = [], loading = false, error = null, onRefresh }) =>
             
             return (
               <tr key={item._id || index}>
-                                 {/* Image */}
-                 <td className="align-middle text-start" style={{ width: 130 }}>
-                   <div
-                     className="thumb"
-                     style={{
-                       width: 100,
-                       height: 100,
-                       overflow: "hidden",
-                       display: "flex",
-                       alignItems: "center",
-                       justifyContent: "center",
-                       border: "1px solid #e5e5e5",
-                       borderRadius: "4px"
-                     }}
-                   >
-                     <SafeImage
-                       width={100}
-                       height={100}
-                       className="img-whp"
-                       src={item.images?.[0] || item.images?.url || item.images}
-                       alt={item.name || item.title || 'Robot Image'}
-                       style={{ 
-                         width: "100%",
-                         height: "100%",
-                         objectFit: "contain",
-                         objectPosition: "center"
-                       }}
-                     />
-                   </div>
-                 </td>
-
-                                   {/* Listing Title */}
-                  <td className="align-middle text-start">
-                    <div
-                      style={{ display: "flex", alignItems: "center", height: "100%", minHeight: "90px", justifyContent: "flex-start" }}
-                    >
-                      <h4 className="mb-0">{item.name || item.title || 'Unnamed Robot'}</h4>
+                <td scope="row">
+                  <div className="feat_robot list favorite_page style2">
+                    <div className="thumb">
+                      <Image
+                        width={150}
+                        height={220}
+                        className="img-whp cover"
+                        src={getImageUrl(item)}
+                        alt={item.name || item.title || 'Robot Image'}
+                        unoptimized
+                        onError={handleImageError}
+                        priority={index < 5} // Prioritize first 5 images
+                      />
+                      <div className="thmb_cntnt">
+                        <ul className="tag mb0">
+                          <li className="list-inline-item">
+                            <a href="#" onClick={(e) => e.preventDefault()}>
+                              {getDisplayName(item, 'category') || getDisplayName(item, 'categoryid') || 'Uncategorized'}
+                            </a>
+                          </li>
+                        </ul>
+                      </div>
                     </div>
-                  </td>
+                    <div className="details">
+                      <div className="tc_content">
+                        <h4 title={item.name || item.title}>
+                          {item.name || item.title || 'Unnamed Robot'}
+                        </h4>
+                        {(getDisplayName(item, 'manufacturer') || getDisplayName(item, 'countryOfOrigin')) && (
+                          <p>
+                            <span className="flaticon-placeholder"></span>
+                            {getDisplayName(item, 'manufacturer') || getDisplayName(item, 'countryOfOrigin')}
+                          </p>
+                        )}
+                        <a className="fp_price text-thm" href="#" onClick={(e) => e.preventDefault()}>
+                          ${getPrice(item)}
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </td>
 
                                  {/* Date Published */}
                  <td className="align-middle text-start">

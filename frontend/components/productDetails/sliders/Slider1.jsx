@@ -6,6 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import { Navigation, Thumbs } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import Image from "next/image";
+
 export default function Slider1({
   activeColor = "gray",
   setActiveColor = () => {},
@@ -16,40 +17,51 @@ export default function Slider1({
   productImages = [], // New prop for robot images
 }) {
   // Use robot images if available, otherwise fall back to static slides
-  const items = productImages && productImages.length > 0 
-    ? productImages.map((img, index) => ({
-        id: index + 1,
-        color: activeColor,
-        src: img,
-        alt: `Robot image ${index + 1}`,
-        width: 600,
-        height: 800,
-      }))
-    : [...slideItems];
-  
+  const items =
+    productImages && productImages.length > 0
+      ? productImages.map((img, index) => ({
+          id: index + 1,
+          color: activeColor,
+          src: img,
+          alt: `Robot image ${index + 1}`,
+          width: 600,
+          height: 800,
+        }))
+      : [...slideItems];
+
   // Set first item if provided
   if (firstItem && items.length > 0) {
     items[0].src = firstItem;
   }
 
   useEffect(() => {
-    // Function to initialize Drift
+    // Function to initialize Drift safely
     const imageZoom = () => {
       const driftAll = document.querySelectorAll(".tf-image-zoom");
       const pane = document.querySelector(".tf-zoom-main");
 
-      driftAll.forEach((el) => {
-        new Drift(el, {
-          zoomFactor: 2,
-          paneContainer: pane,
-          inlinePane: false,
-          handleTouch: false,
-          hoverBoundingBox: true,
-          containInline: true,
+      if (driftAll.length > 0 && pane) {
+        driftAll.forEach((el) => {
+          try {
+            new Drift(el, {
+              zoomFactor: 2,
+              paneContainer: pane,
+              inlinePane: false,
+              handleTouch: false,
+              hoverBoundingBox: true,
+              containInline: true,
+            });
+          } catch (err) {
+            console.warn("Drift init failed:", err.message);
+          }
         });
-      });
+      } else {
+        console.log("Zoom skipped: elements not found.");
+      }
     };
+
     imageZoom();
+
     const zoomElements = document.querySelectorAll(".tf-image-zoom");
 
     const handleMouseOver = (event) => {
@@ -103,13 +115,15 @@ export default function Slider1({
   const [thumbsSwiper, setThumbsSwiper] = useState(null);
   const [activeIndex, setActiveIndex] = useState(0);
   const swiperRef = useRef(null);
+
   useEffect(() => {
     if (!(items[activeIndex].color == activeColor)) {
       const slideIndex =
         items.filter((elm) => elm.color == activeColor)[0]?.id - 1;
-      swiperRef.current.slideTo(slideIndex);
+      swiperRef.current?.slideTo(slideIndex);
     }
   }, [activeColor]);
+
   useEffect(() => {
     setTimeout(() => {
       if (swiperRef.current) {
@@ -207,13 +221,12 @@ export default function Slider1({
               className="item"
               data-pswp-width={slide.width}
               data-pswp-height={slide.height}
-              //   onClick={() => openLightbox(index)}
             >
               <Image
                 className="tf-image-zoom lazyload"
                 data-zoom={slide.src}
                 data-src={slide.src}
-                alt=""
+                alt={slide.alt}
                 src={slide.src}
                 width={slide.width}
                 height={slide.height}

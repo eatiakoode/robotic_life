@@ -38,6 +38,42 @@ export default function Descriptions1({ product }) {
                 >
                   <span className="inner">FAQs</span>
                 </li>
+                <li
+                  className={`item-title ${activeTab == 4 ? "active" : ""} `}
+                  onClick={() => setActiveTab(4)}
+                >
+                  <span className="inner">Payloads & Attachments</span>
+                </li>
+                <li
+                  className={`item-title ${activeTab == 4 ? "active" : ""} `}
+                  onClick={() => setActiveTab(4)}
+                >
+                  <span className="inner">Sensors & Softwares</span>
+                </li>
+                <li
+                  className={`item-title ${activeTab == 4 ? "active" : ""} `}
+                  onClick={() => setActiveTab(4)}
+                >
+                  <span className="inner">Operational Environment</span>
+                </li>
+                {/* <li
+                  className={`item-title ${activeTab == 4 ? "active" : ""} `}
+                  onClick={() => setActiveTab(4)}
+                >
+                  <span className="inner">Application</span>
+                </li>
+                <li
+                  className={`item-title ${activeTab == 4 ? "active" : ""} `}
+                  onClick={() => setActiveTab(4)}
+                >
+                  <span className="inner">Application</span>
+                </li>
+                <li
+                  className={`item-title ${activeTab == 4 ? "active" : ""} `}
+                  onClick={() => setActiveTab(4)}
+                >
+                  <span className="inner">Application</span>
+                </li> */}
               </ul>
               <div className="widget-content-tab">
                 <div

@@ -169,6 +169,7 @@ export default function Description({ product }) {
           </div>
           </div>
           )}
+          
 
           {/* Version */}
           {product?.version && product.version.trim() && (

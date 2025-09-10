@@ -47,7 +47,7 @@ const createRobot = asyncHandler(async (req, res) => {
     const populatedRobot = await Robot.findById(robot._id)
       .populate("category", "name")
       .populate("manufacturer", "name")
-      .populate("countryOfOrigin", "title")
+      .populate("countryOfOrigin", "name")
       .populate("powerSource", "name")
       .populate("color", "name")
       .populate("material", "name")
@@ -63,7 +63,7 @@ const createRobot = asyncHandler(async (req, res) => {
 
     res.status(201).json({
       message: "Robot created successfully",
-      data: populatedRobot
+      data: populatedRobot,
     });
   } catch (err) {
     console.error("Create robot error:", err);

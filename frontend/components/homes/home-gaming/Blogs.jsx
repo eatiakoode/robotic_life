@@ -48,8 +48,8 @@ export default function  Blogs() {
         <div className="container">
           <div className="heading-section-2 align-items-center type-2 wow fadeInUp">
             <h3 className="heading font-5 fw-bold">News &amp; Reviews</h3>
-            <Link href={`/blog-list`} className="btn-line">
-              View Blogs
+            <Link href={`/shop-collection`} className="btn-line">
+              View All
             </Link>
           </div>
           <div className="text-center py-5">
@@ -88,7 +88,7 @@ export default function  Blogs() {
         <div className="container">
           <div className="heading-section-2 align-items-center type-2 wow fadeInUp">
             <h3 className="heading font-5 fw-bold">News &amp; Reviews</h3>
-            <Link href={`/blog-list`} className="btn-line">
+            <Link href={`/shop-collection`} className="btn-line">
               View All
             </Link>
           </div>
@@ -162,8 +162,8 @@ export default function  Blogs() {
     <section>
       <div className="container">
         <div className="heading-section-2 align-items-center type-2 wow fadeInUp">
-          <h3 className="heading font-5 fw-bold">Blogs</h3>
-          <Link href={`/blog-list`} className="btn-line">
+          <h3 className="heading font-5 fw-bold">News &amp; Reviews</h3>
+          <Link href={`/shop-collection`} className="btn-line">
             View All
           </Link>
         </div>

@@ -93,44 +93,18 @@ const TableData = ({ sliders = [], loading = false, error = null, onRefresh }) =
             borderRadius: "4px"
           }}
         >
-          <img
-            width={100}
-            height={100}
-            src={(() => {
-              const imagePath = item?.images && item.images.length > 0 ? item.images[0] : null;
-              const backendUrl = (process.env.NEXT_PUBLIC_BACKEND_API_URL || 'http://localhost:5000').replace(/\/$/, '');
-              
-              if (!imagePath) {
-                return `${backendUrl}/public/assets/images/thumbnail.webp`;
-              }
-              
-              if (imagePath.startsWith('http')) {
-                return imagePath;
-              }
-              
-              // Fix double slash issue by ensuring proper URL construction
-              const cleanPath = imagePath.startsWith('/') ? imagePath.substring(1) : imagePath;
-              const fullUrl = `${backendUrl}/${cleanPath}`;
-              console.log(`Constructing image URL for ${item?.title}:`, {
-                originalPath: imagePath,
-                cleanPath: cleanPath,
-                backendUrl: backendUrl,
-                fullUrl: fullUrl
-              });
-              return fullUrl;
-            })()}
+          <Image
+            width={90}
+            height={90}
+            className="img-whp cover"
+            src={
+              item?.images && item.images.length > 0
+                ? `${process.env.NEXT_PUBLIC_API_URL}${item.images[0]}`
+                : `${process.env.NEXT_PUBLIC_API_URL}public/assets/images/thumbnail.webp`
+            }
             alt={`${item?.title || 'Slider'}`}
-            style={{ 
-              width: "100%",
-              height: "100%",
-              objectFit: "contain",
-              objectPosition: "center"
-            }}
-            onError={(e) => {
-              console.log(`Image failed to load: ${e.target.src}`);
-              const backendUrl = (process.env.NEXT_PUBLIC_BACKEND_API_URL || 'http://localhost:5000').replace(/\/$/, '');
-              e.target.src = `${backendUrl}/public/assets/images/thumbnail.webp`;
-            }}
+            unoptimized
+            style={{ width: "100%", height: "100%", objectFit: "contain" }}
           />
         </div>
       </td>
