@@ -196,7 +196,7 @@ export const getRobotById = async (id: string, passedToken?: string) => {
   if (!token) throw new Error("User not authenticated!");
 
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_ADMIN_API_URL}api/robot/${id}`,
+    `${process.env.NEXT_PUBLIC_ADMIN_API_URL}admin/api/robot/${id}`,
     {
       method: "GET",
       headers: { Authorization: `Bearer ${token}` },
