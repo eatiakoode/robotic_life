@@ -43,6 +43,8 @@ const CreateList = () => {
   const [manufacturers, setManufacturers] = useState([]);
   const [selectedManufacturer, setSelectedManufacturer] = useState("");
   const [launchYear, setLaunchYear] = useState("");
+  const [feature, setFeature] = useState("");
+  const [interoperability, setInteroperability] = useState("");
 
   const [power, setPower] = useState([]);
   const [selectedPower, setSelectedPower] = useState("");
@@ -68,6 +70,13 @@ const CreateList = () => {
   const [mtbfUnit, setMtbfUnit] = useState("h");
   const [maintenanceInterval, setMaintenanceInterval] = useState("");
   const [maintenanceIntervalUnit, setMaintenanceIntervalUnit] = useState("h");
+  const [grippingStrength, setGrippingStrength] = useState("");
+  const [grippingStrengthUnit, setGrippingStrengthUnit] = useState("kg");
+  const [articulationPrecision, setArticulationPrecision] = useState("");
+  const [articulationPrecisionUnit, setArticulationPrecisionUnit] =
+    useState("°");
+  const [communicationRange, setCommunicationRange] = useState("");
+  const [communicationRangeUnit, setCommunicationRangeUnit] = useState("m");
 
   const [patentNumber, setPatentNumber] = useState("");
   const [loadCapacity, setLoadCapacity] = useState("");
@@ -206,8 +215,8 @@ const CreateList = () => {
           Array.isArray(manufacturerRes?.items)
             ? manufacturerRes.items
             : Array.isArray(manufacturerRes)
-            ? manufacturerRes
-            : []
+              ? manufacturerRes
+              : []
         );
         setPower(Array.isArray(powerRes) ? powerRes : powerRes?.data || []);
         setColors(Array.isArray(colorRes) ? colorRes : colorRes?.data || []);
@@ -433,8 +442,14 @@ const CreateList = () => {
 
     // Validate at least some maintenance features are provided
     if (!mtbf && !maintenanceInterval) {
-      newErrors.maintenance =
+      newErrors.maintenanceInfo =
         "At least one maintenance information (MTBF or Maintenance Interval) is required";
+    }
+
+    // Validate at least some load handling features are provided
+    if (!grippingStrength && !articulationPrecision) {
+      newErrors.loadHandling =
+        "At least one load handling information (Gripping Strength or Articulation Precision) is required";
     }
 
     // Validate slug uniqueness (basic check)
@@ -506,6 +521,9 @@ const CreateList = () => {
       if (metadescription)
         formData.append("metadescription", metadescription.trim());
 
+      if (feature) formData.append("feature", feature.trim());
+      if (interoperability) formData.append("interoperability", interoperability.trim());
+
       // Dimensions with validation
       if (length) {
         formData.append("dimensions.length.value", String(length));
@@ -546,8 +564,29 @@ const CreateList = () => {
 
       // maintenance Interval
       if (maintenanceInterval) {
-        formData.append("maintenanceInterval.value", String(maintenanceInterval));
+        formData.append(
+          "maintenanceInterval.value",
+          String(maintenanceInterval)
+        );
         formData.append("maintenanceInterval.unit", maintenanceIntervalUnit);
+      }
+
+      // gripping Strength
+      if (grippingStrength) {
+        formData.append("grippingStrength.value", String(grippingStrength));
+        formData.append("grippingStrength.unit", grippingStrengthUnit);
+      }
+
+      // articulation Precision
+      if (articulationPrecision) {
+        formData.append("articulationPrecision.value", String(articulationPrecision));
+        formData.append("articulationPrecision.unit", articulationPrecisionUnit);
+      }
+
+      // energyConsumption
+      if (communicationRange) {
+        formData.append("communicationRange.value", String(communicationRange));
+        formData.append("communicationRange.unit", communicationRangeUnit);
       }
 
       // Other specifications (optional)
@@ -759,9 +798,8 @@ const CreateList = () => {
             <label htmlFor="roboDescription">Description *</label>
             <textarea
               id="roboDescription"
-              className={`form-control ${
-                error.description ? "is-invalid" : ""
-              }`}
+              className={`form-control ${error.description ? "is-invalid" : ""
+                }`}
               rows="7"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
@@ -802,9 +840,8 @@ const CreateList = () => {
             <label>Category</label>
             <select
               id="categorySelect"
-              className={`selectpicker form-select ${
-                error.selectedCategory ? "is-invalid" : ""
-              }`}
+              className={`selectpicker form-select ${error.selectedCategory ? "is-invalid" : ""
+                }`}
               value={selectedCategory}
               onChange={handleCategoryChange}
               data-live-search="true"
@@ -855,9 +892,8 @@ const CreateList = () => {
             <label>Manufacturer</label>
             <select
               id="manufacturerSelect"
-              className={`selectpicker form-select ${
-                error.selectedManufacturer ? "is-invalid" : ""
-              }`}
+              className={`selectpicker form-select ${error.selectedManufacturer ? "is-invalid" : ""
+                }`}
               value={selectedManufacturer}
               onChange={handleManufacturerChange}
               data-live-search="true"
@@ -884,9 +920,8 @@ const CreateList = () => {
             <label htmlFor="countrySelect">Country of Origin *</label>
             <select
               id="countrySelect"
-              className={`selectpicker form-select ${
-                error.selectedCountry ? "is-invalid" : ""
-              }`}
+              className={`selectpicker form-select ${error.selectedCountry ? "is-invalid" : ""
+                }`}
               value={selectedCountry}
               onChange={handleCountryChange}
               data-live-search="true"
@@ -1124,8 +1159,6 @@ const CreateList = () => {
 
                 <label htmlFor="durability">Durability</label>
 
-                {/* --- durability start --- */}
-
                 <div className="row">
                   {/* ipRating start */}
                   <div className="col-lg-6 position-relative mb-2">
@@ -1164,15 +1197,11 @@ const CreateList = () => {
                   {/* radiationShielding ends */}
                 </div>
 
-                {/* --- durability ends --- */}
-
                 {/* --- durability row ends --- */}
 
                 {/* --- maintenance row starts --- */}
 
                 <label htmlFor="maintenanceInfo">Maintenance Information</label>
-
-                {/* --- maintenance start --- */}
 
                 <div className="row">
                   {/* mtbf start */}
@@ -1228,7 +1257,9 @@ const CreateList = () => {
                         MozAppearance: "none",
                       }}
                       value={maintenanceIntervalUnit}
-                      onChange={(e) => setMaintenanceIntervalUnit(e.target.value)}
+                      onChange={(e) =>
+                        setMaintenanceIntervalUnit(e.target.value)
+                      }
                     >
                       <option value="h">h</option>
                       <option value="days">days</option>
@@ -1238,9 +1269,7 @@ const CreateList = () => {
                   {/* maintenance Interval ends */}
                 </div>
 
-                {/* --- durability ends --- */}
-
-                {/* --- durability row ends --- */}
+                {/* --- maintenance row ends --- */}
 
                 {/* another row starts */}
                 <div className="row">
@@ -1285,9 +1314,8 @@ const CreateList = () => {
                       <label htmlFor="powerSelect">Power Source</label>
                       <select
                         id="powerSelect"
-                        className={`selectpicker form-select ${
-                          error.selectedPower ? "is-invalid" : ""
-                        }`}
+                        className={`selectpicker form-select ${error.selectedPower ? "is-invalid" : ""
+                          }`}
                         value={selectedPower}
                         onChange={handlePowerChange}
                         data-live-search="true"
@@ -1646,9 +1674,7 @@ const CreateList = () => {
 
                   {/* energy consumption start */}
                   <div className="col-lg-6 mb-2">
-                    <label htmlFor="energyConsumption">
-                      Energy Consumption
-                    </label>
+                    <label htmlFor="energyConsumption">Energy Consumption</label>
                     <div className="position-relative">
                       <input
                         type="number"
@@ -1891,10 +1917,153 @@ const CreateList = () => {
               </div>
             </div>
 
+            {/* -------- Capabilities Start-------- */}
+
             <div className="row">
               <div className="col-lg-12">
                 <h3 className="mb30">Capabilities</h3>
               </div>
+              {/* robot feature start */}
+              <div className="col-lg-6">
+                <div className="my_profile_setting_input form-group">
+                  <label htmlFor="version">Feature</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="feature"
+                    value={feature}
+                    onChange={(e) => setFeature(e.target.value)}
+                    placeholder="Enter Feature"
+                  />
+                </div>
+              </div>
+              {/* robot feature ends */}
+
+              {/* robot interoperability start */}
+              <div className="col-lg-6">
+                <div className="my_profile_setting_input form-group">
+                  <label htmlFor="interoperability">Interoperability</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="interoperability"
+                    value={interoperability}
+                    onChange={(e) => setInteroperability(e.target.value)}
+                    placeholder="Enter Interoperability"
+                  />
+                </div>
+              </div>
+              {/* robot interoperability ends */}
+
+              {/* communication Range start */}
+              <div className="col-lg-6">
+                <div className="my_profile_setting_input form-group">
+                  <label htmlFor="communicationRange">Communication Range</label>
+                  <div className="position-relative">
+                    <input
+                      type="number"
+                      className="form-control pe-5"
+                      placeholder="Enter Robot Communication Range"
+                      value={communicationRange}
+                      onChange={(e) => setCommunicationRange(e.target.value)}
+                    />
+                    <select
+                      className="form-select position-absolute end-0 border-0 bg-transparent"
+                      style={{
+                        width: "auto",
+                        height: "auto",
+                        top: "50%",
+                        transform: "translateY(-50%)",
+                        paddingRight: "30px",
+                        paddingLeft: "8px",
+                        appearance: "none",
+                        WebkitAppearance: "none",
+                        MozAppearance: "none",
+                      }}
+                      value={communicationRangeUnit}
+                      onChange={(e) =>
+                        setCommunicationRangeUnit(e.target.value)
+                      }
+                    >
+                      <option value="m">m</option>
+                      <option value="kWh">kWh</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              {/* energy consumption ends */}
+
+              {/* Load Handling start */}
+              <div className="my_profile_setting_input form-group">
+                <label htmlFor="loadHandling">Load Handling</label>
+                {/* mtbf start */}
+                <div className="row">
+                  <div className="col-lg-6 col-xl-6 position-relative mb-2">
+                    <input
+                      type="text"
+                      className="form-control pe-5"
+                      placeholder="Enter Robot Gripping Strength"
+                      value={grippingStrength}
+                      onChange={(e) => setGrippingStrength(e.target.value)}
+                    />
+                    <select
+                      className="form-select position-absolute end-0 border-0 bg-transparent"
+                      style={{
+                        width: "auto",
+                        height: "auto",
+                        top: "50%",
+                        transform: "translateY(-50%)",
+                        paddingRight: "45px",
+                        paddingLeft: "8px",
+                        appearance: "none",
+                        WebkitAppearance: "none",
+                        MozAppearance: "none",
+                      }}
+                      value={grippingStrengthUnit}
+                      onChange={(e) => setGrippingStrengthUnit(e.target.value)}
+                    >
+                      <option value="h">h</option>
+                    </select>
+                  </div>
+                  {/* mtbf ends */}
+
+                  {/* maintenance Interval start */}
+                  <div className="col-lg-6 col-xl-6 position-relative mb-2">
+                    <input
+                      type="text"
+                      className="form-control pe-5"
+                      placeholder="Enter Robot Articulation Precision"
+                      value={articulationPrecision}
+                      onChange={(e) => setArticulationPrecision(e.target.value)}
+                    />
+                    <select
+                      className="form-select position-absolute end-0 border-0 bg-transparent"
+                      style={{
+                        width: "auto",
+                        height: "auto",
+                        top: "50%",
+                        transform: "translateY(-50%)",
+                        paddingRight: "1px",
+                        paddingLeft: "8px",
+                        appearance: "none",
+                        WebkitAppearance: "none",
+                        MozAppearance: "none",
+                      }}
+                      value={articulationPrecisionUnit}
+                      onChange={(e) =>
+                        setArticulationPrecisionUnit(e.target.value)
+                      }
+                    >
+                      <option value="h">h</option>
+                      <option value="days">days</option>
+                      <option value="months">months</option>
+                    </select>
+                  </div>
+                  {/* maintenance Interval ends */}
+                </div>
+              </div>
+              {/* Load Handling ends */}
+
               {/* Navigation Types start */}
               <div className="col-lg-6 col-xl-6">
                 <div className="my_profile_setting_input ui_kit_select_search form-group">
@@ -2545,9 +2714,8 @@ const CreateList = () => {
                   <label htmlFor="primaryFunction">Primary Function</label>
                   <select
                     id="primaryFunction"
-                    className={`selectpicker form-select ${
-                      error.selectedPrimaryFunction ? "is-invalid" : ""
-                    }`}
+                    className={`selectpicker form-select ${error.selectedPrimaryFunction ? "is-invalid" : ""
+                      }`}
                     value={selectedPrimaryFunction}
                     onChange={handlePrimaryFunctionChange}
                     data-live-search="true"
@@ -2578,9 +2746,8 @@ const CreateList = () => {
                   </label>
                   <select
                     id="operatingEnvironment"
-                    className={`selectpicker form-select ${
-                      error.selectedOperatingEnvironment ? "is-invalid" : ""
-                    }`}
+                    className={`selectpicker form-select ${error.selectedOperatingEnvironment ? "is-invalid" : ""
+                      }`}
                     value={selectedOperatingEnvironment}
                     onChange={handleOperatingEnvironmentChange}
                     data-live-search="true"
@@ -2609,9 +2776,8 @@ const CreateList = () => {
                   <label htmlFor="autonomyLevel">Autonomy Level</label>
                   <select
                     id="autonomyLevel"
-                    className={`selectpicker form-select ${
-                      error.selectedAutonomyLevel ? "is-invalid" : ""
-                    }`}
+                    className={`selectpicker form-select ${error.selectedAutonomyLevel ? "is-invalid" : ""
+                      }`}
                     value={selectedAutonomyLevel}
                     onChange={handleAutonomyLevelChange}
                     data-live-search="true"
@@ -2645,9 +2811,8 @@ const CreateList = () => {
                   <label htmlFor="videoEmbedCode">Video Embed code</label>
                   <textarea
                     id="videoEmbedCode"
-                    className={`form-control ${
-                      error.videoembedcode ? "is-invalid" : ""
-                    }`}
+                    className={`form-control ${error.videoembedcode ? "is-invalid" : ""
+                      }`}
                     rows="7"
                     value={videoembedcode}
                     onChange={(e) => setVideoEmbedCode(e.target.value)}
@@ -2673,10 +2838,10 @@ const CreateList = () => {
                     style={
                       featuredimage !== null
                         ? {
-                            backgroundImage: `url(${URL.createObjectURL(
-                              featuredimage
-                            )})`,
-                          }
+                          backgroundImage: `url(${URL.createObjectURL(
+                            featuredimage
+                          )})`,
+                        }
                         : undefined
                     }
                     htmlFor="featuredimage"
@@ -2693,29 +2858,29 @@ const CreateList = () => {
                 <ul className="mb-0">
                   {robotSelectedImgs.length > 0
                     ? robotSelectedImgs?.map((item, index) => (
-                        <li key={index} className="list-inline-item">
-                          <div className="portfolio_item">
-                            <Image
-                              width={200}
-                              height={200}
-                              className="img-fluid cover"
-                              src={URL.createObjectURL(item)}
-                              alt="fp1.jpg"
-                            />
-                            <div
-                              className="edu_stats_list"
-                              data-bs-toggle="tooltip"
-                              data-bs-placement="top"
-                              title="Delete"
-                              data-original-title="Delete"
-                            >
-                              <a onClick={() => deleteImage(item.name)}>
-                                <span className="flaticon-garbage"></span>
-                              </a>
-                            </div>
+                      <li key={index} className="list-inline-item">
+                        <div className="portfolio_item">
+                          <Image
+                            width={200}
+                            height={200}
+                            className="img-fluid cover"
+                            src={URL.createObjectURL(item)}
+                            alt="fp1.jpg"
+                          />
+                          <div
+                            className="edu_stats_list"
+                            data-bs-toggle="tooltip"
+                            data-bs-placement="top"
+                            title="Delete"
+                            data-original-title="Delete"
+                          >
+                            <a onClick={() => deleteImage(item.name)}>
+                              <span className="flaticon-garbage"></span>
+                            </a>
                           </div>
-                        </li>
-                      ))
+                        </div>
+                      </li>
+                    ))
                     : undefined}
                   {/* End li */}
                 </ul>
