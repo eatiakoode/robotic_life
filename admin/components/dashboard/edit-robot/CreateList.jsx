@@ -116,6 +116,50 @@ const EditList = () => {
   const [robotSelectedImgs, setRobotSelectedImgs] = useState([]);
   const [existingImages, setExistingImages] = useState([]);
 
+  // Additional fields from add form
+  const [feature, setFeature] = useState("");
+  const [interoperability, setInteroperability] = useState("");
+  const [attachments, setAttachments] = useState("");
+  const [accessoryPorts, setAccessoryPorts] = useState("");
+  const [operatingSystem, setOperatingSystem] = useState("");
+  const [firmwareVersion, setFirmwareVersion] = useState("");
+  const [securityFeatures, setSecurityFeatures] = useState("");
+  const [applications, setApplications] = useState("");
+  const [enduranceExtremeConditions, setEnduranceExtremeConditions] = useState("");
+  const [deploymentLogistics, setDeploymentLogistics] = useState("");
+
+  const [storageCapacity, setStorageCapacity] = useState("");
+  const [storageCapacityUnit, setStorageCapacityUnit] = useState("B");
+  const [loggingInterval, setLoggingInterval] = useState("");
+  const [loggingIntervalUnit, setLoggingIntervalUnit] = useState("s");
+  const [maxSlope, setMaxSlope] = useState("");
+  const [maxSlopeUnit, setMaxSlopeUnit] = useState("°");
+  const [maxStepHeight, setMaxStepHeight] = useState("");
+  const [maxStepHeightUnit, setMaxStepHeightUnit] = useState("cm");
+  const [maxWaterDepth, setMaxWaterDepth] = useState("");
+  const [maxWaterDepthUnit, setMaxWaterDepthUnit] = useState("m");
+
+  const [noiseLevel, setNoiseLevel] = useState("");
+  const [noiseLevelUnit, setNoiseLevelUnit] = useState("dB");
+  const [energyConsumption, setEnergyConsumption] = useState("");
+  const [energyConsumptionUnit, setEnergyConsumptionUnit] = useState("Wh");
+  const [wingspan, setWingspan] = useState("");
+  const [wingspanUnit, setWingspanUnit] = useState("cm");
+  const [ipRating, setIpRating] = useState("");
+  const [milStdCompliance, setMilStdCompliance] = useState("");
+  const [radiationShielding, setRadiationShielding] = useState("");
+  const [mtbf, setMtbf] = useState("");
+  const [mtbfUnit, setMtbfUnit] = useState("h");
+  const [maintenanceInterval, setMaintenanceInterval] = useState("");
+  const [maintenanceIntervalUnit, setMaintenanceIntervalUnit] = useState("h");
+  const [grippingStrength, setGrippingStrength] = useState("");
+  const [grippingStrengthUnit, setGrippingStrengthUnit] = useState("kg");
+  const [articulationPrecision, setArticulationPrecision] = useState("");
+  const [articulationPrecisionUnit, setArticulationPrecisionUnit] = useState("°");
+  const [communicationRange, setCommunicationRange] = useState("");
+  const [communicationRangeUnit, setCommunicationRangeUnit] = useState("m");
+  const [hotSwappable, setHotSwappable] = useState(false);
+
   const normalizeImagePath = (path) => {
     if (!path) return "";
     
@@ -235,6 +279,90 @@ const EditList = () => {
             setChargingTime(robotData.chargingTime.value || robotData.chargingTime || "");
             setChargingTimeUnit(robotData.chargingTime.unit || "h");
           }
+
+          // Additional fields from add form
+          setFeature(robotData.capabilities?.features?.[0] || "");
+          setInteroperability(robotData.capabilities?.interoperability?.[0] || "");
+          setAttachments(robotData.payloadsAndAttachments?.attachments?.[0] || "");
+          setAccessoryPorts(robotData.payloadsAndAttachments?.accessoryPorts?.[0] || "");
+          setOperatingSystem(robotData.sensorsAndSoftware?.operatingSystem || "");
+          setFirmwareVersion(robotData.sensorsAndSoftware?.firmwareVersion || "");
+          setSecurityFeatures(robotData.sensorsAndSoftware?.securityFeatures?.[0] || "");
+          setApplications(robotData.operationalEnvironmentAndApplications?.applications?.[0] || "");
+          setEnduranceExtremeConditions(robotData.operationalEnvironmentAndApplications?.enduranceExtremeConditions?.[0] || "");
+          setDeploymentLogistics(robotData.operationalEnvironmentAndApplications?.deploymentLogistics?.[0] || "");
+
+          // Data logging
+          if (robotData.sensorsAndSoftware?.dataLogging?.storageCapacity) {
+            setStorageCapacity(robotData.sensorsAndSoftware.dataLogging.storageCapacity.value || "");
+            setStorageCapacityUnit(robotData.sensorsAndSoftware.dataLogging.storageCapacity.unit || "B");
+          }
+          if (robotData.sensorsAndSoftware?.dataLogging?.loggingInterval) {
+            setLoggingInterval(robotData.sensorsAndSoftware.dataLogging.loggingInterval.value || "");
+            setLoggingIntervalUnit(robotData.sensorsAndSoftware.dataLogging.loggingInterval.unit || "s");
+          }
+
+          // Mobility constraints
+          if (robotData.operationalEnvironmentAndApplications?.mobilityConstraints?.maxSlope) {
+            setMaxSlope(robotData.operationalEnvironmentAndApplications.mobilityConstraints.maxSlope.value || "");
+            setMaxSlopeUnit(robotData.operationalEnvironmentAndApplications.mobilityConstraints.maxSlope.unit || "°");
+          }
+          if (robotData.operationalEnvironmentAndApplications?.mobilityConstraints?.maxStepHeight) {
+            setMaxStepHeight(robotData.operationalEnvironmentAndApplications.mobilityConstraints.maxStepHeight.value || "");
+            setMaxStepHeightUnit(robotData.operationalEnvironmentAndApplications.mobilityConstraints.maxStepHeight.unit || "cm");
+          }
+          if (robotData.operationalEnvironmentAndApplications?.mobilityConstraints?.maxWaterDepth) {
+            setMaxWaterDepth(robotData.operationalEnvironmentAndApplications.mobilityConstraints.maxWaterDepth.value || "");
+            setMaxWaterDepthUnit(robotData.operationalEnvironmentAndApplications.mobilityConstraints.maxWaterDepth.unit || "m");
+          }
+
+          // Additional specifications
+          if (robotData.specifications?.noiseLevel) {
+            setNoiseLevel(robotData.specifications.noiseLevel.value || "");
+            setNoiseLevelUnit(robotData.specifications.noiseLevel.unit || "dB");
+          }
+          if (robotData.specifications?.energyConsumption) {
+            setEnergyConsumption(robotData.specifications.energyConsumption.value || "");
+            setEnergyConsumptionUnit(robotData.specifications.energyConsumption.unit || "Wh");
+          }
+          if (robotData.specifications?.dimensions?.wingspan) {
+            setWingspan(robotData.specifications.dimensions.wingspan.value || "");
+            setWingspanUnit(robotData.specifications.dimensions.wingspan.unit || "cm");
+          }
+
+          // Durability
+          setIpRating(robotData.specifications?.durability?.ipRating || "");
+          setMilStdCompliance(robotData.specifications?.durability?.milStdCompliance || "");
+          setRadiationShielding(robotData.specifications?.durability?.radiationShielding || "");
+
+          // Maintenance info
+          if (robotData.specifications?.maintenanceInfo?.mtbf) {
+            setMtbf(robotData.specifications.maintenanceInfo.mtbf.value || "");
+            setMtbfUnit(robotData.specifications.maintenanceInfo.mtbf.unit || "h");
+          }
+          if (robotData.specifications?.maintenanceInfo?.maintenanceInterval) {
+            setMaintenanceInterval(robotData.specifications.maintenanceInfo.maintenanceInterval.value || "");
+            setMaintenanceIntervalUnit(robotData.specifications.maintenanceInfo.maintenanceInterval.unit || "h");
+          }
+
+          // Load handling
+          if (robotData.capabilities?.loadHandling?.grippingStrength) {
+            setGrippingStrength(robotData.capabilities.loadHandling.grippingStrength.value || "");
+            setGrippingStrengthUnit(robotData.capabilities.loadHandling.grippingStrength.unit || "kg");
+          }
+          if (robotData.capabilities?.loadHandling?.articulationPrecision) {
+            setArticulationPrecision(robotData.capabilities.loadHandling.articulationPrecision.value || "");
+            setArticulationPrecisionUnit(robotData.capabilities.loadHandling.articulationPrecision.unit || "°");
+          }
+
+          // Communication range
+          if (robotData.capabilities?.communicationRange) {
+            setCommunicationRange(robotData.capabilities.communicationRange.value || "");
+            setCommunicationRangeUnit(robotData.capabilities.communicationRange.unit || "m");
+          }
+
+          // Hot swappable
+          setHotSwappable(robotData.payloadsAndAttachments?.hotSwappable || false);
           
           // Multi-select fields - extract IDs from objects or use direct IDs
           setSelectedColors(robotData.color?.map(c => c._id || c) || []);
@@ -516,8 +644,6 @@ const EditList = () => {
     const requiredFields = [
       { key: "title", value: title, name: "Title" },
       { key: "description", value: description, name: "Description" },
-      { key: "selectedCountry", value: selectedCountry, name: "Country of Origin" },
-      { key: "launchYear", value: launchYear, name: "Launch Year" },
     ];
 
     // Check for empty required fields
@@ -558,13 +684,13 @@ const EditList = () => {
       formData.append("manufacturer", selectedManufacturer || "");
       formData.append("launchYear", launchYear?.toString() || "");
       if (version) formData.append("version", version);
-      formData.append("powerSource", selectedPower || "");
-      formData.append("videoembedcode", videoembedcode?.trim() || "");
-      formData.append("primaryFunction", selectedPrimaryFunction || "");
-      formData.append("operatingEnvironment", selectedOperatingEnvironment || "");
-      formData.append("autonomyLevel", selectedAutonomyLevel || "");
-      if (metatitle) formData.append("metatitle", metatitle);
-      if (metadescription) formData.append("metadescription", metadescription);
+      formData.append("specifications.powerSource", selectedPower || "");
+      formData.append("videoEmbedCode", videoembedcode?.trim() || "");
+      formData.append("capabilities.primaryFunction", selectedPrimaryFunction || "");
+      formData.append("operationalEnvironmentAndApplications.operatingEnvironment", selectedOperatingEnvironment || "");
+      formData.append("capabilities.autonomyLevel", selectedAutonomyLevel || "");
+      if (metatitle) formData.append("metaTitle", metatitle);
+      if (metadescription) formData.append("metaDescription", metadescription);
 
       // Featured image
       if (featuredimage) {
@@ -572,52 +698,136 @@ const EditList = () => {
       }
 
       // Append multi-selects
-      selectedColors.forEach((color) => formData.append("color[]", color));
-      selectedMaterials.forEach((material) => formData.append("material[]", material));
-      selectedNavigationType.forEach((nav) => formData.append("navigationType[]", nav));
-      selectedSensor.forEach((s) => formData.append("sensors[]", s));
-      selectedAISoftwareFeature.forEach((a) => formData.append("aiSoftwareFeatures[]", a));
-      selectedTerrainCapability.forEach((t) => formData.append("terrainCapability[]", t));
-      selectedCommunicationMethod.forEach((c) => formData.append("communicationMethod[]", c));
-      selectedPayloadType.forEach((p) => formData.append("payloadTypesSupported[]", p));
+      selectedColors.forEach((color) => formData.append("specifications.color", color));
+      selectedMaterials.forEach((material) => formData.append("specifications.materials", material));
+      selectedNavigationType.forEach((nav) => formData.append("capabilities.navigationTypes", nav));
+      selectedSensor.forEach((s) => formData.append("sensorsAndSoftware.sensors", s));
+      selectedAISoftwareFeature.forEach((a) => formData.append("sensorsAndSoftware.aiSoftwareFeatures", a));
+      selectedTerrainCapability.forEach((t) => formData.append("operationalEnvironmentAndApplications.terrainCapabilities", t));
+      selectedCommunicationMethod.forEach((c) => formData.append("capabilities.communicationMethods", c));
+      selectedPayloadType.forEach((p) => formData.append("payloadsAndAttachments.payloadTypes", p));
 
       // Append nested unit/value fields
-      if (length) formData.append("dimensions.length.value", String(length));
-      if (lengthUnit) formData.append("dimensions.length.unit", String(lengthUnit));
-      if (width) formData.append("dimensions.width.value", String(width));
-      if (widthUnit) formData.append("dimensions.width.unit", String(widthUnit));
-      if (height) formData.append("dimensions.height.value", String(height));
-      if (heightUnit) formData.append("dimensions.height.unit", String(heightUnit));
+      if (length) formData.append("specifications.dimensions.length.value", String(length));
+      if (lengthUnit) formData.append("specifications.dimensions.length.unit", String(lengthUnit));
+      if (width) formData.append("specifications.dimensions.width.value", String(width));
+      if (widthUnit) formData.append("specifications.dimensions.width.unit", String(widthUnit));
+      if (height) formData.append("specifications.dimensions.height.value", String(height));
+      if (heightUnit) formData.append("specifications.dimensions.height.unit", String(heightUnit));
 
-      if (weight) formData.append("weight.value", String(weight));
-      if (weightUnit) formData.append("weight.unit", String(weightUnit));
+      if (weight) formData.append("specifications.weight.value", String(weight));
+      if (weightUnit) formData.append("specifications.weight.unit", String(weightUnit));
 
-      if (batteryCapacity) formData.append("batteryCapacity.value", String(batteryCapacity));
-      if (batteryCapacityUnit) formData.append("batteryCapacity.unit", String(batteryCapacityUnit));
+      if (batteryCapacity) formData.append("specifications.batteryCapacity.value", String(batteryCapacity));
+      if (batteryCapacityUnit) formData.append("specifications.batteryCapacity.unit", String(batteryCapacityUnit));
 
-      if (loadCapacity) formData.append("loadCapacity.value", String(loadCapacity));
-      if (loadCapacityUnit) formData.append("loadCapacity.unit", String(loadCapacityUnit));
+      if (loadCapacity) formData.append("specifications.loadCapacity.value", String(loadCapacity));
+      if (loadCapacityUnit) formData.append("specifications.loadCapacity.unit", String(loadCapacityUnit));
 
-      if (runtime) formData.append("runtime.value", String(runtime));
-      if (runtimeUnit) formData.append("runtime.unit", String(runtimeUnit));
+      if (runtime) formData.append("specifications.runtime.value", String(runtime));
+      if (runtimeUnit) formData.append("specifications.runtime.unit", String(runtimeUnit));
 
-      if (speed) formData.append("speed.value", String(speed));
-      if (speedUnit) formData.append("speed.unit", String(speedUnit));
+      if (speed) formData.append("specifications.speed.value", String(speed));
+      if (speedUnit) formData.append("specifications.speed.unit", String(speedUnit));
 
-      if (accuracy) formData.append("accuracy.value", String(accuracy));
-      if (accuracyUnit) formData.append("accuracy.unit", String(accuracyUnit));
+      if (accuracy) formData.append("specifications.accuracy.value", String(accuracy));
+      if (accuracyUnit) formData.append("specifications.accuracy.unit", String(accuracyUnit));
 
-      if (range) formData.append("range.value", String(range));
-      if (rangeUnit) formData.append("range.unit", String(rangeUnit));
+      if (range) formData.append("specifications.range.value", String(range));
+      if (rangeUnit) formData.append("specifications.range.unit", String(rangeUnit));
 
-      if (operatingTemperatureMin) formData.append("operatingTemperature.min", String(operatingTemperatureMin));
-      if (operatingTemperatureMax) formData.append("operatingTemperature.max", String(operatingTemperatureMax));
-      if (operatingTemperatureUnit) formData.append("operatingTemperature.unit", String(operatingTemperatureUnit));
+      if (operatingTemperatureMin) formData.append("specifications.operatingTemperature.min", String(operatingTemperatureMin));
+      if (operatingTemperatureMax) formData.append("specifications.operatingTemperature.max", String(operatingTemperatureMax));
+      if (operatingTemperatureUnit) formData.append("specifications.operatingTemperature.unit", String(operatingTemperatureUnit));
 
       if (chargingTime) {
-        formData.append("chargingTime.value", String(chargingTime));
-        formData.append("chargingTime.unit", String(chargingTimeUnit));
+        formData.append("specifications.batteryChargeTime.value", String(chargingTime));
+        formData.append("specifications.batteryChargeTime.unit", String(chargingTimeUnit));
       }
+
+      // Additional fields from add form
+      if (feature) formData.append("capabilities.features", feature.trim());
+      if (interoperability) formData.append("capabilities.interoperability", interoperability.trim());
+      if (attachments) formData.append("payloadsAndAttachments.attachments", attachments.trim());
+      if (accessoryPorts) formData.append("payloadsAndAttachments.accessoryPorts", accessoryPorts.trim());
+      if (operatingSystem) formData.append("sensorsAndSoftware.operatingSystem", operatingSystem.trim());
+      if (firmwareVersion) formData.append("sensorsAndSoftware.firmwareVersion", firmwareVersion.trim());
+      if (securityFeatures) formData.append("sensorsAndSoftware.securityFeatures", securityFeatures.trim());
+      if (applications) formData.append("operationalEnvironmentAndApplications.applications", applications.trim());
+      if (enduranceExtremeConditions) formData.append("operationalEnvironmentAndApplications.enduranceExtremeConditions", enduranceExtremeConditions.trim());
+      if (deploymentLogistics) formData.append("operationalEnvironmentAndApplications.deploymentLogistics", deploymentLogistics.trim());
+
+      // Data logging fields
+      if (storageCapacity) {
+        formData.append("sensorsAndSoftware.dataLogging.storageCapacity.value", String(storageCapacity));
+        formData.append("sensorsAndSoftware.dataLogging.storageCapacity.unit", storageCapacityUnit);
+      }
+      if (loggingInterval) {
+        formData.append("sensorsAndSoftware.dataLogging.loggingInterval.value", String(loggingInterval));
+        formData.append("sensorsAndSoftware.dataLogging.loggingInterval.unit", loggingIntervalUnit);
+      }
+
+      // Mobility constraints
+      if (maxSlope) {
+        formData.append("operationalEnvironmentAndApplications.mobilityConstraints.maxSlope.value", String(maxSlope));
+        formData.append("operationalEnvironmentAndApplications.mobilityConstraints.maxSlope.unit", maxSlopeUnit);
+      }
+      if (maxStepHeight) {
+        formData.append("operationalEnvironmentAndApplications.mobilityConstraints.maxStepHeight.value", String(maxStepHeight));
+        formData.append("operationalEnvironmentAndApplications.mobilityConstraints.maxStepHeight.unit", maxStepHeightUnit);
+      }
+      if (maxWaterDepth) {
+        formData.append("operationalEnvironmentAndApplications.mobilityConstraints.maxWaterDepth.value", String(maxWaterDepth));
+        formData.append("operationalEnvironmentAndApplications.mobilityConstraints.maxWaterDepth.unit", maxWaterDepthUnit);
+      }
+
+      // Additional specifications
+      if (noiseLevel) {
+        formData.append("specifications.noiseLevel.value", String(noiseLevel));
+        formData.append("specifications.noiseLevel.unit", noiseLevelUnit);
+      }
+      if (energyConsumption) {
+        formData.append("specifications.energyConsumption.value", String(energyConsumption));
+        formData.append("specifications.energyConsumption.unit", energyConsumptionUnit);
+      }
+      if (wingspan) {
+        formData.append("specifications.dimensions.wingspan.value", String(wingspan));
+        formData.append("specifications.dimensions.wingspan.unit", wingspanUnit);
+      }
+
+      // Durability fields
+      if (ipRating) formData.append("specifications.durability.ipRating", ipRating.trim());
+      if (milStdCompliance) formData.append("specifications.durability.milStdCompliance", milStdCompliance.trim());
+      if (radiationShielding) formData.append("specifications.durability.radiationShielding", radiationShielding.trim());
+
+      // Maintenance info
+      if (mtbf) {
+        formData.append("specifications.maintenanceInfo.mtbf.value", String(mtbf));
+        formData.append("specifications.maintenanceInfo.mtbf.unit", mtbfUnit);
+      }
+      if (maintenanceInterval) {
+        formData.append("specifications.maintenanceInfo.maintenanceInterval.value", String(maintenanceInterval));
+        formData.append("specifications.maintenanceInfo.maintenanceInterval.unit", maintenanceIntervalUnit);
+      }
+
+      // Load handling
+      if (grippingStrength) {
+        formData.append("capabilities.loadHandling.grippingStrength.value", String(grippingStrength));
+        formData.append("capabilities.loadHandling.grippingStrength.unit", grippingStrengthUnit);
+      }
+      if (articulationPrecision) {
+        formData.append("capabilities.loadHandling.articulationPrecision.value", String(articulationPrecision));
+        formData.append("capabilities.loadHandling.articulationPrecision.unit", articulationPrecisionUnit);
+      }
+
+      // Communication range
+      if (communicationRange) {
+        formData.append("capabilities.communicationRange.value", String(communicationRange));
+        formData.append("capabilities.communicationRange.unit", communicationRangeUnit);
+      }
+
+      // Hot swappable
+      formData.append("payloadsAndAttachments.hotSwappable", hotSwappable ? "true" : "false");
 
       // Append new images
       robotSelectedImgs.forEach((file) => {
