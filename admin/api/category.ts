@@ -96,9 +96,45 @@ export const getSubCategoriesAPI = async (parentId: string) => {
 export const getCategoryTableData = async (filter: Record<string, any>) => {
   const token = getToken();
   if (!token) throw new Error("User not authenticated!");
-  const queryString = new URLSearchParams(filter as any).toString();
+  
+  // Build query parameters
+  const params = new URLSearchParams();
+  
+  // Add pagination
+  if (filter.limit) params.append('limit', filter.limit.toString());
+  if (filter.page) params.append('page', filter.page.toString());
+  
+  // Add search
+  if (filter.search) params.append('search', filter.search);
+  
+  // Add sorting
+  if (filter.sort) {
+    switch (filter.sort) {
+      case 'Recent':
+        params.append('sortBy', 'createdAt');
+        params.append('sortOrder', 'desc');
+        break;
+      case 'Old Review':
+        params.append('sortBy', 'createdAt');
+        params.append('sortOrder', 'asc');
+        break;
+      case 'Name A-Z':
+        params.append('sortBy', 'name');
+        params.append('sortOrder', 'asc');
+        break;
+      case 'Name Z-A':
+        params.append('sortBy', 'name');
+        params.append('sortOrder', 'desc');
+        break;
+      case 'Featured First':
+      default:
+        params.append('sortBy', 'status');
+        params.append('sortOrder', 'desc');
+        break;
+    }
+  }
 
-  const response = await fetch(`${ADMIN_BASE}api/category?${queryString}`, {
+  const response = await fetch(`${ADMIN_BASE}api/category?${params.toString()}`, {
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
@@ -126,9 +162,42 @@ export const getCategoryTableData = async (filter: Record<string, any>) => {
   const limitNum = Number(filter?.limit) || categories.length || 0;
   const pageNum = Number(filter?.page) || 1;
   const start = (pageNum - 1) * limitNum;
-  const items = categories.slice(start, start + limitNum);
+  
+  // Apply client-side filtering if backend doesn't support it
+  let filteredCategories = categories;
+  
+  // Client-side search if backend doesn't support it
+  if (filter.search && !result.items) {
+    const searchTerm = filter.search.toLowerCase();
+    filteredCategories = categories.filter(category => 
+      category.name?.toLowerCase().includes(searchTerm) ||
+      category.description?.toLowerCase().includes(searchTerm)
+    );
+  }
+  
+  // Client-side sorting if backend doesn't support it
+  if (filter.sort && !result.items) {
+    filteredCategories.sort((a, b) => {
+      switch (filter.sort) {
+        case 'Recent':
+          return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+        case 'Old Review':
+          return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+        case 'Name A-Z':
+          return (a.name || '').localeCompare(b.name || '');
+        case 'Name Z-A':
+          return (b.name || '').localeCompare(a.name || '');
+        case 'Featured First':
+        default:
+          return (b.status ? 1 : 0) - (a.status ? 1 : 0);
+      }
+    });
+  }
+  
+  const items = filteredCategories.slice(start, start + limitNum);
+  const finalTotalCount = filteredCategories.length;
 
-  return { items, totalCount };
+  return { items, totalCount: finalTotalCount };
 };
 
 // Delete category

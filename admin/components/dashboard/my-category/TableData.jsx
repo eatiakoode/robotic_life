@@ -4,7 +4,7 @@ import { deleteCategoryAPI } from "@/api/category";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 
-const TableData = ({ categoryList, setCategoryList }) => {
+const TableData = ({ categoryList, setCategoryList, loading = false }) => {
   const router = useRouter();
 
   const deleteCategory = async (id) => {
@@ -156,7 +156,26 @@ const TableData = ({ categoryList, setCategoryList }) => {
             ))}
           </tr>
         </thead>
-        <tbody>{tbodyContent}</tbody>
+        <tbody>
+          {loading ? (
+            <tr>
+              <td colSpan={theadConent.length} className="text-center py-4">
+                <div className="spinner-border text-primary" role="status">
+                  <span className="visually-hidden">Loading...</span>
+                </div>
+                <p className="mt-2 mb-0">Loading categories...</p>
+              </td>
+            </tr>
+          ) : categoryList && categoryList.length > 0 ? (
+            tbodyContent
+          ) : (
+            <tr>
+              <td colSpan={theadConent.length} className="text-center py-4">
+                <p className="mb-0">No categories found.</p>
+              </td>
+            </tr>
+          )}
+        </tbody>
       </table>
     </>
   );
