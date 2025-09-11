@@ -79,6 +79,7 @@ const CreateList = () => {
     useState("°");
   const [communicationRange, setCommunicationRange] = useState("");
   const [communicationRangeUnit, setCommunicationRangeUnit] = useState("m");
+  const [hotSwappable, setHotSwappable] = useState(false);
 
   const [patentNumber, setPatentNumber] = useState("");
   const [loadCapacity, setLoadCapacity] = useState("");
@@ -129,6 +130,8 @@ const CreateList = () => {
   const [selectedAutonomyLevel, setSelectedAutonomyLevel] = useState("");
   const [payloadTypes, setPayloadTypes] = useState([]);
   const [selectedPayloadType, setSelectedPayloadType] = useState([]);
+  const [maxPayloadWeight, setMaxPayloadWeight] = useState("");
+  const [maxPayloadWeightUnit, setMaxPayloadWeightUnit] = useState("kg");
 
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("");
@@ -598,6 +601,9 @@ const CreateList = () => {
         formData.append("communicationRange.value", String(communicationRange));
         formData.append("communicationRange.unit", communicationRangeUnit);
       }
+
+      // hotSwappable
+      formData.append("hotSwappable", hotSwappable ? "true" : "false");
 
       // Other specifications (optional)
       if (batteryCapacity) {
@@ -2613,111 +2619,6 @@ const CreateList = () => {
               </div>
               {/* Communication Method ends */}
 
-              {/* Payload Type start */}
-              <div className="col-lg-6 col-xl-6">
-                <div className="my_profile_setting_input ui_kit_select_search form-group">
-                  <label htmlFor="payloadTypeSelect">Payload Type</label>
-
-                  <div className="position-relative">
-                    <select
-                      id="payloadTypeSelect"
-                      className="selectpicker form-select payloadType-select"
-                      value="placeholder"
-                      onChange={(e) => {
-                        const value = e.target.value;
-                        if (
-                          value !== "placeholder" &&
-                          !selectedPayloadType.includes(value)
-                        ) {
-                          setSelectedPayloadType([
-                            ...selectedPayloadType,
-                            value,
-                          ]);
-                        }
-                        e.target.blur(); // close dropdown after each select
-                      }}
-                      data-live-search="true"
-                      data-width="100%"
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        height: "45px",
-                      }}
-                    >
-                      <option value="placeholder" disabled>
-                        &nbsp;
-                      </option>
-                      {payloadTypes.map((payloadType) => (
-                        <option key={payloadType._id} value={payloadType._id}>
-                          {payloadType.name || payloadType.title}
-                        </option>
-                      ))}
-                    </select>
-
-                    {/* Overlay UI */}
-                    <div
-                      className="form-control position-absolute top-0 start-0 h-100 w-100 d-flex align-items-center px-3 pe-5"
-                      style={{
-                        background: "transparent",
-                        pointerEvents: "none", // disable by default
-                      }}
-                    >
-                      <div
-                        className="d-flex align-items-center flex-nowrap"
-                        style={{
-                          gap: "0.25rem",
-                          overflowX: "auto",
-                          whiteSpace: "nowrap",
-                          scrollbarWidth: "thin",
-                          maxWidth: "100%",
-                          pointerEvents: "auto", // enable scroll here
-                        }}
-                        onMouseDown={(e) => e.stopPropagation()} // stop dropdown from opening while scroll
-                      >
-                        {selectedPayloadType.length === 0 ? (
-                          <span className="text-muted">
-                            -- Select Payload Types --
-                          </span>
-                        ) : (
-                          <>
-                            {payloadTypes
-                              .filter((m) =>
-                                selectedPayloadType.includes(m._id)
-                              )
-                              .map((m) => (
-                                <span
-                                  key={m._id}
-                                  className="badge bg-light text-dark border d-flex align-items-center"
-                                  style={{
-                                    pointerEvents: "auto",
-                                  }}
-                                >
-                                  {m.name || m.title}
-                                  <button
-                                    type="button"
-                                    className="btn-close btn-sm ms-1"
-                                    aria-label="Remove"
-                                    style={{ fontSize: "0.65rem" }}
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      setSelectedPayloadType(
-                                        selectedPayloadType.filter(
-                                          (id) => id !== m._id
-                                        )
-                                      );
-                                    }}
-                                  />
-                                </span>
-                              ))}
-                          </>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              {/* Payload Type ends */}
-
               {/* Primary Function start */}
               <div className="col-lg-6 col-xl-6">
                 <div className="my_profile_setting_input ui_kit_select_search form-group">
@@ -2811,12 +2712,155 @@ const CreateList = () => {
               {/* Autonomy Level ends */}
             </div>
 
-  {/* -------- Payloads & Attachments -------- */}
+            {/* -------- Payloads & Attachments -------- */}
             <div className="row">
               <div className="col-lg-12">
                 <h3 className="mb30">Payloads & Attachments</h3>
               </div>
-            {/* robot attachments start */}
+
+              {/* Max Payload Weight start */}
+              <div className="col-lg-6">
+                <div className="my_profile_setting_input form-group">
+                  <label htmlFor="maxPayloadWeight">Max Payload Weight</label>
+                  <div className="position-relative">
+                    <input
+                      type="number"
+                      className="form-control pe-5"
+                      id="maxPayloadWeight"
+                      value={maxPayloadWeight}
+                      onChange={(e) => setMaxPayloadWeight(e.target.value)}
+                      placeholder="Enter Max Payload Weight"
+                    />
+                    <select
+                      className="form-select position-absolute end-0 border-0 bg-transparent"
+                      style={{
+                        width: "auto",
+                        height: "100%",
+                        top: "0",
+                        paddingRight: "30px",
+                        paddingLeft: "8px",
+                        appearance: "none",
+                        WebkitAppearance: "none",
+                        MozAppearance: "none",
+                      }}
+                      value={maxPayloadWeightUnit}
+                      onChange={(e) => setMaxPayloadWeightUnit(e.target.value)}
+                    >
+                      <option value="kg">kg</option>
+                      <option value="g">g</option>
+                      <option value="lb">lb</option>
+                      <option value="t">t</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              {/* Max Payload Weight ends */}
+
+              {/* Payload Type start */}
+              <div className="col-lg-6 col-xl-6">
+                <div className="my_profile_setting_input ui_kit_select_search form-group">
+                  <label htmlFor="payloadTypeSelect">Payload Type</label>
+                  <div className="position-relative">
+                    <select
+                      id="payloadTypeSelect"
+                      className="selectpicker form-select payloadType-select"
+                      value="placeholder"
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        if (
+                          value !== "placeholder" &&
+                          !selectedPayloadType.includes(value)
+                        ) {
+                          setSelectedPayloadType([
+                            ...selectedPayloadType,
+                            value,
+                          ]);
+                        }
+                        e.target.blur();
+                      }}
+                      data-live-search="true"
+                      data-width="100%"
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        height: "45px",
+                      }}
+                    >
+                      <option value="placeholder" disabled>
+                        &nbsp;
+                      </option>
+                      {payloadTypes.map((payloadType) => (
+                        <option key={payloadType._id} value={payloadType._id}>
+                          {payloadType.name || payloadType.title}
+                        </option>
+                      ))}
+                    </select>
+
+                    {/* Overlay UI */}
+                    <div
+                      className="form-control position-absolute top-0 start-0 h-100 w-100 d-flex align-items-center px-3 pe-5"
+                      style={{
+                        background: "transparent",
+                        pointerEvents: "none",
+                      }}
+                    >
+                      <div
+                        className="d-flex align-items-center flex-nowrap"
+                        style={{
+                          gap: "0.25rem",
+                          overflowX: "auto",
+                          whiteSpace: "nowrap",
+                          scrollbarWidth: "thin",
+                          maxWidth: "100%",
+                          pointerEvents: "auto",
+                        }}
+                        onMouseDown={(e) => e.stopPropagation()}
+                      >
+                        {selectedPayloadType.length === 0 ? (
+                          <span className="text-muted">
+                            -- Select Payload Types --
+                          </span>
+                        ) : (
+                          <>
+                            {payloadTypes
+                              .filter((m) =>
+                                selectedPayloadType.includes(m._id)
+                              )
+                              .map((m) => (
+                                <span
+                                  key={m._id}
+                                  className="badge bg-light text-dark border d-flex align-items-center"
+                                  style={{
+                                    pointerEvents: "auto",
+                                  }}
+                                >
+                                  {m.name || m.title}
+                                  <button
+                                    type="button"
+                                    className="btn-close btn-sm ms-1"
+                                    aria-label="Remove"
+                                    style={{ fontSize: "0.65rem" }}
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      setSelectedPayloadType(
+                                        selectedPayloadType.filter(
+                                          (id) => id !== m._id
+                                        )
+                                      );
+                                    }}
+                                  />
+                                </span>
+                              ))}
+                          </>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              {/* Payload Type ends */}
+
+              {/* robot attachments start */}
               <div className="col-lg-6">
                 <div className="my_profile_setting_input form-group">
                   <label htmlFor="attachments">Attachments</label>
@@ -2830,8 +2874,9 @@ const CreateList = () => {
                   />
                 </div>
               </div>
-            {/* robot attachments ends */}
-            {/* robot accessory ports start */}
+              {/* robot attachments ends */}
+
+              {/* robot accessory ports start */}
               <div className="col-lg-6">
                 <div className="my_profile_setting_input form-group">
                   <label htmlFor="accessoryPorts">Accessory Ports</label>
@@ -2845,7 +2890,47 @@ const CreateList = () => {
                   />
                 </div>
               </div>
-            {/* robot accessory ports ends */}
+              {/* robot accessory ports ends */}
+
+              {/* robot hot swappable start */}
+              <div className="col-lg-6">
+                <div className="my_profile_setting_input form-group">
+                  <label>Hot Swappable</label>
+                  <div className="d-flex gap-3 mt-2">
+                    {/* True Option */}
+                    <div className="form-check">
+                      <input
+                        type="radio"
+                        className="form-check-input"
+                        id="hotSwappableTrue"
+                        name="hotSwappable"
+                        checked={hotSwappable === true}
+                        onChange={() => setHotSwappable(true)}
+                      />
+                      <label className="form-check-label" htmlFor="hotSwappableTrue">
+                        True
+                      </label>
+                    </div>
+
+                    {/* False Option */}
+                    <div className="form-check">
+                      <input
+                        type="radio"
+                        className="form-check-input"
+                        id="hotSwappableFalse"
+                        name="hotSwappable"
+                        checked={hotSwappable === false}
+                        onChange={() => setHotSwappable(false)}
+                      />
+                      <label className="form-check-label" htmlFor="hotSwappableFalse">
+                        False
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              {/* robot hot swappable ends */}
+
             </div>
 
             <div className="row">
