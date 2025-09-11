@@ -1651,7 +1651,6 @@ const CreateList = () => {
                       >
                         <option value="m">m</option>
                         <option value="km">km</option>
-                        <option value="mi">mi</option>
                       </select>
                     </div>
                   </div>
@@ -1720,8 +1719,8 @@ const CreateList = () => {
                           setEnergyConsumptionUnit(e.target.value)
                         }
                       >
-                        <option value="Wh">Wh</option>
-                        <option value="kWh">kWh</option>
+                        <option value="W">W</option>
+                        <option value="kW">kW</option>
                       </select>
                     </div>
                   </div>
