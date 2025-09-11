@@ -2073,9 +2073,10 @@ const CreateList = () => {
                         setArticulationPrecisionUnit(e.target.value)
                       }
                     >
-                      <option value="h">h</option>
-                      <option value="days">days</option>
-                      <option value="months">months</option>
+                      <option value="mm">mm</option>
+                      <option value="µm">µm</option>
+                      <option value="degree">°</option>
+                      <option value="rad">rad</option>
                     </select>
                   </div>
                   {/* maintenance Interval ends */}
