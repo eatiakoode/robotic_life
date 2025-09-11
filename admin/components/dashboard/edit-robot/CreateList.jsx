@@ -26,8 +26,8 @@ import { toast } from "react-toastify";
 const EditList = () => {
   const router = useRouter();
   const params = useParams();
-  const robotId = params?.id; // Get robot ID from URL params
-  const isEditMode = !!robotId; // Check if we're in edit mode
+  const robotId = params?.id; 
+  const isEditMode = !!robotId; 
 
   // --- State Hooks ---
   const [title, setTitle] = useState("");
@@ -109,7 +109,7 @@ const EditList = () => {
   const [specifications, setSpecifications] = useState([]);
   const [metatitle, setMetatitle] = useState("");
   const [metadescription, setMetaDescription] = useState("");
-  const [status, setStatus] = useState(true); // true = Active, false = Inactive
+  const [status, setStatus] = useState(true); 
 
   const [featuredimage, setFeaturedImage] = useState(null);
   const [existingFeaturedImage, setExistingFeaturedImage] = useState("");
