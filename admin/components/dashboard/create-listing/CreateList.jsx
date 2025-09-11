@@ -45,6 +45,8 @@ const CreateList = () => {
   const [launchYear, setLaunchYear] = useState("");
   const [feature, setFeature] = useState("");
   const [interoperability, setInteroperability] = useState("");
+  const [attachments, setAttachments] = useState("");
+  const [accessoryPorts, setAccessoryPorts] = useState("");
 
   const [power, setPower] = useState([]);
   const [selectedPower, setSelectedPower] = useState("");
@@ -440,6 +442,12 @@ const CreateList = () => {
         "At least one durability feature (IP Rating, MIL-STD Compliance, or Radiation Shielding) is required";
     }
 
+    // Validate at least some accessory ports are provided
+    if (!accessoryPorts && !attachments) {
+      newErrors.accessoryPorts =
+        "At least one accessory port or attachment is required";
+    }
+
     // Validate at least some maintenance features are provided
     if (!mtbf && !maintenanceInterval) {
       newErrors.maintenanceInfo =
@@ -523,6 +531,8 @@ const CreateList = () => {
 
       if (feature) formData.append("feature", feature.trim());
       if (interoperability) formData.append("interoperability", interoperability.trim());
+      if (attachments) formData.append("attachments", attachments.trim());
+      if (accessoryPorts) formData.append("accessoryPorts", accessoryPorts.trim());
 
       // Dimensions with validation
       if (length) {
@@ -1926,7 +1936,7 @@ const CreateList = () => {
               {/* robot feature start */}
               <div className="col-lg-6">
                 <div className="my_profile_setting_input form-group">
-                  <label htmlFor="version">Feature</label>
+                  <label htmlFor="feature">Feature</label>
                   <input
                     type="text"
                     className="form-control"
@@ -2799,6 +2809,43 @@ const CreateList = () => {
                 </div>
               </div>
               {/* Autonomy Level ends */}
+            </div>
+
+  {/* -------- Payloads & Attachments -------- */}
+            <div className="row">
+              <div className="col-lg-12">
+                <h3 className="mb30">Payloads & Attachments</h3>
+              </div>
+            {/* robot attachments start */}
+              <div className="col-lg-6">
+                <div className="my_profile_setting_input form-group">
+                  <label htmlFor="attachments">Attachments</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="attachments"
+                    value={attachments}
+                    onChange={(e) => setAttachments(e.target.value)}
+                    placeholder="Enter Attachments"
+                  />
+                </div>
+              </div>
+            {/* robot attachments ends */}
+            {/* robot accessory ports start */}
+              <div className="col-lg-6">
+                <div className="my_profile_setting_input form-group">
+                  <label htmlFor="accessoryPorts">Accessory Ports</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="accessoryPorts"
+                    value={accessoryPorts}
+                    onChange={(e) => setAccessoryPorts(e.target.value)}
+                    placeholder="Enter Accessory Ports"
+                  />
+                </div>
+              </div>
+            {/* robot accessory ports ends */}
             </div>
 
             <div className="row">
