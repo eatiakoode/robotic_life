@@ -675,20 +675,23 @@ const EditList = () => {
       formData.append("slug", finalSlug || "");
       formData.append("description", description?.trim() || "");
       formData.append("status", status ? "true" : "false");
-      formData.append("totalPrice", price?.toString() || "");
-      formData.append("countryOfOrigin", selectedCountry || "");
-      // Use subcategory ID if selected, otherwise use parent category ID
-      const categoryToSave = selectedSubCategory || selectedCategory;
-      formData.append("category", categoryToSave || "");
-      formData.append("subcategoryid", selectedSubCategory || "");
-      formData.append("manufacturer", selectedManufacturer || "");
-      formData.append("launchYear", launchYear?.toString() || "");
+      
+      // Only append fields that have values to avoid ObjectId validation errors
+      if (price && !isNaN(price)) formData.append("totalPrice", price.toString());
+      if (selectedCountry) formData.append("countryOfOrigin", selectedCountry);
+      if (selectedSubCategory || selectedCategory) {
+        const categoryToSave = selectedSubCategory || selectedCategory;
+        formData.append("category", categoryToSave);
+      }
+      if (selectedSubCategory) formData.append("subcategoryid", selectedSubCategory);
+      if (selectedManufacturer) formData.append("manufacturer", selectedManufacturer);
+      if (launchYear && !isNaN(launchYear)) formData.append("launchYear", launchYear.toString());
       if (version) formData.append("version", version);
-      formData.append("specifications.powerSource", selectedPower || "");
-      formData.append("videoEmbedCode", videoembedcode?.trim() || "");
-      formData.append("capabilities.primaryFunction", selectedPrimaryFunction || "");
-      formData.append("operationalEnvironmentAndApplications.operatingEnvironment", selectedOperatingEnvironment || "");
-      formData.append("capabilities.autonomyLevel", selectedAutonomyLevel || "");
+      if (selectedPower) formData.append("specifications.powerSource", selectedPower);
+      if (videoembedcode) formData.append("videoEmbedCode", videoembedcode.trim());
+      if (selectedPrimaryFunction) formData.append("capabilities.primaryFunction", selectedPrimaryFunction);
+      if (selectedOperatingEnvironment) formData.append("operationalEnvironmentAndApplications.operatingEnvironment", selectedOperatingEnvironment);
+      if (selectedAutonomyLevel) formData.append("capabilities.autonomyLevel", selectedAutonomyLevel);
       if (metatitle) formData.append("metaTitle", metatitle);
       if (metadescription) formData.append("metaDescription", metadescription);
 
@@ -707,40 +710,66 @@ const EditList = () => {
       selectedCommunicationMethod.forEach((c) => formData.append("capabilities.communicationMethods", c));
       selectedPayloadType.forEach((p) => formData.append("payloadsAndAttachments.payloadTypes", p));
 
-      // Append nested unit/value fields
-      if (length) formData.append("specifications.dimensions.length.value", String(length));
-      if (lengthUnit) formData.append("specifications.dimensions.length.unit", String(lengthUnit));
-      if (width) formData.append("specifications.dimensions.width.value", String(width));
-      if (widthUnit) formData.append("specifications.dimensions.width.unit", String(widthUnit));
-      if (height) formData.append("specifications.dimensions.height.value", String(height));
-      if (heightUnit) formData.append("specifications.dimensions.height.unit", String(heightUnit));
+      // Append nested unit/value fields with number validation
+      if (length && !isNaN(length)) {
+        formData.append("specifications.dimensions.length.value", String(length));
+        formData.append("specifications.dimensions.length.unit", String(lengthUnit));
+      }
+      if (width && !isNaN(width)) {
+        formData.append("specifications.dimensions.width.value", String(width));
+        formData.append("specifications.dimensions.width.unit", String(widthUnit));
+      }
+      if (height && !isNaN(height)) {
+        formData.append("specifications.dimensions.height.value", String(height));
+        formData.append("specifications.dimensions.height.unit", String(heightUnit));
+      }
 
-      if (weight) formData.append("specifications.weight.value", String(weight));
-      if (weightUnit) formData.append("specifications.weight.unit", String(weightUnit));
+      if (weight && !isNaN(weight)) {
+        formData.append("specifications.weight.value", String(weight));
+        formData.append("specifications.weight.unit", String(weightUnit));
+      }
 
-      if (batteryCapacity) formData.append("specifications.batteryCapacity.value", String(batteryCapacity));
-      if (batteryCapacityUnit) formData.append("specifications.batteryCapacity.unit", String(batteryCapacityUnit));
+      if (batteryCapacity && !isNaN(batteryCapacity)) {
+        formData.append("specifications.batteryCapacity.value", String(batteryCapacity));
+        formData.append("specifications.batteryCapacity.unit", String(batteryCapacityUnit));
+      }
 
-      if (loadCapacity) formData.append("specifications.loadCapacity.value", String(loadCapacity));
-      if (loadCapacityUnit) formData.append("specifications.loadCapacity.unit", String(loadCapacityUnit));
+      if (loadCapacity && !isNaN(loadCapacity)) {
+        formData.append("specifications.loadCapacity.value", String(loadCapacity));
+        formData.append("specifications.loadCapacity.unit", String(loadCapacityUnit));
+      }
 
-      if (runtime) formData.append("specifications.runtime.value", String(runtime));
-      if (runtimeUnit) formData.append("specifications.runtime.unit", String(runtimeUnit));
+      if (runtime && !isNaN(runtime)) {
+        formData.append("specifications.runtime.value", String(runtime));
+        formData.append("specifications.runtime.unit", String(runtimeUnit));
+      }
 
-      if (speed) formData.append("specifications.speed.value", String(speed));
-      if (speedUnit) formData.append("specifications.speed.unit", String(speedUnit));
+      if (speed && !isNaN(speed)) {
+        formData.append("specifications.speed.value", String(speed));
+        formData.append("specifications.speed.unit", String(speedUnit));
+      }
 
-      if (accuracy) formData.append("specifications.accuracy.value", String(accuracy));
-      if (accuracyUnit) formData.append("specifications.accuracy.unit", String(accuracyUnit));
+      if (accuracy && !isNaN(accuracy)) {
+        formData.append("specifications.accuracy.value", String(accuracy));
+        formData.append("specifications.accuracy.unit", String(accuracyUnit));
+      }
 
-      if (range) formData.append("specifications.range.value", String(range));
-      if (rangeUnit) formData.append("specifications.range.unit", String(rangeUnit));
+      if (range && !isNaN(range)) {
+        formData.append("specifications.range.value", String(range));
+        formData.append("specifications.range.unit", String(rangeUnit));
+      }
 
-      if (operatingTemperatureMin) formData.append("specifications.operatingTemperature.min", String(operatingTemperatureMin));
-      if (operatingTemperatureMax) formData.append("specifications.operatingTemperature.max", String(operatingTemperatureMax));
-      if (operatingTemperatureUnit) formData.append("specifications.operatingTemperature.unit", String(operatingTemperatureUnit));
+      if (operatingTemperatureMin && !isNaN(operatingTemperatureMin)) {
+        formData.append("specifications.operatingTemperature.min", String(operatingTemperatureMin));
+      }
+      if (operatingTemperatureMax && !isNaN(operatingTemperatureMax)) {
+        formData.append("specifications.operatingTemperature.max", String(operatingTemperatureMax));
+      }
+      if ((operatingTemperatureMin && !isNaN(operatingTemperatureMin)) || (operatingTemperatureMax && !isNaN(operatingTemperatureMax))) {
+        formData.append("specifications.operatingTemperature.unit", String(operatingTemperatureUnit));
+      }
 
-      if (chargingTime) {
+      if (chargingTime && !isNaN(chargingTime)) {
         formData.append("specifications.batteryChargeTime.value", String(chargingTime));
         formData.append("specifications.batteryChargeTime.unit", String(chargingTimeUnit));
       }
@@ -758,39 +787,39 @@ const EditList = () => {
       if (deploymentLogistics) formData.append("operationalEnvironmentAndApplications.deploymentLogistics", deploymentLogistics.trim());
 
       // Data logging fields
-      if (storageCapacity) {
+      if (storageCapacity && !isNaN(storageCapacity)) {
         formData.append("sensorsAndSoftware.dataLogging.storageCapacity.value", String(storageCapacity));
         formData.append("sensorsAndSoftware.dataLogging.storageCapacity.unit", storageCapacityUnit);
       }
-      if (loggingInterval) {
+      if (loggingInterval && !isNaN(loggingInterval)) {
         formData.append("sensorsAndSoftware.dataLogging.loggingInterval.value", String(loggingInterval));
         formData.append("sensorsAndSoftware.dataLogging.loggingInterval.unit", loggingIntervalUnit);
       }
 
       // Mobility constraints
-      if (maxSlope) {
+      if (maxSlope && !isNaN(maxSlope)) {
         formData.append("operationalEnvironmentAndApplications.mobilityConstraints.maxSlope.value", String(maxSlope));
         formData.append("operationalEnvironmentAndApplications.mobilityConstraints.maxSlope.unit", maxSlopeUnit);
       }
-      if (maxStepHeight) {
+      if (maxStepHeight && !isNaN(maxStepHeight)) {
         formData.append("operationalEnvironmentAndApplications.mobilityConstraints.maxStepHeight.value", String(maxStepHeight));
         formData.append("operationalEnvironmentAndApplications.mobilityConstraints.maxStepHeight.unit", maxStepHeightUnit);
       }
-      if (maxWaterDepth) {
+      if (maxWaterDepth && !isNaN(maxWaterDepth)) {
         formData.append("operationalEnvironmentAndApplications.mobilityConstraints.maxWaterDepth.value", String(maxWaterDepth));
         formData.append("operationalEnvironmentAndApplications.mobilityConstraints.maxWaterDepth.unit", maxWaterDepthUnit);
       }
 
       // Additional specifications
-      if (noiseLevel) {
+      if (noiseLevel && !isNaN(noiseLevel)) {
         formData.append("specifications.noiseLevel.value", String(noiseLevel));
         formData.append("specifications.noiseLevel.unit", noiseLevelUnit);
       }
-      if (energyConsumption) {
+      if (energyConsumption && !isNaN(energyConsumption)) {
         formData.append("specifications.energyConsumption.value", String(energyConsumption));
         formData.append("specifications.energyConsumption.unit", energyConsumptionUnit);
       }
-      if (wingspan) {
+      if (wingspan && !isNaN(wingspan)) {
         formData.append("specifications.dimensions.wingspan.value", String(wingspan));
         formData.append("specifications.dimensions.wingspan.unit", wingspanUnit);
       }
@@ -801,27 +830,27 @@ const EditList = () => {
       if (radiationShielding) formData.append("specifications.durability.radiationShielding", radiationShielding.trim());
 
       // Maintenance info
-      if (mtbf) {
+      if (mtbf && !isNaN(mtbf)) {
         formData.append("specifications.maintenanceInfo.mtbf.value", String(mtbf));
         formData.append("specifications.maintenanceInfo.mtbf.unit", mtbfUnit);
       }
-      if (maintenanceInterval) {
+      if (maintenanceInterval && !isNaN(maintenanceInterval)) {
         formData.append("specifications.maintenanceInfo.maintenanceInterval.value", String(maintenanceInterval));
         formData.append("specifications.maintenanceInfo.maintenanceInterval.unit", maintenanceIntervalUnit);
       }
 
       // Load handling
-      if (grippingStrength) {
+      if (grippingStrength && !isNaN(grippingStrength)) {
         formData.append("capabilities.loadHandling.grippingStrength.value", String(grippingStrength));
         formData.append("capabilities.loadHandling.grippingStrength.unit", grippingStrengthUnit);
       }
-      if (articulationPrecision) {
+      if (articulationPrecision && !isNaN(articulationPrecision)) {
         formData.append("capabilities.loadHandling.articulationPrecision.value", String(articulationPrecision));
         formData.append("capabilities.loadHandling.articulationPrecision.unit", articulationPrecisionUnit);
       }
 
       // Communication range
-      if (communicationRange) {
+      if (communicationRange && !isNaN(communicationRange)) {
         formData.append("capabilities.communicationRange.value", String(communicationRange));
         formData.append("capabilities.communicationRange.unit", communicationRangeUnit);
       }

@@ -39,6 +39,7 @@ const CreateList = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [countries, setCountries] = useState([]);
   const [selectedCountry, setSelectedCountry] = useState("");
+  const [states, setStates] = useState([]);
   const [version, setVersion] = useState("");
   const [manufacturers, setManufacturers] = useState([]);
   const [selectedManufacturer, setSelectedManufacturer] = useState("");
@@ -445,35 +446,41 @@ const CreateList = () => {
     });
 
 
-    // Validate slug uniqueness (basic check)
-    if (slug && slug.length < 3) {
+    // Validate slug only if it's provided and too short
+    if (slug && slug !== "" && slug.length < 3) {
       newErrors.slug = "Slug must be at least 3 characters long";
     }
 
-    // Validate price is a positive number
-    if (price && (isNaN(price) || price <= 0)) {
+    // Only validate price if it's provided and not a valid positive number
+    if (price && price !== "" && (isNaN(price) || price <= 0)) {
       newErrors.price = "Price must be a positive number";
     }
 
-    // Validate launch year
-    if (
-      launchYear &&
-      (isNaN(launchYear) ||
-        launchYear < 1900 ||
-        launchYear > new Date().getFullYear() + 5)
-    ) {
-      newErrors.launchYear =
-        "Launch year must be between 1900 and " +
-        (new Date().getFullYear() + 5);
+    // Only validate launch year if it's provided and not a valid year
+    if (launchYear && launchYear !== "" && (isNaN(launchYear) || launchYear < 1900 || launchYear > new Date().getFullYear() + 5)) {
+      newErrors.launchYear = "Launch year must be between 1900 and " + (new Date().getFullYear() + 5);
     }
 
     if (Object.keys(newErrors).length > 0) {
-      console.log("Validation errors:", newErrors);
+      console.log("Validation errors found:", newErrors);
+      console.log("Error keys:", Object.keys(newErrors));
       setError(newErrors);
       setIsSubmitting(false);
-      toast.error("Please fill in all required fields");
+      toast.error("Please check the form for errors");
       return;
     }
+    
+    console.log("No validation errors found, proceeding with submission...");
+    console.log("Form state before submission:");
+    console.log("title:", title);
+    console.log("description:", description);
+    console.log("selectedCountry:", selectedCountry);
+    console.log("selectedCategory:", selectedCategory);
+    console.log("selectedManufacturer:", selectedManufacturer);
+    console.log("selectedPower:", selectedPower);
+    console.log("selectedPrimaryFunction:", selectedPrimaryFunction);
+    console.log("selectedOperatingEnvironment:", selectedOperatingEnvironment);
+    console.log("selectedAutonomyLevel:", selectedAutonomyLevel);
 
     try {
       console.log("Getting user data from localStorage...");
@@ -494,77 +501,80 @@ const CreateList = () => {
       formData.append("slug", slug);
       formData.append("description", description.trim());
       formData.append("status", status ? "true" : "false");
-      formData.append("totalPrice", price);
-      formData.append("countryOfOrigin", selectedCountry);
-      // Use subcategory ID if selected, otherwise use parent category ID
-      const categoryToSave = selectedSubCategory || selectedCategory;
-      formData.append("category", categoryToSave);
-      formData.append("subcategoryid", selectedSubCategory);
-      formData.append("manufacturer", selectedManufacturer);
-      formData.append("launchYear", launchYear);
-      formData.append("specifications.powerSource", selectedPower);
-      formData.append("videoEmbedCode", videoembedcode.trim());
-      formData.append("capabilities.primaryFunction", selectedPrimaryFunction);
-      formData.append("operationalEnvironmentAndApplications.operatingEnvironment", selectedOperatingEnvironment);
-      formData.append("capabilities.autonomyLevel", selectedAutonomyLevel);
+      
+      // Only append fields that have values to avoid ObjectId validation errors
+      if (price && price !== "" && !isNaN(price)) formData.append("totalPrice", price);
+      if (selectedCountry && selectedCountry !== "") formData.append("countryOfOrigin", selectedCountry);
+      if ((selectedSubCategory && selectedSubCategory !== "") || (selectedCategory && selectedCategory !== "")) {
+        const categoryToSave = selectedSubCategory || selectedCategory;
+        formData.append("category", categoryToSave);
+      }
+      if (selectedSubCategory && selectedSubCategory !== "") formData.append("subcategoryid", selectedSubCategory);
+      if (selectedManufacturer && selectedManufacturer !== "") formData.append("manufacturer", selectedManufacturer);
+      if (launchYear && launchYear !== "" && !isNaN(launchYear)) formData.append("launchYear", launchYear);
+      if (selectedPower && selectedPower !== "") formData.append("specifications.powerSource", selectedPower);
+      if (videoembedcode && videoembedcode.trim() !== "") formData.append("videoEmbedCode", videoembedcode.trim());
+      if (selectedPrimaryFunction && selectedPrimaryFunction !== "") formData.append("capabilities.primaryFunction", selectedPrimaryFunction);
+      if (selectedOperatingEnvironment && selectedOperatingEnvironment !== "") formData.append("operationalEnvironmentAndApplications.operatingEnvironment", selectedOperatingEnvironment);
+      if (selectedAutonomyLevel && selectedAutonomyLevel !== "") formData.append("capabilities.autonomyLevel", selectedAutonomyLevel);
 
       // Optional fields
-      if (version) formData.append("version", version.trim());
-      if (metatitle) formData.append("metaTitle", metatitle.trim());
-      if (metadescription)
+      if (version && version.trim() !== "") formData.append("version", version.trim());
+      if (metatitle && metatitle.trim() !== "") formData.append("metaTitle", metatitle.trim());
+      if (metadescription && metadescription.trim() !== "")
         formData.append("metaDescription", metadescription.trim());
 
-      if (feature) formData.append("capabilities.features", feature.trim());
-      if (interoperability) formData.append("capabilities.interoperability", interoperability.trim());
-      if (attachments) formData.append("payloadsAndAttachments.attachments", attachments.trim());
-      if (accessoryPorts) formData.append("payloadsAndAttachments.accessoryPorts", accessoryPorts.trim());
-      if (operatingSystem) formData.append("sensorsAndSoftware.operatingSystem", operatingSystem.trim());
-      if (firmwareVersion) formData.append("sensorsAndSoftware.firmwareVersion", firmwareVersion.trim());
-      if (securityFeatures) formData.append("sensorsAndSoftware.securityFeatures", securityFeatures.trim());
-      if (applications) formData.append("operationalEnvironmentAndApplications.applications", applications.trim());
-      if (enduranceExtremeConditions) formData.append("operationalEnvironmentAndApplications.enduranceExtremeConditions", enduranceExtremeConditions.trim());
-      if (deploymentLogistics) formData.append("operationalEnvironmentAndApplications.deploymentLogistics", deploymentLogistics.trim());
+      if (feature && feature.trim() !== "") formData.append("capabilities.features", feature.trim());
+      if (interoperability && interoperability.trim() !== "") formData.append("capabilities.interoperability", interoperability.trim());
+      if (attachments && attachments.trim() !== "") formData.append("payloadsAndAttachments.attachments", attachments.trim());
+      if (accessoryPorts && accessoryPorts.trim() !== "") formData.append("payloadsAndAttachments.accessoryPorts", accessoryPorts.trim());
+      if (operatingSystem && operatingSystem.trim() !== "") formData.append("sensorsAndSoftware.operatingSystem", operatingSystem.trim());
+      if (firmwareVersion && firmwareVersion.trim() !== "") formData.append("sensorsAndSoftware.firmwareVersion", firmwareVersion.trim());
+      if (securityFeatures && securityFeatures.trim() !== "") formData.append("sensorsAndSoftware.securityFeatures", securityFeatures.trim());
+      if (applications && applications.trim() !== "") formData.append("operationalEnvironmentAndApplications.applications", applications.trim());
+      if (enduranceExtremeConditions && enduranceExtremeConditions.trim() !== "") formData.append("operationalEnvironmentAndApplications.enduranceExtremeConditions", enduranceExtremeConditions.trim());
+      if (deploymentLogistics && deploymentLogistics.trim() !== "") formData.append("operationalEnvironmentAndApplications.deploymentLogistics", deploymentLogistics.trim());
 
       // Dimensions with validation
-      if (length) {
+      if (length && length !== "" && !isNaN(length)) {
         formData.append("specifications.dimensions.length.value", String(length));
         formData.append("specifications.dimensions.length.unit", lengthUnit);
       }
-      if (width) {
+      if (width && width !== "" && !isNaN(width)) {
         formData.append("specifications.dimensions.width.value", String(width));
         formData.append("specifications.dimensions.width.unit", widthUnit);
       }
-      if (height) {
+      if (height && height !== "" && !isNaN(height)) {
         formData.append("specifications.dimensions.height.value", String(height));
         formData.append("specifications.dimensions.height.unit", heightUnit);
       }
 
       // Weight
-      if (weight) {
+      if (weight && weight !== "" && !isNaN(weight)) {
         formData.append("specifications.weight.value", String(weight));
         formData.append("specifications.weight.unit", weightUnit);
       }
 
       // noiseLevel
-      if (noiseLevel) {
+      if (noiseLevel && noiseLevel !== "" && !isNaN(noiseLevel)) {
         formData.append("specifications.noiseLevel.value", String(noiseLevel));
         formData.append("specifications.noiseLevel.unit", noiseLevelUnit);
       }
 
       // energyConsumption
-      if (energyConsumption) {
+      if (energyConsumption && energyConsumption !== "" && !isNaN(energyConsumption)) {
         formData.append("specifications.energyConsumption.value", String(energyConsumption));
         formData.append("specifications.energyConsumption.unit", energyConsumptionUnit);
       }
 
       // mtbf
-      if (mtbf) {
+      if (mtbf && mtbf !== "" && !isNaN(mtbf)) {
         formData.append("specifications.maintenanceInfo.mtbf.value", String(mtbf));
         formData.append("specifications.maintenanceInfo.mtbf.unit", mtbfUnit);
       }
 
       // maintenance Interval
-      if (maintenanceInterval) {
+      if (maintenanceInterval && maintenanceInterval !== "" && !isNaN(maintenanceInterval)) {
         formData.append(
           "specifications.maintenanceInfo.maintenanceInterval.value",
           String(maintenanceInterval)
@@ -573,19 +583,19 @@ const CreateList = () => {
       }
 
       // gripping Strength
-      if (grippingStrength) {
+      if (grippingStrength && grippingStrength !== "" && !isNaN(grippingStrength)) {
         formData.append("capabilities.loadHandling.grippingStrength.value", String(grippingStrength));
         formData.append("capabilities.loadHandling.grippingStrength.unit", grippingStrengthUnit);
       }
 
       // articulation Precision
-      if (articulationPrecision) {
+      if (articulationPrecision && articulationPrecision !== "" && !isNaN(articulationPrecision)) {
         formData.append("capabilities.loadHandling.articulationPrecision.value", String(articulationPrecision));
         formData.append("capabilities.loadHandling.articulationPrecision.unit", articulationPrecisionUnit);
       }
 
       // communicationRange
-      if (communicationRange) {
+      if (communicationRange && communicationRange !== "" && !isNaN(communicationRange)) {
         formData.append("capabilities.communicationRange.value", String(communicationRange));
         formData.append("capabilities.communicationRange.unit", communicationRangeUnit);
       }
@@ -594,77 +604,77 @@ const CreateList = () => {
       formData.append("payloadsAndAttachments.hotSwappable", hotSwappable ? "true" : "false");
 
       // Other specifications (optional)
-      if (batteryCapacity) {
+      if (batteryCapacity && batteryCapacity !== "" && !isNaN(batteryCapacity)) {
         formData.append("specifications.batteryCapacity.value", String(batteryCapacity));
         formData.append("specifications.batteryCapacity.unit", batteryCapacityUnit);
       }
-      if (loadCapacity) {
+      if (loadCapacity && loadCapacity !== "" && !isNaN(loadCapacity)) {
         formData.append("specifications.loadCapacity.value", String(loadCapacity));
         formData.append("specifications.loadCapacity.unit", loadCapacityUnit);
       }
-      if (runtime) {
+      if (runtime && runtime !== "" && !isNaN(runtime)) {
         formData.append("specifications.runtime.value", String(runtime));
         formData.append("specifications.runtime.unit", runtimeUnit);
       }
-      if (speed) {
+      if (speed && speed !== "" && !isNaN(speed)) {
         formData.append("specifications.speed.value", String(speed));
         formData.append("specifications.speed.unit", speedUnit);
       }
-      if (accuracy) {
+      if (accuracy && accuracy !== "" && !isNaN(accuracy)) {
         formData.append("specifications.accuracy.value", String(accuracy));
         formData.append("specifications.accuracy.unit", accuracyUnit);
       }
-      if (range) {
+      if (range && range !== "" && !isNaN(range)) {
         formData.append("specifications.range.value", String(range));
         formData.append("specifications.range.unit", rangeUnit);
       }
-      if (chargingTime) {
+      if (chargingTime && chargingTime !== "" && !isNaN(chargingTime)) {
         formData.append("specifications.batteryChargeTime.value", String(chargingTime));
         formData.append("specifications.batteryChargeTime.unit", chargingTimeUnit);
       }
 
       // Operating Temperature
-      if (operatingTemperatureMin) {
+      if (operatingTemperatureMin && operatingTemperatureMin !== "" && !isNaN(operatingTemperatureMin)) {
         formData.append(
           "specifications.operatingTemperature.min",
           String(operatingTemperatureMin)
         );
       }
-      if (operatingTemperatureMax) {
+      if (operatingTemperatureMax && operatingTemperatureMax !== "" && !isNaN(operatingTemperatureMax)) {
         formData.append(
           "specifications.operatingTemperature.max",
           String(operatingTemperatureMax)
         );
       }
-      if (operatingTemperatureMin || operatingTemperatureMax) {
+      if ((operatingTemperatureMin && operatingTemperatureMin !== "" && !isNaN(operatingTemperatureMin)) || (operatingTemperatureMax && operatingTemperatureMax !== "" && !isNaN(operatingTemperatureMax))) {
         formData.append("specifications.operatingTemperature.unit", operatingTemperatureUnit);
       }
 
       // Durability fields
-      if (ipRating) formData.append("specifications.durability.ipRating", ipRating.trim());
-      if (milStdCompliance) formData.append("specifications.durability.milStdCompliance", milStdCompliance.trim());
-      if (radiationShielding) formData.append("specifications.durability.radiationShielding", radiationShielding.trim());
+      if (ipRating && ipRating.trim() !== "") formData.append("specifications.durability.ipRating", ipRating.trim());
+      if (milStdCompliance && milStdCompliance.trim() !== "") formData.append("specifications.durability.milStdCompliance", milStdCompliance.trim());
+      if (radiationShielding && radiationShielding.trim() !== "") formData.append("specifications.durability.radiationShielding", radiationShielding.trim());
 
       // Data logging fields
-      if (storageCapacity) {
+      if (storageCapacity && storageCapacity !== "" && !isNaN(storageCapacity)) {
         formData.append("sensorsAndSoftware.dataLogging.storageCapacity.value", String(storageCapacity));
         formData.append("sensorsAndSoftware.dataLogging.storageCapacity.unit", storageCapacityUnit);
       }
-      if (loggingInterval) {
+      if (loggingInterval && loggingInterval !== "" && !isNaN(loggingInterval)) {
         formData.append("sensorsAndSoftware.dataLogging.loggingInterval.value", String(loggingInterval));
         formData.append("sensorsAndSoftware.dataLogging.loggingInterval.unit", loggingIntervalUnit);
       }
 
       // Mobility constraints
-      if (maxSlope) {
+      if (maxSlope && maxSlope !== "" && !isNaN(maxSlope)) {
         formData.append("operationalEnvironmentAndApplications.mobilityConstraints.maxSlope.value", String(maxSlope));
         formData.append("operationalEnvironmentAndApplications.mobilityConstraints.maxSlope.unit", maxSlopeUnit);
       }
-      if (maxStepHeight) {
+      if (maxStepHeight && maxStepHeight !== "" && !isNaN(maxStepHeight)) {
         formData.append("operationalEnvironmentAndApplications.mobilityConstraints.maxStepHeight.value", String(maxStepHeight));
         formData.append("operationalEnvironmentAndApplications.mobilityConstraints.maxStepHeight.unit", maxStepHeightUnit);
       }
-      if (maxWaterDepth) {
+      if (maxWaterDepth && maxWaterDepth !== "" && !isNaN(maxWaterDepth)) {
         formData.append("operationalEnvironmentAndApplications.mobilityConstraints.maxWaterDepth.value", String(maxWaterDepth));
         formData.append("operationalEnvironmentAndApplications.mobilityConstraints.maxWaterDepth.unit", maxWaterDepthUnit);
       }
@@ -723,6 +733,17 @@ const CreateList = () => {
       for (let pair of formData.entries()) {
         console.log(pair[0], pair[1]);
       }
+      
+      // Debug: Check for empty strings that might cause ObjectId errors
+      console.log("Checking for potential ObjectId fields:");
+      console.log("selectedCountry:", selectedCountry);
+      console.log("selectedCategory:", selectedCategory);
+      console.log("selectedSubCategory:", selectedSubCategory);
+      console.log("selectedManufacturer:", selectedManufacturer);
+      console.log("selectedPower:", selectedPower);
+      console.log("selectedPrimaryFunction:", selectedPrimaryFunction);
+      console.log("selectedOperatingEnvironment:", selectedOperatingEnvironment);
+      console.log("selectedAutonomyLevel:", selectedAutonomyLevel);
 
       // Add timeout and retry logic
       const timeoutPromise = new Promise((_, reject) =>
@@ -732,7 +753,7 @@ const CreateList = () => {
         )
       );
 
-      const apiPromise = createRobot(formData, token);
+      const apiPromise = createRobot(formData);
       const res = await Promise.race([apiPromise, timeoutPromise]);
       console.log("API Response:", res);
 
@@ -760,7 +781,7 @@ const CreateList = () => {
 
       // Provide more specific error messages for common issues
       if (errorMessage.includes("validation")) {
-        errorMessage = "Please check all required fields and try again.";
+        errorMessage = "Please check the form for errors and try again.";
       } else if (
         errorMessage.includes("duplicate") ||
         errorMessage.includes("unique")
@@ -852,17 +873,13 @@ const CreateList = () => {
             <label htmlFor="roboStatus">Status</label>
             <select
               id="roboStatus"
-              className={`form-select ${error.status ? "is-invalid" : ""}`}
+              className="form-select"
               value={status}
               onChange={(e) => setStatus(e.target.value === "true")}
-              required
             >
               <option value={true}>Active</option>
               <option value={false}>Inactive</option>
             </select>
-            {error.status && (
-              <span className="text-danger">{error.status}</span>
-            )}
           </div>
         </div>
         {/* robot status ends */}
@@ -873,13 +890,11 @@ const CreateList = () => {
             <label>Category</label>
             <select
               id="categorySelect"
-              className={`selectpicker form-select ${error.selectedCategory ? "is-invalid" : ""
-                }`}
+              className="selectpicker form-select"
               value={selectedCategory}
               onChange={handleCategoryChange}
               data-live-search="true"
               data-width="100%"
-              required
             >
               <option value="">-- Select Category --</option>
               {categories.map((cat) => (
@@ -888,9 +903,6 @@ const CreateList = () => {
                 </option>
               ))}
             </select>
-            {error.selectedCategory && (
-              <span className="text-danger">{error.selectedCategory}</span>
-            )}
           </div>
         </div>
         {/* robot category ends */}
@@ -925,13 +937,11 @@ const CreateList = () => {
             <label>Manufacturer</label>
             <select
               id="manufacturerSelect"
-              className={`selectpicker form-select ${error.selectedManufacturer ? "is-invalid" : ""
-                }`}
+              className="selectpicker form-select"
               value={selectedManufacturer}
               onChange={handleManufacturerChange}
               data-live-search="true"
               data-width="100%"
-              required
             >
               <option value="">-- Select Manufacturer --</option>
               {manufacturers.map((manufacturer) => (
@@ -940,9 +950,6 @@ const CreateList = () => {
                 </option>
               ))}
             </select>
-            {error.selectedManufacturer && (
-              <span className="text-danger">{error.selectedManufacturer}</span>
-            )}
           </div>
         </div>
         {/* robot manufacturer ends */}
@@ -950,16 +957,14 @@ const CreateList = () => {
         {/* robot country start */}
         <div className="col-lg-6 col-xl-6">
           <div className="my_profile_setting_input ui_kit_select_search form-group">
-            <label htmlFor="countrySelect">Country of Origin *</label>
+            <label htmlFor="countrySelect">Country of Origin</label>
             <select
               id="countrySelect"
-              className={`selectpicker form-select ${error.selectedCountry ? "is-invalid" : ""
-                }`}
+              className="selectpicker form-select"
               value={selectedCountry}
               onChange={handleCountryChange}
               data-live-search="true"
               data-width="100%"
-              required
             >
               <option value="">-- Select Country --</option>
               {countries.map((country) => (
@@ -968,9 +973,6 @@ const CreateList = () => {
                 </option>
               ))}
             </select>
-            {error.selectedCountry && (
-              <span className="text-danger">{error.selectedCountry}</span>
-            )}
           </div>
         </div>
         {/* robot country ends */}
@@ -978,13 +980,12 @@ const CreateList = () => {
         {/* robot launch year start */}
         <div className="col-lg-6">
           <div className="my_profile_setting_input form-group">
-            <label htmlFor="launchYear">Launch Year *</label>
+            <label htmlFor="launchYear">Launch Year</label>
             <select
               id="launchYear"
-              className={`form-control ${error.launchYear ? "is-invalid" : ""}`}
+              className="form-control"
               value={launchYear}
               onChange={(e) => setLaunchYear(e.target.value)}
-              required
             >
               <option value="">-- Select Year --</option>
               {Array.from({ length: 101 }, (_, i) => {
@@ -996,9 +997,6 @@ const CreateList = () => {
                 );
               })}
             </select>
-            {error.launchYear && (
-              <span className="text-danger">{error.launchYear}</span>
-            )}
           </div>
         </div>
         {/* robot launch year ends */}
@@ -1009,14 +1007,12 @@ const CreateList = () => {
             <label htmlFor="roboPrice">Total Price</label>
             <input
               type="text"
-              className={`form-control ${error.price ? "is-invalid" : ""}`}
+              className="form-control"
               id="roboPrice"
               value={price}
               onChange={(e) => setPrice(e.target.value)}
               placeholder="Enter Robot Price"
-              required
             />
-            {error.price && <span className="text-danger">{error.price}</span>}
           </div>
         </div>
         {/* robot price ends */}
@@ -1042,9 +1038,6 @@ const CreateList = () => {
         <div className=" mt30 ">
           <div className="col-lg-12">
             <h3 className="mb30">Specifications</h3>
-            {error.dimensions && (
-              <div className="alert alert-warning">{error.dimensions}</div>
-            )}
           </div>
           <div className="row">
             {/*------ Dimensions Start ------*/}
@@ -1347,13 +1340,11 @@ const CreateList = () => {
                       <label htmlFor="powerSelect">Power Source</label>
                       <select
                         id="powerSelect"
-                        className={`selectpicker form-select ${error.selectedPower ? "is-invalid" : ""
-                          }`}
+                        className="selectpicker form-select"
                         value={selectedPower}
                         onChange={handlePowerChange}
                         data-live-search="true"
                         data-width="100%"
-                        required
                       >
                         <option value="">-- Select Power Source --</option>
                         {power.map((powerSource) => (
@@ -1362,11 +1353,6 @@ const CreateList = () => {
                           </option>
                         ))}
                       </select>
-                      {error.selectedPower && (
-                        <span className="text-danger">
-                          {error.selectedPower}
-                        </span>
-                      )}
                     </div>
                   </div>
                   {/* Power Source ends */}
@@ -2322,13 +2308,11 @@ const CreateList = () => {
                   <label htmlFor="primaryFunction">Primary Function</label>
                   <select
                     id="primaryFunction"
-                    className={`selectpicker form-select ${error.selectedPrimaryFunction ? "is-invalid" : ""
-                      }`}
+                    className="selectpicker form-select"
                     value={selectedPrimaryFunction}
                     onChange={handlePrimaryFunctionChange}
                     data-live-search="true"
                     data-width="100%"
-                    required
                   >
                     <option value="">-- Select Primary Function --</option>
                     {primaryFunction.map((func) => (
@@ -2337,11 +2321,6 @@ const CreateList = () => {
                       </option>
                     ))}
                   </select>
-                  {error.selectedPrimaryFunction && (
-                    <span className="text-danger">
-                      {error.selectedPrimaryFunction}
-                    </span>
-                  )}
                 </div>
               </div>
               {/* Primary Function ends */}
@@ -2352,13 +2331,11 @@ const CreateList = () => {
                   <label htmlFor="autonomyLevel">Autonomy Level</label>
                   <select
                     id="autonomyLevel"
-                    className={`selectpicker form-select ${error.selectedAutonomyLevel ? "is-invalid" : ""
-                      }`}
+                    className="selectpicker form-select"
                     value={selectedAutonomyLevel}
                     onChange={handleAutonomyLevelChange}
                     data-live-search="true"
                     data-width="100%"
-                    required
                   >
                     <option value="">-- Select Autonomy Level --</option>
                     {autonomyLevel.map((level) => (
@@ -2367,11 +2344,6 @@ const CreateList = () => {
                       </option>
                     ))}
                   </select>
-                  {error.selectedAutonomyLevel && (
-                    <span className="text-danger">
-                      {error.selectedAutonomyLevel}
-                    </span>
-                  )}
                 </div>
               </div>
               {/* Autonomy Level ends */}
@@ -2949,17 +2921,15 @@ const CreateList = () => {
               <div className="col-lg-6 col-xl-6">
                 <div className="my_profile_setting_input ui_kit_select_search form-group">
                   <label htmlFor="operatingEnvironment">
-                    Operating Environment *
+                    Operating Environment
                   </label>
                   <select
                     id="operatingEnvironment"
-                    className={`selectpicker form-select ${error.selectedOperatingEnvironment ? "is-invalid" : ""
-                      }`}
+                    className="selectpicker form-select"
                     value={selectedOperatingEnvironment}
                     onChange={handleOperatingEnvironmentChange}
                     data-live-search="true"
                     data-width="100%"
-                    required
                   >
                     <option value="">-- Select Operating Environment --</option>
                     {operatingEnvironment.map((env) => (
@@ -2968,11 +2938,6 @@ const CreateList = () => {
                       </option>
                     ))}
                   </select>
-                  {error.selectedOperatingEnvironment && (
-                    <span className="text-danger">
-                      {error.selectedOperatingEnvironment}
-                    </span>
-                  )}
                 </div>
               </div>
               {/* Operating Environment ends */}
@@ -3247,17 +3212,12 @@ const CreateList = () => {
                   <label htmlFor="videoEmbedCode">Video Embed code</label>
                   <textarea
                     id="videoEmbedCode"
-                    className={`form-control ${error.videoembedcode ? "is-invalid" : ""
-                      }`}
+                    className="form-control"
                     rows="7"
                     value={videoembedcode}
                     onChange={(e) => setVideoEmbedCode(e.target.value)}
                     placeholder="Enter Video Embed code"
-                    required
                   ></textarea>
-                  {error.videoembedcode && (
-                    <span className="text-danger">{error.videoembedcode}</span>
-                  )}
                 </div>
               </div>
               {/* End .col */}

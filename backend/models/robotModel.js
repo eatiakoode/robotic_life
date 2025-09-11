@@ -22,11 +22,11 @@ const RobotSchema = new mongoose.Schema(
     // Basic 
     title: { type: String, required: true, trim: true },
     slug: { type: String, required: true, unique: true, index: true, lowercase: true },
-    description: { type: String, trim: true },
-    category: { type: mongoose.Schema.Types.ObjectId, ref: "Category", required: true },
-    manufacturer: { type: mongoose.Schema.Types.ObjectId, ref: "Manufacturer", required: true },
-    countryOfOrigin: { type: mongoose.Schema.Types.ObjectId, ref: "Country", required: true },
-    launchYear: { type: Number, min: 1900, max: new Date().getFullYear() + 5, required: true },
+    description: { type: String, required: true, trim: true },
+    category: { type: mongoose.Schema.Types.ObjectId, ref: "Category" },
+    manufacturer: { type: mongoose.Schema.Types.ObjectId, ref: "Manufacturer" },
+    countryOfOrigin: { type: mongoose.Schema.Types.ObjectId, ref: "Country" },
+    launchYear: { type: Number, min: 1900, max: new Date().getFullYear() + 5 },
     totalPrice: { type: Number },
     version: { type: String, trim: true },
 

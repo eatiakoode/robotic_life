@@ -4,13 +4,13 @@ const Manufacturer = require("../models/manufacturerModel");
 const Country = require("../models/countryModel");
 const slugify = require("slugify");
 const asyncHandler = require("express-async-handler");
-const { uploadPhoto, robotImgResize } = require("../middlewares/uploadImage");
+const { uploadPhoto, robotImgUpload } = require("../middlewares/uploadImage");
 
 // Create a new Robot
 const createRobot = asyncHandler(async (req, res) => {
   try {
     if (req.files) {
-      const processedImages = await robotImgResize(req);
+      const processedImages = await robotImgUpload(req);
       if (processedImages.length > 0) {
         req.body.images = "public/images/robot/" + processedImages[0];
       }
@@ -104,7 +104,7 @@ const updateRobot = async (req, res) => {
     console.log("req.body:", req.body);
 
     if (req.files && req.files.length > 0) {
-      const processedImages = await robotImgResize(req);
+      const processedImages = await robotImgUpload(req);
       if (processedImages.length > 0) {
         req.body.images = "public/images/robot/" + processedImages[0];
       }
