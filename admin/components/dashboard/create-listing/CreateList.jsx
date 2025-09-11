@@ -432,12 +432,6 @@ const CreateList = () => {
     const requiredFields = [
       { key: "title", value: title, name: "Title" },
       { key: "description", value: description, name: "Description" },
-      {
-        key: "selectedCountry",
-        value: selectedCountry,
-        name: "Country of Origin",
-      },
-      { key: "launchYear", value: launchYear, name: "Launch Year" },
     ];
 
     // Check for empty required fields
@@ -450,47 +444,6 @@ const CreateList = () => {
       }
     });
 
-    // Validate at least some specifications are provided
-    if (!length && !width && !height && !weight) {
-      newErrors.dimensions =
-        "At least one dimension (length, width, height, or weight) is required";
-    }
-
-    // Validate at least some durability features are provided
-    if (!ipRating && !milStdCompliance && !radiationShielding) {
-      newErrors.durability =
-        "At least one durability feature (IP Rating, MIL-STD Compliance, or Radiation Shielding) is required";
-    }
-
-    // Validate at least some accessory ports are provided
-    if (!accessoryPorts && !attachments) {
-      newErrors.accessoryPorts =
-        "At least one accessory port or attachment is required";
-    }
-
-    // Validate at least some maintenance features are provided
-    if (!mtbf && !maintenanceInterval) {
-      newErrors.maintenanceInfo =
-        "At least one maintenance information (MTBF or Maintenance Interval) is required";
-    }
-
-    // Validate at least some load handling features are provided
-    if (!grippingStrength && !articulationPrecision) {
-      newErrors.loadHandling =
-        "At least one load handling information (Gripping Strength or Articulation Precision) is required";
-    }
-
-    // Validate at least some dataLogging features are provided
-    if (!storageCapacity && !loggingInterval) {
-      newErrors.dataLogging =
-        "At least one data logging information (Storage Capacity or Logging Interval) is required";
-    }
-
-    // Validate at least some mobilityConstraints features are provided
-    if (!maxSlope && !maxStepHeight && !maxWaterDepth) {
-      newErrors.mobilityConstraints =
-        "At least one mobility constraint (Max Slope, Max Step Height, or Max Water Depth) is required";
-    }
 
     // Validate slug uniqueness (basic check)
     if (slug && slug.length < 3) {
@@ -549,179 +502,208 @@ const CreateList = () => {
       formData.append("subcategoryid", selectedSubCategory);
       formData.append("manufacturer", selectedManufacturer);
       formData.append("launchYear", launchYear);
-      formData.append("powerSource", selectedPower);
-      formData.append("videoembedcode", videoembedcode.trim());
-      formData.append("primaryFunction", selectedPrimaryFunction);
-      formData.append("operatingEnvironment", selectedOperatingEnvironment);
-      formData.append("autonomyLevel", selectedAutonomyLevel);
+      formData.append("specifications.powerSource", selectedPower);
+      formData.append("videoEmbedCode", videoembedcode.trim());
+      formData.append("capabilities.primaryFunction", selectedPrimaryFunction);
+      formData.append("operationalEnvironmentAndApplications.operatingEnvironment", selectedOperatingEnvironment);
+      formData.append("capabilities.autonomyLevel", selectedAutonomyLevel);
 
       // Optional fields
       if (version) formData.append("version", version.trim());
-      if (metatitle) formData.append("metatitle", metatitle.trim());
+      if (metatitle) formData.append("metaTitle", metatitle.trim());
       if (metadescription)
-        formData.append("metadescription", metadescription.trim());
+        formData.append("metaDescription", metadescription.trim());
 
-      if (feature) formData.append("feature", feature.trim());
-      if (interoperability) formData.append("interoperability", interoperability.trim());
-      if (attachments) formData.append("attachments", attachments.trim());
-      if (accessoryPorts) formData.append("accessoryPorts", accessoryPorts.trim());
-      if (operatingSystem) formData.append("operatingSystem", operatingSystem.trim());
-      if (firmwareVersion) formData.append("firmwareVersion", firmwareVersion.trim());
-      if (securityFeatures) formData.append("securityFeatures", securityFeatures.trim());
-      if (applications) formData.append("applications", applications.trim());
-      if (enduranceExtremeConditions) formData.append("enduranceExtremeConditions", enduranceExtremeConditions.trim());
-      if (deploymentLogistics) formData.append("deploymentLogistics", deploymentLogistics.trim());
+      if (feature) formData.append("capabilities.features", feature.trim());
+      if (interoperability) formData.append("capabilities.interoperability", interoperability.trim());
+      if (attachments) formData.append("payloadsAndAttachments.attachments", attachments.trim());
+      if (accessoryPorts) formData.append("payloadsAndAttachments.accessoryPorts", accessoryPorts.trim());
+      if (operatingSystem) formData.append("sensorsAndSoftware.operatingSystem", operatingSystem.trim());
+      if (firmwareVersion) formData.append("sensorsAndSoftware.firmwareVersion", firmwareVersion.trim());
+      if (securityFeatures) formData.append("sensorsAndSoftware.securityFeatures", securityFeatures.trim());
+      if (applications) formData.append("operationalEnvironmentAndApplications.applications", applications.trim());
+      if (enduranceExtremeConditions) formData.append("operationalEnvironmentAndApplications.enduranceExtremeConditions", enduranceExtremeConditions.trim());
+      if (deploymentLogistics) formData.append("operationalEnvironmentAndApplications.deploymentLogistics", deploymentLogistics.trim());
 
       // Dimensions with validation
       if (length) {
-        formData.append("dimensions.length.value", String(length));
-        formData.append("dimensions.length.unit", lengthUnit);
+        formData.append("specifications.dimensions.length.value", String(length));
+        formData.append("specifications.dimensions.length.unit", lengthUnit);
       }
       if (width) {
-        formData.append("dimensions.width.value", String(width));
-        formData.append("dimensions.width.unit", widthUnit);
+        formData.append("specifications.dimensions.width.value", String(width));
+        formData.append("specifications.dimensions.width.unit", widthUnit);
       }
       if (height) {
-        formData.append("dimensions.height.value", String(height));
-        formData.append("dimensions.height.unit", heightUnit);
+        formData.append("specifications.dimensions.height.value", String(height));
+        formData.append("specifications.dimensions.height.unit", heightUnit);
       }
 
       // Weight
       if (weight) {
-        formData.append("weight.value", String(weight));
-        formData.append("weight.unit", weightUnit);
+        formData.append("specifications.weight.value", String(weight));
+        formData.append("specifications.weight.unit", weightUnit);
       }
 
       // noiseLevel
       if (noiseLevel) {
-        formData.append("noiseLevel.value", String(noiseLevel));
-        formData.append("noiseLevel.unit", noiseLevelUnit);
+        formData.append("specifications.noiseLevel.value", String(noiseLevel));
+        formData.append("specifications.noiseLevel.unit", noiseLevelUnit);
       }
 
       // energyConsumption
       if (energyConsumption) {
-        formData.append("energyConsumption.value", String(energyConsumption));
-        formData.append("energyConsumption.unit", energyConsumptionUnit);
+        formData.append("specifications.energyConsumption.value", String(energyConsumption));
+        formData.append("specifications.energyConsumption.unit", energyConsumptionUnit);
       }
 
       // mtbf
       if (mtbf) {
-        formData.append("mtbf.value", String(mtbf));
-        formData.append("mtbf.unit", mtbfUnit);
+        formData.append("specifications.maintenanceInfo.mtbf.value", String(mtbf));
+        formData.append("specifications.maintenanceInfo.mtbf.unit", mtbfUnit);
       }
 
       // maintenance Interval
       if (maintenanceInterval) {
         formData.append(
-          "maintenanceInterval.value",
+          "specifications.maintenanceInfo.maintenanceInterval.value",
           String(maintenanceInterval)
         );
-        formData.append("maintenanceInterval.unit", maintenanceIntervalUnit);
+        formData.append("specifications.maintenanceInfo.maintenanceInterval.unit", maintenanceIntervalUnit);
       }
 
       // gripping Strength
       if (grippingStrength) {
-        formData.append("grippingStrength.value", String(grippingStrength));
-        formData.append("grippingStrength.unit", grippingStrengthUnit);
+        formData.append("capabilities.loadHandling.grippingStrength.value", String(grippingStrength));
+        formData.append("capabilities.loadHandling.grippingStrength.unit", grippingStrengthUnit);
       }
 
       // articulation Precision
       if (articulationPrecision) {
-        formData.append("articulationPrecision.value", String(articulationPrecision));
-        formData.append("articulationPrecision.unit", articulationPrecisionUnit);
+        formData.append("capabilities.loadHandling.articulationPrecision.value", String(articulationPrecision));
+        formData.append("capabilities.loadHandling.articulationPrecision.unit", articulationPrecisionUnit);
       }
 
-      // energyConsumption
+      // communicationRange
       if (communicationRange) {
-        formData.append("communicationRange.value", String(communicationRange));
-        formData.append("communicationRange.unit", communicationRangeUnit);
+        formData.append("capabilities.communicationRange.value", String(communicationRange));
+        formData.append("capabilities.communicationRange.unit", communicationRangeUnit);
       }
 
       // hotSwappable
-      formData.append("hotSwappable", hotSwappable ? "true" : "false");
+      formData.append("payloadsAndAttachments.hotSwappable", hotSwappable ? "true" : "false");
 
       // Other specifications (optional)
       if (batteryCapacity) {
-        formData.append("batteryCapacity.value", String(batteryCapacity));
-        formData.append("batteryCapacity.unit", batteryCapacityUnit);
+        formData.append("specifications.batteryCapacity.value", String(batteryCapacity));
+        formData.append("specifications.batteryCapacity.unit", batteryCapacityUnit);
       }
       if (loadCapacity) {
-        formData.append("loadCapacity.value", String(loadCapacity));
-        formData.append("loadCapacity.unit", loadCapacityUnit);
+        formData.append("specifications.loadCapacity.value", String(loadCapacity));
+        formData.append("specifications.loadCapacity.unit", loadCapacityUnit);
       }
       if (runtime) {
-        formData.append("runtime.value", String(runtime));
-        formData.append("runtime.unit", runtimeUnit);
+        formData.append("specifications.runtime.value", String(runtime));
+        formData.append("specifications.runtime.unit", runtimeUnit);
       }
       if (speed) {
-        formData.append("speed.value", String(speed));
-        formData.append("speed.unit", speedUnit);
+        formData.append("specifications.speed.value", String(speed));
+        formData.append("specifications.speed.unit", speedUnit);
       }
       if (accuracy) {
-        formData.append("accuracy.value", String(accuracy));
-        formData.append("accuracy.unit", accuracyUnit);
+        formData.append("specifications.accuracy.value", String(accuracy));
+        formData.append("specifications.accuracy.unit", accuracyUnit);
       }
       if (range) {
-        formData.append("range.value", String(range));
-        formData.append("range.unit", rangeUnit);
+        formData.append("specifications.range.value", String(range));
+        formData.append("specifications.range.unit", rangeUnit);
       }
       if (chargingTime) {
-        formData.append("chargingTime.value", String(chargingTime));
-        formData.append("chargingTime.unit", chargingTimeUnit);
+        formData.append("specifications.batteryChargeTime.value", String(chargingTime));
+        formData.append("specifications.batteryChargeTime.unit", chargingTimeUnit);
       }
 
       // Operating Temperature
       if (operatingTemperatureMin) {
         formData.append(
-          "operatingTemperature.min",
+          "specifications.operatingTemperature.min",
           String(operatingTemperatureMin)
         );
       }
       if (operatingTemperatureMax) {
         formData.append(
-          "operatingTemperature.max",
+          "specifications.operatingTemperature.max",
           String(operatingTemperatureMax)
         );
       }
       if (operatingTemperatureMin || operatingTemperatureMax) {
-        formData.append("operatingTemperature.unit", operatingTemperatureUnit);
+        formData.append("specifications.operatingTemperature.unit", operatingTemperatureUnit);
+      }
+
+      // Durability fields
+      if (ipRating) formData.append("specifications.durability.ipRating", ipRating.trim());
+      if (milStdCompliance) formData.append("specifications.durability.milStdCompliance", milStdCompliance.trim());
+      if (radiationShielding) formData.append("specifications.durability.radiationShielding", radiationShielding.trim());
+
+      // Data logging fields
+      if (storageCapacity) {
+        formData.append("sensorsAndSoftware.dataLogging.storageCapacity.value", String(storageCapacity));
+        formData.append("sensorsAndSoftware.dataLogging.storageCapacity.unit", storageCapacityUnit);
+      }
+      if (loggingInterval) {
+        formData.append("sensorsAndSoftware.dataLogging.loggingInterval.value", String(loggingInterval));
+        formData.append("sensorsAndSoftware.dataLogging.loggingInterval.unit", loggingIntervalUnit);
+      }
+
+      // Mobility constraints
+      if (maxSlope) {
+        formData.append("operationalEnvironmentAndApplications.mobilityConstraints.maxSlope.value", String(maxSlope));
+        formData.append("operationalEnvironmentAndApplications.mobilityConstraints.maxSlope.unit", maxSlopeUnit);
+      }
+      if (maxStepHeight) {
+        formData.append("operationalEnvironmentAndApplications.mobilityConstraints.maxStepHeight.value", String(maxStepHeight));
+        formData.append("operationalEnvironmentAndApplications.mobilityConstraints.maxStepHeight.unit", maxStepHeightUnit);
+      }
+      if (maxWaterDepth) {
+        formData.append("operationalEnvironmentAndApplications.mobilityConstraints.maxWaterDepth.value", String(maxWaterDepth));
+        formData.append("operationalEnvironmentAndApplications.mobilityConstraints.maxWaterDepth.unit", maxWaterDepthUnit);
       }
 
       // Multi-select fields (only if they have selections)
       if (selectedColors.length > 0) {
-        selectedColors.forEach((color) => formData.append("color", color));
+        selectedColors.forEach((color) => formData.append("specifications.color", color));
       }
       if (selectedMaterials.length > 0) {
         selectedMaterials.forEach((material) =>
-          formData.append("material", material)
+          formData.append("specifications.materials", material)
         );
       }
       if (selectedNavigationType.length > 0) {
         selectedNavigationType.forEach((nav) =>
-          formData.append("navigationType", nav)
+          formData.append("capabilities.navigationTypes", nav)
         );
       }
       if (selectedSensor.length > 0) {
-        selectedSensor.forEach((s) => formData.append("sensors", s));
+        selectedSensor.forEach((s) => formData.append("sensorsAndSoftware.sensors", s));
       }
       if (selectedAISoftwareFeature.length > 0) {
         selectedAISoftwareFeature.forEach((a) =>
-          formData.append("aiSoftwareFeatures", a)
+          formData.append("sensorsAndSoftware.aiSoftwareFeatures", a)
         );
       }
       if (selectedTerrainCapability.length > 0) {
         selectedTerrainCapability.forEach((t) =>
-          formData.append("terrainCapability", t)
+          formData.append("operationalEnvironmentAndApplications.terrainCapabilities", t)
         );
       }
       if (selectedCommunicationMethod.length > 0) {
         selectedCommunicationMethod.forEach((c) =>
-          formData.append("communicationMethod", c)
+          formData.append("capabilities.communicationMethods", c)
         );
       }
       if (selectedPayloadType.length > 0) {
         selectedPayloadType.forEach((p) =>
-          formData.append("payloadTypesSupported", p)
+          formData.append("payloadsAndAttachments.payloadTypes", p)
         );
       }
 
