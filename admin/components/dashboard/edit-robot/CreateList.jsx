@@ -973,40 +973,6 @@ const EditList = () => {
         formData.append("operationalEnvironmentAndApplications.mobilityConstraints.maxWaterDepth.unit", maxWaterDepthUnit);
       }
 
-      // Additional specifications
-      if (noiseLevel && !isNaN(noiseLevel)) {
-        formData.append("specifications.noiseLevel.value", String(noiseLevel));
-        formData.append("specifications.noiseLevel.unit", noiseLevelUnit);
-      }
-      if (energyConsumption && !isNaN(energyConsumption)) {
-        formData.append("specifications.energyConsumption.value", String(energyConsumption));
-        formData.append("specifications.energyConsumption.unit", energyConsumptionUnit);
-      }
-      if (wingspan && !isNaN(wingspan)) {
-        formData.append("specifications.dimensions.wingspan.value", String(wingspan));
-        formData.append("specifications.dimensions.wingspan.unit", wingspanUnit);
-      }
-      if (reach && !isNaN(reach)) {
-        formData.append("specifications.dimensions.reach.value", String(reach));
-        formData.append("specifications.dimensions.reach.unit", reachUnit);
-      }
-
-      // Durability fields
-      if (ipRating) formData.append("specifications.durability.ipRating", ipRating.trim());
-      if (milStdCompliance) formData.append("specifications.durability.milStdCompliance", milStdCompliance.trim());
-      if (radiationShielding) formData.append("specifications.durability.radiationShielding", radiationShielding.trim());
-
-      // Maintenance info
-      if (mtbf && !isNaN(mtbf)) {
-        formData.append("specifications.maintenanceInfo.mtbf.value", String(mtbf));
-        formData.append("specifications.maintenanceInfo.mtbf.unit", mtbfUnit);
-      }
-      if (maintenanceInterval && !isNaN(maintenanceInterval)) {
-        formData.append("specifications.maintenanceInfo.maintenanceInterval.value", String(maintenanceInterval));
-        formData.append("specifications.maintenanceInfo.maintenanceInterval.unit", maintenanceIntervalUnit);
-      }
-
-      // Load handling - Articulation Precision
       if (articulationPrecision && !isNaN(articulationPrecision)) {
         formData.append("capabilities.loadHandling.articulationPrecision.value", String(articulationPrecision));
         formData.append("capabilities.loadHandling.articulationPrecision.unit", articulationPrecisionUnit);
