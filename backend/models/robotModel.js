@@ -36,7 +36,8 @@ const RobotSchema = new mongoose.Schema(
         length: unitValueSchema,
         width: unitValueSchema,
         height: unitValueSchema,
-        wingspan: unitValueSchema
+        wingspan: unitValueSchema,
+        reach: unitValueSchema
       },
       weight: unitValueSchema,
       speed: unitValueSchema,
@@ -122,7 +123,8 @@ const RobotSchema = new mongoose.Schema(
     metaTitle: { type: String },
     metaDescription: { type: String },
     status: { type: Boolean, default: true, required: true },
-    recentlyViewed: [{ type: mongoose.Schema.Types.ObjectId, ref: "Robot" }]
+    recentlyViewed: [{ type: mongoose.Schema.Types.ObjectId, ref: "Robot" }],
+    isFeatured: { type: Boolean, default: false },
   },
   { timestamps: true }
 );
