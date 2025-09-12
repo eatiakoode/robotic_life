@@ -6,17 +6,31 @@ import { Swiper, SwiperSlide } from "swiper/react";
 
 export default function Features({ parentClass = "flat-spacing" }) {
   return (
-    <section className={`${parentClass} features-banner`} style={{
-      background: 'linear-gradient(135deg, #f0f3f5a6 0%, #e9ecef 50%, #dee2e6 100%)',
-      backgroundAttachment: 'fixed',
-      border: '1px solid #c1c1c1ff',
-      borderRadius: '12px',
-      boxShadow: '0 4px 12px rgba(27, 26, 26, 0.33)',
-      margin: '80px 48px',
+    <>
+      <style jsx>{`
+        .feature-card:hover {
+          transform: translateY(-12px) !important;
+          box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2) !important;
+          z-index: 20 !important;
+        }
+        .feature-card:hover .icon-box {
+          transform: scale(1.1) !important;
+          box-shadow: 0 6px 20px rgba(192, 199, 229, 0.4) !important;
+        }
+        
+        
+      `}</style>
+      <section className={`${parentClass} features-banner`} style={{
+      background: '#f8f9fa',
+      border: '1px solid #e9ecef',
+      borderRadius: '21px',
+      boxShadow: '2px 8px 15px rgba(0, 0, 0, 0.08)',
+      margin: '80px 55px',
       position: 'relative',
-      overflow: 'hidden'
+      overflow: 'visible',
+      zIndex: 1
     }}>
-      <div className="container">
+      <div className="container" style={{ position: 'relative', zIndex: 2, padding: '0 15px' }}>
         <Swiper
           dir="ltr"
           className="swiper tf-sw-iconbox"
@@ -32,16 +46,57 @@ export default function Features({ parentClass = "flat-spacing" }) {
             clickable: true,
             el: ".spd2",
           }}
+          style={{ overflow: 'visible' }}
         >
           {iconboxItems.map((item) => (
             <SwiperSlide key={item.id}>
-              <div className="tf-icon-box style-2 type-2 type-column">
-                <div className="icon-box">
-                  <span className={`icon ${item.icon}`} />
+              <div className="tf-icon-box style-2 type-2 type-column feature-card" style={{
+                background: 'rgba(255, 255, 255, 0.95)',
+                borderRadius: '15px',
+                padding: '30px 20px',
+                boxShadow: '0 4px 15px rgba(0, 0, 0, 0.1)',
+                border: '1px solid rgba(255, 255, 255, 0.2)',
+                transition: 'all 0.3s ease',
+                // cursor: 'pointer',
+                height: '100%',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                textAlign: 'center',
+                position: 'relative',
+                zIndex: 10
+              }}>
+                <div className="icon-box" style={{
+                  width: '80px',
+                  height: '80px',
+                  borderRadius: '50%',
+                  background: 'linear-gradient(135deg, #babbbeff 0%, #96919aff 100%)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  marginBottom: '20px',
+                  boxShadow: '0 4px 15px rgba(192, 199, 229, 0.3)',
+                  transition: 'all 0.3s ease'
+                }}>
+                  <span className={`icon ${item.icon}`} style={{
+                    fontSize: '28px',
+                    color: 'white',
+                    filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.2))'
+                  }} />
                 </div>
                 <div className="content">
-                  <h6>{item.title}</h6>
-                  <p className="text-secondary">{item.description}</p>
+                  <h6 style={{
+                    fontSize: '18px',
+                    fontWeight: '600',
+                    color: '#2c3e50',
+                    marginBottom: '12px'
+                  }}>{item.title}</h6>
+                  <p className="text-secondary" style={{
+                    fontSize: '14px',
+                    color: '#6c757d',
+                    lineHeight: '1.5',
+                    margin: '0'
+                  }}>{item.description}</p>
                 </div>
               </div>
             </SwiperSlide>
@@ -50,5 +105,6 @@ export default function Features({ parentClass = "flat-spacing" }) {
         </Swiper>
       </div>
     </section>
+    </>
   );
 }

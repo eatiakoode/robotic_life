@@ -66,13 +66,13 @@ export default function Team() {
                     e.currentTarget.style.boxShadow = '0 4px 20px rgba(0,0,0,0.08)';
                   }}
                 >
-                  <div className="icon-box mb-3">
+                  <div className="icon-box mb-3 icon-center">
                     <span 
                       className={`icon ${item.icon}`}
                       style={{
-                        fontSize: '48px',
+                        fontSize: '40px',
                         color: '#333',
-                        display: 'block'
+                        display: 'flex'
                       }}
                     />
                   </div>
