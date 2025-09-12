@@ -426,4 +426,26 @@ const compareRobots = async (req, res) => {
   }
 };
 
-module.exports = { getRecentRobots, getallRobots, getRobotBySlug, filterRobots, getRecentlyViewed, getRelatedRobots, compareRobots };
+const getFeaturedRobots = asyncHandler(async (req, res) => {
+  try {
+    const robots = await Robot.find({ status: true, isFeatured: true })
+      .select("title slug totalPrice images specifications.color")
+      .populate("specifications.color", "name")
+      .limit(3)
+      .sort({ createdAt: -1 });
+
+    res.status(200).json({
+      success: true,
+      count: robots.length,
+      data: robots,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Error fetching featured robots",
+      error: error.message,
+    });
+  }
+});
+
+module.exports = { getRecentRobots, getallRobots, getRobotBySlug, filterRobots, getRecentlyViewed, getRelatedRobots, compareRobots, getFeaturedRobots };
