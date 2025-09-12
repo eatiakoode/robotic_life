@@ -83,6 +83,8 @@ const CreateList = () => {
   const [widthUnit, setWidthUnit] = useState("cm");
   const [wingspan, setWingspan] = useState("");
   const [wingspanUnit, setWingspanUnit] = useState("cm");
+  const [reach, setReach] = useState("");
+  const [reachUnit, setReachUnit] = useState("cm");
   const [ipRating, setIpRating] = useState("");
   const [milStdCompliance, setMilStdCompliance] = useState("");
   const [radiationShielding, setRadiationShielding] = useState("");
@@ -98,6 +100,7 @@ const CreateList = () => {
   const [communicationRange, setCommunicationRange] = useState("");
   const [communicationRangeUnit, setCommunicationRangeUnit] = useState("m");
   const [hotSwappable, setHotSwappable] = useState(false);
+  const [isFeatured, setIsFeatured] = useState(false);
 
   const [patentNumber, setPatentNumber] = useState("");
   const [loadCapacity, setLoadCapacity] = useState("");
@@ -469,7 +472,7 @@ const CreateList = () => {
       toast.error("Please check the form for errors");
       return;
     }
-    
+
     console.log("No validation errors found, proceeding with submission...");
     console.log("Form state before submission:");
     console.log("title:", title);
@@ -501,7 +504,7 @@ const CreateList = () => {
       formData.append("slug", slug);
       formData.append("description", description.trim());
       formData.append("status", status ? "true" : "false");
-      
+
       // Only append fields that have values to avoid ObjectId validation errors
       if (price && price !== "" && !isNaN(price)) formData.append("totalPrice", price);
       if (selectedCountry && selectedCountry !== "") formData.append("countryOfOrigin", selectedCountry);
@@ -602,6 +605,9 @@ const CreateList = () => {
 
       // hotSwappable
       formData.append("payloadsAndAttachments.hotSwappable", hotSwappable ? "true" : "false");
+
+      // isFeatured
+      formData.append("payloadsAndAttachments.isFeatured", isFeatured ? "true" : "false");
 
       // Other specifications (optional)
       if (batteryCapacity && batteryCapacity !== "" && !isNaN(batteryCapacity)) {
@@ -733,7 +739,7 @@ const CreateList = () => {
       for (let pair of formData.entries()) {
         console.log(pair[0], pair[1]);
       }
-      
+
       // Debug: Check for empty strings that might cause ObjectId errors
       console.log("Checking for potential ObjectId fields:");
       console.log("selectedCountry:", selectedCountry);
@@ -1033,6 +1039,45 @@ const CreateList = () => {
         </div>
         {/* robot version ends */}
 
+        {/* robot isFeatured start */}
+        <div className="col-lg-6">
+          <div className="my_profile_setting_input form-group">
+            <label>IsFeatured</label>
+            <div className="d-flex gap-3 mt-2">
+              {/* True Option */}
+              <div className="form-check">
+                <input
+                  type="radio"
+                  className="form-check-input"
+                  id="isFeaturedTrue"
+                  name="isFeatured"
+                  checked={isFeatured === true}
+                  onChange={() => setIsFeatured(true)}
+                />
+                <label className="form-check-label" htmlFor="isFeaturedTrue">
+                  True
+                </label>
+              </div>
+
+              {/* False Option */}
+              <div className="form-check">
+                <input
+                  type="radio"
+                  className="form-check-input"
+                  id="isFeaturedFalse"
+                  name="isFeatured"
+                  checked={isFeatured === false}
+                  onChange={() => setIsFeatured(false)}
+                />
+                <label className="form-check-label" htmlFor="isFeaturedFalse">
+                  False
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+        {/* robot isFeatured ends */}
+
         {/* --- specifications start--- */}
 
         <div className=" mt30 ">
@@ -1177,6 +1222,37 @@ const CreateList = () => {
                     </select>
                   </div>
                   {/* wingspan ends */}
+
+                  {/* reach start */}
+                  <div className="col-lg-6 position-relative mb-2">
+                    <input
+                      type="number"
+                      className="form-control pe-5"
+                      placeholder="Enter Robot Reach"
+                      value={reach}
+                      onChange={(e) => setReach(e.target.value)}
+                    />
+                    <select
+                      className="form-select position-absolute end-0 border-0 bg-transparent"
+                      style={{
+                        width: "auto",
+                        height: "auto",
+                        top: "50%",
+                        transform: "translateY(-50%)",
+                        paddingRight: "30px",
+                        paddingLeft: "8px",
+                        appearance: "none",
+                        WebkitAppearance: "none",
+                        MozAppearance: "none",
+                      }}
+                      value={reachUnit}
+                      onChange={(e) => setReachUnit(e.target.value)}
+                    >
+                      <option value="cm">cm</option>
+                      <option value="m">m</option>
+                    </select>
+                  </div>
+                  {/* reach ends */}
                 </div>
 
                 {/* --- dimension row ends --- */}

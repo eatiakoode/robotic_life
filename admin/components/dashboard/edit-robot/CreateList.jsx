@@ -36,6 +36,7 @@ const EditList = () => {
   const [price, setPrice] = useState("");
   const [error, setError] = useState({});
   const [loading, setLoading] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [countries, setCountries] = useState([]);
   const [selectedCountry, setSelectedCountry] = useState("");
@@ -96,6 +97,8 @@ const EditList = () => {
   const [selectedAutonomyLevel, setSelectedAutonomyLevel] = useState("");
   const [payloadTypes, setPayloadTypes] = useState([]);
   const [selectedPayloadType, setSelectedPayloadType] = useState([]);
+  const [maxPayloadWeight, setMaxPayloadWeight] = useState("");
+  const [maxPayloadWeightUnit, setMaxPayloadWeightUnit] = useState("kg");
 
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("");
@@ -159,6 +162,7 @@ const EditList = () => {
   const [communicationRange, setCommunicationRange] = useState("");
   const [communicationRangeUnit, setCommunicationRangeUnit] = useState("m");
   const [hotSwappable, setHotSwappable] = useState(false);
+  const [isFeatured, setIsFeatured] = useState(false);
 
   const normalizeImagePath = (path) => {
     if (!path) return "";
@@ -364,6 +368,9 @@ const EditList = () => {
           // Hot swappable
           setHotSwappable(robotData.payloadsAndAttachments?.hotSwappable || false);
           
+          // Is Featured
+          setIsFeatured(robotData.payloadsAndAttachments?.isFeatured || false);
+          
           // Multi-select fields - extract IDs from objects or use direct IDs
           setSelectedColors(robotData.color?.map(c => c._id || c) || []);
           setSelectedMaterials(robotData.material?.map(m => m._id || m) || []);
@@ -373,6 +380,93 @@ const EditList = () => {
           setSelectedTerrainCapability(robotData.terrainCapability?.map(t => t._id || t) || []);
           setSelectedCommunicationMethod(robotData.communicationMethod?.map(c => c._id || c) || []);
           setSelectedPayloadType(robotData.payloadTypesSupported?.map(p => p._id || p) || []);
+          
+          // Payload weight
+          if (robotData.payloadsAndAttachments?.maxPayloadWeight) {
+            setMaxPayloadWeight(robotData.payloadsAndAttachments.maxPayloadWeight.value || "");
+            setMaxPayloadWeightUnit(robotData.payloadsAndAttachments.maxPayloadWeight.unit || "kg");
+          }
+
+          // Additional specifications
+          if (robotData.specifications?.wingspan) {
+            setWingspan(robotData.specifications.wingspan.value || "");
+            setWingspanUnit(robotData.specifications.wingspan.unit || "cm");
+          }
+          if (robotData.specifications?.ipRating) {
+            setIpRating(robotData.specifications.ipRating || "");
+          }
+          if (robotData.specifications?.milStdCompliance) {
+            setMilStdCompliance(robotData.specifications.milStdCompliance || "");
+          }
+          if (robotData.specifications?.radiationShielding) {
+            setRadiationShielding(robotData.specifications.radiationShielding || "");
+          }
+          if (robotData.specifications?.mtbf) {
+            setMtbf(robotData.specifications.mtbf.value || "");
+            setMtbfUnit(robotData.specifications.mtbf.unit || "h");
+          }
+          if (robotData.specifications?.maintenanceInterval) {
+            setMaintenanceInterval(robotData.specifications.maintenanceInterval.value || "");
+            setMaintenanceIntervalUnit(robotData.specifications.maintenanceInterval.unit || "h");
+          }
+          if (robotData.specifications?.noiseLevel) {
+            setNoiseLevel(robotData.specifications.noiseLevel.value || "");
+            setNoiseLevelUnit(robotData.specifications.noiseLevel.unit || "dB");
+          }
+          if (robotData.specifications?.energyConsumption) {
+            setEnergyConsumption(robotData.specifications.energyConsumption.value || "");
+            setEnergyConsumptionUnit(robotData.specifications.energyConsumption.unit || "Wh");
+          }
+
+          // Capabilities
+          if (robotData.capabilities?.feature) {
+            setFeature(robotData.capabilities.feature || "");
+          }
+          if (robotData.capabilities?.communicationRange) {
+            setCommunicationRange(robotData.capabilities.communicationRange.value || "");
+            setCommunicationRangeUnit(robotData.capabilities.communicationRange.unit || "m");
+          }
+          if (robotData.capabilities?.grippingStrength) {
+            setGrippingStrength(robotData.capabilities.grippingStrength.value || "");
+            setGrippingStrengthUnit(robotData.capabilities.grippingStrength.unit || "kg");
+          }
+          if (robotData.capabilities?.interoperability) {
+            setInteroperability(robotData.capabilities.interoperability || "");
+          }
+
+          // Payloads & Attachments
+          if (robotData.payloadsAndAttachments?.attachments) {
+            setAttachments(robotData.payloadsAndAttachments.attachments || "");
+          }
+          if (robotData.payloadsAndAttachments?.accessoryPorts) {
+            setAccessoryPorts(robotData.payloadsAndAttachments.accessoryPorts || "");
+          }
+          if (robotData.payloadsAndAttachments?.hotSwappable !== undefined) {
+            setHotSwappable(robotData.payloadsAndAttachments.hotSwappable);
+          }
+
+          // Sensors & Software
+          if (robotData.sensorsAndSoftware?.operatingSystem) {
+            setOperatingSystem(robotData.sensorsAndSoftware.operatingSystem || "");
+          }
+          if (robotData.sensorsAndSoftware?.firmwareVersion) {
+            setFirmwareVersion(robotData.sensorsAndSoftware.firmwareVersion || "");
+          }
+          if (robotData.sensorsAndSoftware?.securityFeatures) {
+            setSecurityFeatures(robotData.sensorsAndSoftware.securityFeatures || "");
+          }
+          if (robotData.sensorsAndSoftware?.storageCapacity) {
+            setStorageCapacity(robotData.sensorsAndSoftware.storageCapacity.value || "");
+            setStorageCapacityUnit(robotData.sensorsAndSoftware.storageCapacity.unit || "B");
+          }
+
+          // Operational Environment & Applications
+          if (robotData.operationalEnvironmentAndApplications?.applications) {
+            setApplications(robotData.operationalEnvironmentAndApplications.applications || "");
+          }
+          if (robotData.operationalEnvironmentAndApplications?.deploymentLogistics) {
+            setDeploymentLogistics(robotData.operationalEnvironmentAndApplications.deploymentLogistics || "");
+          }
           
           // Single select fields
           setSelectedPrimaryFunction(robotData.primaryFunction?._id || robotData.primaryFunction || "");
@@ -666,7 +760,7 @@ const EditList = () => {
         return;
       }
 
-      setLoading(true);
+      setIsSubmitting(true);
 
       const formData = new FormData();
 
@@ -709,6 +803,68 @@ const EditList = () => {
       selectedTerrainCapability.forEach((t) => formData.append("operationalEnvironmentAndApplications.terrainCapabilities", t));
       selectedCommunicationMethod.forEach((c) => formData.append("capabilities.communicationMethods", c));
       selectedPayloadType.forEach((p) => formData.append("payloadsAndAttachments.payloadTypes", p));
+
+      // Payload weight
+      if (maxPayloadWeight && !isNaN(maxPayloadWeight)) {
+        formData.append("payloadsAndAttachments.maxPayloadWeight.value", String(maxPayloadWeight));
+        formData.append("payloadsAndAttachments.maxPayloadWeight.unit", maxPayloadWeightUnit);
+      }
+
+      // Additional specifications
+      if (wingspan && !isNaN(wingspan)) {
+        formData.append("specifications.wingspan.value", String(wingspan));
+        formData.append("specifications.wingspan.unit", wingspanUnit);
+      }
+      if (ipRating) formData.append("specifications.ipRating", ipRating);
+      if (milStdCompliance) formData.append("specifications.milStdCompliance", milStdCompliance);
+      if (radiationShielding) formData.append("specifications.radiationShielding", radiationShielding);
+      if (mtbf && !isNaN(mtbf)) {
+        formData.append("specifications.mtbf.value", String(mtbf));
+        formData.append("specifications.mtbf.unit", mtbfUnit);
+      }
+      if (maintenanceInterval && !isNaN(maintenanceInterval)) {
+        formData.append("specifications.maintenanceInterval.value", String(maintenanceInterval));
+        formData.append("specifications.maintenanceInterval.unit", maintenanceIntervalUnit);
+      }
+      if (noiseLevel && !isNaN(noiseLevel)) {
+        formData.append("specifications.noiseLevel.value", String(noiseLevel));
+        formData.append("specifications.noiseLevel.unit", noiseLevelUnit);
+      }
+      if (energyConsumption && !isNaN(energyConsumption)) {
+        formData.append("specifications.energyConsumption.value", String(energyConsumption));
+        formData.append("specifications.energyConsumption.unit", energyConsumptionUnit);
+      }
+
+      // Capabilities
+      if (feature) formData.append("capabilities.features", feature);
+      if (communicationRange && !isNaN(communicationRange)) {
+        formData.append("capabilities.communicationRange.value", String(communicationRange));
+        formData.append("capabilities.communicationRange.unit", communicationRangeUnit);
+      }
+      if (grippingStrength && !isNaN(grippingStrength)) {
+        formData.append("capabilities.grippingStrength.value", String(grippingStrength));
+        formData.append("capabilities.grippingStrength.unit", grippingStrengthUnit);
+      }
+      if (interoperability) formData.append("capabilities.interoperability", interoperability);
+
+      // Payloads & Attachments
+      if (attachments) formData.append("payloadsAndAttachments.attachments", attachments);
+      if (accessoryPorts) formData.append("payloadsAndAttachments.accessoryPorts", accessoryPorts);
+      formData.append("payloadsAndAttachments.hotSwappable", hotSwappable);
+      formData.append("payloadsAndAttachments.isFeatured", isFeatured ? "true" : "false");
+
+      // Sensors & Software
+      if (operatingSystem) formData.append("sensorsAndSoftware.operatingSystem", operatingSystem);
+      if (firmwareVersion) formData.append("sensorsAndSoftware.firmwareVersion", firmwareVersion);
+      if (securityFeatures) formData.append("sensorsAndSoftware.securityFeatures", securityFeatures);
+      if (storageCapacity && !isNaN(storageCapacity)) {
+        formData.append("sensorsAndSoftware.storageCapacity.value", String(storageCapacity));
+        formData.append("sensorsAndSoftware.storageCapacity.unit", storageCapacityUnit);
+      }
+
+      // Operational Environment & Applications
+      if (applications) formData.append("operationalEnvironmentAndApplications.applications", applications);
+      if (deploymentLogistics) formData.append("operationalEnvironmentAndApplications.deploymentLogistics", deploymentLogistics);
 
       // Append nested unit/value fields with number validation
       if (length && !isNaN(length)) {
@@ -893,7 +1049,7 @@ const EditList = () => {
       console.error(err);
       setError({ general: err.message || "Something went wrong" });
     } finally {
-      setLoading(false);
+      setIsSubmitting(false);
     }
   };
 
@@ -1283,6 +1439,42 @@ const EditList = () => {
                       </select>
                     </div>
                   </div>
+
+                  {/* Wingspan start */}
+                  <div className="col-lg-6 mb-2">
+                    <label htmlFor="wingspan">Wingspan</label>
+                    <div className="position-relative">
+                      <input
+                        type="number"
+                        className="form-control pe-5"
+                        placeholder="Enter Robot Wingspan"
+                        value={wingspan}
+                        onChange={(e) => setWingspan(e.target.value)}
+                      />
+                      <select
+                        className="form-select position-absolute end-0 border-0 bg-transparent"
+                        style={{
+                          width: "auto",
+                          height: "auto",
+                          top: "50%",
+                          transform: "translateY(-50%)",
+                          paddingRight: "30px",
+                          paddingLeft: "8px",
+                          appearance: "none",
+                          WebkitAppearance: "none",
+                          MozAppearance: "none",
+                        }}
+                        value={wingspanUnit}
+                        onChange={(e) => setWingspanUnit(e.target.value)}
+                      >
+                        <option value="mm">mm</option>
+                        <option value="cm">cm</option>
+                        <option value="m">m</option>
+                        <option value="ft">ft</option>
+                      </select>
+                    </div>
+                  </div>
+                  {/* Wingspan ends */}
 
                   {/* Power Source start */}
                   <div className="col-lg-6 col-xl-6">
@@ -1766,11 +1958,343 @@ const EditList = () => {
               </div>
             </div>
 
+            {/* Durability section */}
+            <div className="row">
+              <div className="col-lg-12">
+                <h3 className="mb30">Durability</h3>
+              </div>
+              
+              {/* IP Rating start */}
+              <div className="col-lg-6 col-xl-6">
+                <div className="my_profile_setting_input form-group">
+                  <label htmlFor="ipRating">IP Rating</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="ipRating"
+                    value={ipRating}
+                    onChange={(e) => setIpRating(e.target.value)}
+                    placeholder="Enter Robot IP Rating"
+                  />
+                </div>
+              </div>
+              {/* IP Rating ends */}
+
+              {/* MIL-STD Compliance start */}
+              <div className="col-lg-6 col-xl-6">
+                <div className="my_profile_setting_input form-group">
+                  <label htmlFor="milStdCompliance">MIL-STD Compliance</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="milStdCompliance"
+                    value={milStdCompliance}
+                    onChange={(e) => setMilStdCompliance(e.target.value)}
+                    placeholder="Enter Robot MIL-STD Compliance"
+                  />
+                </div>
+              </div>
+              {/* MIL-STD Compliance ends */}
+
+              {/* Radiation Shielding start */}
+              <div className="col-lg-6 col-xl-6">
+                <div className="my_profile_setting_input form-group">
+                  <label htmlFor="radiationShielding">Radiation Shielding</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="radiationShielding"
+                    value={radiationShielding}
+                    onChange={(e) => setRadiationShielding(e.target.value)}
+                    placeholder="Enter Robot Radiation Shielding"
+                  />
+                </div>
+              </div>
+              {/* Radiation Shielding ends */}
+            </div>
+
+            {/* Maintenance Information section */}
+            <div className="row">
+              <div className="col-lg-12">
+                <h3 className="mb30">Maintenance Information</h3>
+              </div>
+              
+              {/* MTBF start */}
+              <div className="col-lg-6 col-xl-6">
+                <div className="my_profile_setting_input form-group">
+                  <label htmlFor="mtbf">Mean Time Between Failures (MTBF)</label>
+                  <div className="position-relative">
+                    <input
+                      type="number"
+                      className="form-control pe-5"
+                      id="mtbf"
+                      value={mtbf}
+                      onChange={(e) => setMtbf(e.target.value)}
+                      placeholder="Enter MTBF"
+                    />
+                    <select
+                      className="form-select position-absolute end-0 border-0 bg-transparent"
+                      style={{
+                        width: "auto",
+                        height: "auto",
+                        top: "50%",
+                        transform: "translateY(-50%)",
+                        paddingRight: "30px",
+                        paddingLeft: "8px",
+                        appearance: "none",
+                        WebkitAppearance: "none",
+                        MozAppearance: "none",
+                      }}
+                      value={mtbfUnit}
+                      onChange={(e) => setMtbfUnit(e.target.value)}
+                    >
+                      <option value="h">h</option>
+                      <option value="days">days</option>
+                      <option value="months">months</option>
+                      <option value="years">years</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              {/* MTBF ends */}
+
+              {/* Maintenance Interval start */}
+              <div className="col-lg-6 col-xl-6">
+                <div className="my_profile_setting_input form-group">
+                  <label htmlFor="maintenanceInterval">Maintenance Interval</label>
+                  <div className="position-relative">
+                    <input
+                      type="number"
+                      className="form-control pe-5"
+                      id="maintenanceInterval"
+                      value={maintenanceInterval}
+                      onChange={(e) => setMaintenanceInterval(e.target.value)}
+                      placeholder="Enter Maintenance Interval"
+                    />
+                    <select
+                      className="form-select position-absolute end-0 border-0 bg-transparent"
+                      style={{
+                        width: "auto",
+                        height: "auto",
+                        top: "50%",
+                        transform: "translateY(-50%)",
+                        paddingRight: "30px",
+                        paddingLeft: "8px",
+                        appearance: "none",
+                        WebkitAppearance: "none",
+                        MozAppearance: "none",
+                      }}
+                      value={maintenanceIntervalUnit}
+                      onChange={(e) => setMaintenanceIntervalUnit(e.target.value)}
+                    >
+                      <option value="h">h</option>
+                      <option value="days">days</option>
+                      <option value="months">months</option>
+                      <option value="years">years</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              {/* Maintenance Interval ends */}
+            </div>
+
+            {/* Additional Specifications section */}
+            <div className="row">
+              <div className="col-lg-12">
+                <h3 className="mb30">Additional Specifications</h3>
+              </div>
+              
+              {/* Noise Level start */}
+              <div className="col-lg-6 col-xl-6">
+                <div className="my_profile_setting_input form-group">
+                  <label htmlFor="noiseLevel">Noise Level</label>
+                  <div className="position-relative">
+                    <input
+                      type="number"
+                      className="form-control pe-5"
+                      id="noiseLevel"
+                      value={noiseLevel}
+                      onChange={(e) => setNoiseLevel(e.target.value)}
+                      placeholder="Enter Robot Noise Level"
+                    />
+                    <select
+                      className="form-select position-absolute end-0 border-0 bg-transparent"
+                      style={{
+                        width: "auto",
+                        height: "auto",
+                        top: "50%",
+                        transform: "translateY(-50%)",
+                        paddingRight: "30px",
+                        paddingLeft: "8px",
+                        appearance: "none",
+                        WebkitAppearance: "none",
+                        MozAppearance: "none",
+                      }}
+                      value={noiseLevelUnit}
+                      onChange={(e) => setNoiseLevelUnit(e.target.value)}
+                    >
+                      <option value="dB">dB</option>
+                      <option value="dBA">dBA</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              {/* Noise Level ends */}
+
+              {/* Energy Consumption start */}
+              <div className="col-lg-6 col-xl-6">
+                <div className="my_profile_setting_input form-group">
+                  <label htmlFor="energyConsumption">Energy Consumption</label>
+                  <div className="position-relative">
+                    <input
+                      type="number"
+                      className="form-control pe-5"
+                      id="energyConsumption"
+                      value={energyConsumption}
+                      onChange={(e) => setEnergyConsumption(e.target.value)}
+                      placeholder="Enter Robot Energy Consumption"
+                    />
+                    <select
+                      className="form-select position-absolute end-0 border-0 bg-transparent"
+                      style={{
+                        width: "auto",
+                        height: "auto",
+                        top: "50%",
+                        transform: "translateY(-50%)",
+                        paddingRight: "30px",
+                        paddingLeft: "8px",
+                        appearance: "none",
+                        WebkitAppearance: "none",
+                        MozAppearance: "none",
+                      }}
+                      value={energyConsumptionUnit}
+                      onChange={(e) => setEnergyConsumptionUnit(e.target.value)}
+                    >
+                      <option value="Wh">Wh</option>
+                      <option value="kWh">kWh</option>
+                      <option value="J">J</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              {/* Energy Consumption ends */}
+            </div>
+
             {/* Capabilities section */}
             <div className="row">
               <div className="col-lg-12">
                 <h3 className="mb30">Capabilities</h3>
               </div>
+
+              {/* Feature start */}
+              <div className="col-lg-6 col-xl-6">
+                <div className="my_profile_setting_input form-group">
+                  <label htmlFor="feature">Feature</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="feature"
+                    value={feature}
+                    onChange={(e) => setFeature(e.target.value)}
+                    placeholder="Enter Robot Features"
+                  />
+                </div>
+              </div>
+              {/* Feature ends */}
+
+              {/* Communication Range start */}
+              <div className="col-lg-6 col-xl-6">
+                <div className="my_profile_setting_input form-group">
+                  <label htmlFor="communicationRange">Communication Range</label>
+                  <div className="position-relative">
+                    <input
+                      type="number"
+                      className="form-control pe-5"
+                      id="communicationRange"
+                      value={communicationRange}
+                      onChange={(e) => setCommunicationRange(e.target.value)}
+                      placeholder="Enter Communication Range"
+                    />
+                    <select
+                      className="form-select position-absolute end-0 border-0 bg-transparent"
+                      style={{
+                        width: "auto",
+                        height: "auto",
+                        top: "50%",
+                        transform: "translateY(-50%)",
+                        paddingRight: "30px",
+                        paddingLeft: "8px",
+                        appearance: "none",
+                        WebkitAppearance: "none",
+                        MozAppearance: "none",
+                      }}
+                      value={communicationRangeUnit}
+                      onChange={(e) => setCommunicationRangeUnit(e.target.value)}
+                    >
+                      <option value="m">m</option>
+                      <option value="km">km</option>
+                      <option value="ft">ft</option>
+                      <option value="miles">miles</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              {/* Communication Range ends */}
+
+              {/* Load Handling (Gripping Strength) start */}
+              <div className="col-lg-6 col-xl-6">
+                <div className="my_profile_setting_input form-group">
+                  <label htmlFor="grippingStrength">Load Handling (Gripping Strength)</label>
+                  <div className="position-relative">
+                    <input
+                      type="number"
+                      className="form-control pe-5"
+                      id="grippingStrength"
+                      value={grippingStrength}
+                      onChange={(e) => setGrippingStrength(e.target.value)}
+                      placeholder="Enter Robot Gripping Strength"
+                    />
+                    <select
+                      className="form-select position-absolute end-0 border-0 bg-transparent"
+                      style={{
+                        width: "auto",
+                        height: "auto",
+                        top: "50%",
+                        transform: "translateY(-50%)",
+                        paddingRight: "30px",
+                        paddingLeft: "8px",
+                        appearance: "none",
+                        WebkitAppearance: "none",
+                        MozAppearance: "none",
+                      }}
+                      value={grippingStrengthUnit}
+                      onChange={(e) => setGrippingStrengthUnit(e.target.value)}
+                    >
+                      <option value="g">g</option>
+                      <option value="kg">kg</option>
+                      <option value="lb">lb</option>
+                      <option value="N">N</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              {/* Load Handling ends */}
+
+              {/* Interoperability start */}
+              <div className="col-lg-6 col-xl-6">
+                <div className="my_profile_setting_input form-group">
+                  <label htmlFor="interoperability">Interoperability</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="interoperability"
+                    value={interoperability}
+                    onChange={(e) => setInteroperability(e.target.value)}
+                    placeholder="Enter Robot Interoperability"
+                  />
+                </div>
+              </div>
+              {/* Interoperability ends */}
 
               {/* Navigation Types start */}
               <div className="col-lg-6 col-xl-6">
@@ -2302,6 +2826,44 @@ const EditList = () => {
                 </div>
               </div>
 
+              {/* Max Payload Weight start */}
+              <div className="col-lg-6">
+                <div className="my_profile_setting_input form-group">
+                  <label htmlFor="maxPayloadWeight">Max Payload Weight</label>
+                  <div className="position-relative">
+                    <input
+                      type="number"
+                      className="form-control pe-5"
+                      id="maxPayloadWeight"
+                      value={maxPayloadWeight}
+                      onChange={(e) => setMaxPayloadWeight(e.target.value)}
+                      placeholder="Enter Max Payload Weight"
+                    />
+                    <select
+                      className="form-select position-absolute end-0 border-0 bg-transparent"
+                      style={{
+                        width: "auto",
+                        height: "100%",
+                        top: "0",
+                        paddingRight: "30px",
+                        paddingLeft: "8px",
+                        appearance: "none",
+                        WebkitAppearance: "none",
+                        MozAppearance: "none",
+                      }}
+                      value={maxPayloadWeightUnit}
+                      onChange={(e) => setMaxPayloadWeightUnit(e.target.value)}
+                    >
+                      <option value="g">g</option>
+                      <option value="kg">kg</option>
+                      <option value="lb">lb</option>
+                      <option value="t">t</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              {/* Max Payload Weight ends */}
+
               {/* Payload Type start */}
               <div className="col-lg-6 col-xl-6">
                 <div className="my_profile_setting_input ui_kit_select_search form-group">
@@ -2393,6 +2955,411 @@ const EditList = () => {
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+
+        {/* Additional Payloads & Attachments fields */}
+        <div className="col-lg-12">
+          <div className="row">
+            {/* Attachments start */}
+            <div className="col-lg-6 col-xl-6">
+              <div className="my_profile_setting_input form-group">
+                <label htmlFor="attachments">Attachments</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  id="attachments"
+                  value={attachments}
+                  onChange={(e) => setAttachments(e.target.value)}
+                  placeholder="Enter Robot Attachments"
+                />
+              </div>
+            </div>
+            {/* Attachments ends */}
+
+            {/* Accessory Ports start */}
+            <div className="col-lg-6 col-xl-6">
+              <div className="my_profile_setting_input form-group">
+                <label htmlFor="accessoryPorts">Accessory Ports</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  id="accessoryPorts"
+                  value={accessoryPorts}
+                  onChange={(e) => setAccessoryPorts(e.target.value)}
+                  placeholder="Enter Robot Accessory Ports"
+                />
+              </div>
+            </div>
+            {/* Accessory Ports ends */}
+
+            {/* Hot Swappable start */}
+            <div className="col-lg-6 col-xl-6">
+              <div className="my_profile_setting_input form-group">
+                <label htmlFor="hotSwappable">Hot Swappable</label>
+                <div className="d-flex gap-3">
+                  <div className="form-check">
+                    <input
+                      className="form-check-input"
+                      type="radio"
+                      name="hotSwappable"
+                      id="hotSwappableTrue"
+                      value="true"
+                      checked={hotSwappable === true}
+                      onChange={(e) => setHotSwappable(e.target.value === "true")}
+                    />
+                    <label className="form-check-label" htmlFor="hotSwappableTrue">
+                      True
+                    </label>
+                  </div>
+                  <div className="form-check">
+                    <input
+                      className="form-check-input"
+                      type="radio"
+                      name="hotSwappable"
+                      id="hotSwappableFalse"
+                      value="false"
+                      checked={hotSwappable === false}
+                      onChange={(e) => setHotSwappable(e.target.value === "true")}
+                    />
+                    <label className="form-check-label" htmlFor="hotSwappableFalse">
+                      False
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {/* Hot Swappable ends */}
+
+            {/* Is Featured start */}
+            <div className="col-lg-6 col-xl-6">
+              <div className="my_profile_setting_input form-group">
+                <label htmlFor="isFeatured">Is Featured</label>
+                <div className="d-flex gap-3">
+                  <div className="form-check">
+                    <input
+                      className="form-check-input"
+                      type="radio"
+                      name="isFeatured"
+                      id="isFeaturedTrue"
+                      value="true"
+                      checked={isFeatured === true}
+                      onChange={(e) => setIsFeatured(e.target.value === "true")}
+                    />
+                    <label className="form-check-label" htmlFor="isFeaturedTrue">
+                      True
+                    </label>
+                  </div>
+                  <div className="form-check">
+                    <input
+                      className="form-check-input"
+                      type="radio"
+                      name="isFeatured"
+                      id="isFeaturedFalse"
+                      value="false"
+                      checked={isFeatured === false}
+                      onChange={(e) => setIsFeatured(e.target.value === "true")}
+                    />
+                    <label className="form-check-label" htmlFor="isFeaturedFalse">
+                      False
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {/* Is Featured ends */}
+          </div>
+        </div>
+
+        {/* Mobility Constraints start */}
+        <div className="col-lg-12">
+          <div className="my_profile_setting_input form-group">
+            <label htmlFor="mobilityConstraints">Mobility Constraints</label>
+            <div className="row">
+              {/* maxSlope start */}
+              <div className="col-lg-6 col-xl-6 position-relative mb-2">
+                <input
+                  type="text"
+                  className="form-control pe-5"
+                  placeholder="Enter Robot Max Slope"
+                  value={maxSlope}
+                  onChange={(e) => setMaxSlope(e.target.value)}
+                />
+                <select
+                  className="form-select position-absolute end-0 border-0 bg-transparent"
+                  style={{
+                    width: "auto",
+                    height: "100%",
+                    top: "0",
+                    paddingRight: "30px",
+                    paddingLeft: "8px",
+                    appearance: "none",
+                    WebkitAppearance: "none",
+                    MozAppearance: "none",
+                  }}
+                  value={maxSlopeUnit}
+                  onChange={(e) => setMaxSlopeUnit(e.target.value)}
+                >
+                  <option value="degree">°</option>
+                  <option value="percentage">%</option>
+                </select>
+              </div>
+              {/* maxSlope ends */}
+
+              {/* maxStepHeight start */}
+              <div className="col-lg-6 col-xl-6 position-relative mb-2">
+                <input
+                  type="text"
+                  className="form-control pe-5"
+                  placeholder="Enter Robot Max Step Height"
+                  value={maxStepHeight}
+                  onChange={(e) => setMaxStepHeight(e.target.value)}
+                />
+                <select
+                  className="form-select position-absolute end-0 border-0 bg-transparent"
+                  style={{
+                    width: "auto",
+                    height: "100%",
+                    top: "0",
+                    paddingRight: "30px",
+                    paddingLeft: "8px",
+                    appearance: "none",
+                    WebkitAppearance: "none",
+                    MozAppearance: "none",
+                  }}
+                  value={maxStepHeightUnit}
+                  onChange={(e) => setMaxStepHeightUnit(e.target.value)}
+                >
+                  <option value="mm">mm</option>
+                  <option value="cm">cm</option>
+                </select>
+              </div>
+              {/* maxStepHeight ends */}
+
+              {/* maxWaterDepth start */}
+              <div className="col-lg-6 col-xl-6 position-relative mb-2">
+                <input
+                  type="text"
+                  className="form-control pe-5"
+                  placeholder="Enter Robot Max Water Depth"
+                  value={maxWaterDepth}
+                  onChange={(e) => setMaxWaterDepth(e.target.value)}
+                />
+                <select
+                  className="form-select position-absolute end-0 border-0 bg-transparent"
+                  style={{
+                    width: "auto",
+                    height: "100%",
+                    top: "0",
+                    paddingRight: "30px",
+                    paddingLeft: "8px",
+                    appearance: "none",
+                    WebkitAppearance: "none",
+                    MozAppearance: "none",
+                  }}
+                  value={maxWaterDepthUnit}
+                  onChange={(e) => setMaxWaterDepthUnit(e.target.value)}
+                >
+                  <option value="m">m</option>
+                  <option value="cm">cm</option>
+                  <option value="ft">ft</option>
+                </select>
+              </div>
+              {/* maxWaterDepth ends */}
+            </div>
+          </div>
+        </div>
+        {/* Mobility Constraints ends */}
+
+        {/* Sensors & Software section */}
+        <div className="col-lg-12">
+          <div className="row">
+            <div className="col-lg-12">
+              <h3 className="mb30">Sensors & Software</h3>
+            </div>
+            
+            {/* Operating System start */}
+            <div className="col-lg-6 col-xl-6">
+              <div className="my_profile_setting_input form-group">
+                <label htmlFor="operatingSystem">Operating System</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  id="operatingSystem"
+                  value={operatingSystem}
+                  onChange={(e) => setOperatingSystem(e.target.value)}
+                  placeholder="Enter Robot Operating System"
+                />
+              </div>
+            </div>
+            {/* Operating System ends */}
+
+            {/* Firmware Version start */}
+            <div className="col-lg-6 col-xl-6">
+              <div className="my_profile_setting_input form-group">
+                <label htmlFor="firmwareVersion">Firmware Version</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  id="firmwareVersion"
+                  value={firmwareVersion}
+                  onChange={(e) => setFirmwareVersion(e.target.value)}
+                  placeholder="Enter Robot Firmware Version"
+                />
+              </div>
+            </div>
+            {/* Firmware Version ends */}
+
+            {/* Security Features start */}
+            <div className="col-lg-6 col-xl-6">
+              <div className="my_profile_setting_input form-group">
+                <label htmlFor="securityFeatures">Security Features</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  id="securityFeatures"
+                  value={securityFeatures}
+                  onChange={(e) => setSecurityFeatures(e.target.value)}
+                  placeholder="Enter Robot Security Features"
+                />
+              </div>
+            </div>
+            {/* Security Features ends */}
+
+            {/* Data Logging (Storage Capacity) start */}
+            <div className="col-lg-6 col-xl-6">
+              <div className="my_profile_setting_input form-group">
+                <label htmlFor="storageCapacity">Data Logging (Storage Capacity)</label>
+                <div className="position-relative">
+                  <input
+                    type="number"
+                    className="form-control pe-5"
+                    id="storageCapacity"
+                    value={storageCapacity}
+                    onChange={(e) => setStorageCapacity(e.target.value)}
+                    placeholder="Enter Robot Storage Capacity"
+                  />
+                  <select
+                    className="form-select position-absolute end-0 border-0 bg-transparent"
+                    style={{
+                      width: "auto",
+                      height: "auto",
+                      top: "50%",
+                      transform: "translateY(-50%)",
+                      paddingRight: "30px",
+                      paddingLeft: "8px",
+                      appearance: "none",
+                      WebkitAppearance: "none",
+                      MozAppearance: "none",
+                    }}
+                    value={storageCapacityUnit}
+                    onChange={(e) => setStorageCapacityUnit(e.target.value)}
+                  >
+                    <option value="B">B</option>
+                    <option value="KB">KB</option>
+                    <option value="MB">MB</option>
+                    <option value="GB">GB</option>
+                    <option value="TB">TB</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            {/* Data Logging ends */}
+
+            {/* Logging Interval start */}
+            <div className="col-lg-6 col-xl-6">
+              <div className="my_profile_setting_input form-group">
+                <label htmlFor="loggingInterval">Logging Interval</label>
+                <div className="position-relative">
+                  <input
+                    type="number"
+                    className="form-control pe-5"
+                    id="loggingInterval"
+                    value={loggingInterval}
+                    onChange={(e) => setLoggingInterval(e.target.value)}
+                    placeholder="Enter Robot Logging Interval"
+                  />
+                  <select
+                    className="form-select position-absolute end-0 border-0 bg-transparent"
+                    style={{
+                      width: "auto",
+                      height: "auto",
+                      top: "50%",
+                      transform: "translateY(-50%)",
+                      paddingRight: "30px",
+                      paddingLeft: "8px",
+                      appearance: "none",
+                      WebkitAppearance: "none",
+                      MozAppearance: "none",
+                    }}
+                    value={loggingIntervalUnit}
+                    onChange={(e) => setLoggingIntervalUnit(e.target.value)}
+                  >
+                    <option value="s">s</option>
+                    <option value="min">min</option>
+                    <option value="h">h</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            {/* Logging Interval ends */}
+          </div>
+        </div>
+
+        {/* Operational Environment & Applications section */}
+        <div className="col-lg-12">
+          <div className="row">
+            <div className="col-lg-12">
+              <h3 className="mb30">Operational Environment & Applications</h3>
+            </div>
+            
+            {/* Applications start */}
+            <div className="col-lg-6 col-xl-6">
+              <div className="my_profile_setting_input form-group">
+                <label htmlFor="applications">Applications</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  id="applications"
+                  value={applications}
+                  onChange={(e) => setApplications(e.target.value)}
+                  placeholder="Enter Robot Applications"
+                />
+              </div>
+            </div>
+            {/* Applications ends */}
+
+            {/* Endurance in Extreme Conditions start */}
+            <div className="col-lg-6 col-xl-6">
+              <div className="my_profile_setting_input form-group">
+                <label htmlFor="enduranceExtremeConditions">Endurance in Extreme Conditions</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  id="enduranceExtremeConditions"
+                  value={enduranceExtremeConditions}
+                  onChange={(e) => setEnduranceExtremeConditions(e.target.value)}
+                  placeholder="Enter Endurance in Extreme Conditions"
+                />
+              </div>
+            </div>
+            {/* Endurance in Extreme Conditions ends */}
+
+            {/* Deployment Logistics start */}
+            <div className="col-lg-6 col-xl-6">
+              <div className="my_profile_setting_input form-group">
+                <label htmlFor="deploymentLogistics">Deployment Logistics</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  id="deploymentLogistics"
+                  value={deploymentLogistics}
+                  onChange={(e) => setDeploymentLogistics(e.target.value)}
+                  placeholder="Enter Robot Deployment Logistics"
+                />
+              </div>
+            </div>
+            {/* Deployment Logistics ends */}
           </div>
         </div>
 
@@ -2617,9 +3584,9 @@ const EditList = () => {
             <button
               className="btn btn1 float-start"
               type="submit"
-              disabled={loading}
+              disabled={isSubmitting}
             >
-              {loading ? (
+              {isSubmitting ? (
                 <>
                   <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
                   {isEditMode ? 'Updating...' : 'Creating...'}
