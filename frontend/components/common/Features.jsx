@@ -6,13 +6,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 
 export default function Features({ parentClass = "flat-spacing" }) {
   return (
-    <section 
-      className={parentClass} 
-      style={{
-        background: 'linear-gradient(to right, #f8f8f8, #f0f0f0)', // Light grey gradient
-        padding: '50px 0' // Optional: Thoda padding bhi add kar sakte hain
-      }}
-    >
+    <section className={`${parentClass} features-banner`}>
       <div className="container">
         <Swiper
           dir="ltr"

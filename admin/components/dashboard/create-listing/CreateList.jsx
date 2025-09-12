@@ -2137,7 +2137,7 @@ const CreateList = () => {
                         height: "auto",
                         top: "50%",
                         transform: "translateY(-50%)",
-                        paddingRight: "1px",
+                        paddingRight: "30px",
                         paddingLeft: "8px",
                         appearance: "none",
                         WebkitAppearance: "none",

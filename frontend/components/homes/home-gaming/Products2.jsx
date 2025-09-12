@@ -1,13 +1,13 @@
 "use client";
 
 import ProductCard1 from "@/components/productCards/ProductCard1";
-import { useRobots } from "@/hooks/useRobots";
+import { useFeaturedRobots } from "@/hooks/useFeaturedRobots";
 import { Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import Link from "next/link";
 
 export default function Products2() {
-  const { robots, loading, error } = useRobots();
+  const { robots, loading, error } = useFeaturedRobots();
 
   // Helper function to map color names to CSS classes
   const getColorClass = (colorName) => {
@@ -39,7 +39,7 @@ export default function Products2() {
   };
 
   // Transform robot data to match ProductCard1 expected format
-  const transformedRobots = robots.map(robot => ({
+  const transformedRobots = (robots || []).map(robot => ({
     id: robot._id,
     title: robot.title,
     slug: robot.slug, // Add slug field
@@ -58,7 +58,7 @@ export default function Products2() {
             ? robot.images[0] 
             : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}${robot.images[0].startsWith('/') ? robot.images[0] : `/${robot.images[0]}`}`)
         : '/images/product/placeholder.jpg',
-    colors: robot.color && robot.color.length > 0 ? robot.color.map(color => ({
+    colors: robot.specifications?.color && robot.specifications.color.length > 0 ? robot.specifications.color.map(color => ({
       bgColor: getColorClass(color.name),
       colorName: color.name || 'Unknown',
       imgSrc: robot.images && robot.images.length > 0 
