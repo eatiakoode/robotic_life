@@ -18671,4 +18671,13 @@ ul.list-text.type-number {
   min-width: 200px;
 }
 
+/* styles.css ke andar add karo */
+.features-banner {
+  background: linear-gradient(135deg, #f5f5f5, #eaeaea);
+  padding: 60px 0;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+
 /*# sourceMappingURL=styles.css.map */
