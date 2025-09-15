@@ -6,12 +6,49 @@ import dynamic from "next/dynamic";
 // ✅ Heavy components lazy load
 const Slider1 = dynamic(() => import("../sliders/Slider1"), { ssr: false });
 const ProductStikyBottom = dynamic(() => import("../ProductStikyBottom"), { ssr: false });
-const ColorSelect = dynamic(() => import("../ColorSelect"), { ssr: false });
 
 export default function Details1({ product }) {
-  const [activeColor, setActiveColor] = useState(
-    product.colors?.length > 0 ? product.colors[0].color : "gray"
-  );
+  const [compareList, setCompareList] = useState([]);
+  const [isInCompare, setIsInCompare] = useState(false);
+
+  // Check if product is already in compare list
+  React.useEffect(() => {
+    const savedCompareList = localStorage.getItem('robotCompareList');
+    if (savedCompareList) {
+      const parsedList = JSON.parse(savedCompareList);
+      setCompareList(parsedList);
+      setIsInCompare(parsedList.some(item => item.id === product.id));
+    }
+  }, [product.id]);
+
+  const handleAddToCompare = () => {
+    const savedCompareList = localStorage.getItem('robotCompareList');
+    let currentList = savedCompareList ? JSON.parse(savedCompareList) : [];
+    
+    if (isInCompare) {
+      // Remove from compare list
+      currentList = currentList.filter(item => item.id !== product.id);
+      setIsInCompare(false);
+    } else {
+      // Add to compare list (max 4 items)
+      if (currentList.length >= 4) {
+        alert('You can compare maximum 4 robots at a time. Please remove one robot from compare list first.');
+        return;
+      }
+      currentList.push({
+        id: product.id,
+        title: product.title,
+        price: product.price,
+        imgSrc: product.imgSrc,
+        manufacturer: product.manufacturer?.name || product.manufacturer,
+        category: product.category?.name || product.category
+      });
+      setIsInCompare(true);
+    }
+    
+    setCompareList(currentList);
+    localStorage.setItem('robotCompareList', JSON.stringify(currentList));
+  };
 
   return (
     <section className="flat-spacing">
@@ -23,8 +60,6 @@ export default function Details1({ product }) {
               <div className="tf-product-media-wrap sticky-top">
                 <Suspense fallback={<p>Loading images...</p>}>
                   <Slider1
-                    setActiveColor={setActiveColor}
-                    activeColor={activeColor}
                     firstItem={product.imgSrc}
                     productImages={product.images || []}
                   />
@@ -62,14 +97,6 @@ export default function Details1({ product }) {
                     </div>
                   </div>
 
-                  {/* 🔹 Color Selector */}
-                  <Suspense fallback={<p>Loading color options...</p>}>
-                    <ColorSelect
-                      setActiveColor={setActiveColor}
-                      activeColor={activeColor}
-                      colorOptions={product.colors || []}
-                    />
-                  </Suspense>
 
                   {/* 🔹 Specifications */}
                   <div className="tf-product-info-specifications mb_20 mt-3">
@@ -106,6 +133,28 @@ export default function Details1({ product }) {
                         })()}
                       </span>
                     </div>
+                  </div>
+
+                  {/* 🔹 Add to Compare Button */}
+                  <div className="tf-product-info-compare mt-5 mb_20">
+                    <button
+                      onClick={handleAddToCompare}
+                      className={`btn-main-product ${isInCompare ? 'in-compare' : ''}`}
+                    >
+                      <i className={`icon-${isInCompare ? 'check' : 'compare'}`}></i>
+                      {isInCompare ? 'Remove from Compare' : 'Add to Compare'}
+                      {compareList.length > 0 && (
+                        <span className="compare-count" style={{
+                          backgroundColor: 'rgba(255,255,255,0.2)',
+                          borderRadius: '50%',
+                          padding: '2px 6px',
+                          fontSize: '12px',
+                          marginLeft: '4px'
+                        }}>
+                          {compareList.length}
+                        </span>
+                      )}
+                    </button>
                   </div>
                 </div>
               </div>

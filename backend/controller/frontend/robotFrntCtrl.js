@@ -305,7 +305,7 @@ const getRecentlyViewed = asyncHandler(async (req, res) => {
       });
     }
 
-    ids = [...new Set(ids)].slice(0, 2);
+    ids = [...new Set(ids)].slice(0, 10);
 
     const robots = await Robot.find({ _id: { $in: ids } })
       .select("title slug images totalPrice specifications.color")

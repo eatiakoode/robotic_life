@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 
-const RECENTLY_VIEWED_KEY = 'recentlyViewedProducts';
-const MAX_RECENTLY_VIEWED = 5;
+const RECENTLY_VIEWED_KEY = 'recentlyViewedRobots';
+const MAX_RECENTLY_VIEWED = 10;
 
 export const useRecentlyViewed = () => {
   const [recentlyViewedIds, setRecentlyViewedIds] = useState([]);
@@ -29,15 +29,20 @@ export const useRecentlyViewed = () => {
   const addToRecentlyViewed = useCallback((productId) => {
     if (!productId || typeof window === 'undefined') return;
 
+    console.log('➕ Adding product to recently viewed:', productId);
+
     setRecentlyViewedIds(prev => {
       // Remove if already exists
       const filtered = prev.filter(id => id !== productId);
       // Add to beginning
       const updated = [productId, ...filtered].slice(0, MAX_RECENTLY_VIEWED);
       
+      console.log('📝 Updated recently viewed IDs:', updated);
+      
       try {
         // Save to localStorage
         localStorage.setItem(RECENTLY_VIEWED_KEY, JSON.stringify(updated));
+        console.log('💾 Saved to localStorage');
       } catch (error) {
         console.warn('Error saving to localStorage:', error);
       }

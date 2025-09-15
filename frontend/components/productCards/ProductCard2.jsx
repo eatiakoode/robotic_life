@@ -71,28 +71,30 @@ export default function ProductCard2({
           <span className="old-price">${product.price.toFixed(2)}</span>$
           {product.oldPrice.toFixed(2)}
         </span>
-        <ul className="list-color-product">
-          {product.colors.map((color, idx) => (
-            <li
-              className={`list-color-item color-swatch ${
-                currentImage == color.imgSrc ? "active" : ""
-              }  ${color.bgColor == "bg-white" ? "line" : ""}`}
-              onMouseOver={() => setCurrentImage(color.imgSrc)}
-              key={idx}
-            >
-              <span className={`swatch-value ${color.bgColor}`} />
-              <Image
-                className="lazyload"
-                data-src={color.imgSrc}
-                src={color.imgSrc}
-                alt="image-product"
-                width={600}
-                height={800}
-              />
-            </li>
-          ))}
-        </ul>
+        {product.manufacturer && (
+          <div className="manufacturer-info">
+            <span className="manufacturer-label">Manufacturer:</span>
+            <span className="manufacturer-name">{product.manufacturer.name || product.manufacturer}</span>
+          </div>
+        )}
       </div>
+      <style jsx>{`
+        .manufacturer-info {
+          margin-top: 8px;
+          padding: 4px 0;
+        }
+        .manufacturer-label {
+          font-size: 12px;
+          color: #666;
+          font-weight: 500;
+          margin-right: 4px;
+        }
+        .manufacturer-name {
+          font-size: 13px;
+          color: #333;
+          font-weight: 600;
+        }
+      `}</style>
     </div>
   );
 }

@@ -1,6 +1,5 @@
 "use client";
 
-import LayoutHandler from "./LayoutHandler";
 import Sorting from "./Sorting";
 import Listview from "./Listview";
 import GridView from "./GridView";
@@ -15,7 +14,7 @@ import FilterMeta from "./FilterMeta";
 
 export default function Products1({ parentClass = "flat-spacing",products ,productMainget}) {
   const searchParams = useSearchParams();
-  const [activeLayout, setActiveLayout] = useState(1);
+  const [activeLayout, setActiveLayout] = useState(4); // Default to 4-column grid view
   const [state, dispatch] = useReducer(reducer, initialState);
   const [productMain, setProductMain] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -29,7 +28,6 @@ export default function Products1({ parentClass = "flat-spacing",products ,produ
     weightUnit,
     size,
     availability,
-    color,
     brands,
     selectedParentCategory,
     selectedSubCategory,
@@ -50,11 +48,6 @@ export default function Products1({ parentClass = "flat-spacing",products ,produ
     setWeight: (value) => dispatch({ type: "SET_WEIGHT", payload: value }),
     setWeightUnit: (value) => dispatch({ type: "SET_WEIGHT_UNIT", payload: value }),
 
-    setColor: (value) => {
-      value == color
-        ? dispatch({ type: "SET_COLOR", payload: "All" })
-        : dispatch({ type: "SET_COLOR", payload: value });
-    },
     setSize: (value) => {
       value == size
         ? dispatch({ type: "SET_SIZE", payload: "All" })
@@ -216,28 +209,6 @@ export default function Products1({ parentClass = "flat-spacing",products ,produ
       // Ensure it's a full URL if it's a relative path
       const finalHoverImage = hoverImage.startsWith('http') ? hoverImage : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}${hoverImage.startsWith('/') ? hoverImage : `/${hoverImage}`}`;
 
-      // Transform colors if they exist
-      let colors = [];
-      if (robot.color && Array.isArray(robot.color) && robot.color.length > 0) {
-        colors = robot.color.map(colorItem => ({
-          imgSrc: mainImage,
-          bgColor: colorItem.name ? `bg-${colorItem.name.toLowerCase().replace(/\s+/g, '-')}` : 'bg-primary',
-          name: colorItem.name || 'Default'
-        }));
-      } else if (robot.color && typeof robot.color === 'object' && robot.color.name) {
-        colors = [{
-          imgSrc: mainImage,
-          bgColor: `bg-${robot.color.name.toLowerCase().replace(/\s+/g, '-')}`,
-          name: robot.color.name
-        }];
-      } else {
-        // Default color if no color data
-        colors = [{
-          imgSrc: mainImage,
-          bgColor: 'bg-primary',
-          name: 'Default'
-        }];
-      }
 
       return {
         ...robot,
@@ -245,7 +216,6 @@ export default function Products1({ parentClass = "flat-spacing",products ,produ
         imgSrc: finalMainImage,
         imgHover: finalHoverImage,
         price: parseFloat(robot.totalPrice) || parseFloat(robot.price) || parseFloat(robot.cost) || 0,
-        colors: colors,
         inStock: true,
         oldPrice: null,
         rating: 5,
@@ -269,8 +239,21 @@ export default function Products1({ parentClass = "flat-spacing",products ,produ
     
     // Check if any filters are actually applied
     const hasFilters = selectedSubCategory || selectedParentCategory || (brands && brands.length > 0) || 
-                      (color !== "All" && color.name) || (price && price.length === 2) || 
+                      (price && price.length === 2 && (price[0] !== priceBounds[0] || price[1] !== priceBounds[1])) || 
                       (weight && Array.isArray(weight) && weight.length === 2 && (weight[0] !== weightBounds[0] || weight[1] !== weightBounds[1]));
+    
+    console.log('🔍 ApplyFilters Debug:', {
+      productMainLength: productMain.length,
+      hasFilters,
+      price: price,
+      priceBounds: priceBounds,
+      priceFilterActive: price && price.length === 2 && (price[0] !== priceBounds[0] || price[1] !== priceBounds[1]),
+      selectedParentCategory: selectedParentCategory?.name,
+      selectedSubCategory: selectedSubCategory?.name,
+      brands: brands,
+      weight: weight,
+      weightBounds: weightBounds
+    });
     
     // Only use backend filtering if filters are actually applied
     if (hasFilters) {
@@ -289,11 +272,8 @@ export default function Products1({ parentClass = "flat-spacing",products ,produ
           additionalFilters.manufacturers = brands;
         }
         
-        if (color !== "All" && color.name) {
-          additionalFilters.colors = [color.name];
-        }
         
-        if (price && price.length === 2) {
+        if (price && price.length === 2 && (price[0] !== priceBounds[0] || price[1] !== priceBounds[1])) {
           additionalFilters.minPrice = price[0];
           additionalFilters.maxPrice = price[1];
         }
@@ -343,12 +323,6 @@ export default function Products1({ parentClass = "flat-spacing",products ,produ
       );
     }
 
-    if (color !== "All" && color && color.name) {
-      filteredProducts = filteredProducts.filter((elm) => {
-        const hasColor = elm.filterColor && elm.filterColor.includes(color.name);
-        return hasColor;
-      });
-    }
 
     if (size !== "All" && size !== "Free Size") {
       filteredProducts = filteredProducts.filter((elm) =>
@@ -369,8 +343,8 @@ export default function Products1({ parentClass = "flat-spacing",products ,produ
       // or implement additional logic as needed
     }
 
-    // Filter by price range - NOW ENABLED WITH DYNAMIC PRICING
-    if (price && price.length === 2) {
+    // Filter by price range - ONLY when user actually changes the price from bounds
+    if (price && price.length === 2 && (price[0] !== priceBounds[0] || price[1] !== priceBounds[1])) {
       // Reset to first page when price filter changes
       dispatch({ type: "SET_CURRENT_PAGE", payload: 1 });
       
@@ -399,8 +373,15 @@ export default function Products1({ parentClass = "flat-spacing",products ,produ
       });
     }
     
+    console.log('✅ ApplyFilters Result:', {
+      originalLength: productMain.length,
+      filteredLength: filteredProducts.length,
+      hasFilters,
+      finalFilteredProducts: filteredProducts.length
+    });
+    
     dispatch({ type: "SET_FILTERED", payload: filteredProducts });
-  }, [productMain, price, weight, weightUnit, availability, color, size, brands, activeFilterOnSale, selectedParentCategory, selectedSubCategory]);
+  }, [productMain, price, weight, weightUnit, availability, size, brands, activeFilterOnSale, selectedParentCategory, selectedSubCategory]);
 
   useEffect(() => {
     // Don't run applyFilters if we're still loading category from URL
@@ -409,18 +390,23 @@ export default function Products1({ parentClass = "flat-spacing",products ,produ
     }
     
     applyFilters();
-  }, [price, weight, weightUnit, availability, color, size, brands, activeFilterOnSale, selectedParentCategory, selectedSubCategory, applyFilters]);
+  }, [price, weight, weightUnit, availability, size, brands, activeFilterOnSale, selectedParentCategory, selectedSubCategory, applyFilters]);
 
-  // Separate useEffect for price bounds calculation when productMain changes
+  // Separate useEffect for price bounds calculation when products prop changes
   useEffect(() => {
-    setProductMain(products);
-    if (productMain && productMain.length > 0) {
-              // Use auto-refresh to ensure price bounds are always current
-        refreshPriceBounds(productMain);
+    // Only set productMain from props if products prop is provided and not null
+    if (products && Array.isArray(products) && products.length > 0) {
+      setProductMain(products);
+      // Use auto-refresh to ensure price bounds are always current
+      refreshPriceBounds(products);
       // Also refresh weight bounds
-      refreshWeightBounds(productMain);
+      refreshWeightBounds(products);
+      
+      // Also set the filtered and sorted products to show all products initially
+      dispatch({ type: "SET_FILTERED", payload: products });
+      dispatch({ type: "SET_SORTED", payload: products });
     }
-  }, [productMain]); // Removed refreshPriceBounds dependency
+  }, [products]); // Changed dependency to products prop
 
   // Separate useEffect for price bounds calculation when category changes
   useEffect(() => {
@@ -453,8 +439,13 @@ export default function Products1({ parentClass = "flat-spacing",products ,produ
           dispatch({ type: "SET_SUB_CATEGORY", payload: null });
           
           // Use the category-specific API endpoint for better filtering
-          const rawResults = await getRobotsByCategorySlug(categorySlug);
-          
+          console.log('🔍 Loading category from URL:', { categorySlug, categoryName, categoryType });
+          const rawResults = await getRobotsByCategorySlug(categorySlug, categoryType);
+          console.log('📦 Raw category results:', { 
+            categorySlug, 
+            resultsLength: rawResults?.length || 0, 
+            results: rawResults 
+          });
           
           if (rawResults && Array.isArray(rawResults) && rawResults.length > 0) {
             // Transform the raw backend data to frontend format using existing function
@@ -466,6 +457,9 @@ export default function Products1({ parentClass = "flat-spacing",products ,produ
             
             // Set filtered products
             dispatch({ type: "SET_FILTERED", payload: transformedResults });
+            
+            // Also set the sorted products to show all products initially
+            dispatch({ type: "SET_SORTED", payload: transformedResults });
             
             // Create a category object for the state
             const categoryObj = {
@@ -492,6 +486,7 @@ export default function Products1({ parentClass = "flat-spacing",products ,produ
             console.log(`No robots found for category: ${categorySlug}`);
             setProductMain([]);
             dispatch({ type: "SET_FILTERED", payload: [] });
+            dispatch({ type: "SET_SORTED", payload: [] });
             
             // Still set the category in state for UI display
             const categoryObj = {
@@ -528,64 +523,93 @@ export default function Products1({ parentClass = "flat-spacing",products ,produ
   useEffect(() => {
     const categorySlug = searchParams.get('category');
     
+    console.log('🔄 Products1 useEffect triggered:', { 
+      categorySlug, 
+      urlCategoryLoaded, 
+      productsProp: products?.length || 'null/undefined',
+      productMainLength: productMain.length 
+    });
+    
     // Only fetch all products if no category is specified in URL and URL category is loaded
-    if (!categorySlug && urlCategoryLoaded) {
-    const fetchProducts = async () => {
-      try {
-        setLoading(true);
-        const products = await getAllProducts();
-          
+    // AND no products prop is provided
+    if (!categorySlug && urlCategoryLoaded && (!products || products.length === 0)) {
+      const fetchProducts = async () => {
+        try {
+          setLoading(true);
+          console.log('🔍 Fetching all products from backend...');
+          const products = await getAllProducts();
+          console.log('✅ Fetched products:', products.length);
+            
           // Transform robot data for ProductCard1 compatibility
           const transformedProducts = transformRobotData(products);
+          console.log('🔄 Transformed products:', transformedProducts.length);
           
           setProductMain(transformedProducts);
         
-        // Auto-refresh price bounds to ensure they include all products
+          // Auto-refresh price bounds to ensure they include all products
           refreshPriceBounds(transformedProducts);
         
-        // Also refresh weight bounds
+          // Also refresh weight bounds
           refreshWeightBounds(transformedProducts);
         
-        // Also set the initial filtered products to show all products
+          // Also set the initial filtered products to show all products
           dispatch({ type: "SET_FILTERED", payload: transformedProducts });
-      } catch (error) {
-        console.error('❌ Error fetching products:', error);
-        setProductMain([]);
-      } finally {
-        setLoading(false);
-      }
-    };
+          
+          // Also set the sorted products to show all products initially
+          dispatch({ type: "SET_SORTED", payload: transformedProducts });
+        } catch (error) {
+          console.error('❌ Error fetching products:', error);
+          setProductMain([]);
+        } finally {
+          setLoading(false);
+        }
+      };
 
-    fetchProducts();
+      fetchProducts();
+    } else if (products && products.length > 0) {
+      console.log('📦 Using products from props:', products.length);
+    } else {
+      console.log('⏸️ Skipping fetch - conditions not met');
     }
-  }, [searchParams, urlCategoryLoaded]);
+  }, [searchParams, urlCategoryLoaded, products]);
 
   useEffect(() => {
+    console.log('🔄 Sorting useEffect triggered:', { 
+      sortingOption, 
+      filteredLength: filtered.length,
+      productMainLength: productMain.length 
+    });
+    
     if (sortingOption === "Price Ascending") {
       const sorted = [...filtered].sort((a, b) => a.price - b.price);
+      console.log('📊 Price Ascending sorted:', sorted.length);
       dispatch({
         type: "SET_SORTED",
         payload: sorted,
       });
     } else if (sortingOption === "Price Descending") {
       const sorted = [...filtered].sort((a, b) => b.price - a.price);
+      console.log('📊 Price Descending sorted:', sorted.length);
       dispatch({
         type: "SET_SORTED",
         payload: sorted,
       });
     } else if (sortingOption === "Title Ascending") {
       const sorted = [...filtered].sort((a, b) => a.title.localeCompare(b.title));
+      console.log('📊 Title Ascending sorted:', sorted.length);
       dispatch({
         type: "SET_SORTED",
         payload: sorted,
       });
     } else if (sortingOption === "Title Descending") {
       const sorted = [...filtered].sort((a, b) => b.title.localeCompare(a.title));
+      console.log('📊 Title Descending sorted:', sorted.length);
       dispatch({
         type: "SET_SORTED",
         payload: sorted,
       });
     } else {
+      console.log('📊 Default sorting - using filtered:', filtered.length);
       dispatch({ type: "SET_SORTED", payload: filtered });
     }
     dispatch({ type: "SET_CURRENT_PAGE", payload: 1 });
@@ -631,7 +655,7 @@ export default function Products1({ parentClass = "flat-spacing",products ,produ
               </a>
             </div>
             <ul className="tf-control-layout">
-              {/* Layout toggle removed but container kept for original positioning */}
+              {/* Layout controls removed as per user request */}
             </ul>
             <div className="tf-control-sorting">
               <p className="d-none d-lg-block text-caption-1">Sort by:</p>
@@ -724,7 +748,12 @@ export default function Products1({ parentClass = "flat-spacing",products ,produ
                 className={`tf-grid-layout wrapper-shop tf-col-${activeLayout}`}
                 id="gridLayout"
               >
-                {/* <GridView products={sorted} /> */}
+                <GridView 
+                  products={sorted} 
+                  currentPage={currentPage}
+                  itemsPerPage={itemPerPage}
+                  onPageChange={(page) => allProps.setCurrentPage(page)}
+                />
               </div>
             )}
           </div>

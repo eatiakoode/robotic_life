@@ -7,6 +7,7 @@ import { Pagination } from "swiper/modules";
 import { products } from "@/data/products";
 import ProductCard1 from "../productCards/ProductCard1";
 import { getRelatedProducts, getRecentlyViewed } from "@/api/product";
+import { useAnimationClasses } from "@/hooks/useIsMounted";
 
 export default function RelatedProducts({ productSlug, recentlyViewedIds = [] }) {
   const [relatedProducts, setRelatedProducts] = useState([]);
@@ -19,6 +20,9 @@ export default function RelatedProducts({ productSlug, recentlyViewedIds = [] })
   const memoizedRecentlyViewedIds = useMemo(() => {
     return Array.isArray(recentlyViewedIds) ? recentlyViewedIds : [];
   }, [recentlyViewedIds]);
+
+  // Use animation classes hook to prevent hydration mismatch
+  const tabClasses = useAnimationClasses('tab-product justify-content-sm-center');
 
   const fetchRelatedProducts = useCallback(async (slug) => {
     if (!slug) return [];
@@ -102,7 +106,7 @@ export default function RelatedProducts({ productSlug, recentlyViewedIds = [] })
       <section className="flat-spacing">
         <div className="container flat-animate-tab">
           <ul
-            className="tab-product justify-content-sm-center wow fadeInUp"
+            className={tabClasses}
             data-wow-delay="0s"
             role="tablist"
           >
@@ -143,7 +147,7 @@ export default function RelatedProducts({ productSlug, recentlyViewedIds = [] })
     <section className="flat-spacing">
       <div className="container flat-animate-tab">
         <ul
-          className="tab-product justify-content-sm-center wow fadeInUp"
+          className={tabClasses}
           data-wow-delay="0s"
           role="tablist"
         >

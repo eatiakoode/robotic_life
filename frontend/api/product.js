@@ -170,6 +170,9 @@ export const getAllProducts = async () => {
               category: product.category, // Keep original category from backend
               categoryId: product.category?._id || product.category,
               
+              // Manufacturer data for ProductCard display
+              manufacturer: product.manufacturer,
+              
               // Robot specifications
               slug: product.slug && product.slug.trim() ? product.slug : null,
               launchYear: product.launchYear || null,
@@ -492,6 +495,9 @@ export const searchProducts = async (query, filters = {}) => {
               category: product.category,
               categoryId: product.category?._id || product.category,
               
+              // Manufacturer data for ProductCard display
+              manufacturer: product.manufacturer,
+              
               // Robot specifications
               slug: product.slug && product.slug.trim() ? product.slug : null,
               launchYear: product.launchYear || null,
@@ -659,6 +665,9 @@ export const getProductsByCategory = async (category, additionalFilters = {}) =>
               category: product.category, // Keep original category from backend
               categoryId: product.category?._id || product.category,
               
+              // Manufacturer data for ProductCard display
+              manufacturer: product.manufacturer,
+              
               // Robot specifications
               slug: product.slug && product.slug.trim() ? product.slug : null,
               launchYear: product.launchYear || null,
@@ -795,6 +804,9 @@ export const getRelatedProducts = async (slug) => {
               oldPrice: null,
               category: product.category,
               categoryId: product.category?._id || product.category,
+              
+              // Manufacturer data for ProductCard display
+              manufacturer: product.manufacturer,
               
               // Robot specifications
               slug: product.slug && product.slug.trim() ? product.slug : null,
@@ -942,6 +954,9 @@ export const getRecentlyViewed = async (ids) => {
               oldPrice: null,
               category: product.category,
               categoryId: product.category?._id || product.category,
+              
+              // Manufacturer data for ProductCard display
+              manufacturer: product.manufacturer,
               
               // Robot specifications
               slug: product.slug && product.slug.trim() ? product.slug : null,

@@ -77,6 +77,7 @@ const getFilteredRobotsByParentCategory = asyncHandler(async (req, res) => {
 const getRobotsByCategorySlug = asyncHandler(async (req, res) => {
   try {
     const { slug } = req.params;
+    const { type } = req.query; // Get the type from query parameters
 
     if (!slug) {
       return res.status(400).json({
@@ -85,7 +86,7 @@ const getRobotsByCategorySlug = asyncHandler(async (req, res) => {
       });
     }
 
-    const category = await Category.findOne({ slug });
+    const category = await Category.findOne({ slug }).select("name slug parent status");
     if (!category) {
       return res.status(404).json({
         success: false,
@@ -93,12 +94,47 @@ const getRobotsByCategorySlug = asyncHandler(async (req, res) => {
       });
     }
 
+    console.log('🔍 Category found:', {
+      slug: category.slug,
+      name: category.name,
+      parent: category.parent,
+      isSubcategory: !!category.parent,
+      requestedType: type,
+      categoryId: category._id
+    });
+
     let categoryIds = [category._id];
 
-    if (!category.parent) {
-      const subcategories = await Category.find({ parent: category._id }).select("_id");
-      categoryIds = categoryIds.concat(subcategories.map((c) => c._id));
+    // Determine behavior based on URL type parameter - STRICT MODE
+    if (type === 'subcategory') {
+      // URL says subcategory - ONLY include this specific category, regardless of database structure
+      console.log('📁 URL says subcategory - STRICT MODE: only this specific category:', categoryIds.length, 'category');
+      console.log('📁 Will query ONLY category ID:', category._id, 'for slug:', category.slug);
+    } else if (type === 'parent') {
+      // URL says parent - include this category + all its subcategories
+      if (!category.parent) {
+        const subcategories = await Category.find({ parent: category._id }).select("_id name slug");
+        console.log('📂 Found subcategories for parent:', subcategories.map(s => ({ id: s._id, name: s.name, slug: s.slug })));
+        categoryIds = categoryIds.concat(subcategories.map((c) => c._id));
+        console.log('📂 URL says parent - including subcategories:', categoryIds.length, 'total categories');
+      } else {
+        console.log('📁 Database says subcategory but URL says parent - only this specific category:', categoryIds.length, 'category');
+      }
+    } else {
+      // No type specified - use database structure to determine behavior
+      if (!category.parent) {
+        const subcategories = await Category.find({ parent: category._id }).select("_id name slug");
+        console.log('📂 No type specified - found subcategories for parent:', subcategories.map(s => ({ id: s._id, name: s.name, slug: s.slug })));
+        categoryIds = categoryIds.concat(subcategories.map((c) => c._id));
+        console.log('📂 No type specified - including subcategories:', categoryIds.length, 'total categories');
+      } else {
+        console.log('📁 No type specified - database says subcategory - only this specific category:', categoryIds.length, 'category');
+      }
     }
+    // If it's a subcategory, only include that specific subcategory (don't include parent)
+    // This ensures subcategory filtering shows only robots from that subcategory
+
+    console.log('🔍 Querying robots with categoryIds:', categoryIds);
 
     const robots = await Robot.find({
       category: { $in: categoryIds },
@@ -107,7 +143,12 @@ const getRobotsByCategorySlug = asyncHandler(async (req, res) => {
       .populate("category", "name slug")
       .populate("manufacturer", "name")
       .populate("countryOfOrigin", "name")
-      .populate("powerSource", "name");
+      .populate("specifications.powerSource", "name");
+
+    console.log('✅ Found robots:', {
+      count: robots.length,
+      robots: robots.map(r => ({ id: r._id, title: r.title, category: r.category?.name }))
+    });
 
     res.status(200).json({
       success: true,

@@ -1,9 +1,10 @@
 "use client";
 import React, { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { getAllProducts } from "@/api/product";
+import { getAllProducts, getRecentlyViewed } from "@/api/product";
 import { getParentCategories } from "@/api/category";
 import ProductCard1 from "../productCards/ProductCard1";
+import { useRecentlyViewed } from "@/hooks/useRecentlyViewed";
 
 export default function SearchModal() {
   const router = useRouter();
@@ -14,6 +15,9 @@ export default function SearchModal() {
   const [recentlyViewed, setRecentlyViewed] = useState([]);
   const [categories, setCategories] = useState([]);
   const [categoriesLoading, setCategoriesLoading] = useState(false);
+  
+  // Use the recently viewed hook for consistent data management
+  const { recentlyViewedIds, isInitialized } = useRecentlyViewed();
 
   // Load all products and categories on component mount
   useEffect(() => {
@@ -30,14 +34,6 @@ export default function SearchModal() {
         
         setAllProducts(products);
         setCategories(categoriesData);
-        
-        // Set recently viewed from localStorage or show first 4 products
-        const recent = JSON.parse(localStorage.getItem('recentlyViewedRobots') || '[]');
-        if (recent.length > 0) {
-          setRecentlyViewed(recent.slice(0, 4));
-        } else {
-          setRecentlyViewed(products.slice(0, 4));
-        }
       } catch (error) {
         console.error('Error loading data:', error);
       } finally {
@@ -48,6 +44,45 @@ export default function SearchModal() {
 
     loadData();
   }, []);
+
+  // Load recently viewed products when IDs are available
+  useEffect(() => {
+    const loadRecentlyViewed = async () => {
+      console.log('🔄 Loading recently viewed products...', { 
+        isInitialized, 
+        recentlyViewedIds: recentlyViewedIds.length,
+        allProducts: allProducts.length 
+      });
+
+      if (!isInitialized || !recentlyViewedIds.length) {
+        // If no recently viewed IDs, show first 4 products as fallback
+        if (allProducts.length > 0) {
+          console.log('📦 Using fallback products (no recently viewed)');
+          setRecentlyViewed(allProducts.slice(0, 4));
+        }
+        return;
+      }
+
+      try {
+        setLoading(true);
+        console.log('🔍 Fetching recently viewed products from API...', recentlyViewedIds);
+        const recentlyViewedProducts = await getRecentlyViewed(recentlyViewedIds);
+        console.log('✅ Recently viewed products loaded:', recentlyViewedProducts.length);
+        setRecentlyViewed(recentlyViewedProducts);
+      } catch (error) {
+        console.error('❌ Error loading recently viewed products:', error);
+        // Fallback to first 4 products
+        if (allProducts.length > 0) {
+          console.log('📦 Using fallback products (API error)');
+          setRecentlyViewed(allProducts.slice(0, 4));
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadRecentlyViewed();
+  }, [isInitialized, recentlyViewedIds, allProducts]);
 
   // Debounced search function
   const debouncedSearch = useCallback(
@@ -123,12 +158,6 @@ export default function SearchModal() {
 
   // Handle product click (for recently viewed)
   const handleProductClick = (product) => {
-    // Add to recently viewed
-    const recent = JSON.parse(localStorage.getItem('recentlyViewedRobots') || '[]');
-    const updatedRecent = [product, ...recent.filter(p => p.id !== product.id)].slice(0, 10);
-    localStorage.setItem('recentlyViewedRobots', JSON.stringify(updatedRecent));
-    setRecentlyViewed(updatedRecent.slice(0, 4));
-    
     // Navigate to product detail page using slug
     router.push(`/product-detail/${product.slug || product.id}`);
   };

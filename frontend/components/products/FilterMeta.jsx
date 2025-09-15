@@ -4,7 +4,7 @@ export default function FilterMeta({ allProps, productLength }) {
   return (
     <div className="meta-filter-shop" style={{}}>
       <div id="product-count-grid" className="count-text">
-        <span className="count">{productLength}</span> Products Found
+        <span className="count">{productLength}</span> Robots Found
       </div>
 
       <div id="applied-filters">
@@ -25,18 +25,6 @@ export default function FilterMeta({ allProps, productLength }) {
             onClick={() => allProps.setSize("All")}
           >
             {allProps.size}
-            <span className="remove-tag icon-close" />
-          </span>
-        ) : (
-          ""
-        )}
-        {allProps.color != "All" ? (
-          <span
-            className="filter-tag color-tag"
-            onClick={() => allProps.setColor("All")}
-          >
-            <span className={`color ${allProps.color.bgColor} `} />
-            {allProps.color.name}
             <span className="remove-tag icon-close" />
           </span>
         ) : (
@@ -77,7 +65,6 @@ export default function FilterMeta({ allProps, productLength }) {
       </div>
       {allProps.availability != "All" ||
       allProps.size != "All" ||
-      allProps.color != "All" ||
       allProps.brands.length ||
       (allProps.price && allProps.priceBounds && 
        (allProps.price[0] !== allProps.priceBounds[0] || 

@@ -5,9 +5,7 @@ const BACKEND_API_URL = process.env.NEXT_PUBLIC_BACKEND_API_URL || 'http://local
 
 // Fallback URLs in case the main one fails
 const FALLBACK_URLS = [
-  'http://localhost:5000',
-  'http://localhost:3001', 
-  'http://localhost:8000'
+  'http://localhost:5000'
 ];
 
 // Get all parent categories (categories with no parent)
@@ -199,7 +197,7 @@ export const getAllCategories = async () => {
 };
 
 // Get robots by category slug (handles both parent and subcategory)
-export const getRobotsByCategorySlug = async (categorySlug) => {
+export const getRobotsByCategorySlug = async (categorySlug, categoryType = null) => {
   // Validate categorySlug
   if (!categorySlug) {
     console.warn('⚠️ No categorySlug provided to getRobotsByCategorySlug');
@@ -216,6 +214,18 @@ export const getRobotsByCategorySlug = async (categorySlug) => {
     try {
       // Try the original slug first
       let apiUrl = `${baseUrl}/frontend/api/category/${categorySlug}`;
+      
+      // Add category type as query parameter if provided
+      if (categoryType) {
+        apiUrl += `?type=${categoryType}`;
+      }
+      
+      console.log('🔍 Attempting API call:', { baseUrl, apiUrl, categorySlug, categoryType });
+      
+      // Check if this is a localhost URL and if the server is likely not running
+      if (baseUrl.includes('localhost') && !baseUrl.includes('3001')) {
+        console.log('⚠️ Backend server might not be running on', baseUrl);
+      }
       
       // Add timeout to prevent hanging requests
       const controller = new AbortController();
@@ -258,28 +268,46 @@ export const getRobotsByCategorySlug = async (categorySlug) => {
 
       if (response.ok) {
         const data = await response.json();
-
+        
+        console.log('🔍 Category API Response:', { 
+          categorySlug, 
+          status: response.status, 
+          data: data 
+        });
 
         // Handle different response formats
         let robots = [];
         if (data.success && data.data && Array.isArray(data.data)) {
           // Backend returns { success: true, data: [...] }
           robots = data.data;
+          console.log('✅ Found robots via success.data format:', robots.length);
 
         } else if (Array.isArray(data)) {
           // Backend returns array directly
           robots = data;
+          console.log('✅ Found robots via direct array format:', robots.length);
 
         } else {
-
+          console.log('❌ Unexpected response format:', data);
           continue; // Try next URL
         }
 
+        // Transform robots data to include manufacturer field for ProductCard components
+        const transformedRobots = robots.map(robot => ({
+          ...robot,
+          // Ensure manufacturer data is available for ProductCard components
+          manufacturer: robot.manufacturer
+        }));
 
-
-        return robots;
+        console.log('🔄 Transformed robots for listing page:', transformedRobots.length);
+        return transformedRobots;
       } else {
         const errorText = await response.text();
+        console.log('❌ Category API Error:', { 
+          categorySlug, 
+          status: response.status, 
+          error: errorText 
+        });
 
       }
     } catch (error) {
@@ -292,7 +320,8 @@ export const getRobotsByCategorySlug = async (categorySlug) => {
     }
   }
 
-
+  console.log('❌ All backend URLs failed for getRobotsByCategorySlug. Backend server might not be running.');
+  console.log('💡 Please start the backend server with: cd backend && npm start');
   return [];
 };
 

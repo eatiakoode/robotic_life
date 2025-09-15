@@ -2,14 +2,13 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import { getParentCategories, getSubCategories } from "@/api/category";
-import { getAllColors, getAllManufacturers } from "@/api/filterData";
+import { getAllManufacturers } from "@/api/filterData";
 
 import RangeSlider from "react-range-slider-input";
 
 export default function FilterModal({ allProps }) {
   const [parentCategories, setParentCategories] = useState([]);
   const [subCategories, setSubCategories] = useState([]);
-  const [colors, setColors] = useState([]);
   const [manufacturers, setManufacturers] = useState([]);
   const [loading, setLoading] = useState(true);
   const timeoutRef = useRef(null);
@@ -66,9 +65,8 @@ export default function FilterModal({ allProps }) {
         setLoading(true);
         
         // Fetch all data in parallel
-        const [categoriesResult, colorsResult, manufacturersResult] = await Promise.allSettled([
+        const [categoriesResult, manufacturersResult] = await Promise.allSettled([
           getParentCategories(),
-          getAllColors(),
           getAllManufacturers()
         ]);
         
@@ -78,14 +76,6 @@ export default function FilterModal({ allProps }) {
         } else {
           console.error('❌ Error fetching categories:', categoriesResult.reason);
           setParentCategories([]);
-        }
-        
-        // Handle colors
-        if (colorsResult.status === 'fulfilled') {
-          setColors(colorsResult.value);
-        } else {
-          console.error('❌ Error fetching colors:', colorsResult.reason);
-          setColors([]);
         }
         
         // Handle manufacturers
@@ -99,7 +89,6 @@ export default function FilterModal({ allProps }) {
       } catch (error) {
         console.error('❌ Error fetching filter data:', error);
         setParentCategories([]);
-        setColors([]);
         setManufacturers([]);
       } finally {
         setLoading(false);
@@ -416,27 +405,6 @@ export default function FilterModal({ allProps }) {
                   <span>Pounds (lb)</span>
                 </label>
               </div>
-            </div>
-          </div>
-          <div className="widget-facet facet-color">
-            <h6 className="facet-title">Colors</h6>
-            <div className="facet-color-box">
-              {loading ? (
-                <div>Loading colors...</div>
-              ) : (
-                colors.map((color, index) => (
-                <div
-                  onClick={() => allProps.setColor(color)}
-                  key={index}
-                  className={`color-item color-check ${
-                    color == allProps.color ? "active" : ""
-                  }`}
-                >
-                  <span className={`color ${color.bgColor}`} />
-                  {color.name}
-                </div>
-                ))
-              )}
             </div>
           </div>
           {/* COMMENTED OUT: Availability section as requested */}

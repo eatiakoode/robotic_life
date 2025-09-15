@@ -6,14 +6,17 @@ import CountdownTimer from "../common/Countdown";
 import { useContextElement } from "@/context/Context";
 import { transformRobotForComparison } from "@/api/robotCompare";
 import { openOffcanvasModal } from "@/utils/modalUtils";
+import { useAnimationClasses } from "@/hooks/useIsMounted";
 
 export default function ProductCard1({
   product,
   gridClass = "",
-  parentClass = "card-product wow fadeInUp",
+  parentClass = "card-product",
   isNotImageRatio = false,
   radiusClass = "",
 }) {
+  // Use animation classes hook to prevent hydration mismatch
+  const cardClasses = useAnimationClasses(parentClass);
   // Helper function to get a valid image source
   const getValidImageSrc = (imgSrc) => {
     if (!imgSrc || imgSrc === '' || imgSrc === null || imgSrc === undefined) {
@@ -34,11 +37,29 @@ export default function ProductCard1({
   }, [product]);
 
   return (
-    <div
-      className={`${parentClass} ${gridClass} ${
-        product.isOnSale ? "on-sale" : ""
-      } ${product.sizes ? "card-product-size" : ""}`}
-    >
+    <>
+      <style jsx>{`
+        .manufacturer-info {
+          margin-top: 8px;
+          padding: 4px 0;
+        }
+        .manufacturer-label {
+          font-size: 12px;
+          color: #666;
+          font-weight: 500;
+          margin-right: 4px;
+        }
+        .manufacturer-name {
+          font-size: 13px;
+          color: #333;
+          font-weight: 600;
+        }
+      `}</style>
+      <div
+        className={`${cardClasses} ${gridClass} ${
+          product.isOnSale ? "on-sale" : ""
+        } ${product.sizes ? "card-product-size" : ""}`}
+      >
       <div
         className={`card-product-wrapper ${
           isNotImageRatio ? "aspect-ratio-0" : ""
@@ -235,29 +256,14 @@ export default function ProductCard1({
           )}{" "}
           ${product.price?.toFixed(2)}
         </span>
-        {product.colors && (
-          <ul className="list-color-product">
-            {product.colors.map((color, index) => (
-              <li
-                key={index}
-                className={`list-color-item color-swatch ${
-                  getValidImageSrc(currentImage) === getValidImageSrc(color.imgSrc) ? "active" : ""
-                } ${color.bgColor === "bg-white" ? "line" : ""}`}
-                onMouseOver={() => setCurrentImage(getValidImageSrc(color.imgSrc))}
-              >
-                <span className={`swatch-value ${color.bgColor}`} />
-                <Image
-                  className="lazyload"
-                  src={getValidImageSrc(color.imgSrc)}
-                  alt="color variant"
-                  width={600}
-                  height={800}
-                />
-              </li>
-            ))}
-          </ul>
+        {product.manufacturer && (
+          <div className="manufacturer-info">
+            <span className="manufacturer-label">Manufacturer:</span>
+            <span className="manufacturer-name">{product.manufacturer.name || product.manufacturer}</span>
+          </div>
         )}
       </div>
     </div>
+    </>
   );
 }

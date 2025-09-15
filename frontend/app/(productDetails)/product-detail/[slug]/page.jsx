@@ -5,6 +5,7 @@ import Details1 from "@/components/productDetails/details/Details1";
 import ProductDetailWrapper from "./ProductDetailWrapper";
 import { getRobotBySlug } from "@/api/product";
 import React, { Suspense } from "react";
+import Link from "next/link";
 
 export const metadata = {
   title: "Robot Detail || TheBotsWorld - Advanced Robotics Solutions",
@@ -21,6 +22,30 @@ export default async function ProductDetailPage({ params }) {
     return (
       <>
         <Header1 />
+
+            <div
+      className="page-title"
+      style={{ backgroundImage: "url(/images/section/detail-card.png)" }}
+    >
+      <div className="container-full">
+        <div className="row">
+          <div className="col-12">
+            <h3 className="heading text-center text-white">Robots</h3>
+            <ul className="breadcrumbs d-flex align-items-center justify-content-center">
+              <li>
+                <Link className="link text-white" href={`/`}>
+                  Homepage
+                </Link>
+              </li>
+              <li>
+                <i className="icon-arrRight" />
+              </li>
+              <li>Robots</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
         <div className="container mt-5">
           <div className="row">
             <div className="col-12">
@@ -37,6 +62,30 @@ export default async function ProductDetailPage({ params }) {
   return (
     <>
       <Header1 />
+
+          <div
+      className="page-title"
+      style={{ backgroundImage: "url(/images/section/detail-card.png)" }}
+    >
+      <div className="container-full">
+        <div className="row">
+          <div className="col-12">
+            <h3 className="heading text-center text-white">Robots</h3>
+            <ul className="breadcrumbs d-flex align-items-center justify-content-center">
+              <li>
+                <Link className="link text-white" href={`/`}>
+                  Homepage
+                </Link>
+              </li>
+              <li>
+                <i className="icon-arrRight" />
+              </li>
+              <li>Robots</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
 
       {/* Suspense se smooth loading */}
       <Suspense fallback={<p className="text-center mt-5">Loading robot details...</p>}>

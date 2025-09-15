@@ -117,23 +117,51 @@ export default function Slider1({
   const swiperRef = useRef(null);
 
   useEffect(() => {
-    if (!(items[activeIndex].color == activeColor)) {
+    if (items && items.length > 0 && items[activeIndex] && !(items[activeIndex].color == activeColor)) {
       const slideIndex =
         items.filter((elm) => elm.color == activeColor)[0]?.id - 1;
-      swiperRef.current?.slideTo(slideIndex);
+      if (slideIndex >= 0) {
+        swiperRef.current?.slideTo(slideIndex);
+      }
     }
-  }, [activeColor]);
+  }, [activeColor, items, activeIndex]);
 
   useEffect(() => {
-    setTimeout(() => {
-      if (swiperRef.current) {
-        swiperRef.current.slideTo(1);
-        swiperRef.current.slideTo(
-          items.filter((elm) => elm.color == activeColor)[0]?.id - 1
-        );
-      }
-    });
-  }, []);
+    if (items && items.length > 0) {
+      setTimeout(() => {
+        if (swiperRef.current) {
+          swiperRef.current.slideTo(1);
+          const slideIndex = items.filter((elm) => elm.color == activeColor)[0]?.id - 1;
+          if (slideIndex >= 0) {
+            swiperRef.current.slideTo(slideIndex);
+          }
+        }
+      });
+    }
+  }, [items, activeColor]);
+
+  // Don't render if no items
+  if (!items || items.length === 0) {
+    return (
+      <div className="thumbs-slider">
+        <div className="swiper tf-product-media-main">
+          <div className="swiper-wrapper">
+            <div className="swiper-slide">
+              <div className="item">
+                <Image
+                  className="lazyload"
+                  src={firstItem || "/images/section/no-image.png"}
+                  alt="No image available"
+                  width={600}
+                  height={800}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="thumbs-slider">
@@ -203,7 +231,7 @@ export default function Slider1({
         id="gallery-swiper-started"
         spaceBetween={10}
         slidesPerView={1}
-        thumbs={{ swiper: thumbsSwiper }}
+        thumbs={thumbsSwiper ? { swiper: thumbsSwiper } : undefined}
         modules={[Thumbs]}
         onSwiper={(swiper) => (swiperRef.current = swiper)}
         onSlideChange={(swiper) => {

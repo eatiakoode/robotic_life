@@ -6,8 +6,9 @@ import Image from "next/image";
 import { Swiper, SwiperSlide } from "swiper/react";
 import ProductCard1 from "../productCards/ProductCard1";
 import { getParentCategories, getSubCategories } from "@/api/category";
-import { getAllProducts } from "@/api/product";
+import { getAllProducts, getRecentlyViewed } from "@/api/product";
 import { usePathname } from "next/navigation";
+import { useRecentlyViewed } from "@/hooks/useRecentlyViewed";
 export default function Nav() {
   const pathname = usePathname();
   const [categories, setCategories] = useState([]);
@@ -17,25 +18,21 @@ export default function Nav() {
   const [robots, setRobots] = useState([]);
   const [robotsLoading, setRobotsLoading] = useState(false);
   const leaveTimeoutRef = useRef(null);
+  
+  // Use the recently viewed hook for consistent data management
+  const { recentlyViewedIds, isInitialized } = useRecentlyViewed();
 
-  // Fetch parent categories, their subcategories, and recent robots on component mount
+  // Fetch parent categories and subcategories on component mount
   useEffect(() => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        setRobotsLoading(true);
 
-        // Fetch parent categories and robots in parallel
-        const [parentCategories, robotsData] = await Promise.all([
-          getParentCategories(),
-          getAllProducts(),
-        ]);
-
+        // Fetch parent categories
+        const parentCategories = await getParentCategories();
         setCategories(parentCategories);
-        setRobots(robotsData.slice(0, 4)); // Take only first 4 robots for recent section
 
         // Fetch subcategories for all parent categories
-
         const subcategoryPromises = parentCategories.map(async (category) => {
           try {
             const subs = await getSubCategories(category._id);
@@ -60,12 +57,51 @@ export default function Nav() {
         console.error("Error fetching data:", error);
       } finally {
         setLoading(false);
-        setRobotsLoading(false);
       }
     };
 
     fetchData();
   }, []);
+
+  // Load recently viewed robots when IDs are available
+  useEffect(() => {
+    const loadRecentlyViewed = async () => {
+      if (!isInitialized || !recentlyViewedIds.length) {
+        // If no recently viewed IDs, show first 4 products as fallback
+        try {
+          setRobotsLoading(true);
+          const allProducts = await getAllProducts();
+          setRobots(allProducts.slice(0, 4));
+        } catch (error) {
+          console.error('Error loading fallback robots:', error);
+          setRobots([]);
+        } finally {
+          setRobotsLoading(false);
+        }
+        return;
+      }
+
+      try {
+        setRobotsLoading(true);
+        const recentlyViewedProducts = await getRecentlyViewed(recentlyViewedIds);
+        setRobots(recentlyViewedProducts.slice(0, 4));
+      } catch (error) {
+        console.error('Error loading recently viewed products:', error);
+        // Fallback to first 4 products
+        try {
+          const allProducts = await getAllProducts();
+          setRobots(allProducts.slice(0, 4));
+        } catch (fallbackError) {
+          console.error('Error loading fallback robots:', fallbackError);
+          setRobots([]);
+        }
+      } finally {
+        setRobotsLoading(false);
+      }
+    };
+
+    loadRecentlyViewed();
+  }, [isInitialized, recentlyViewedIds]);
 
   // Cleanup timeout on unmount
   useEffect(() => {

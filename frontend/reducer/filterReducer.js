@@ -8,7 +8,6 @@ export const initialState = {
   weightUnit: "kg", // Default weight unit: kg (kilograms)
   size: "All",
   availability: "All",
-  color: "All",
   activeFilterOnSale: false,
   brands: [],
   selectedParentCategory: null,
@@ -47,8 +46,6 @@ export function reducer(state, action) {
     case "SET_SIZE":
       return { ...state, size: action.payload };
 
-    case "SET_COLOR":
-      return { ...state, color: action.payload };
     case "SET_AVAILABILITY":
       return { ...state, availability: action.payload };
     case "SET_BRANDS":
@@ -77,7 +74,6 @@ export function reducer(state, action) {
         weightUnit: "g", // Reset to default unit (grams)
         size: "All",
         availability: "All",
-        color: "All",
         brands: [],
         activeFilterOnSale: false,
         selectedParentCategory: null,

@@ -110,7 +110,7 @@ export default async function ListingPage({ searchParams }) {
         </div>
       </div>
     </div>
-    <Products1 products={categorydata} productMain={categorydata} />
+    <Products1 products={categorydata || undefined} productMain={categorydata || undefined} />
     <Footer1 dark />
   </>)
 }
