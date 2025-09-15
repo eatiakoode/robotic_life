@@ -3,6 +3,7 @@
 import Sorting from "./Sorting";
 import Listview from "./Listview";
 import GridView from "./GridView";
+import Pagination from "../common/Pagination";
 import { useEffect, useReducer, useState, useCallback } from "react";
 import { useSearchParams } from "next/navigation";
 import FilterModal from "./FilterModal";
@@ -735,26 +736,56 @@ export default function Products1({ parentClass = "flat-spacing",products ,produ
                 <p className="mt-3">Loading products from backend...</p>
               </div>
             ) : activeLayout == 1 ? (
-              <div className="tf-list-layout wrapper-shop eati" id="listLayout">
-                <Listview 
-                  products={sorted} 
-                  currentPage={currentPage}
-                  itemsPerPage={itemPerPage}
-                  onPageChange={(page) => allProps.setCurrentPage(page)}
-                />
-              </div>
+              <>
+                <div className="tf-list-layout wrapper-shop eati" id="listLayout">
+                  <Listview 
+                    products={sorted} 
+                    currentPage={currentPage}
+                    itemsPerPage={itemPerPage}
+                    onPageChange={(page) => allProps.setCurrentPage(page)}
+                    pagination={false}
+                  />
+                </div>
+                {/* Pagination outside list container */}
+                {sorted.length > itemPerPage && (
+                  <div className="pagination-container">
+                    <Pagination 
+                      currentPage={currentPage}
+                      totalPages={Math.ceil(sorted.length / itemPerPage)}
+                      onPageChange={(page) => allProps.setCurrentPage(page)}
+                      totalItems={sorted.length}
+                      itemsPerPage={itemPerPage}
+                    />
+                  </div>
+                )}
+              </>
             ) : (
-              <div
-                className={`tf-grid-layout wrapper-shop tf-col-${activeLayout}`}
-                id="gridLayout"
-              >
-                <GridView 
-                  products={sorted} 
-                  currentPage={currentPage}
-                  itemsPerPage={itemPerPage}
-                  onPageChange={(page) => allProps.setCurrentPage(page)}
-                />
-              </div>
+              <>
+                <div
+                  className={`tf-grid-layout wrapper-shop tf-col-${activeLayout}`}
+                  id="gridLayout"
+                >
+                  <GridView 
+                    products={sorted} 
+                    currentPage={currentPage}
+                    itemsPerPage={itemPerPage}
+                    onPageChange={(page) => allProps.setCurrentPage(page)}
+                    pagination={false}
+                  />
+                </div>
+                {/* Pagination outside grid container */}
+                {sorted.length > itemPerPage && (
+                  <div className="pagination-container">
+                    <Pagination 
+                      currentPage={currentPage}
+                      totalPages={Math.ceil(sorted.length / itemPerPage)}
+                      onPageChange={(page) => allProps.setCurrentPage(page)}
+                      totalItems={sorted.length}
+                      itemsPerPage={itemPerPage}
+                    />
+                  </div>
+                )}
+              </>
             )}
           </div>
         </div>

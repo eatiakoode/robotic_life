@@ -148,15 +148,13 @@ export default function BlogList() {
               ))
             )}
             {pagination.totalPages > 1 && (
-              <ul className="wg-pagination">
-                <Pagination 
-                  totalPages={pagination.totalPages}
-                  currentPage={pagination.currentPage}
-                  onPageChange={handlePageChange}
-                  totalItems={pagination.totalBlogs}
-                  itemsPerPage={pagination.limit}
-                />
-              </ul>
+              <Pagination 
+                totalPages={pagination.totalPages}
+                currentPage={pagination.currentPage}
+                onPageChange={handlePageChange}
+                totalItems={pagination.totalBlogs}
+                itemsPerPage={pagination.limit}
+              />
             )}
           </div>
           <div className="col-lg-4">

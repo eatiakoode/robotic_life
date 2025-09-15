@@ -6,7 +6,6 @@ import CountdownTimer from "../common/Countdown";
 import { useContextElement } from "@/context/Context";
 import { transformRobotForComparison } from "@/api/robotCompare";
 import { openOffcanvasModal } from "@/utils/modalUtils";
-import { useAnimationClasses } from "@/hooks/useIsMounted";
 
 export default function ProductCard1({
   product,
@@ -15,8 +14,6 @@ export default function ProductCard1({
   isNotImageRatio = false,
   radiusClass = "",
 }) {
-  // Use animation classes hook to prevent hydration mismatch
-  const cardClasses = useAnimationClasses(parentClass);
   // Helper function to get a valid image source
   const getValidImageSrc = (imgSrc) => {
     if (!imgSrc || imgSrc === '' || imgSrc === null || imgSrc === undefined) {
@@ -56,7 +53,7 @@ export default function ProductCard1({
         }
       `}</style>
       <div
-        className={`${cardClasses} ${gridClass} ${
+        className={`${parentClass} ${gridClass} ${
           product.isOnSale ? "on-sale" : ""
         } ${product.sizes ? "card-product-size" : ""}`}
       >

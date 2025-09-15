@@ -67,17 +67,9 @@ export default function Nav() {
   useEffect(() => {
     const loadRecentlyViewed = async () => {
       if (!isInitialized || !recentlyViewedIds.length) {
-        // If no recently viewed IDs, show first 4 products as fallback
-        try {
-          setRobotsLoading(true);
-          const allProducts = await getAllProducts();
-          setRobots(allProducts.slice(0, 4));
-        } catch (error) {
-          console.error('Error loading fallback robots:', error);
-          setRobots([]);
-        } finally {
-          setRobotsLoading(false);
-        }
+        // If no recently viewed IDs, show empty state
+        setRobots([]);
+        setRobotsLoading(false);
         return;
       }
 
@@ -87,14 +79,7 @@ export default function Nav() {
         setRobots(recentlyViewedProducts.slice(0, 4));
       } catch (error) {
         console.error('Error loading recently viewed products:', error);
-        // Fallback to first 4 products
-        try {
-          const allProducts = await getAllProducts();
-          setRobots(allProducts.slice(0, 4));
-        } catch (fallbackError) {
-          console.error('Error loading fallback robots:', fallbackError);
-          setRobots([]);
-        }
+        setRobots([]);
       } finally {
         setRobotsLoading(false);
       }

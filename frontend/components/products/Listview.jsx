@@ -6,7 +6,7 @@ export default function Listview({
   products, 
   pagination = true, 
   currentPage = 1, 
-  itemsPerPage = 10,
+  itemsPerPage = 12,
   onPageChange = () => {}
 }) {
   // Calculate pagination

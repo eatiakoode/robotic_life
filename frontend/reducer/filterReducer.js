@@ -16,7 +16,7 @@ export const initialState = {
   sortingOption: "Sort by (Default)",
   sorted: [], // Start with empty array, will be populated by API
   currentPage: 1,
-  itemPerPage: 10, // Show 10 robots per page
+  itemPerPage: 12, // Show 12 robots per page
 };
 
 export function reducer(state, action) {
