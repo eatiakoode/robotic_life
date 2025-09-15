@@ -69,12 +69,12 @@ export default function Capabilities({ product }) {
           )}
 
           {/* Features */}
-          {capabilities.features && capabilities.features.length > 0 && (
+          {capabilities.features && capabilities.features.length > 0 && capabilities.features.some(feature => feature && feature.trim() !== '') && (
             <div className="col-lg-4 col-md-6 mb-4">
               <div className="spec-card">
                 <h6 className="spec-title">Features</h6>
                 <p className="spec-content">
-                  {capabilities.features.join(', ')}
+                  {capabilities.features.filter(feature => feature && feature.trim() !== '').join(', ')}
                 </p>
               </div>
             </div>
@@ -96,12 +96,12 @@ export default function Capabilities({ product }) {
           )}
 
           {/* Interoperability */}
-          {capabilities.interoperability && capabilities.interoperability.length > 0 && (
+          {capabilities.interoperability && capabilities.interoperability.length > 0 && capabilities.interoperability.some(item => item && item.trim() !== '') && (
             <div className="col-lg-4 col-md-6 mb-4">
               <div className="spec-card">
                 <h6 className="spec-title">Interoperability</h6>
                 <p className="spec-content">
-                  {capabilities.interoperability.join(', ')}
+                  {capabilities.interoperability.filter(item => item && item.trim() !== '').join(', ')}
                 </p>
               </div>
             </div>

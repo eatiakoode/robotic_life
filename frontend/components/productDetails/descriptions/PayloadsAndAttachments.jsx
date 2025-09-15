@@ -50,40 +50,44 @@ export default function PayloadsAndAttachments({ product }) {
             </div>
           )}
           
-          {payloadsData.attachments && payloadsData.attachments.length > 0 && (
+          {payloadsData.attachments && payloadsData.attachments.length > 0 && payloadsData.attachments.some(attachment => attachment && attachment.trim() !== '') && (
             <div className="col-lg-4 col-md-6 mb-4">
               <div className="spec-card">
                 <h6 className="spec-title">Attachments</h6>
                 <p className="spec-content">
-                  {payloadsData.attachments.join(", ")}
+                  {payloadsData.attachments.filter(attachment => attachment && attachment.trim() !== '').join(", ")}
                 </p>
               </div>
             </div>
           )}
           
-          <div className="col-lg-4 col-md-6 mb-4">
-            <div className="spec-card">
-              <h6 className="spec-title">Hot Swappable</h6>
-              <p className="spec-content">
-                {payloadsData.hotSwappable ? "Yes" : "No"}
-              </p>
+          {payloadsData.hotSwappable !== undefined && payloadsData.hotSwappable !== null && (
+            <div className="col-lg-4 col-md-6 mb-4">
+              <div className="spec-card">
+                <h6 className="spec-title">Hot Swappable</h6>
+                <p className="spec-content">
+                  {payloadsData.hotSwappable ? "Yes" : "No"}
+                </p>
+              </div>
             </div>
-          </div>
+          )}
           
-          {payloadsData.accessoryPorts && payloadsData.accessoryPorts.length > 0 && (
+          {payloadsData.accessoryPorts && payloadsData.accessoryPorts.length > 0 && payloadsData.accessoryPorts.some(port => port && port.trim() !== '') && (
             <div className="col-lg-4 col-md-6 mb-4">
               <div className="spec-card">
                 <h6 className="spec-title">Accessory Ports</h6>
                 <p className="spec-content">
-                  {payloadsData.accessoryPorts.join(", ")}
+                  {payloadsData.accessoryPorts.filter(port => port && port.trim() !== '').join(", ")}
                 </p>
               </div>
             </div>
           )}
           
-          {(!payloadsData.maxPayloadWeight && 
+          {(!payloadsData.maxPayloadWeight || (!payloadsData.maxPayloadWeight.value && !payloadsData.maxPayloadWeight.unit)) && 
             (!payloadsData.payloadTypes || payloadsData.payloadTypes.length === 0) &&
-            (!payloadsData.attachments || payloadsData.attachments.length === 0)) && (
+            (!payloadsData.attachments || payloadsData.attachments.length === 0 || !payloadsData.attachments.some(attachment => attachment && attachment.trim() !== '')) &&
+            (payloadsData.hotSwappable === undefined || payloadsData.hotSwappable === null) &&
+            (!payloadsData.accessoryPorts || payloadsData.accessoryPorts.length === 0 || !payloadsData.accessoryPorts.some(port => port && port.trim() !== '')) && (
             <div className="col-12">
               <div className="spec-card">
                 <h6 className="spec-title">No Information Available</h6>

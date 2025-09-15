@@ -71,9 +71,7 @@ export default function BlogDefault() {
               </React.Fragment>
             ))}
 
-            <ul className="wg-pagination">
-              <Pagination />
-            </ul>
+            <Pagination />
           </div>
           <div className="col-lg-4">
             <Sidebar />

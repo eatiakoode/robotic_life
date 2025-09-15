@@ -1,7 +1,6 @@
 import React from "react";
 import ProductCard1 from "../productCards/ProductCard1";
 import Pagination from "../common/Pagination";
-import { useAnimationClasses } from "@/hooks/useIsMounted";
 
 export default function GridView({ 
   products, 
@@ -10,8 +9,6 @@ export default function GridView({
   itemsPerPage = 12, 
   onPageChange 
 }) {
-  // Use animation classes hook to prevent hydration mismatch
-  const cardClasses = useAnimationClasses('card-product');
   
   // Calculate pagination
   const totalPages = Math.ceil(products.length / itemsPerPage);
@@ -19,33 +16,22 @@ export default function GridView({
   const endIndex = startIndex + itemsPerPage;
   const paginatedProducts = products.slice(startIndex, endIndex);
   
-  console.log('🎯 GridView props:', { 
-    productsLength: products.length, 
-    itemsPerPage, 
-    currentPage, 
-    totalPages, 
-    startIndex, 
-    endIndex, 
-    paginatedProductsLength: paginatedProducts.length 
-  });
 
   return (
     <>
       {paginatedProducts.map((product, index) => (
-        <ProductCard1 key={product.id || index} product={product} gridClass="grid" parentClass={cardClasses} />
+        <ProductCard1 key={product.id || index} product={product} gridClass="grid" parentClass="card-product" />
       ))}
       
       {/* pagination */}
       {pagination && totalPages > 1 && (
-        <div className="tf-pagination">
-          <ul className="wg-pagination justify-content-center">
-            <Pagination 
-              currentPage={currentPage}
-              totalPages={totalPages}
-              onPageChange={onPageChange}
-            />
-          </ul>
-        </div>
+        <Pagination 
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={onPageChange}
+          totalItems={products.length}
+          itemsPerPage={itemsPerPage}
+        />
       )}
     </>
   );

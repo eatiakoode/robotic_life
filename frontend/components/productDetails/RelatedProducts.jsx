@@ -4,10 +4,8 @@ import Link from "next/link";
 import Image from "next/image";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination } from "swiper/modules";
-import { products } from "@/data/products";
 import ProductCard1 from "../productCards/ProductCard1";
 import { getRelatedProducts, getRecentlyViewed } from "@/api/product";
-import { useAnimationClasses } from "@/hooks/useIsMounted";
 
 export default function RelatedProducts({ productSlug, recentlyViewedIds = [] }) {
   const [relatedProducts, setRelatedProducts] = useState([]);
@@ -21,8 +19,6 @@ export default function RelatedProducts({ productSlug, recentlyViewedIds = [] })
     return Array.isArray(recentlyViewedIds) ? recentlyViewedIds : [];
   }, [recentlyViewedIds]);
 
-  // Use animation classes hook to prevent hydration mismatch
-  const tabClasses = useAnimationClasses('tab-product justify-content-sm-center');
 
   const fetchRelatedProducts = useCallback(async (slug) => {
     if (!slug) return [];
@@ -79,19 +75,10 @@ export default function RelatedProducts({ productSlug, recentlyViewedIds = [] })
         setRecentlyViewedProducts(recentlyViewed);
         setHasFetched(true);
 
-        // If no data from API, use fallback
-        if (related.length === 0 && recentlyViewed.length === 0) {
-          setRelatedProducts(products.slice(0, 4));
-          setRecentlyViewedProducts(products.slice(4));
-        }
-
       } catch (err) {
-        // Silently handle errors and show fallback data
-        setError('Unable to load products. Showing sample products instead.');
-        
-        // Fallback to static data
-        setRelatedProducts(products.slice(0, 4));
-        setRecentlyViewedProducts(products.slice(4));
+        // Handle errors without fallback data
+        setError('Unable to load products. Please try refreshing the page.');
+        console.error('Error fetching products:', err);
       } finally {
         setLoading(false);
       }
@@ -106,7 +93,7 @@ export default function RelatedProducts({ productSlug, recentlyViewedIds = [] })
       <section className="flat-spacing">
         <div className="container flat-animate-tab">
           <ul
-            className={tabClasses}
+            className="tab-product justify-content-sm-center"
             data-wow-delay="0s"
             role="tablist"
           >
@@ -147,7 +134,7 @@ export default function RelatedProducts({ productSlug, recentlyViewedIds = [] })
     <section className="flat-spacing">
       <div className="container flat-animate-tab">
         <ul
-          className={tabClasses}
+          className="tab-product justify-content-sm-center"
           data-wow-delay="0s"
           role="tablist"
         >

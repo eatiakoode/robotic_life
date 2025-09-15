@@ -103,23 +103,23 @@ export default function OperationalEnvironment({ product }) {
             </div>
           )}
           
-          {operationalData.enduranceExtremeConditions && operationalData.enduranceExtremeConditions.length > 0 && (
+          {operationalData.enduranceExtremeConditions && operationalData.enduranceExtremeConditions.length > 0 && operationalData.enduranceExtremeConditions.some(condition => condition && condition.trim() !== '') && (
             <div className="col-lg-4 col-md-6 mb-4">
               <div className="spec-card">
                 <h6 className="spec-title">Endurance in Extreme Conditions</h6>
                 <p className="spec-content">
-                  {operationalData.enduranceExtremeConditions.join(", ")}
+                  {operationalData.enduranceExtremeConditions.filter(condition => condition && condition.trim() !== '').join(", ")}
                 </p>
               </div>
             </div>
           )}
           
-          {operationalData.deploymentLogistics && operationalData.deploymentLogistics.length > 0 && (
+          {operationalData.deploymentLogistics && operationalData.deploymentLogistics.length > 0 && operationalData.deploymentLogistics.some(logistic => logistic && logistic.trim() !== '') && (
             <div className="col-lg-4 col-md-6 mb-4">
               <div className="spec-card">
                 <h6 className="spec-title">Deployment Logistics</h6>
                 <p className="spec-content">
-                  {operationalData.deploymentLogistics.join(", ")}
+                  {operationalData.deploymentLogistics.filter(logistic => logistic && logistic.trim() !== '').join(", ")}
                 </p>
               </div>
             </div>
