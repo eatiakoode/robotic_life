@@ -12,7 +12,7 @@ export async function generateMetadata({ searchParams }) {
   let categorydata = null;
   let locationdata = null;
   try {
-    
+
     if (searchParams.cat) {
       try {
         categorydata = await getRobotsByCategorySlug(searchParams.category);
@@ -22,30 +22,30 @@ export async function generateMetadata({ searchParams }) {
       }
     } else if (searchParams.location) {
       try {
-          locationdata = await getLocationById(searchParams.location);
-        } catch (error) {
-          console.error("Category fetch failed:", error.message);
-          locationdata = null; // fallback to default
-        }
+        locationdata = await getLocationById(searchParams.location);
+      } catch (error) {
+        console.error("Category fetch failed:", error.message);
+        locationdata = null; // fallback to default
+      }
     }
-    
-    
+
+
     if (categorydata) {
       return {
-        title: categorydata.metatitle? categorydata.metatitle : 'WEGROW INFRAVENTURES - Property List',
-        description: categorydata.metadescription?.slice(0, 200) ? categorydata.metadescription :  'WEGROW INFRAVENTURES - Property List.',
-        
+        title: categorydata.metatitle ? categorydata.metatitle : 'WEGROW INFRAVENTURES - Property List',
+        description: categorydata.metadescription?.slice(0, 200) ? categorydata.metadescription : 'WEGROW INFRAVENTURES - Property List.',
+
       };
     } if (locationdata) {
       return {
-        title: locationdata.metatitle? locationdata.metatitle : 'WEGROW INFRAVENTURES - Property List',
-        description: locationdata.metadescription?.slice(0, 200) ? locationdata.metadescription :  'WEGROW INFRAVENTURES - Property List.',
-        
+        title: locationdata.metatitle ? locationdata.metatitle : 'Robot List || TheBotsWorld - Advanced Robotics Information',
+        description: locationdata.metadescription?.slice(0, 200) ? locationdata.metadescription : 'Explore detailed specifications and features of our advanced robotics information',
+
       };
     } else {
       return {
-        title: 'WEGROW INFRAVENTURES - Property List ',
-        description:'WEGROW INFRAVENTURES - Property List ',
+        title: "Robot Detail || TheBotsWorld - Advanced Robotics Information",
+        description: "Explore detailed specifications and features of our advanced robotics information",
       };
     }
   } catch (error) {
@@ -56,18 +56,6 @@ export async function generateMetadata({ searchParams }) {
     };
   }
 }
-
-// const index = () => {
-//   return (
-//     <>
-//       <GridV1 />
-//     </>
-//   );
-// };
-
-// // export default dynamic(() => Promise.resolve(index), { ssr: false });
-
-// export default index;
 export default async function ListingPage({ searchParams }) {
   const filter = {
     keyword: searchParams.keyword || "",
@@ -80,49 +68,49 @@ export default async function ListingPage({ searchParams }) {
   };
 
   // const data = await getPropertyFilterData(filter);
-  
+
   // const properties = data?.items || [];
   // const totalCount = data?.totalCount || 0;
-  
+
   let categorydata = null;
   let locationdata = null;
   if (searchParams.category) {
-      try {
-        categorydata = await getRobotsByCategorySlug(searchParams.category);
-      } catch (error) {
-        console.error("Category fetch failed:", error.message);
-        categorydata = null; // fallback to default
-      }
-    } 
-  
+    try {
+      categorydata = await getRobotsByCategorySlug(searchParams.category);
+    } catch (error) {
+      console.error("Category fetch failed:", error.message);
+      categorydata = null; // fallback to default
+    }
+  }
 
 
-  return(<>
-      <Header1 />
-      <div
-        className="page-title"
-        style={{ backgroundImage: "url(/images/section/detail-card.png)" }}
-      >
-        <div className="container-full">
-          <div className="row">
-            <div className="col-12">
-              <h3 className="heading text-center text-white">Robots</h3>
-              <ul className="breadcrumbs d-flex align-items-center justify-content-center">
-                <li>
-                  <Link className="link text-white" href={`/`}>
-                    Homepage
-                  </Link>
-                </li>
-                <li>
-                  <i className="icon-arrRight" />
-                </li>
-                <li>Robots</li>
-              </ul>
-            </div>
+
+  return (<>
+    <Header1 />
+    <div
+      className="page-title"
+      style={{ backgroundImage: "url(/images/section/detail-card.png)" }}
+    >
+      <div className="container-full">
+        <div className="row">
+          <div className="col-12">
+            <h3 className="heading text-center text-white">Robots</h3>
+            <ul className="breadcrumbs d-flex align-items-center justify-content-center">
+              <li>
+                <Link className="link text-white" href={`/`}>
+                  Homepage
+                </Link>
+              </li>
+              <li>
+                <i className="icon-arrRight" />
+              </li>
+              <li>Robots</li>
+            </ul>
           </div>
         </div>
       </div>
-      <Products1 products={categorydata} productMain={categorydata} />
-      <Footer1 dark />
-    </>)
+    </div>
+    <Products1 products={categorydata} productMain={categorydata} />
+    <Footer1 dark />
+  </>)
 }

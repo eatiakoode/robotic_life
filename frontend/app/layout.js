@@ -11,20 +11,12 @@ import { faRobot, faBookOpen, faFlask, faUsers } from '@fortawesome/free-solid-s
 
 // Add icons to the library
 library.add(faRobot, faBookOpen, faFlask, faUsers);
-import ScrollTop from "@/components/common/ScrollTop";
 import Context from "@/context/Context";
-import CartModal from "@/components/modals/CartModal";
-import QuickView from "@/components/modals/QuickView";
-import QuickAdd from "@/components/modals/QuickAdd";
 import Compare from "@/components/modals/Compare";
 import MobileMenu from "@/components/modals/MobileMenu";
 
 import SearchModal from "@/components/modals/SearchModal";
-import SizeGuide from "@/components/modals/SizeGuide";
-import Wishlist from "@/components/modals/Wishlist";
-import DemoModal from "@/components/modals/DemoModal";
 import Categories from "@/components/modals/Categories";
-import RtlToggler from "@/components/common/RtlToggler";
 import AccountSidebar from "@/components/modals/AccountSidebar";
 import "font-awesome/css/font-awesome.min.css";
 
@@ -51,11 +43,10 @@ export default function RootLayout({ children }) {
 
     window.addEventListener("scroll", handleScroll);
 
-    // Cleanup function to remove event listener on component unmount
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
-  }, []); // Empty dependency array means this effect runs once on mount and cleans up on unmount
+  }, []); 
 
   const [scrollDirection, setScrollDirection] = useState("down");
 
@@ -82,17 +73,17 @@ export default function RootLayout({ children }) {
 
     const lastScrollY = { current: window.scrollY };
 
-    // Add scroll event listener
+
     window.addEventListener("scroll", handleScroll);
 
-    // Cleanup: remove event listener when component unmounts
+    
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, [pathname]);
   useEffect(() => {
     // Close any open modal
-    const bootstrap = require("bootstrap"); // dynamically import bootstrap
+    const bootstrap = require("bootstrap"); 
     const modalElements = document.querySelectorAll(".modal.show");
     modalElements.forEach((modal) => {
       const modalInstance = bootstrap.Modal.getInstance(modal);
@@ -109,7 +100,7 @@ export default function RootLayout({ children }) {
         offcanvasInstance.hide();
       }
     });
-  }, [pathname]); // Runs every time the route changes
+  }, [pathname]);
 
   useEffect(() => {
     const header = document.querySelector("header");
@@ -133,17 +124,10 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body className="preload-wrapper popup-loader">
         <Context>
-          {/* <RtlToggler /> */}
           <div id="wrapper">{children}</div>
-          {/* <CartModal />
-          <QuickView />
-          <QuickAdd /> */}
           <Compare />
           <MobileMenu />
           <SearchModal />
-          {/* <SizeGuide />
-          <Wishlist />
-          <DemoModal /> */}
           <Categories />
           <AccountSidebar />
         </Context>
