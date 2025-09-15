@@ -854,7 +854,12 @@ const EditList = () => {
       }
 
       // Capabilities
-      formData.append("capabilities.features", feature || "");
+      // Handle array fields - always send as arrays, even if empty
+      if (feature && feature.trim() !== "") {
+        formData.append("capabilities.features", feature.trim());
+      } else {
+        formData.append("capabilities.features", "[]");
+      }
       if (communicationRange && !isNaN(communicationRange)) {
         formData.append("capabilities.communicationRange.value", String(communicationRange));
         formData.append("capabilities.communicationRange.unit", communicationRangeUnit);
@@ -863,11 +868,24 @@ const EditList = () => {
         formData.append("capabilities.loadHandling.grippingStrength.value", String(grippingStrength));
         formData.append("capabilities.loadHandling.grippingStrength.unit", grippingStrengthUnit);
       }
-      formData.append("capabilities.interoperability", interoperability || "");
+      if (interoperability && interoperability.trim() !== "") {
+        formData.append("capabilities.interoperability", interoperability.trim());
+      } else {
+        formData.append("capabilities.interoperability", "[]");
+      }
 
       // Payloads & Attachments
-      formData.append("payloadsAndAttachments.attachments", attachments || "");
-      formData.append("payloadsAndAttachments.accessoryPorts", accessoryPorts || "");
+      if (attachments && attachments.trim() !== "") {
+        formData.append("payloadsAndAttachments.attachments", attachments.trim());
+      } else {
+        formData.append("payloadsAndAttachments.attachments", "[]");
+      }
+      
+      if (accessoryPorts && accessoryPorts.trim() !== "") {
+        formData.append("payloadsAndAttachments.accessoryPorts", accessoryPorts.trim());
+      } else {
+        formData.append("payloadsAndAttachments.accessoryPorts", "[]");
+      }
       formData.append("payloadsAndAttachments.hotSwappable", hotSwappable ? "true" : "false");
       
       
@@ -878,7 +896,12 @@ const EditList = () => {
       // Sensors & Software
       formData.append("sensorsAndSoftware.operatingSystem", operatingSystem || "");
       formData.append("sensorsAndSoftware.firmwareVersion", firmwareVersion || "");
-      formData.append("sensorsAndSoftware.securityFeatures", securityFeatures || "");
+      // Handle array fields - always send as arrays, even if empty
+      if (securityFeatures && securityFeatures.trim() !== "") {
+        formData.append("sensorsAndSoftware.securityFeatures", securityFeatures.trim());
+      } else {
+        formData.append("sensorsAndSoftware.securityFeatures", "[]");
+      }
 
       // Data logging fields
       if (storageCapacity && !isNaN(storageCapacity)) {
@@ -891,9 +914,23 @@ const EditList = () => {
       }
 
       // Operational Environment & Applications
-      formData.append("operationalEnvironmentAndApplications.applications", applications || "");
-      formData.append("operationalEnvironmentAndApplications.enduranceExtremeConditions", enduranceExtremeConditions || "");
-      formData.append("operationalEnvironmentAndApplications.deploymentLogistics", deploymentLogistics || "");
+      if (applications && applications.trim() !== "") {
+        formData.append("operationalEnvironmentAndApplications.applications", applications.trim());
+      } else {
+        formData.append("operationalEnvironmentAndApplications.applications", "[]");
+      }
+      
+      if (enduranceExtremeConditions && enduranceExtremeConditions.trim() !== "") {
+        formData.append("operationalEnvironmentAndApplications.enduranceExtremeConditions", enduranceExtremeConditions.trim());
+      } else {
+        formData.append("operationalEnvironmentAndApplications.enduranceExtremeConditions", "[]");
+      }
+      
+      if (deploymentLogistics && deploymentLogistics.trim() !== "") {
+        formData.append("operationalEnvironmentAndApplications.deploymentLogistics", deploymentLogistics.trim());
+      } else {
+        formData.append("operationalEnvironmentAndApplications.deploymentLogistics", "[]");
+      }
 
       // Append nested unit/value fields with number validation
       if (length && !isNaN(length)) {

@@ -527,16 +527,54 @@ const CreateList = () => {
       if (metadescription && metadescription.trim() !== "")
         formData.append("metaDescription", metadescription.trim());
 
-      if (feature && feature.trim() !== "") formData.append("capabilities.features", feature.trim());
-      if (interoperability && interoperability.trim() !== "") formData.append("capabilities.interoperability", interoperability.trim());
-      if (attachments && attachments.trim() !== "") formData.append("payloadsAndAttachments.attachments", attachments.trim());
-      if (accessoryPorts && accessoryPorts.trim() !== "") formData.append("payloadsAndAttachments.accessoryPorts", accessoryPorts.trim());
+      // Handle array fields - always send as arrays, even if empty
+      if (feature && feature.trim() !== "") {
+        formData.append("capabilities.features", feature.trim());
+      } else {
+        formData.append("capabilities.features", "[]");
+      }
+      
+      if (interoperability && interoperability.trim() !== "") {
+        formData.append("capabilities.interoperability", interoperability.trim());
+      } else {
+        formData.append("capabilities.interoperability", "[]");
+      }
+      if (attachments && attachments.trim() !== "") {
+        formData.append("payloadsAndAttachments.attachments", attachments.trim());
+      } else {
+        formData.append("payloadsAndAttachments.attachments", "[]");
+      }
+      
+      if (accessoryPorts && accessoryPorts.trim() !== "") {
+        formData.append("payloadsAndAttachments.accessoryPorts", accessoryPorts.trim());
+      } else {
+        formData.append("payloadsAndAttachments.accessoryPorts", "[]");
+      }
       if (operatingSystem && operatingSystem.trim() !== "") formData.append("sensorsAndSoftware.operatingSystem", operatingSystem.trim());
       if (firmwareVersion && firmwareVersion.trim() !== "") formData.append("sensorsAndSoftware.firmwareVersion", firmwareVersion.trim());
-      if (securityFeatures && securityFeatures.trim() !== "") formData.append("sensorsAndSoftware.securityFeatures", securityFeatures.trim());
-      if (applications && applications.trim() !== "") formData.append("operationalEnvironmentAndApplications.applications", applications.trim());
-      if (enduranceExtremeConditions && enduranceExtremeConditions.trim() !== "") formData.append("operationalEnvironmentAndApplications.enduranceExtremeConditions", enduranceExtremeConditions.trim());
-      if (deploymentLogistics && deploymentLogistics.trim() !== "") formData.append("operationalEnvironmentAndApplications.deploymentLogistics", deploymentLogistics.trim());
+      // Handle array fields - always send as arrays, even if empty
+      if (securityFeatures && securityFeatures.trim() !== "") {
+        formData.append("sensorsAndSoftware.securityFeatures", securityFeatures.trim());
+      } else {
+        formData.append("sensorsAndSoftware.securityFeatures", "[]");
+      }
+      
+      if (applications && applications.trim() !== "") {
+        formData.append("operationalEnvironmentAndApplications.applications", applications.trim());
+      } else {
+        formData.append("operationalEnvironmentAndApplications.applications", "[]");
+      }
+      
+      if (enduranceExtremeConditions && enduranceExtremeConditions.trim() !== "") {
+        formData.append("operationalEnvironmentAndApplications.enduranceExtremeConditions", enduranceExtremeConditions.trim());
+      } else {
+        formData.append("operationalEnvironmentAndApplications.enduranceExtremeConditions", "[]");
+      }
+      if (deploymentLogistics && deploymentLogistics.trim() !== "") {
+        formData.append("operationalEnvironmentAndApplications.deploymentLogistics", deploymentLogistics.trim());
+      } else {
+        formData.append("operationalEnvironmentAndApplications.deploymentLogistics", "[]");
+      }
 
       // Dimensions with validation
       if (length && length !== "" && !isNaN(length)) {
