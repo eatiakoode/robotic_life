@@ -4,6 +4,9 @@ import Description from "./Description";
 import Capabilities from "./Capabilities";
 import Media from "./Media";
 import FAQs from "./FAQs";
+import PayloadsAndAttachments from "./PayloadsAndAttachments";
+import SensorsAndSoftware from "./SensorsAndSoftware";
+import OperationalEnvironment from "./OperationalEnvironment";
 
 export default function Descriptions1({ product }) {
   const [activeTab, setActiveTab] = useState(1);
@@ -39,20 +42,20 @@ export default function Descriptions1({ product }) {
                   <span className="inner">FAQs</span>
                 </li>
                 <li
-                  className={`item-title ${activeTab == 4 ? "active" : ""} `}
-                  onClick={() => setActiveTab(4)}
+                  className={`item-title ${activeTab == 5 ? "active" : ""} `}
+                  onClick={() => setActiveTab(5)}
                 >
                   <span className="inner">Payloads & Attachments</span>
                 </li>
                 <li
-                  className={`item-title ${activeTab == 4 ? "active" : ""} `}
-                  onClick={() => setActiveTab(4)}
+                  className={`item-title ${activeTab == 6 ? "active" : ""} `}
+                  onClick={() => setActiveTab(6)}
                 >
                   <span className="inner">Sensors & Softwares</span>
                 </li>
                 <li
-                  className={`item-title ${activeTab == 4 ? "active" : ""} `}
-                  onClick={() => setActiveTab(4)}
+                  className={`item-title ${activeTab == 7 ? "active" : ""} `}
+                  onClick={() => setActiveTab(7)}
                 >
                   <span className="inner">Operational Environment</span>
                 </li>
@@ -110,6 +113,33 @@ export default function Descriptions1({ product }) {
                 >
                   <div className="tab-faqs">
                     <FAQs product={product} />
+                  </div>
+                </div>
+                <div
+                  className={`widget-content-inner ${
+                    activeTab == 5 ? "active" : ""
+                  } `}
+                >
+                  <div className="tab-payloads">
+                    <PayloadsAndAttachments product={product} />
+                  </div>
+                </div>
+                <div
+                  className={`widget-content-inner ${
+                    activeTab == 6 ? "active" : ""
+                  } `}
+                >
+                  <div className="tab-sensors">
+                    <SensorsAndSoftware product={product} />
+                  </div>
+                </div>
+                <div
+                  className={`widget-content-inner ${
+                    activeTab == 7 ? "active" : ""
+                  } `}
+                >
+                  <div className="tab-operational">
+                    <OperationalEnvironment product={product} />
                   </div>
                 </div>
               </div>

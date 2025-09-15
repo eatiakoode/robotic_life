@@ -2,113 +2,150 @@ import React from "react";
 import "./spec-cards.css";
 
 export default function Capabilities({ product }) {
+  const capabilities = product?.capabilities || {};
+
+  const renderUnitValue = (unitValue, title) => {
+    if (!unitValue || (!unitValue.value && !unitValue.unit)) return null;
+    return (
+      <div className="col-lg-4 col-md-6 mb-4">
+        <div className="spec-card">
+          <h6 className="spec-title">{title}</h6>
+          <p className="spec-content">
+            {unitValue.value && unitValue.unit 
+              ? `${unitValue.value} ${unitValue.unit}`
+              : unitValue.value || unitValue.unit || "N/A"
+            }
+          </p>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <>
       <div className="capabilities-grid">
         <div className="row">
-          {/* Navigation Type */}
-          {product?.navigationType && product.navigationType.length > 0 && (
+          {/* Autonomy Level */}
+          {capabilities.autonomyLevel && (
             <div className="col-lg-4 col-md-6 mb-4">
               <div className="spec-card">
-                <h6 className="spec-title">Navigation Type</h6>
+                <h6 className="spec-title">Autonomy Level</h6>
                 <p className="spec-content">
-                  {product.navigationType.map(nav => nav?.name || nav?.title || 'Unknown').join(', ')}
+                  {typeof capabilities.autonomyLevel === 'object' 
+                    ? capabilities.autonomyLevel.name || capabilities.autonomyLevel.title
+                    : capabilities.autonomyLevel
+                  }
                 </p>
               </div>
             </div>
           )}
 
-          {/* AI Software Features */}
-          {product?.aiSoftwareFeatures && product.aiSoftwareFeatures.length > 0 && (
+          {/* Navigation Types */}
+          {capabilities.navigationTypes && capabilities.navigationTypes.length > 0 && (
             <div className="col-lg-4 col-md-6 mb-4">
               <div className="spec-card">
-                <h6 className="spec-title">AI Software Features</h6>
+                <h6 className="spec-title">Navigation Types</h6>
                 <p className="spec-content">
-                  {product.aiSoftwareFeatures.map(feature => feature?.name || feature?.title || 'Unknown').join(', ')}
+                  {capabilities.navigationTypes.map(nav => 
+                    typeof nav === 'object' ? nav.name || nav.title : nav
+                  ).join(', ')}
                 </p>
               </div>
             </div>
           )}
 
-          {/* Operating Environment */}
-          {product?.operatingEnvironment && (
+          {/* Communication Methods */}
+          {capabilities.communicationMethods && capabilities.communicationMethods.length > 0 && (
             <div className="col-lg-4 col-md-6 mb-4">
               <div className="spec-card">
-                <h6 className="spec-title">Operating Environment</h6>
+                <h6 className="spec-title">Communication Methods</h6>
                 <p className="spec-content">
-                  {product.operatingEnvironment?.name || product.operatingEnvironment?.title || 'Unknown'}
+                  {capabilities.communicationMethods.map(comm => 
+                    typeof comm === 'object' ? comm.name || comm.title : comm
+                  ).join(', ')}
                 </p>
               </div>
             </div>
           )}
 
-          {/* Terrain Capability */}
-          {product?.terrainCapability && product.terrainCapability.length > 0 && (
+          {/* Features */}
+          {capabilities.features && capabilities.features.length > 0 && (
             <div className="col-lg-4 col-md-6 mb-4">
               <div className="spec-card">
-                <h6 className="spec-title">Terrain Capability</h6>
+                <h6 className="spec-title">Features</h6>
                 <p className="spec-content">
-                  {product.terrainCapability.map(terrain => terrain?.name || terrain?.title || 'Unknown').join(', ')}
-                </p>
-              </div>
-            </div>
-          )}
-
-          {/* Payload Type */}
-          {product?.payloadTypesSupported && product.payloadTypesSupported.length > 0 && (
-            <div className="col-lg-4 col-md-6 mb-4">
-              <div className="spec-card">
-                <h6 className="spec-title">Payload Type</h6>
-                <p className="spec-content">
-                  {product.payloadTypesSupported.map(payload => payload?.name || payload?.title || 'Unknown').join(', ')}
-                </p>
-              </div>
-            </div>
-          )}
-
-          {/* Sensors */}
-          {product?.sensors && product.sensors.length > 0 && (
-            <div className="col-lg-4 col-md-6 mb-4">
-              <div className="spec-card">
-                <h6 className="spec-title">Sensors</h6>
-                <p className="spec-content">
-                  {product.sensors.map(sensor => sensor?.name || sensor?.title || 'Unknown').join(', ')}
+                  {capabilities.features.join(', ')}
                 </p>
               </div>
             </div>
           )}
 
           {/* Primary Function */}
-          {product?.primaryFunction && (
+          {capabilities.primaryFunction && (
             <div className="col-lg-4 col-md-6 mb-4">
               <div className="spec-card">
                 <h6 className="spec-title">Primary Function</h6>
                 <p className="spec-content">
-                  {product.primaryFunction?.name || product.primaryFunction?.title || 'Unknown'}
+                  {typeof capabilities.primaryFunction === 'object' 
+                    ? capabilities.primaryFunction.name || capabilities.primaryFunction.title
+                    : capabilities.primaryFunction
+                  }
                 </p>
               </div>
             </div>
           )}
 
-          {/* Autonomy Level */}
-          {product?.autonomyLevel && (
+          {/* Interoperability */}
+          {capabilities.interoperability && capabilities.interoperability.length > 0 && (
             <div className="col-lg-4 col-md-6 mb-4">
               <div className="spec-card">
-                <h6 className="spec-title">Autonomy Level</h6>
+                <h6 className="spec-title">Interoperability</h6>
                 <p className="spec-content">
-                  {product.autonomyLevel?.name || product.autonomyLevel?.title || 'Unknown'}
+                  {capabilities.interoperability.join(', ')}
                 </p>
               </div>
             </div>
           )}
 
-          {/* Communication Method */}
-          {product?.communicationMethod && product.communicationMethod.length > 0 && (
+          {/* Load Handling */}
+          {capabilities.loadHandling && capabilities.loadHandling.grippingStrength && (capabilities.loadHandling.grippingStrength.value || capabilities.loadHandling.grippingStrength.unit) && (
             <div className="col-lg-4 col-md-6 mb-4">
               <div className="spec-card">
-                <h6 className="spec-title">Communication Method</h6>
+                <h6 className="spec-title">Gripping Strength</h6>
                 <p className="spec-content">
-                  {product.communicationMethod.map(comm => comm?.name || comm?.title || 'Unknown').join(', ')}
+                  {capabilities.loadHandling.grippingStrength.value && capabilities.loadHandling.grippingStrength.unit 
+                    ? `${capabilities.loadHandling.grippingStrength.value} ${capabilities.loadHandling.grippingStrength.unit}`
+                    : capabilities.loadHandling.grippingStrength.value || capabilities.loadHandling.grippingStrength.unit || "N/A"
+                  }
+                </p>
+              </div>
+            </div>
+          )}
+
+          {capabilities.loadHandling && capabilities.loadHandling.articulationPrecision && (capabilities.loadHandling.articulationPrecision.value || capabilities.loadHandling.articulationPrecision.unit) && (
+            <div className="col-lg-4 col-md-6 mb-4">
+              <div className="spec-card">
+                <h6 className="spec-title">Articulation Precision</h6>
+                <p className="spec-content">
+                  {capabilities.loadHandling.articulationPrecision.value && capabilities.loadHandling.articulationPrecision.unit 
+                    ? `${capabilities.loadHandling.articulationPrecision.value} ${capabilities.loadHandling.articulationPrecision.unit}`
+                    : capabilities.loadHandling.articulationPrecision.value || capabilities.loadHandling.articulationPrecision.unit || "N/A"
+                  }
+                </p>
+              </div>
+            </div>
+          )}
+
+          {/* Communication Range */}
+          {capabilities.communicationRange && (capabilities.communicationRange.value || capabilities.communicationRange.unit) && (
+            <div className="col-lg-4 col-md-6 mb-4">
+              <div className="spec-card">
+                <h6 className="spec-title">Communication Range</h6>
+                <p className="spec-content">
+                  {capabilities.communicationRange.value && capabilities.communicationRange.unit 
+                    ? `${capabilities.communicationRange.value} ${capabilities.communicationRange.unit}`
+                    : capabilities.communicationRange.value || capabilities.communicationRange.unit || "N/A"
+                  }
                 </p>
               </div>
             </div>
