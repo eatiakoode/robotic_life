@@ -6,7 +6,8 @@ import Link from "next/link";
 import Topbar6 from "@/components/headers/Topbar6";
 import About from "@/components/otherPages/About";
 import Info from "@/components/otherPages/Info";
-import Testimonials from "@/components/otherPages/Testimonials";
+// import Testimonials from "@/components/otherPages/Testimonials";
+import Testimonials from "@/components/homes/home-gaming/Testimonials";
 import React from "react";
 
 export const metadata = {

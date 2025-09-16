@@ -4,7 +4,6 @@ import Footer1 from "@/components/footers/Footer1";
 import Header1 from "@/components/headers/Header1";
 import Link from "next/link";
 import React from "react";
-import dynamic from "next/dynamic";
 
 // export default function BlogListPage() {
 //   return (
@@ -39,14 +38,11 @@ import dynamic from "next/dynamic";
 //   );
 // }
 
-import { getBlogBySlug } from "@/api/frontend/blog";
-import BlogDetail from "@/components/common/blog";
-import { getBlogById } from "@/api/blog";
+import { getBlogBySlug } from "@/api/blog";
 
 export async function generateMetadata({ params }) {
   try {
-    const res = await getBlogBySlug(params.id);
-    const blog = res?.data;
+    const blog = await getBlogBySlug(params.id);
 
     if (!blog) {
       return {
@@ -81,11 +77,6 @@ export async function generateMetadata({ params }) {
   }
 }
 const BlogDetailsDynamic = async ({params}) => {
-
-  
-  const id = params.id;
-const res = await getBlogById(params.id);
-    const blog = res?.data;
   return (
     <>
      <Header1 />
@@ -112,16 +103,11 @@ const res = await getBlogById(params.id);
           </div>
         </div>
       </div>
-      <BlogList blog={blog} />
+      <BlogList />
       <Footer1 dark/>
 
-    {/* <BlogDetail blog={blog}/> */}
     </>
   );
 };
 
-// export default BlogDetailsDynamic;
-
-export default dynamic(() => Promise.resolve(BlogDetailsDynamic), {
-  ssr: false,
-});
+export default BlogDetailsDynamic;

@@ -72,7 +72,7 @@
             color: var(--white);
         }
         &::after {
-            background-color: var(--primary);
+            background-color: #000000;
         }
         &.has-border {
             border: 1px solid var(--main);
@@ -99,7 +99,7 @@
     display: inline-flex;
     align-items: center;
     gap: 4px;
-    background: linear-gradient(to right, var(--primary) 50%, var(--main) 50%);
+    background: linear-gradient(to right, #000000 50%, var(--main) 50%);
     background-size: 200% 100%;
     background-position: right;
     -webkit-background-clip: text;
@@ -123,7 +123,7 @@
         width: 0;
         bottom: 0;
         height: 2px;
-        background-color: var(--primary);
+        background-color: #000000;
         transition: width 0.3s linear;
         z-index: 1;
     }
@@ -131,7 +131,7 @@
         color: var(--white);
         background: linear-gradient(
             to right,
-            var(--primary) 50%,
+            #000000 50%,
             var(--white) 50%
         );
         background-size: 200% 100%;
