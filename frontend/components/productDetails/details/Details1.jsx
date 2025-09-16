@@ -1,54 +1,39 @@
 "use client";
 
-import React, { useState, Suspense } from "react";
+import React, { Suspense } from "react";
 import dynamic from "next/dynamic";
+import { useContextElement } from "@/context/Context";
+import { transformRobotForComparison } from "@/api/robotCompare";
+import { openOffcanvasModal } from "@/utils/modalUtils";
 
 // ✅ Heavy components lazy load
 const Slider1 = dynamic(() => import("../sliders/Slider1"), { ssr: false });
 const ProductStikyBottom = dynamic(() => import("../ProductStikyBottom"), { ssr: false });
 
 export default function Details1({ product }) {
-  const [compareList, setCompareList] = useState([]);
-  const [isInCompare, setIsInCompare] = useState(false);
+  const {
+    addRobotToCompare,
+    isAddedtoCompareItem,
+  } = useContextElement();
 
-  // Check if product is already in compare list
-  React.useEffect(() => {
-    const savedCompareList = localStorage.getItem('robotCompareList');
-    if (savedCompareList) {
-      const parsedList = JSON.parse(savedCompareList);
-      setCompareList(parsedList);
-      setIsInCompare(parsedList.some(item => item.id === product.id));
-    }
-  }, [product.id]);
-
-  const handleAddToCompare = () => {
-    const savedCompareList = localStorage.getItem('robotCompareList');
-    let currentList = savedCompareList ? JSON.parse(savedCompareList) : [];
-    
-    if (isInCompare) {
-      // Remove from compare list
-      currentList = currentList.filter(item => item.id !== product.id);
-      setIsInCompare(false);
-    } else {
-      // Add to compare list (max 4 items)
-      if (currentList.length >= 4) {
-        alert('You can compare maximum 4 robots at a time. Please remove one robot from compare list first.');
+  const handleAddToCompare = (e) => {
+    e.preventDefault();
+    const robotData = transformRobotForComparison(product);
+    if (robotData && robotData.id) {
+      if (isAddedtoCompareItem(robotData.id)) {
+        openOffcanvasModal('compare');
         return;
       }
-      currentList.push({
-        id: product.id,
-        title: product.title,
-        price: product.price,
-        imgSrc: product.imgSrc,
-        manufacturer: product.manufacturer?.name || product.manufacturer,
-        category: product.category?.name || product.category
-      });
-      setIsInCompare(true);
+      addRobotToCompare(robotData);
+      setTimeout(() => {
+        openOffcanvasModal('compare');
+      }, 100);
+    } else {
+      console.error('Invalid robot data for comparison');
     }
-    
-    setCompareList(currentList);
-    localStorage.setItem('robotCompareList', JSON.stringify(currentList));
   };
+
+  const isInCompare = isAddedtoCompareItem(product._id || product.id);
 
   return (
     <section className="flat-spacing">
@@ -143,17 +128,6 @@ export default function Details1({ product }) {
                     >
                       <i className={`icon-${isInCompare ? 'check' : 'compare'}`}></i>
                       {isInCompare ? 'Remove from Compare' : 'Add to Compare'}
-                      {compareList.length > 0 && (
-                        <span className="compare-count" style={{
-                          backgroundColor: 'rgba(255,255,255,0.2)',
-                          borderRadius: '50%',
-                          padding: '2px 6px',
-                          fontSize: '12px',
-                          marginLeft: '4px'
-                        }}>
-                          {compareList.length}
-                        </span>
-                      )}
                     </button>
                   </div>
                 </div>

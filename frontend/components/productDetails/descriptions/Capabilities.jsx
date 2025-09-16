@@ -1,157 +1,111 @@
 import React from "react";
-import "./spec-cards.css";
+import "./spec-table.css";
 
 export default function Capabilities({ product }) {
   const capabilities = product?.capabilities || {};
 
   const renderUnitValue = (unitValue, title) => {
     if (!unitValue || (!unitValue.value && !unitValue.unit)) return null;
-    return (
-      <div className="col-lg-4 col-md-6 mb-4">
-        <div className="spec-card">
-          <h6 className="spec-title">{title}</h6>
-          <p className="spec-content">
-            {unitValue.value && unitValue.unit 
+    return {
+      title,
+      value: unitValue.value && unitValue.unit 
               ? `${unitValue.value} ${unitValue.unit}`
               : unitValue.value || unitValue.unit || "N/A"
-            }
-          </p>
-        </div>
-      </div>
-    );
+    };
   };
 
-  return (
-    <>
-      <div className="capabilities-grid">
-        <div className="row">
-          {/* Autonomy Level */}
-          {capabilities.autonomyLevel && (
-            <div className="col-lg-4 col-md-6 mb-4">
-              <div className="spec-card">
-                <h6 className="spec-title">Autonomy Level</h6>
-                <p className="spec-content">
-                  {typeof capabilities.autonomyLevel === 'object' 
+  // Collect all capabilities into an array
+  const getCapabilities = () => {
+    const capabilityList = [];
+
+    // Autonomy Level
+    if (capabilities.autonomyLevel) {
+      capabilityList.push({
+        title: "Autonomy Level",
+        value: typeof capabilities.autonomyLevel === 'object' 
                     ? capabilities.autonomyLevel.name || capabilities.autonomyLevel.title
                     : capabilities.autonomyLevel
-                  }
-                </p>
-              </div>
-            </div>
-          )}
+      });
+    }
 
-          {/* Navigation Types */}
-          {capabilities.navigationTypes && capabilities.navigationTypes.length > 0 && (
-            <div className="col-lg-4 col-md-6 mb-4">
-              <div className="spec-card">
-                <h6 className="spec-title">Navigation Types</h6>
-                <p className="spec-content">
-                  {capabilities.navigationTypes.map(nav => 
+    // Navigation Types
+    if (capabilities.navigationTypes && capabilities.navigationTypes.length > 0) {
+      capabilityList.push({
+        title: "Navigation Types",
+        value: capabilities.navigationTypes.map(nav => 
                     typeof nav === 'object' ? nav.name || nav.title : nav
-                  ).join(', ')}
-                </p>
-              </div>
-            </div>
-          )}
+        ).join(', ')
+      });
+    }
 
-          {/* Communication Methods */}
-          {capabilities.communicationMethods && capabilities.communicationMethods.length > 0 && (
-            <div className="col-lg-4 col-md-6 mb-4">
-              <div className="spec-card">
-                <h6 className="spec-title">Communication Methods</h6>
-                <p className="spec-content">
-                  {capabilities.communicationMethods.map(comm => 
+    // Communication Methods
+    if (capabilities.communicationMethods && capabilities.communicationMethods.length > 0) {
+      capabilityList.push({
+        title: "Communication Methods",
+        value: capabilities.communicationMethods.map(comm => 
                     typeof comm === 'object' ? comm.name || comm.title : comm
-                  ).join(', ')}
-                </p>
-              </div>
-            </div>
-          )}
+        ).join(', ')
+      });
+    }
 
-          {/* Features */}
-          {capabilities.features && capabilities.features.length > 0 && capabilities.features.some(feature => feature && feature.trim() !== '') && (
-            <div className="col-lg-4 col-md-6 mb-4">
-              <div className="spec-card">
-                <h6 className="spec-title">Features</h6>
-                <p className="spec-content">
-                  {capabilities.features.filter(feature => feature && feature.trim() !== '').join(', ')}
-                </p>
-              </div>
-            </div>
-          )}
+    // Features
+    if (capabilities.features && capabilities.features.length > 0 && capabilities.features.some(feature => feature && feature.trim() !== '')) {
+      capabilityList.push({
+        title: "Features",
+        value: capabilities.features.filter(feature => feature && feature.trim() !== '').join(', ')
+      });
+    }
 
-          {/* Primary Function */}
-          {capabilities.primaryFunction && (
-            <div className="col-lg-4 col-md-6 mb-4">
-              <div className="spec-card">
-                <h6 className="spec-title">Primary Function</h6>
-                <p className="spec-content">
-                  {typeof capabilities.primaryFunction === 'object' 
+    // Primary Function
+    if (capabilities.primaryFunction) {
+      capabilityList.push({
+        title: "Primary Function",
+        value: typeof capabilities.primaryFunction === 'object' 
                     ? capabilities.primaryFunction.name || capabilities.primaryFunction.title
                     : capabilities.primaryFunction
-                  }
-                </p>
-              </div>
-            </div>
-          )}
+      });
+    }
 
-          {/* Interoperability */}
-          {capabilities.interoperability && capabilities.interoperability.length > 0 && capabilities.interoperability.some(item => item && item.trim() !== '') && (
-            <div className="col-lg-4 col-md-6 mb-4">
-              <div className="spec-card">
-                <h6 className="spec-title">Interoperability</h6>
-                <p className="spec-content">
-                  {capabilities.interoperability.filter(item => item && item.trim() !== '').join(', ')}
-                </p>
-              </div>
-            </div>
-          )}
+    // Interoperability
+    if (capabilities.interoperability && capabilities.interoperability.length > 0 && capabilities.interoperability.some(item => item && item.trim() !== '')) {
+      capabilityList.push({
+        title: "Interoperability",
+        value: capabilities.interoperability.filter(item => item && item.trim() !== '').join(', ')
+      });
+    }
 
-          {/* Load Handling */}
-          {capabilities.loadHandling && capabilities.loadHandling.grippingStrength && (capabilities.loadHandling.grippingStrength.value || capabilities.loadHandling.grippingStrength.unit) && (
-            <div className="col-lg-4 col-md-6 mb-4">
-              <div className="spec-card">
-                <h6 className="spec-title">Gripping Strength</h6>
-                <p className="spec-content">
-                  {capabilities.loadHandling.grippingStrength.value && capabilities.loadHandling.grippingStrength.unit 
-                    ? `${capabilities.loadHandling.grippingStrength.value} ${capabilities.loadHandling.grippingStrength.unit}`
-                    : capabilities.loadHandling.grippingStrength.value || capabilities.loadHandling.grippingStrength.unit || "N/A"
-                  }
-                </p>
-              </div>
-            </div>
-          )}
+    // Load Handling
+    if (capabilities.loadHandling) {
+      if (capabilities.loadHandling.grippingStrength && (capabilities.loadHandling.grippingStrength.value || capabilities.loadHandling.grippingStrength.unit)) {
+        capabilityList.push(renderUnitValue(capabilities.loadHandling.grippingStrength, "Gripping Strength"));
+      }
+      if (capabilities.loadHandling.articulationPrecision && (capabilities.loadHandling.articulationPrecision.value || capabilities.loadHandling.articulationPrecision.unit)) {
+        capabilityList.push(renderUnitValue(capabilities.loadHandling.articulationPrecision, "Articulation Precision"));
+      }
+    }
 
-          {capabilities.loadHandling && capabilities.loadHandling.articulationPrecision && (capabilities.loadHandling.articulationPrecision.value || capabilities.loadHandling.articulationPrecision.unit) && (
-            <div className="col-lg-4 col-md-6 mb-4">
-              <div className="spec-card">
-                <h6 className="spec-title">Articulation Precision</h6>
-                <p className="spec-content">
-                  {capabilities.loadHandling.articulationPrecision.value && capabilities.loadHandling.articulationPrecision.unit 
-                    ? `${capabilities.loadHandling.articulationPrecision.value} ${capabilities.loadHandling.articulationPrecision.unit}`
-                    : capabilities.loadHandling.articulationPrecision.value || capabilities.loadHandling.articulationPrecision.unit || "N/A"
-                  }
-                </p>
-              </div>
-            </div>
-          )}
+    // Communication Range
+    if (capabilities.communicationRange && (capabilities.communicationRange.value || capabilities.communicationRange.unit)) {
+      capabilityList.push(renderUnitValue(capabilities.communicationRange, "Communication Range"));
+    }
 
-          {/* Communication Range */}
-          {capabilities.communicationRange && (capabilities.communicationRange.value || capabilities.communicationRange.unit) && (
-            <div className="col-lg-4 col-md-6 mb-4">
-              <div className="spec-card">
-                <h6 className="spec-title">Communication Range</h6>
-                <p className="spec-content">
-                  {capabilities.communicationRange.value && capabilities.communicationRange.unit 
-                    ? `${capabilities.communicationRange.value} ${capabilities.communicationRange.unit}`
-                    : capabilities.communicationRange.value || capabilities.communicationRange.unit || "N/A"
-                  }
-                </p>
-              </div>
-            </div>
-          )}
-        </div>
+    return capabilityList.filter(capability => capability !== null);
+  };
+
+  const capabilitiesList = getCapabilities();
+
+  return (
+    <div className="specification-table-container">
+      <table className="specification-table">
+        <tbody>
+          {capabilitiesList.map((capability, index) => (
+            <tr key={index} className="spec-row">
+              <td className="spec-label">{capability.title}</td>
+              <td className="spec-value">{capability.value}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
       </div>
-    </>
   );
 }

@@ -1,7 +1,5 @@
 "use client";
 import { slides } from "@/data/singleProductSliders";
-import Drift from "drift-zoom";
-import PhotoSwipeLightbox from "photoswipe/lightbox";
 import { useEffect, useRef, useState } from "react";
 import { Navigation, Thumbs } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -34,83 +32,7 @@ export default function Slider1({
     items[0].src = firstItem;
   }
 
-  useEffect(() => {
-    // Function to initialize Drift safely
-    const imageZoom = () => {
-      const driftAll = document.querySelectorAll(".tf-image-zoom");
-      const pane = document.querySelector(".tf-zoom-main");
 
-      if (driftAll.length > 0 && pane) {
-        driftAll.forEach((el) => {
-          try {
-            new Drift(el, {
-              zoomFactor: 2,
-              paneContainer: pane,
-              inlinePane: false,
-              handleTouch: false,
-              hoverBoundingBox: true,
-              containInline: true,
-            });
-          } catch (err) {
-            console.warn("Drift init failed:", err.message);
-          }
-        });
-      } else {
-        console.log("Zoom skipped: elements not found.");
-      }
-    };
-
-    imageZoom();
-
-    const zoomElements = document.querySelectorAll(".tf-image-zoom");
-
-    const handleMouseOver = (event) => {
-      const parent = event.target.closest(".section-image-zoom");
-      if (parent) {
-        parent.classList.add("zoom-active");
-      }
-    };
-
-    const handleMouseLeave = (event) => {
-      const parent = event.target.closest(".section-image-zoom");
-      if (parent) {
-        parent.classList.remove("zoom-active");
-      }
-    };
-
-    zoomElements.forEach((element) => {
-      element.addEventListener("mouseover", handleMouseOver);
-      element.addEventListener("mouseleave", handleMouseLeave);
-    });
-
-    // Cleanup event listeners on component unmount
-    return () => {
-      zoomElements.forEach((element) => {
-        element.removeEventListener("mouseover", handleMouseOver);
-        element.removeEventListener("mouseleave", handleMouseLeave);
-      });
-    };
-  }, []); // Empty dependency array to run only once on mount
-
-  const lightboxRef = useRef(null);
-  useEffect(() => {
-    // Initialize PhotoSwipeLightbox
-    const lightbox = new PhotoSwipeLightbox({
-      gallery: "#gallery-swiper-started",
-      children: ".item",
-      pswpModule: () => import("photoswipe"),
-    });
-
-    lightbox.init();
-
-    // Store the lightbox instance in the ref for later use
-    lightboxRef.current = lightbox;
-
-    // Cleanup: destroy the lightbox when the component unmounts
-    return () => {
-      lightbox.destroy();
-    };
-  }, []);
 
   const [thumbsSwiper, setThumbsSwiper] = useState(null);
   const [activeIndex, setActiveIndex] = useState(0);
@@ -166,7 +88,7 @@ export default function Slider1({
   return (
     <div className="thumbs-slider">
       <Swiper
-        className="swiper tf-product-media-thumbs other-image-zoom"
+        className="swiper tf-product-media-thumbs"
         dir="ltr"
         direction="vertical"
         spaceBetween={10}
@@ -243,23 +165,16 @@ export default function Slider1({
       >
         {items.map((slide, index) => (
           <SwiperSlide key={index} className="swiper-slide" data-color="gray">
-            <a
-              href={slide.src}
-              target="_blank"
-              className="item"
-              data-pswp-width={slide.width}
-              data-pswp-height={slide.height}
-            >
+            <div className="item">
               <Image
-                className="tf-image-zoom lazyload"
-                data-zoom={slide.src}
+                className="lazyload"
                 data-src={slide.src}
                 alt={slide.alt}
                 src={slide.src}
                 width={slide.width}
                 height={slide.height}
               />
-            </a>
+            </div>
           </SwiperSlide>
         ))}
       </Swiper>

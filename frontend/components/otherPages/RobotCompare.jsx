@@ -1,9 +1,9 @@
 "use client";
 import { useContextElement } from "@/context/Context";
-import { compareRobots, transformRobotForComparison } from "@/api/robotCompare";
 import Image from "next/image";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
+import "./robot-compare.css";
 
 export default function RobotCompare() {
   const {
@@ -16,35 +16,61 @@ export default function RobotCompare() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    const fetchCompareData = async () => {
-      if (contextCompareRobots.length === 0) {
-        setRobots([]);
-        return;
-      }
+  // Transform robot data for comparison display
+  const transformRobotForComparison = (robot) => {
+    if (!robot) {
+      return null;
+    }
 
-      setLoading(true);
-      setError(null);
-
-      try {
-        const robotIds = contextCompareRobots.map(robot => robot.id);
-        const response = await compareRobots(robotIds);
-        
-        if (response.success && response.data) {
-          const transformedRobots = response.data.map(transformRobotForComparison);
-          setRobots(transformedRobots);
-        } else {
-          setError('Failed to fetch robot comparison data');
-        }
-      } catch (err) {
-        console.error('Error fetching compare data:', err);
-        setError(err.message || 'Failed to load robot comparison data');
-      } finally {
-        setLoading(false);
-      }
+    const transformed = {
+      id: robot._id || robot.id,
+      title: robot.title || 'Untitled Robot',
+      slug: robot.slug || '',
+      description: robot.description || '',
+      price: robot.totalPrice || robot.price || 0,
+      launchYear: robot.launchYear || '',
+      images: robot.images || (robot.imgSrc ? [robot.imgSrc] : []),
+      category: robot.category?.name || robot.category || 'N/A',
+      manufacturer: robot.manufacturer?.name || robot.manufacturer || 'N/A',
+      powerSource: robot.powerSource?.name || robot.powerSource || 'N/A',
+      primaryFunction: robot.primaryFunction?.name || robot.primaryFunction || 'N/A',
+      operatingEnvironment: robot.operatingEnvironment?.name || robot.operatingEnvironment || 'N/A',
+      autonomyLevel: robot.autonomyLevel?.name || robot.autonomyLevel || 'N/A',
+      colors: robot.color?.map(c => c.name) || robot.colors || [],
+      materials: robot.material?.map(m => m.name) || robot.materials || [],
+      navigationTypes: robot.navigationType?.map(n => n.name) || robot.navigationTypes || [],
+      sensors: robot.sensors?.map(s => s.name) || robot.sensors || [],
+      aiSoftwareFeatures: robot.aiSoftwareFeatures?.map(a => a.name) || robot.aiSoftwareFeatures || [],
+      terrainCapabilities: robot.terrainCapability?.map(t => t.name) || robot.terrainCapabilities || [],
+      communicationMethods: robot.communicationMethod?.map(c => c.name) || robot.communicationMethods || [],
+      payloadTypes: robot.payloadTypesSupported?.map(p => p.name) || robot.payloadTypes || [],
+      // Specifications
+      weight: robot.weight || null,
+      speed: robot.speed || null,
+      range: robot.range || null,
+      loadCapacity: robot.loadCapacity || null,
+      batteryCapacity: robot.batteryCapacity || null,
+      runtime: robot.runtime || null,
+      dimensions: robot.dimensions || null,
+      operatingTemperature: robot.operatingTemperature || null,
     };
+    
+    return transformed;
+  };
 
-    fetchCompareData();
+  useEffect(() => {
+    if (contextCompareRobots.length === 0) {
+      setRobots([]);
+      return;
+    }
+
+    console.log('Context compare robots:', contextCompareRobots);
+    
+    // Transform the robots data for better display
+    const transformedRobots = contextCompareRobots.map(transformRobotForComparison);
+    console.log('Transformed robots:', transformedRobots);
+    setRobots(transformedRobots);
+    setLoading(false);
   }, [contextCompareRobots]);
 
   const getImageUrl = (images) => {
@@ -63,16 +89,31 @@ export default function RobotCompare() {
   };
 
   const formatSpecification = (spec) => {
-    if (!spec) return 'N/A';
-    if (typeof spec === 'object' && spec.value && spec.unit) {
-      return `${spec.value} ${spec.unit}`;
+    if (!spec || spec === null || spec === undefined) return 'N/A';
+    if (typeof spec === 'object') {
+      if (spec.value && spec.unit) {
+        return `${spec.value} ${spec.unit}`;
+      }
+      if (spec.name) {
+        return spec.name;
+      }
+      if (Array.isArray(spec) && spec.length > 0) {
+        return spec.map(item => item.name || item).join(', ');
+      }
+      return 'N/A';
     }
+    if (typeof spec === 'string' && spec.trim() === '') return 'N/A';
     return spec.toString();
   };
 
   const formatArraySpec = (arr) => {
-    if (!arr || arr.length === 0) return 'N/A';
-    return arr.join(', ');
+    if (!arr || !Array.isArray(arr) || arr.length === 0) return 'N/A';
+    return arr.map(item => {
+      if (typeof item === 'object' && item.name) {
+        return item.name;
+      }
+      return item;
+    }).join(', ');
   };
 
   if (loading) {
@@ -131,16 +172,22 @@ export default function RobotCompare() {
               <h3>Compare Robots ({robots.length}/3)</h3>
               <button 
                 className="btn btn-outline-danger btn-sm"
-                onClick={clearAllCompareRobots}
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  clearAllCompareRobots();
+                  // Reset cursor to default
+                  document.body.style.cursor = 'default';
+                }}
               >
                 Clear All
               </button>
             </div>
 
-            <div className="tf-compare-table">
+            <div className={`tf-compare-table ${robots.length === 1 ? 'one-product' : robots.length === 2 ? 'two-products' : 'three-products'}`}>
               {/* Header Row */}
-              <div className="tf-compare-row tf-compare-grid">
-                <div className="tf-compare-col d-md-block d-none">
+              <div className="tf-compare-row">
+                <div className="tf-compare-col">
                   <h6>Robot Details</h6>
                 </div>
                 {robots.map((robot, i) => (
@@ -148,7 +195,13 @@ export default function RobotCompare() {
                     <div className="tf-compare-item">
                       <button
                         className="btn-close position-absolute top-0 end-0 m-2"
-                        onClick={() => removeRobotFromCompare(robot.id)}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          removeRobotFromCompare(robot.id);
+                          // Reset cursor to default
+                          document.body.style.cursor = 'default';
+                        }}
                         style={{ zIndex: 10 }}
                         title="Remove from comparison"
                       ></button>
@@ -182,11 +235,11 @@ export default function RobotCompare() {
 
               {/* Price Row */}
               <div className="tf-compare-row">
-                <div className="tf-compare-col tf-compare-field d-md-block d-none">
+                <div className="tf-compare-col">
                   <h6>Price</h6>
                 </div>
                 {robots.map((robot, i) => (
-                  <div key={i} className="tf-compare-col tf-compare-field text-center">
+                  <div key={i} className="tf-compare-col tf-compare-field">
                     <span className="price">
                       {robot.price ? `$${robot.price.toLocaleString()}` : 'Price on Request'}
                     </span>
@@ -196,11 +249,11 @@ export default function RobotCompare() {
 
               {/* Launch Year Row */}
               <div className="tf-compare-row">
-                <div className="tf-compare-col tf-compare-field d-md-block d-none">
+                <div className="tf-compare-col">
                   <h6>Launch Year</h6>
                 </div>
                 {robots.map((robot, i) => (
-                  <div key={i} className="tf-compare-col tf-compare-field text-center">
+                  <div key={i} className="tf-compare-col tf-compare-field">
                     <span>{robot.launchYear || 'N/A'}</span>
                   </div>
                 ))}
@@ -208,11 +261,11 @@ export default function RobotCompare() {
 
               {/* Category Row */}
               <div className="tf-compare-row">
-                <div className="tf-compare-col tf-compare-field d-md-block d-none">
+                <div className="tf-compare-col">
                   <h6>Category</h6>
                 </div>
                 {robots.map((robot, i) => (
-                  <div key={i} className="tf-compare-col tf-compare-field text-center">
+                  <div key={i} className="tf-compare-col tf-compare-field">
                     <span>{robot.category}</span>
                   </div>
                 ))}
@@ -220,11 +273,11 @@ export default function RobotCompare() {
 
               {/* Manufacturer Row */}
               <div className="tf-compare-row">
-                <div className="tf-compare-col tf-compare-field d-md-block d-none">
+                <div className="tf-compare-col">
                   <h6>Manufacturer</h6>
                 </div>
                 {robots.map((robot, i) => (
-                  <div key={i} className="tf-compare-col tf-compare-field text-center">
+                  <div key={i} className="tf-compare-col tf-compare-field">
                     <span>{robot.manufacturer}</span>
                   </div>
                 ))}
@@ -232,11 +285,11 @@ export default function RobotCompare() {
 
               {/* Power Source Row */}
               <div className="tf-compare-row">
-                <div className="tf-compare-col tf-compare-field d-md-block d-none">
+                <div className="tf-compare-col">
                   <h6>Power Source</h6>
                 </div>
                 {robots.map((robot, i) => (
-                  <div key={i} className="tf-compare-col tf-compare-field text-center">
+                  <div key={i} className="tf-compare-col tf-compare-field">
                     <span>{robot.powerSource}</span>
                   </div>
                 ))}
@@ -244,11 +297,11 @@ export default function RobotCompare() {
 
               {/* Primary Function Row */}
               <div className="tf-compare-row">
-                <div className="tf-compare-col tf-compare-field d-md-block d-none">
+                <div className="tf-compare-col">
                   <h6>Primary Function</h6>
                 </div>
                 {robots.map((robot, i) => (
-                  <div key={i} className="tf-compare-col tf-compare-field text-center">
+                  <div key={i} className="tf-compare-col tf-compare-field">
                     <span>{robot.primaryFunction}</span>
                   </div>
                 ))}
@@ -256,11 +309,11 @@ export default function RobotCompare() {
 
               {/* Operating Environment Row */}
               <div className="tf-compare-row">
-                <div className="tf-compare-col tf-compare-field d-md-block d-none">
+                <div className="tf-compare-col">
                   <h6>Operating Environment</h6>
                 </div>
                 {robots.map((robot, i) => (
-                  <div key={i} className="tf-compare-col tf-compare-field text-center">
+                  <div key={i} className="tf-compare-col tf-compare-field">
                     <span>{robot.operatingEnvironment}</span>
                   </div>
                 ))}
@@ -268,11 +321,11 @@ export default function RobotCompare() {
 
               {/* Autonomy Level Row */}
               <div className="tf-compare-row">
-                <div className="tf-compare-col tf-compare-field d-md-block d-none">
+                <div className="tf-compare-col">
                   <h6>Autonomy Level</h6>
                 </div>
                 {robots.map((robot, i) => (
-                  <div key={i} className="tf-compare-col tf-compare-field text-center">
+                  <div key={i} className="tf-compare-col tf-compare-field">
                     <span>{robot.autonomyLevel}</span>
                   </div>
                 ))}
@@ -280,11 +333,11 @@ export default function RobotCompare() {
 
               {/* Weight Row */}
               <div className="tf-compare-row">
-                <div className="tf-compare-col tf-compare-field d-md-block d-none">
+                <div className="tf-compare-col">
                   <h6>Weight</h6>
                 </div>
                 {robots.map((robot, i) => (
-                  <div key={i} className="tf-compare-col tf-compare-field text-center">
+                  <div key={i} className="tf-compare-col tf-compare-field">
                     <span>{formatSpecification(robot.weight)}</span>
                   </div>
                 ))}
@@ -292,11 +345,11 @@ export default function RobotCompare() {
 
               {/* Speed Row */}
               <div className="tf-compare-row">
-                <div className="tf-compare-col tf-compare-field d-md-block d-none">
+                <div className="tf-compare-col">
                   <h6>Speed</h6>
                 </div>
                 {robots.map((robot, i) => (
-                  <div key={i} className="tf-compare-col tf-compare-field text-center">
+                  <div key={i} className="tf-compare-col tf-compare-field">
                     <span>{formatSpecification(robot.speed)}</span>
                   </div>
                 ))}
@@ -304,11 +357,11 @@ export default function RobotCompare() {
 
               {/* Range Row */}
               <div className="tf-compare-row">
-                <div className="tf-compare-col tf-compare-field d-md-block d-none">
+                <div className="tf-compare-col">
                   <h6>Range</h6>
                 </div>
                 {robots.map((robot, i) => (
-                  <div key={i} className="tf-compare-col tf-compare-field text-center">
+                  <div key={i} className="tf-compare-col tf-compare-field">
                     <span>{formatSpecification(robot.range)}</span>
                   </div>
                 ))}
@@ -316,11 +369,11 @@ export default function RobotCompare() {
 
               {/* Load Capacity Row */}
               <div className="tf-compare-row">
-                <div className="tf-compare-col tf-compare-field d-md-block d-none">
+                <div className="tf-compare-col">
                   <h6>Load Capacity</h6>
                 </div>
                 {robots.map((robot, i) => (
-                  <div key={i} className="tf-compare-col tf-compare-field text-center">
+                  <div key={i} className="tf-compare-col tf-compare-field">
                     <span>{formatSpecification(robot.loadCapacity)}</span>
                   </div>
                 ))}
@@ -328,11 +381,11 @@ export default function RobotCompare() {
 
               {/* Battery Capacity Row */}
               <div className="tf-compare-row">
-                <div className="tf-compare-col tf-compare-field d-md-block d-none">
+                <div className="tf-compare-col">
                   <h6>Battery Capacity</h6>
                 </div>
                 {robots.map((robot, i) => (
-                  <div key={i} className="tf-compare-col tf-compare-field text-center">
+                  <div key={i} className="tf-compare-col tf-compare-field">
                     <span>{formatSpecification(robot.batteryCapacity)}</span>
                   </div>
                 ))}
@@ -340,11 +393,11 @@ export default function RobotCompare() {
 
               {/* Runtime Row */}
               <div className="tf-compare-row">
-                <div className="tf-compare-col tf-compare-field d-md-block d-none">
+                <div className="tf-compare-col">
                   <h6>Runtime</h6>
                 </div>
                 {robots.map((robot, i) => (
-                  <div key={i} className="tf-compare-col tf-compare-field text-center">
+                  <div key={i} className="tf-compare-col tf-compare-field">
                     <span>{formatSpecification(robot.runtime)}</span>
                   </div>
                 ))}
@@ -352,11 +405,11 @@ export default function RobotCompare() {
 
               {/* Colors Row */}
               <div className="tf-compare-row">
-                <div className="tf-compare-col tf-compare-field d-md-block d-none">
+                <div className="tf-compare-col">
                   <h6>Colors</h6>
                 </div>
                 {robots.map((robot, i) => (
-                  <div key={i} className="tf-compare-col tf-compare-field text-center">
+                  <div key={i} className="tf-compare-col tf-compare-field">
                     <span>{formatArraySpec(robot.colors)}</span>
                   </div>
                 ))}
@@ -364,11 +417,11 @@ export default function RobotCompare() {
 
               {/* Materials Row */}
               <div className="tf-compare-row">
-                <div className="tf-compare-col tf-compare-field d-md-block d-none">
+                <div className="tf-compare-col">
                   <h6>Materials</h6>
                 </div>
                 {robots.map((robot, i) => (
-                  <div key={i} className="tf-compare-col tf-compare-field text-center">
+                  <div key={i} className="tf-compare-col tf-compare-field">
                     <span>{formatArraySpec(robot.materials)}</span>
                   </div>
                 ))}
@@ -376,11 +429,11 @@ export default function RobotCompare() {
 
               {/* Sensors Row */}
               <div className="tf-compare-row">
-                <div className="tf-compare-col tf-compare-field d-md-block d-none">
+                <div className="tf-compare-col">
                   <h6>Sensors</h6>
                 </div>
                 {robots.map((robot, i) => (
-                  <div key={i} className="tf-compare-col tf-compare-field text-center">
+                  <div key={i} className="tf-compare-col tf-compare-field">
                     <span>{formatArraySpec(robot.sensors)}</span>
                   </div>
                 ))}
@@ -388,11 +441,11 @@ export default function RobotCompare() {
 
               {/* AI Software Features Row */}
               <div className="tf-compare-row">
-                <div className="tf-compare-col tf-compare-field d-md-block d-none">
+                <div className="tf-compare-col">
                   <h6>AI Features</h6>
                 </div>
                 {robots.map((robot, i) => (
-                  <div key={i} className="tf-compare-col tf-compare-field text-center">
+                  <div key={i} className="tf-compare-col tf-compare-field">
                     <span>{formatArraySpec(robot.aiSoftwareFeatures)}</span>
                   </div>
                 ))}
@@ -400,11 +453,11 @@ export default function RobotCompare() {
 
               {/* View Details Row */}
               <div className="tf-compare-row">
-                <div className="tf-compare-col tf-compare-field d-md-block d-none">
+                <div className="tf-compare-col">
                   <h6>View Details</h6>
                 </div>
                 {robots.map((robot, i) => (
-                  <div key={i} className="tf-compare-col tf-compare-field tf-compare-viewcart text-center">
+                  <div key={i} className="tf-compare-col tf-compare-field tf-compare-viewcart">
                     <Link
                       className="btn btn-primary btn-sm"
                       href={`/product-detail/${robot.slug || robot.id}`}

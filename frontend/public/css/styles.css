@@ -3057,6 +3057,26 @@ footer.has-pb {
   padding-bottom: 98px;
 }
 
+/* Sticky Footer Fix */
+html, body {
+  height: 100%;
+}
+
+#wrapper {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+#wrapper > main,
+#wrapper > div:not(.offcanvas):not(.modal) {
+  flex: 1;
+}
+
+footer {
+  margin-top: auto;
+}
+
 .tf-payment {
   display: flex;
   align-items: center;

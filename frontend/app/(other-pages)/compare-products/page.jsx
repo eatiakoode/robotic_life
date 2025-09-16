@@ -12,27 +12,27 @@ export default function CompareProductsPage() {
       <Header1 />
       <div
         className="page-title"
-        style={{ backgroundImage: "url(/images/section/page-title.jpg)" }}
+        style={{ backgroundImage: "url(/images/section/detail-card.png)" }}
       >
         <div className="container">
-          <h3 className="heading text-center">Compare Robots</h3>
+          <h3 className="heading text-center text-white">Compare Robots</h3>
           <ul className="breadcrumbs d-flex align-items-center justify-content-center">
             <li>
-              <Link className="link" href={`/`}>
+              <Link className="text-white bg-gradient-to-r from-gray-200 to-gray-400 bg-clip-text text-transparent hover:from-gray-300 hover:to-gray-500 transition duration-300" href={`/`}>
                 Homepage
               </Link>
             </li>
             <li>
               <i className="icon-arrRight" />
             </li>
-            <li>
+            {/* <li>
               <Link className="link" href={`/shop-filter-canvas`}>
                 Shop
               </Link>
-            </li>
-            <li>
+            </li> */}
+            {/* <li>
               <i className="icon-arrRight" />
-            </li>
+            </li> */}
             <li>Compare</li>
           </ul>
         </div>

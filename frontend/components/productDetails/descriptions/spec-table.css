@@ -1,0 +1,207 @@
+/* Specification Table Styles */
+.specification-table-container {
+  padding: 30px 40px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  min-height: 400px;
+}
+
+.specification-table {
+  width: 100%;
+  max-width: 900px;
+  border-collapse: collapse;
+  background: #fff;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1), 0 4px 10px rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+}
+
+.spec-row {
+  border-bottom: 1px solid #f1f5f9;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.spec-row:last-child {
+  border-bottom: none;
+}
+
+.spec-row:hover {
+  background: linear-gradient(135deg, #000000 0%, #e5e7eb 100%);
+  transform: translateX(8px) scale(1.02);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3), 0 4px 12px rgba(0, 0, 0, 0.2);
+  border-left: 4px solid #374151;
+}
+
+.spec-row:hover .spec-label {
+  background: linear-gradient(135deg, #000000 0%, #e5e7eb 100%);
+  color: #ffffff;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  transform: translateX(-4px);
+  font-weight: 800;
+}
+
+.spec-row:hover .spec-value {
+  color: #000000;
+  font-weight: 600;
+  transform: translateX(-4px);
+}
+
+.spec-label {
+  padding: 20px 24px;
+  font-weight: 700;
+  color: #1e293b;
+  font-size: 15px;
+  width: 40%;
+  vertical-align: top;
+  border-right: 1px solid #f1f5f9;
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  position: relative;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.spec-label::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 1px;
+  height: 60%;
+  background: linear-gradient(to bottom, transparent, #cbd5e1, transparent);
+}
+
+.spec-value {
+  padding: 20px 24px;
+  color: #475569;
+  font-size: 15px;
+  line-height: 1.6;
+  vertical-align: top;
+  width: 60%;
+  font-weight: 500;
+  background: #fff;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .specification-table-container {
+    padding: 20px 30px;
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  }
+  
+  .specification-table {
+    max-width: 100%;
+    border-radius: 12px;
+  }
+  
+  .spec-label {
+    padding: 16px 18px;
+    font-size: 14px;
+    width: 35%;
+    letter-spacing: 0.3px;
+  }
+  
+  .spec-value {
+    padding: 16px 18px;
+    font-size: 14px;
+    width: 65%;
+  }
+}
+
+@media (max-width: 480px) {
+  .specification-table-container {
+    padding: 15px 20px;
+  }
+  
+  .specification-table {
+    font-size: 13px;
+    border-radius: 10px;
+  }
+  
+  .spec-label {
+    padding: 14px 16px;
+    font-size: 13px;
+    width: 30%;
+    letter-spacing: 0.2px;
+  }
+  
+  .spec-value {
+    padding: 14px 16px;
+    font-size: 13px;
+    width: 70%;
+  }
+}
+
+/* Alternative mobile layout - stack vertically on very small screens */
+@media (max-width: 360px) {
+  .specification-table-container {
+    padding: 15px 15px;
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  }
+  
+  .specification-table {
+    display: block;
+    border-radius: 8px;
+  }
+  
+  .spec-row {
+    display: block;
+    border-bottom: 1px solid #f1f5f9;
+    padding: 16px 20px;
+    margin-bottom: 8px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+  }
+  
+  .spec-row:hover {
+    transform: translateY(-4px) scale(1.02);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3), 0 4px 8px rgba(0, 0, 0, 0.2);
+    background: linear-gradient(135deg, #000000 0%, #e5e7eb 100%);
+    border-left: 4px solid #374151;
+  }
+  
+  .spec-row:hover .spec-label {
+    background: linear-gradient(135deg, #000000 0%, #e5e7eb 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    color: #ffffff;
+    font-weight: 800;
+  }
+  
+  .spec-row:hover .spec-value {
+    color: #000000;
+    font-weight: 600;
+  }
+  
+  .spec-label {
+    display: block;
+    width: 100%;
+    padding: 0 0 8px 0;
+    border-right: none;
+    background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-weight: 700;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  
+  .spec-value {
+    display: block;
+    width: 100%;
+    padding: 0;
+    color: #475569;
+    font-weight: 500;
+    font-size: 13px;
+  }
+}

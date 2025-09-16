@@ -1,144 +1,106 @@
 "use client";
 import React from "react";
+import "./spec-table.css";
 
 export default function OperationalEnvironment({ product }) {
   const operationalData = product?.operationalEnvironmentAndApplications || {};
 
   const renderUnitValue = (unitValue, label) => {
     if (!unitValue || (!unitValue.value && !unitValue.unit)) return null;
-    return (
-      <div className="spec-item mb_6">
-        <span className="fw-bold">{label}:</span>
-        <span className="ms-2">
-          {unitValue.value && unitValue.unit 
+    return {
+      title: label,
+      value: unitValue.value && unitValue.unit 
             ? `${unitValue.value} ${unitValue.unit}`
             : unitValue.value || unitValue.unit || "N/A"
-          }
-        </span>
-      </div>
-    );
+    };
   };
 
-  return (
-    <>
-      <div className="capabilities-grid">
-        <div className="row">
-          {operationalData.operatingEnvironment && (
-            <div className="col-lg-4 col-md-6 mb-4">
-              <div className="spec-card">
-                <h6 className="spec-title">Operating Environment</h6>
-                <p className="spec-content">
-                  {typeof operationalData.operatingEnvironment === 'object' 
+  // Collect all operational environment data into an array
+  const getOperationalEnvironment = () => {
+    const dataList = [];
+
+    // Operating Environment
+    if (operationalData.operatingEnvironment) {
+      dataList.push({
+        title: "Operating Environment",
+        value: typeof operationalData.operatingEnvironment === 'object' 
                     ? operationalData.operatingEnvironment.name || operationalData.operatingEnvironment.title
                     : operationalData.operatingEnvironment
-                  }
-                </p>
-              </div>
-            </div>
-          )}
-          
-          {operationalData.terrainCapabilities && operationalData.terrainCapabilities.length > 0 && (
-            <div className="col-lg-4 col-md-6 mb-4">
-              <div className="spec-card">
-                <h6 className="spec-title">Terrain Capabilities</h6>
-                <p className="spec-content">
-                  {operationalData.terrainCapabilities.map((terrain, index) => 
+      });
+    }
+
+    // Terrain Capabilities
+    if (operationalData.terrainCapabilities && operationalData.terrainCapabilities.length > 0) {
+      dataList.push({
+        title: "Terrain Capabilities",
+        value: operationalData.terrainCapabilities.map((terrain, index) => 
                     typeof terrain === 'object' ? terrain.name || terrain.title : terrain
-                  ).join(", ")}
-                </p>
-              </div>
-            </div>
-          )}
-          
-          {operationalData.applications && operationalData.applications.length > 0 && (
-            <div className="col-lg-4 col-md-6 mb-4">
-              <div className="spec-card">
-                <h6 className="spec-title">Applications</h6>
-                <p className="spec-content">
-                  {operationalData.applications.join(", ")}
-                </p>
-              </div>
-            </div>
-          )}
-          
-          {operationalData.mobilityConstraints && operationalData.mobilityConstraints.maxSlope && (operationalData.mobilityConstraints.maxSlope.value || operationalData.mobilityConstraints.maxSlope.unit) && (
-            <div className="col-lg-4 col-md-6 mb-4">
-              <div className="spec-card">
-                <h6 className="spec-title">Max Slope</h6>
-                <p className="spec-content">
-                  {operationalData.mobilityConstraints.maxSlope.value && operationalData.mobilityConstraints.maxSlope.unit 
-                    ? `${operationalData.mobilityConstraints.maxSlope.value} ${operationalData.mobilityConstraints.maxSlope.unit}`
-                    : operationalData.mobilityConstraints.maxSlope.value || operationalData.mobilityConstraints.maxSlope.unit || "N/A"
-                  }
-                </p>
-              </div>
-            </div>
-          )}
-          
-          {operationalData.mobilityConstraints && operationalData.mobilityConstraints.maxStepHeight && (operationalData.mobilityConstraints.maxStepHeight.value || operationalData.mobilityConstraints.maxStepHeight.unit) && (
-            <div className="col-lg-4 col-md-6 mb-4">
-              <div className="spec-card">
-                <h6 className="spec-title">Max Step Height</h6>
-                <p className="spec-content">
-                  {operationalData.mobilityConstraints.maxStepHeight.value && operationalData.mobilityConstraints.maxStepHeight.unit 
-                    ? `${operationalData.mobilityConstraints.maxStepHeight.value} ${operationalData.mobilityConstraints.maxStepHeight.unit}`
-                    : operationalData.mobilityConstraints.maxStepHeight.value || operationalData.mobilityConstraints.maxStepHeight.unit || "N/A"
-                  }
-                </p>
-              </div>
-            </div>
-          )}
-          
-          {operationalData.mobilityConstraints && operationalData.mobilityConstraints.maxWaterDepth && (operationalData.mobilityConstraints.maxWaterDepth.value || operationalData.mobilityConstraints.maxWaterDepth.unit) && (
-            <div className="col-lg-4 col-md-6 mb-4">
-              <div className="spec-card">
-                <h6 className="spec-title">Max Water Depth</h6>
-                <p className="spec-content">
-                  {operationalData.mobilityConstraints.maxWaterDepth.value && operationalData.mobilityConstraints.maxWaterDepth.unit 
-                    ? `${operationalData.mobilityConstraints.maxWaterDepth.value} ${operationalData.mobilityConstraints.maxWaterDepth.unit}`
-                    : operationalData.mobilityConstraints.maxWaterDepth.value || operationalData.mobilityConstraints.maxWaterDepth.unit || "N/A"
-                  }
-                </p>
-              </div>
-            </div>
-          )}
-          
-          {operationalData.enduranceExtremeConditions && operationalData.enduranceExtremeConditions.length > 0 && operationalData.enduranceExtremeConditions.some(condition => condition && condition.trim() !== '') && (
-            <div className="col-lg-4 col-md-6 mb-4">
-              <div className="spec-card">
-                <h6 className="spec-title">Endurance in Extreme Conditions</h6>
-                <p className="spec-content">
-                  {operationalData.enduranceExtremeConditions.filter(condition => condition && condition.trim() !== '').join(", ")}
-                </p>
-              </div>
-            </div>
-          )}
-          
-          {operationalData.deploymentLogistics && operationalData.deploymentLogistics.length > 0 && operationalData.deploymentLogistics.some(logistic => logistic && logistic.trim() !== '') && (
-            <div className="col-lg-4 col-md-6 mb-4">
-              <div className="spec-card">
-                <h6 className="spec-title">Deployment Logistics</h6>
-                <p className="spec-content">
-                  {operationalData.deploymentLogistics.filter(logistic => logistic && logistic.trim() !== '').join(", ")}
-                </p>
-              </div>
-            </div>
-          )}
-          
-          {!operationalData.operatingEnvironment &&
-           (!operationalData.terrainCapabilities || operationalData.terrainCapabilities.length === 0) &&
-           (!operationalData.applications || operationalData.applications.length === 0) && (
-            <div className="col-12">
-              <div className="spec-card">
-                <h6 className="spec-title">No Information Available</h6>
-                <p className="spec-content">
-                  No operational environment information available for this robot.
-                </p>
-              </div>
-            </div>
-          )}
-        </div>
+        ).join(", ")
+      });
+    }
+
+    // Applications
+    if (operationalData.applications && operationalData.applications.length > 0) {
+      dataList.push({
+        title: "Applications",
+        value: operationalData.applications.join(", ")
+      });
+    }
+
+    // Mobility Constraints
+    if (operationalData.mobilityConstraints) {
+      if (operationalData.mobilityConstraints.maxSlope && (operationalData.mobilityConstraints.maxSlope.value || operationalData.mobilityConstraints.maxSlope.unit)) {
+        dataList.push(renderUnitValue(operationalData.mobilityConstraints.maxSlope, "Max Slope"));
+      }
+      if (operationalData.mobilityConstraints.maxStepHeight && (operationalData.mobilityConstraints.maxStepHeight.value || operationalData.mobilityConstraints.maxStepHeight.unit)) {
+        dataList.push(renderUnitValue(operationalData.mobilityConstraints.maxStepHeight, "Max Step Height"));
+      }
+      if (operationalData.mobilityConstraints.maxWaterDepth && (operationalData.mobilityConstraints.maxWaterDepth.value || operationalData.mobilityConstraints.maxWaterDepth.unit)) {
+        dataList.push(renderUnitValue(operationalData.mobilityConstraints.maxWaterDepth, "Max Water Depth"));
+      }
+    }
+
+    // Endurance in Extreme Conditions
+    if (operationalData.enduranceExtremeConditions && operationalData.enduranceExtremeConditions.length > 0 && operationalData.enduranceExtremeConditions.some(condition => condition && condition.trim() !== '')) {
+      dataList.push({
+        title: "Endurance in Extreme Conditions",
+        value: operationalData.enduranceExtremeConditions.filter(condition => condition && condition.trim() !== '').join(", ")
+      });
+    }
+
+    // Deployment Logistics
+    if (operationalData.deploymentLogistics && operationalData.deploymentLogistics.length > 0 && operationalData.deploymentLogistics.some(logistic => logistic && logistic.trim() !== '')) {
+      dataList.push({
+        title: "Deployment Logistics",
+        value: operationalData.deploymentLogistics.filter(logistic => logistic && logistic.trim() !== '').join(", ")
+      });
+    }
+
+    // Check if no data available
+    if (dataList.length === 0) {
+      dataList.push({
+        title: "No Information Available",
+        value: "No operational environment information available for this robot."
+      });
+    }
+
+    return dataList.filter(item => item !== null);
+  };
+
+  const operationalEnvironmentList = getOperationalEnvironment();
+
+  return (
+    <div className="specification-table-container">
+      <table className="specification-table">
+        <tbody>
+          {operationalEnvironmentList.map((item, index) => (
+            <tr key={index} className="spec-row">
+              <td className="spec-label">{item.title}</td>
+              <td className="spec-value">{item.value}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
       </div>
-    </>
   );
 }
