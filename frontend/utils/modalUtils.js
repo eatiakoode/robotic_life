@@ -86,6 +86,9 @@ export const closeOffcanvasModal = (modalId) => {
       return;
     }
 
+    // Reset cursor to default
+    document.body.style.cursor = 'default';
+
     // Try to use Bootstrap if available
     if (window.bootstrap && window.bootstrap.Offcanvas) {
       const offcanvas = window.bootstrap.Offcanvas.getInstance(modalElement);
@@ -130,6 +133,9 @@ const hideModalManually = (modalElement) => {
   modalElement.removeAttribute('aria-modal');
   modalElement.removeAttribute('role');
   document.body.classList.remove('offcanvas-open');
+  
+  // Reset cursor to default
+  document.body.style.cursor = 'default';
   
   // Remove backdrop
   const backdrop = document.getElementById('offcanvas-backdrop');

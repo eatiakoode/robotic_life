@@ -60,7 +60,26 @@ export default function Compare() {
         <div className="header">
           <span
             className="icon-close icon-close-popup"
-            onClick={() => closeOffcanvasModal('compare')}
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              // Force close the modal immediately
+              const modalElement = document.getElementById('compare');
+              if (modalElement) {
+                modalElement.classList.remove('show');
+                modalElement.style.display = 'none';
+                modalElement.removeAttribute('aria-modal');
+                modalElement.removeAttribute('role');
+                document.body.classList.remove('offcanvas-open');
+                // Remove backdrop
+                const backdrop = document.getElementById('offcanvas-backdrop');
+                if (backdrop) {
+                  backdrop.remove();
+                }
+              }
+              // Reset cursor to default
+              document.body.style.cursor = 'default';
+            }}
             aria-label="Close"
             style={{ cursor: 'pointer' }}
           />
@@ -148,6 +167,23 @@ export default function Compare() {
                               e.stopPropagation();
                               removeRobotFromCompare(elm.id);
                               setForceUpdate(prev => prev + 1);
+                              // Reset cursor to default
+                              document.body.style.cursor = 'default';
+                              // If no robots left, close the modal
+                              if (compareRobots.length <= 1) {
+                                const modalElement = document.getElementById('compare');
+                                if (modalElement) {
+                                  modalElement.classList.remove('show');
+                                  modalElement.style.display = 'none';
+                                  modalElement.removeAttribute('aria-modal');
+                                  modalElement.removeAttribute('role');
+                                  document.body.classList.remove('offcanvas-open');
+                                  const backdrop = document.getElementById('offcanvas-backdrop');
+                                  if (backdrop) {
+                                    backdrop.remove();
+                                  }
+                                }
+                              }
                             }}
                             title="Remove from comparison"
                           />
@@ -210,7 +246,26 @@ export default function Compare() {
                       </Link>
                       {items.length > 0 && (
                         <div
-                          onClick={clearAllCompareRobots}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            clearAllCompareRobots();
+                            // Reset cursor to default
+                            document.body.style.cursor = 'default';
+                            // Close the modal after clearing all
+                            const modalElement = document.getElementById('compare');
+                            if (modalElement) {
+                              modalElement.classList.remove('show');
+                              modalElement.style.display = 'none';
+                              modalElement.removeAttribute('aria-modal');
+                              modalElement.removeAttribute('role');
+                              document.body.classList.remove('offcanvas-open');
+                              const backdrop = document.getElementById('offcanvas-backdrop');
+                              if (backdrop) {
+                                backdrop.remove();
+                              }
+                            }
+                          }}
                           className="tf-compapre-button-clear-all clear-file-delete tf-btn w-100 btn-white radius-4 has-border"
                           style={{ cursor: 'pointer' }}
                         >
