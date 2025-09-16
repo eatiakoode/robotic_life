@@ -30,7 +30,7 @@ export default function Products() {
     try {
       setLoading(true);
       const backendUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
-      const apiUrl = `${backendUrl}/frontend/api/category/filter/${categorySlug}`;
+      const apiUrl = `${backendUrl}/frontend/api/category/${categorySlug}`;
       
       const response = await fetch(apiUrl);
       
@@ -95,7 +95,7 @@ export default function Products() {
             }
             
             return {
-              ...robot,
+              ...robot, // Preserve all original robot data including nested structures
               id: robot._id,
               imgSrc: imgSrc,
               imgHover: imgHover,

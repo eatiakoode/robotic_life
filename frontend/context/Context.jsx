@@ -135,7 +135,11 @@ export default function Context({ children }) {
   const clearAllCompareRobots = () => {
     setCompareRobots([]);
     setCompareItem([]);
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem("compareRobots");
+    }
   };
+
 
   // Function to open compare modal
   const openCompareModal = () => {
@@ -157,37 +161,71 @@ export default function Context({ children }) {
     return false;
   };
   useEffect(() => {
-    const items = JSON.parse(localStorage.getItem("cartList"));
-    if (items?.length) {
-      setCartProducts(items);
+    if (typeof window !== 'undefined') {
+      const items = JSON.parse(localStorage.getItem("cartList") || "[]");
+      if (items?.length) {
+        setCartProducts(items);
+      }
     }
   }, []);
 
   useEffect(() => {
-    localStorage.setItem("cartList", JSON.stringify(cartProducts));
+    if (typeof window !== 'undefined') {
+      localStorage.setItem("cartList", JSON.stringify(cartProducts));
+    }
   }, [cartProducts]);
+  
   useEffect(() => {
-    const items = JSON.parse(localStorage.getItem("wishlist"));
-    if (items?.length) {
-      setWishList(items);
+    if (typeof window !== 'undefined') {
+      const items = JSON.parse(localStorage.getItem("wishlist") || "[]");
+      if (items?.length) {
+        setWishList(items);
+      }
     }
   }, []);
 
   useEffect(() => {
-    localStorage.setItem("wishlist", JSON.stringify(wishList));
+    if (typeof window !== 'undefined') {
+      localStorage.setItem("wishlist", JSON.stringify(wishList));
+    }
   }, [wishList]);
 
-  // Persist compare robots to localStorage
+  // Persist compare robots to localStorage (client-side only)
   useEffect(() => {
-    localStorage.setItem("compareRobots", JSON.stringify(compareRobots));
+    if (typeof window !== 'undefined') {
+      localStorage.setItem("compareRobots", JSON.stringify(compareRobots));
+    }
   }, [compareRobots]);
 
-  // Load compare robots from localStorage on mount
+  // Load compare robots from localStorage on mount (client-side only)
   useEffect(() => {
-    const savedCompareRobots = JSON.parse(localStorage.getItem("compareRobots") || "[]");
-    if (savedCompareRobots.length > 0) {
-      setCompareRobots(savedCompareRobots);
-      setCompareItem(savedCompareRobots.map(robot => robot.id));
+    // Only run on client side
+    if (typeof window === 'undefined') return;
+    
+    try {
+      const savedCompareRobots = JSON.parse(localStorage.getItem("compareRobots") || "[]");
+      if (savedCompareRobots.length > 0) {
+        // Check if the saved data has the new format (with nested structures)
+        const hasNewFormat = savedCompareRobots.some(robot => 
+          robot.specifications || robot.capabilities || robot.operationalEnvironmentAndApplications
+        );
+        
+        if (hasNewFormat) {
+          setCompareRobots(savedCompareRobots);
+          setCompareItem(savedCompareRobots.map(robot => robot.id));
+        } else {
+          // Clear old format data
+          localStorage.removeItem("compareRobots");
+          setCompareRobots([]);
+          setCompareItem([]);
+        }
+      }
+    } catch (error) {
+      console.error('Error loading comparison data from localStorage:', error);
+      // Clear corrupted data
+      localStorage.removeItem("compareRobots");
+      setCompareRobots([]);
+      setCompareItem([]);
     }
   }, []);
 

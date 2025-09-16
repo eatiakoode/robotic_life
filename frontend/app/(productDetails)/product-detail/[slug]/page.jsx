@@ -13,7 +13,7 @@ export const metadata = {
 };
 
 export default async function ProductDetailPage({ params }) {
-  const { slug } = params;
+  const { slug } = await params;
 
   // ✅ Fetch robot data
   const product = await getRobotBySlug(slug);

@@ -98,12 +98,24 @@ export default function RelatedProducts({ productSlug, recentlyViewedIds = [] })
             role="tablist"
           >
             <li className="nav-tab-item" role="presentation">
-              <a href="#ralatedProducts" className="active" data-bs-toggle="tab">
+              <a 
+                href="#ralatedProducts" 
+                className="active" 
+                data-bs-toggle="tab"
+                aria-selected="true"
+                role="tab"
+              >
                 Related Products
               </a>
             </li>
             <li className="nav-tab-item" role="presentation">
-              <a href="#recentlyViewed" data-bs-toggle="tab">
+              <a 
+                href="#recentlyViewed" 
+                data-bs-toggle="tab"
+                aria-selected="false"
+                tabIndex="-1"
+                role="tab"
+              >
                 Recently Viewed
               </a>
             </li>
@@ -139,12 +151,24 @@ export default function RelatedProducts({ productSlug, recentlyViewedIds = [] })
           role="tablist"
         >
           <li className="nav-tab-item" role="presentation">
-            <a href="#ralatedProducts" className="active" data-bs-toggle="tab">
+            <a 
+              href="#ralatedProducts" 
+              className="active" 
+              data-bs-toggle="tab"
+              aria-selected="true"
+              role="tab"
+            >
               Related Products
             </a>
           </li>
           <li className="nav-tab-item" role="presentation">
-            <a href="#recentlyViewed" data-bs-toggle="tab">
+            <a 
+              href="#recentlyViewed" 
+              data-bs-toggle="tab"
+              aria-selected="false"
+              tabIndex="-1"
+              role="tab"
+            >
               Recently Viewed
             </a>
           </li>

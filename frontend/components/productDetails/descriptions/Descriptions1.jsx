@@ -30,18 +30,6 @@ export default function Descriptions1({ product }) {
                   <span className="inner">Capabilities</span>
                 </li>
                 <li
-                  className={`item-title ${activeTab == 3 ? "active" : ""} `}
-                  onClick={() => setActiveTab(3)}
-                >
-                  <span className="inner">Media</span>
-                </li>
-                <li
-                  className={`item-title ${activeTab == 4 ? "active" : ""} `}
-                  onClick={() => setActiveTab(4)}
-                >
-                  <span className="inner">FAQs</span>
-                </li>
-                <li
                   className={`item-title ${activeTab == 5 ? "active" : ""} `}
                   onClick={() => setActiveTab(5)}
                 >
@@ -59,24 +47,18 @@ export default function Descriptions1({ product }) {
                 >
                   <span className="inner">Operational Environment</span>
                 </li>
-                {/* <li
-                  className={`item-title ${activeTab == 4 ? "active" : ""} `}
-                  onClick={() => setActiveTab(4)}
+                <li
+                  className={`item-title ${activeTab == 3 ? "active" : ""} `}
+                  onClick={() => setActiveTab(3)}
                 >
-                  <span className="inner">Application</span>
+                  <span className="inner">Media</span>
                 </li>
                 <li
                   className={`item-title ${activeTab == 4 ? "active" : ""} `}
                   onClick={() => setActiveTab(4)}
                 >
-                  <span className="inner">Application</span>
+                  <span className="inner">FAQs</span>
                 </li>
-                <li
-                  className={`item-title ${activeTab == 4 ? "active" : ""} `}
-                  onClick={() => setActiveTab(4)}
-                >
-                  <span className="inner">Application</span>
-                </li> */}
               </ul>
               <div className="widget-content-tab">
                 <div

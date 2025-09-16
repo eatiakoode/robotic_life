@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import CountdownTimer from "../common/Countdown";
 import { useContextElement } from "@/context/Context";
-import { transformRobotForComparison } from "@/api/robotCompare";
+// import { transformRobotForComparison } from "@/api/robotCompare"; // No longer needed
 import { openOffcanvasModal } from "@/utils/modalUtils";
 
 export default function ProductCard1({
@@ -214,13 +214,15 @@ export default function ProductCard1({
             aria-controls="compare"
             onClick={(e) => {
               e.preventDefault();
-              const robotData = transformRobotForComparison(product);
-              if (robotData && robotData.id) {
-                if (isAddedtoCompareItem(robotData.id)) {
+              // Pass the raw product data directly to addRobotToCompare
+              // The transformation will happen in the comparison component
+              if (product && (product._id || product.id)) {
+                const productId = product._id || product.id;
+                if (isAddedtoCompareItem(productId)) {
                   openOffcanvasModal('compare');
                   return;
                 }
-                addRobotToCompare(robotData);
+                addRobotToCompare(product);
                 setTimeout(() => {
                   openOffcanvasModal('compare');
                 }, 100);

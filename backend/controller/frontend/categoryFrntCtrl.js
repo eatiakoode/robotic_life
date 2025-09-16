@@ -143,7 +143,18 @@ const getRobotsByCategorySlug = asyncHandler(async (req, res) => {
       .populate("category", "name slug")
       .populate("manufacturer", "name")
       .populate("countryOfOrigin", "name")
-      .populate("specifications.powerSource", "name");
+      .populate("specifications.powerSource", "name")
+      .populate("specifications.materials", "name")
+      .populate("specifications.color", "name")
+      .populate("capabilities.primaryFunction", "name")
+      .populate("capabilities.autonomyLevel", "name")
+      .populate("capabilities.navigationTypes", "name")
+      .populate("capabilities.communicationMethods", "name")
+      .populate("operationalEnvironmentAndApplications.operatingEnvironment", "name")
+      .populate("operationalEnvironmentAndApplications.terrainCapabilities", "name")
+      .populate("sensorsAndSoftware.sensors", "name")
+      .populate("sensorsAndSoftware.aiSoftwareFeatures", "name")
+      .populate("payloadsAndAttachments.payloadTypes", "name");
 
     console.log('✅ Found robots:', {
       count: robots.length,

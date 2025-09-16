@@ -293,7 +293,14 @@ export const getRobotBySlug = async (slug) => {
             metaTitle: robot.metaTitle || robot.metatitle || '',
             metaDescription: robot.metaDescription || robot.metadescription || '',
             
-            // Dimensions and specifications
+            // Preserve the complete nested structure from backend
+            specifications: robot.specifications || {},
+            capabilities: robot.capabilities || {},
+            operationalEnvironmentAndApplications: robot.operationalEnvironmentAndApplications || {},
+            sensorsAndSoftware: robot.sensorsAndSoftware || {},
+            payloadsAndAttachments: robot.payloadsAndAttachments || {},
+            
+            // Legacy individual fields for backward compatibility
             dimensions: robot.specifications?.dimensions || {},
             weight: robot.specifications?.weight || {},
             batteryCapacity: robot.specifications?.batteryCapacity || {},
@@ -349,13 +356,6 @@ export const getRobotBySlug = async (slug) => {
             // Additional populated fields
             manufacturer: robot.manufacturer,
             countryOfOrigin: robot.countryOfOrigin,
-            
-            // Complete nested objects for tabbed interface
-            specifications: robot.specifications || {},
-            capabilities: robot.capabilities || {},
-            payloadsAndAttachments: robot.payloadsAndAttachments || {},
-            sensorsAndSoftware: robot.sensorsAndSoftware || {},
-            operationalEnvironmentAndApplications: robot.operationalEnvironmentAndApplications || {},
             
             // Legacy individual fields for backward compatibility
             navigationType: robot.capabilities?.navigationTypes,
