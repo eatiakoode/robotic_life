@@ -247,18 +247,20 @@ export default function ProductCard1({
         <Link href={`/product-detail/${product.slug && product.slug.trim() ? product.slug : product.id}`} className="title link">
           {product.title}
         </Link>
+        <span className="manufacturer-name">
+          {product.manufacturer && (
+            <>
+            <span className="manufacturer-label">Manufacturer:</span>
+            <span className="manufacturer-name">{product.manufacturer.name || product.manufacturer}</span>
+            </>
+        )}
+        </span>
         <span className="price">
           {product.oldPrice && (
             <span className="old-price">${product.oldPrice.toFixed(2)}</span>
           )}{" "}
           ${product.price?.toFixed(2)}
         </span>
-        {product.manufacturer && (
-          <div className="manufacturer-info">
-            <span className="manufacturer-label">Manufacturer:</span>
-            <span className="manufacturer-name">{product.manufacturer.name || product.manufacturer}</span>
-          </div>
-        )}
       </div>
     </div>
     </>

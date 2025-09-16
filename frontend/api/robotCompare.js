@@ -75,12 +75,10 @@ export const getRobotById = async (robotId) => {
  * @returns {Object} Transformed robot data
  */
 export const transformRobotForComparison = (robot) => {
-  console.log('transformRobotForComparison called with:', robot);
-  
   if (!robot) {
-    console.log('No robot data provided, returning null');
     return null;
   }
+
 
   const transformed = {
     id: robot._id || robot.id,
@@ -90,31 +88,43 @@ export const transformRobotForComparison = (robot) => {
     price: robot.totalPrice || robot.price || 0,
     launchYear: robot.launchYear || '',
     images: robot.images || (robot.imgSrc ? [robot.imgSrc] : []),
+    
+    // Basic info
     category: robot.category?.name || 'N/A',
     manufacturer: robot.manufacturer?.name || 'N/A',
-    powerSource: robot.powerSource?.name || 'N/A',
-    primaryFunction: robot.primaryFunction?.name || 'N/A',
-    operatingEnvironment: robot.operatingEnvironment?.name || 'N/A',
-    autonomyLevel: robot.autonomyLevel?.name || 'N/A',
-    colors: robot.color?.map(c => c.name) || [],
-    materials: robot.material?.map(m => m.name) || [],
-    navigationTypes: robot.navigationType?.map(n => n.name) || [],
-    sensors: robot.sensors?.map(s => s.name) || [],
-    aiSoftwareFeatures: robot.aiSoftwareFeatures?.map(a => a.name) || [],
-    terrainCapabilities: robot.terrainCapability?.map(t => t.name) || [],
-    communicationMethods: robot.communicationMethod?.map(c => c.name) || [],
-    payloadTypes: robot.payloadTypesSupported?.map(p => p.name) || [],
-    // Specifications
-    weight: robot.weight || null,
-    speed: robot.speed || null,
-    range: robot.range || null,
-    loadCapacity: robot.loadCapacity || null,
-    batteryCapacity: robot.batteryCapacity || null,
-    runtime: robot.runtime || null,
-    dimensions: robot.dimensions || null,
-    operatingTemperature: robot.operatingTemperature || null,
+    
+    // Specifications (flattened structure - direct access)
+    powerSource: robot.powerSource?.name || robot.specifications?.powerSource?.name || 'N/A',
+    weight: robot.weight || robot.specifications?.weight || null,
+    speed: robot.speed || robot.specifications?.speed || null,
+    range: robot.range || robot.specifications?.range || null,
+    loadCapacity: robot.LoadCapacity || robot.specifications?.loadCapacity || null,
+    batteryCapacity: robot.batteryCapacity || robot.specifications?.batteryCapacity || null,
+    runtime: robot.runtime || robot.specifications?.runtime || null,
+    dimensions: robot.dimensions || robot.specifications?.dimensions || null,
+    operatingTemperature: robot.operatingTemperature || robot.specifications?.operatingTemperature || null,
+    
+    // Capabilities (flattened structure - direct access)
+    primaryFunction: robot.primaryFunction?.name || robot.capabilities?.primaryFunction?.name || 'N/A',
+    autonomyLevel: robot.autonomyLevel?.name || robot.capabilities?.autonomyLevel?.name || 'N/A',
+    navigationTypes: robot.navigationType?.map(n => n.name) || robot.capabilities?.navigationTypes?.map(n => n.name) || [],
+    communicationMethods: robot.communicationMethod?.map(c => c.name) || robot.capabilities?.communicationMethods?.map(c => c.name) || [],
+    
+    // Operational Environment (flattened structure - direct access)
+    operatingEnvironment: robot.operatingEnvironment?.name || robot.operationalEnvironmentAndApplications?.operatingEnvironment?.name || 'N/A',
+    terrainCapabilities: robot.terrainCapability?.map(t => t.name) || robot.operationalEnvironmentAndApplications?.terrainCapabilities?.map(t => t.name) || [],
+    
+    // Sensors & Software (flattened structure - direct access)
+    sensors: robot.sensors?.map(s => s.name) || robot.sensorsAndSoftware?.sensors?.map(s => s.name) || [],
+    aiSoftwareFeatures: robot.aiSoftwareFeatures?.map(a => a.name) || robot.sensorsAndSoftware?.aiSoftwareFeatures?.map(a => a.name) || [],
+    
+    // Payloads & Attachments (flattened structure - direct access)
+    payloadTypes: robot.payloadTypesSupported?.map(p => p.name) || robot.payloadsAndAttachments?.payloadTypes?.map(p => p.name) || [],
+    
+    // Materials and Colors (flattened structure - direct access)
+    materials: robot.material?.map(m => m.name) || robot.specifications?.materials?.map(m => m.name) || [],
+    colors: robot.colors?.map(c => c.name) || robot.specifications?.color?.map(c => c.name) || [],
   };
   
-  console.log('Transformed robot data:', transformed);
   return transformed;
 };

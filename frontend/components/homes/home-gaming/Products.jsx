@@ -58,7 +58,7 @@ export default function Products() {
                 `${backendUrl}/${robot.images[0].replace('public/', '')}` : 
                 `${backendUrl}/${robot.images[0]}`
               ) : 
-              `/images/products/product-1.jpg`; // Fallback image for imgSrc
+              null; // No fallback image - let ProductCard handle it
 
             const imgHover = robot.images && robot.images.length > 1 ? 
               (robot.images[1].startsWith('public/') ? 
@@ -100,11 +100,11 @@ export default function Products() {
               imgSrc: imgSrc,
               imgHover: imgHover,
               price: robot.totalPrice || 0,
-              inStock: true,
-              oldPrice: null,
-              rating: 5,
-              isOnSale: false,
-              sizes: null,
+              inStock: robot.status !== false, // Use robot status if available
+              oldPrice: robot.oldPrice || null,
+              rating: robot.rating || 0,
+              isOnSale: robot.isOnSale || false,
+              sizes: robot.sizes || null,
               wowDelay: "0.1s",
               colors: colors,
               tabFilterOptions: [activeCategory?.name || '']
@@ -152,7 +152,7 @@ export default function Products() {
                 ))}
               </ul>
             </div>
-            <Link href="/shop-filter-canvas" className="btn-line">
+            <Link href="/shop-default-grid" className="btn-line">
               View All Robots
             </Link>
           </div>
@@ -189,7 +189,7 @@ export default function Products() {
                 <p className="text-danger">Error loading categories or no categories available.</p>
               </div>
             </div>
-            <Link href="/shop-filter-canvas" className="btn-line">
+            <Link href="/shop-default-grid" className="btn-line">
               View All Robots
             </Link>
           </div>
@@ -229,7 +229,7 @@ export default function Products() {
               ))}
             </ul>
           </div>
-          <Link href="/shop-filter-canvas" className="btn-line">
+          <Link href="/shop-default-grid" className="btn-line">
             View All Robots
           </Link>
         </div>

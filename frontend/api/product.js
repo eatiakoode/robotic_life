@@ -95,6 +95,7 @@ export const getAllProducts = async () => {
         
         // Handle new response format with success/data structure
         const products = data.success && data.data ? data.data : data;
+        
 
         
 
@@ -212,7 +213,7 @@ export const getAllProducts = async () => {
 // Get robot by slug
 export const getRobotBySlug = async (slug) => {
   if (!slug) {
-    console.warn('⚠️ No slug provided to getRobotBySlug');
+    // Silently return null instead of warning
     return null;
   }
 
@@ -371,7 +372,7 @@ export const getRobotBySlug = async (slug) => {
 
           return transformedRobot;
         } else {
-          console.log('No robot data found for slug:', slug);
+          // Silently return null when no data found
           return null;
         }
       } else {
@@ -717,7 +718,7 @@ export const getProductsByCategory = async (category, additionalFilters = {}) =>
 // Get related products by slug
 export const getRelatedProducts = async (slug) => {
   if (!slug) {
-    console.warn('⚠️ No slug provided to getRelatedProducts');
+    // Silently return empty array instead of warning
     return [];
   }
 
@@ -866,7 +867,7 @@ export const getRelatedProducts = async (slug) => {
 // Get recently viewed products by IDs
 export const getRecentlyViewed = async (ids) => {
   if (!ids || !Array.isArray(ids) || ids.length === 0) {
-    console.warn('⚠️ No IDs provided to getRecentlyViewed');
+    // Silently return empty array instead of warning
     return [];
   }
 

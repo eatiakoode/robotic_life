@@ -81,38 +81,56 @@ export default function BlogDetail1({ blog }) {
           </p>
         </div>
         
-        {/* Additional images section - dynamic images within existing dimensions */}
+        {/* Images section - always show at least one image */}
         <div className="group-image d-flex gap-20">
-          <div>
-            <Image
-              alt={`${blog.title} - Additional image 1`}
-              src={
-                blog.additionalImages && blog.additionalImages.length > 0 
-                  ? getImageUrl(blog.additionalImages[0]) 
-                  : blog.logoimage 
-                    ? getImageUrl(blog.logoimage) 
-                    : "/images/blog/blog-details-3.jpg"
-              }
-              width={623}
-              height={468}
-              style={{ width: '100%', height: 'auto', objectFit: 'cover' }}
-            />
-          </div>
-          <div>
-            <Image
-              alt={`${blog.title} - Additional image 2`}
-              src={
-                blog.additionalImages && blog.additionalImages.length > 1 
-                  ? getImageUrl(blog.additionalImages[1]) 
-                  : blog.logoimage 
-                    ? getImageUrl(blog.logoimage) 
-                    : "/images/blog/blog-details-4.jpg"
-              }
-              width={623}
-              height={468}
-              style={{ width: '100%', height: 'auto', objectFit: 'cover' }}
-            />
-          </div>
+          {blog.additionalImages && blog.additionalImages.length > 0 ? (
+            // Show additional images if available
+            blog.additionalImages.length === 1 ? (
+              // Single additional image - center it
+              <div className="w-100 d-flex justify-content-center">
+                <Image
+                  alt={`${blog.title} - Image`}
+                  src={getImageUrl(blog.additionalImages[0])}
+                  width={623}
+                  height={468}
+                  style={{ width: '100%', maxWidth: '623px', height: 'auto', objectFit: 'cover', borderRadius: '15px'}}
+                />
+              </div>
+            ) : (
+              // Multiple additional images - show up to 2
+              <>
+                <div>
+                  <Image
+                    alt={`${blog.title} - Image 1`}
+                    src={getImageUrl(blog.additionalImages[0])}
+                    width={623}
+                    height={468}
+                    style={{ width: '100%', height: 'auto', objectFit: 'cover', borderRadius: '15px'}}
+                  />
+                </div>
+                <div>
+                  <Image
+                    alt={`${blog.title} - Image 2`}
+                    src={getImageUrl(blog.additionalImages[1])}
+                    width={623}
+                    height={468}
+                    style={{ width: '100%', height: 'auto', objectFit: 'cover', borderRadius: '15px'}}
+                  />
+                </div>
+              </>
+            )
+          ) : (
+            // Fallback to main blog image - single centered image
+            <div className="w-100 d-flex justify-content-center">
+              <Image
+                alt={`${blog.title} - Main image`}
+                src={blog.logoimage ? getImageUrl(blog.logoimage) : "/images/blog/blog-details-1.jpg"}
+                width={623}
+                height={468}
+                style={{ width: '100%', maxWidth: '623px', height: 'auto', objectFit: 'cover', borderRadius: '15px'}}
+              />
+            </div>
+          )}
         </div>
         
         <div className="content">

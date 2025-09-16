@@ -210,9 +210,9 @@ export default function Products1({ parentClass = "flat-spacing",products ,produ
       // Ensure it's a full URL if it's a relative path
       const finalHoverImage = hoverImage.startsWith('http') ? hoverImage : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}${hoverImage.startsWith('/') ? hoverImage : `/${hoverImage}`}`;
 
-
+      // Preserve the full nested structure for comparison
       return {
-        ...robot,
+        ...robot, // This preserves all nested data
         id: robot._id,
         imgSrc: finalMainImage,
         imgHover: finalHoverImage,
@@ -243,18 +243,6 @@ export default function Products1({ parentClass = "flat-spacing",products ,produ
                       (price && price.length === 2 && (price[0] !== priceBounds[0] || price[1] !== priceBounds[1])) || 
                       (weight && Array.isArray(weight) && weight.length === 2 && (weight[0] !== weightBounds[0] || weight[1] !== weightBounds[1]));
     
-    console.log('🔍 ApplyFilters Debug:', {
-      productMainLength: productMain.length,
-      hasFilters,
-      price: price,
-      priceBounds: priceBounds,
-      priceFilterActive: price && price.length === 2 && (price[0] !== priceBounds[0] || price[1] !== priceBounds[1]),
-      selectedParentCategory: selectedParentCategory?.name,
-      selectedSubCategory: selectedSubCategory?.name,
-      brands: brands,
-      weight: weight,
-      weightBounds: weightBounds
-    });
     
     // Only use backend filtering if filters are actually applied
     if (hasFilters) {
@@ -303,7 +291,6 @@ export default function Products1({ parentClass = "flat-spacing",products ,produ
         }
       } catch (error) {
         // Backend filtering failed, fallback to client-side
-        console.log('Backend filtering failed, using client-side filtering:', error);
       }
     }
 
@@ -374,12 +361,6 @@ export default function Products1({ parentClass = "flat-spacing",products ,produ
       });
     }
     
-    console.log('✅ ApplyFilters Result:', {
-      originalLength: productMain.length,
-      filteredLength: filteredProducts.length,
-      hasFilters,
-      finalFilteredProducts: filteredProducts.length
-    });
     
     dispatch({ type: "SET_FILTERED", payload: filteredProducts });
   }, [productMain, price, weight, weightUnit, availability, size, brands, activeFilterOnSale, selectedParentCategory, selectedSubCategory]);
@@ -440,13 +421,7 @@ export default function Products1({ parentClass = "flat-spacing",products ,produ
           dispatch({ type: "SET_SUB_CATEGORY", payload: null });
           
           // Use the category-specific API endpoint for better filtering
-          console.log('🔍 Loading category from URL:', { categorySlug, categoryName, categoryType });
           const rawResults = await getRobotsByCategorySlug(categorySlug, categoryType);
-          console.log('📦 Raw category results:', { 
-            categorySlug, 
-            resultsLength: rawResults?.length || 0, 
-            results: rawResults 
-          });
           
           if (rawResults && Array.isArray(rawResults) && rawResults.length > 0) {
             // Transform the raw backend data to frontend format using existing function
@@ -484,7 +459,6 @@ export default function Products1({ parentClass = "flat-spacing",products ,produ
             setUrlCategoryLoaded(true);
           } else {
             // No robots found for this category
-            console.log(`No robots found for category: ${categorySlug}`);
             setProductMain([]);
             dispatch({ type: "SET_FILTERED", payload: [] });
             dispatch({ type: "SET_SORTED", payload: [] });
@@ -524,12 +498,6 @@ export default function Products1({ parentClass = "flat-spacing",products ,produ
   useEffect(() => {
     const categorySlug = searchParams.get('category');
     
-    console.log('🔄 Products1 useEffect triggered:', { 
-      categorySlug, 
-      urlCategoryLoaded, 
-      productsProp: products?.length || 'null/undefined',
-      productMainLength: productMain.length 
-    });
     
     // Only fetch all products if no category is specified in URL and URL category is loaded
     // AND no products prop is provided
@@ -537,13 +505,10 @@ export default function Products1({ parentClass = "flat-spacing",products ,produ
       const fetchProducts = async () => {
         try {
           setLoading(true);
-          console.log('🔍 Fetching all products from backend...');
           const products = await getAllProducts();
-          console.log('✅ Fetched products:', products.length);
             
           // Transform robot data for ProductCard1 compatibility
           const transformedProducts = transformRobotData(products);
-          console.log('🔄 Transformed products:', transformedProducts.length);
           
           setProductMain(transformedProducts);
         
@@ -568,49 +533,37 @@ export default function Products1({ parentClass = "flat-spacing",products ,produ
 
       fetchProducts();
     } else if (products && products.length > 0) {
-      console.log('📦 Using products from props:', products.length);
-    } else {
-      console.log('⏸️ Skipping fetch - conditions not met');
+      // Products provided via props, no need to fetch
     }
   }, [searchParams, urlCategoryLoaded, products]);
 
   useEffect(() => {
-    console.log('🔄 Sorting useEffect triggered:', { 
-      sortingOption, 
-      filteredLength: filtered.length,
-      productMainLength: productMain.length 
-    });
     
     if (sortingOption === "Price Ascending") {
       const sorted = [...filtered].sort((a, b) => a.price - b.price);
-      console.log('📊 Price Ascending sorted:', sorted.length);
       dispatch({
         type: "SET_SORTED",
         payload: sorted,
       });
     } else if (sortingOption === "Price Descending") {
       const sorted = [...filtered].sort((a, b) => b.price - a.price);
-      console.log('📊 Price Descending sorted:', sorted.length);
       dispatch({
         type: "SET_SORTED",
         payload: sorted,
       });
     } else if (sortingOption === "Title Ascending") {
       const sorted = [...filtered].sort((a, b) => a.title.localeCompare(b.title));
-      console.log('📊 Title Ascending sorted:', sorted.length);
       dispatch({
         type: "SET_SORTED",
         payload: sorted,
       });
     } else if (sortingOption === "Title Descending") {
       const sorted = [...filtered].sort((a, b) => b.title.localeCompare(a.title));
-      console.log('📊 Title Descending sorted:', sorted.length);
       dispatch({
         type: "SET_SORTED",
         payload: sorted,
       });
     } else {
-      console.log('📊 Default sorting - using filtered:', filtered.length);
       dispatch({ type: "SET_SORTED", payload: filtered });
     }
     dispatch({ type: "SET_CURRENT_PAGE", payload: 1 });

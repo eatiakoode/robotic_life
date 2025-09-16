@@ -12,19 +12,18 @@ export async function generateMetadata({ searchParams }) {
   let categorydata = null;
   let locationdata = null;
   try {
+    const params = await searchParams;
 
-    if (searchParams.cat) {
+    if (params.cat) {
       try {
-        categorydata = await getRobotsByCategorySlug(searchParams.category);
+        categorydata = await getRobotsByCategorySlug(params.category);
       } catch (error) {
-        console.error("Category fetch failed:", error.message);
         categorydata = null; // fallback to default
       }
-    } else if (searchParams.location) {
+    } else if (params.location) {
       try {
-        locationdata = await getLocationById(searchParams.location);
+        locationdata = await getLocationById(params.location);
       } catch (error) {
-        console.error("Category fetch failed:", error.message);
         locationdata = null; // fallback to default
       }
     }
@@ -49,7 +48,6 @@ export async function generateMetadata({ searchParams }) {
       };
     }
   } catch (error) {
-    console.error("Metadata error:", error);
     return {
       title: 'Error Loading Blog',
       description: 'There was an issue loading the blog metadata.',
@@ -57,28 +55,24 @@ export async function generateMetadata({ searchParams }) {
   }
 }
 export default async function ListingPage({ searchParams }) {
+  const params = await searchParams;
+  
   const filter = {
-    keyword: searchParams.keyword || "",
-    city: searchParams.city || "",
-    category: searchParams.cat || "",
-    propertytype: searchParams.propertytype || "",
-    location: searchParams.location || "",
+    keyword: params.keyword || "",
+    city: params.city || "",
+    category: params.cat || "",
+    propertytype: params.propertytype || "",
+    location: params.location || "",
     limit: 4,
-    page: searchParams.page || 1,
+    page: params.page || 1,
   };
-
-  // const data = await getPropertyFilterData(filter);
-
-  // const properties = data?.items || [];
-  // const totalCount = data?.totalCount || 0;
 
   let categorydata = null;
   let locationdata = null;
-  if (searchParams.category) {
+  if (params.category) {
     try {
-      categorydata = await getRobotsByCategorySlug(searchParams.category);
+      categorydata = await getRobotsByCategorySlug(params.category);
     } catch (error) {
-      console.error("Category fetch failed:", error.message);
       categorydata = null; // fallback to default
     }
   }

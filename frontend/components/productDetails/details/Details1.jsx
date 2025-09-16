@@ -19,6 +19,7 @@ export default function Details1({ product }) {
   const handleAddToCompare = (e) => {
     e.preventDefault();
     const robotData = transformRobotForComparison(product);
+    
     if (robotData && robotData.id) {
       if (isAddedtoCompareItem(robotData.id)) {
         openOffcanvasModal('compare');

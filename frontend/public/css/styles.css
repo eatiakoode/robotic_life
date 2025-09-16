@@ -892,6 +892,10 @@ a:hover {
   transition: all 0.3s ease;
   text-decoration: none;
   outline: 0;
+  background: linear-gradient(135deg, #9ca3af, #6b7280) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
 }
 
 .link {
@@ -902,7 +906,11 @@ a:hover {
   transition: all 0.3s ease;
 }
 .link:hover {
-  color: var(--primary) !important;
+  background: linear-gradient(135deg, #9ca3af, #6b7280) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+  text-decoration: none !important;
 }
 
 .grid-2 {
@@ -1845,10 +1853,17 @@ a:hover {
   color: var(--secondary-2);
 }
 .tf-list-categories .categories-item:hover {
-  color: var(--primary);
+  background: linear-gradient(135deg, #9ca3af, #6b7280) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+  text-decoration: none !important;
 }
 .tf-list-categories .categories-item:hover .icon {
-  color: var(--primary);
+  background: linear-gradient(135deg, #9ca3af, #6b7280) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
 }
 .tf-list-categories:hover > .list-categories-inner {
   opacity: 1;
@@ -1889,7 +1904,10 @@ a:hover {
   padding: 14px 20px;
 }
 .tf-list-categories.style-1 .categories-item:hover .icon {
-  color: var(--primary);
+  background: linear-gradient(135deg, #9ca3af, #6b7280) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
 }
 .tf-list-categories.style-1 .icon-left {
   font-size: 24px;
@@ -1976,7 +1994,11 @@ a:hover {
 }
 #header .box-nav-ul .menu-item.active .item-link,
 #header .box-nav-ul .menu-item:hover .item-link {
-  color: var(--primary);
+  background: linear-gradient(135deg, #9ca3af, #6b7280) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+  text-decoration: none !important;
 }
 #header .box-nav-ul .menu-item.active .demo-item.active .demo-name {
   color: var(--primary);
@@ -2997,7 +3019,11 @@ footer .footer-menu .footer-menu_item {
   color: var(--secondary);
 }
 footer .footer-menu .footer-menu_item:hover {
-  color: var(--primary);
+  background: linear-gradient(135deg, #9ca3af, #6b7280) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+  text-decoration: none !important;
 }
 footer .footer-menu .footer-menu-list {
   display: flex;
@@ -3044,7 +3070,11 @@ footer.bg-main .footer-menu .footer-menu_item {
   color: var(--secondary-2);
 }
 footer.bg-main .footer-menu .footer-menu_item:hover {
-  color: var(--primary);
+  background: linear-gradient(135deg, #9ca3af, #6b7280) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+  text-decoration: none !important;
 }
 footer.bg-main .footer-bottom-wrap {
   border-color: rgba(255, 255, 255, 0.1);
@@ -10494,14 +10524,31 @@ section .wg-blog.style-abs:hover .title a,
   background-size: 100% 100% !important;
 }
 
-/* Force gray color for all blog title links on hover */
+/* Force gray gradient for all blog title links on hover */
 .wg-blog:hover .title a,
 .wg-blog .title a:hover {
   text-decoration: none !important;
-  color: #9ca3af !important;
-  background: none !important;
-  background-image: none !important;
-  background-size: 100% 100% !important;
+  background: linear-gradient(135deg, #9ca3af, #6b7280) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+}
+
+/* Global link hover override - ensure all links use gray gradient instead of red */
+a:hover,
+.link:hover,
+[class*="link"]:hover,
+[class*="menu"] a:hover,
+[class*="footer"] a:hover,
+[class*="nav"] a:hover,
+[class*="blog"] a:hover,
+[class*="category"] a:hover {
+  background: linear-gradient(135deg, #9ca3af, #6b7280) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+  text-decoration: none !important;
+  color: transparent !important;
 }
 .wg-blog.style-1 .image {
   margin-bottom: 24px;
@@ -10690,12 +10737,30 @@ ul.list-tags a {
   padding: 4px 15px;
   border-radius: 5px;
   border: 1px solid var(--line);
+  transition: all 0.3s ease;
+}
+ul.list-tags a:hover {
+  background: linear-gradient(135deg, #9ca3af, #6b7280) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+  text-decoration: none !important;
+  border-color: #9ca3af;
 }
 ul.list-tags.has-bg a {
   border-radius: 40px;
   padding: 4px 16px 4px 16px;
   background-color: var(--surface);
   border: 0;
+  transition: all 0.3s ease;
+}
+ul.list-tags.has-bg a:hover {
+  background: linear-gradient(135deg, #9ca3af, #6b7280) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+  text-decoration: none !important;
+  background-color: var(--surface) !important;
 }
 
 .new-item {
@@ -13110,7 +13175,7 @@ ul.breadcrumbs i {
 }
 .blog-detail-wrap > .image {
   height: 568px;
-  background-image: url(./../images/blog/blog-details-1.jpg);
+  background-image: url(/images/blog/blog-details-1.jpg);
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
@@ -13171,10 +13236,18 @@ ul.breadcrumbs i {
   margin-bottom: 4px;
 }
 .blog-detail-wrap > .inner .related-post .text-btn-uppercase a {
-  color: var(--primary);
+  background: linear-gradient(135deg, #9ca3af, #6b7280) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+  text-decoration: none !important;
 }
 .blog-detail-wrap > .inner .related-post .text-btn-uppercase a:hover {
-  color: var(--main);
+  background: linear-gradient(135deg, #9ca3af, #6b7280) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+  text-decoration: none !important;
 }
 
 ul.list-text {

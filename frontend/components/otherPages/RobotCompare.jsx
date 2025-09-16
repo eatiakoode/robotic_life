@@ -22,6 +22,8 @@ export default function RobotCompare() {
       return null;
     }
 
+
+
     const transformed = {
       id: robot._id || robot.id,
       title: robot.title || 'Untitled Robot',
@@ -30,29 +32,42 @@ export default function RobotCompare() {
       price: robot.totalPrice || robot.price || 0,
       launchYear: robot.launchYear || '',
       images: robot.images || (robot.imgSrc ? [robot.imgSrc] : []),
-      category: robot.category?.name || robot.category || 'N/A',
-      manufacturer: robot.manufacturer?.name || robot.manufacturer || 'N/A',
-      powerSource: robot.powerSource?.name || robot.powerSource || 'N/A',
-      primaryFunction: robot.primaryFunction?.name || robot.primaryFunction || 'N/A',
-      operatingEnvironment: robot.operatingEnvironment?.name || robot.operatingEnvironment || 'N/A',
-      autonomyLevel: robot.autonomyLevel?.name || robot.autonomyLevel || 'N/A',
-      colors: robot.color?.map(c => c.name) || robot.colors || [],
-      materials: robot.material?.map(m => m.name) || robot.materials || [],
-      navigationTypes: robot.navigationType?.map(n => n.name) || robot.navigationTypes || [],
-      sensors: robot.sensors?.map(s => s.name) || robot.sensors || [],
-      aiSoftwareFeatures: robot.aiSoftwareFeatures?.map(a => a.name) || robot.aiSoftwareFeatures || [],
-      terrainCapabilities: robot.terrainCapability?.map(t => t.name) || robot.terrainCapabilities || [],
-      communicationMethods: robot.communicationMethod?.map(c => c.name) || robot.communicationMethods || [],
-      payloadTypes: robot.payloadTypesSupported?.map(p => p.name) || robot.payloadTypes || [],
-      // Specifications
-      weight: robot.weight || null,
-      speed: robot.speed || null,
-      range: robot.range || null,
-      loadCapacity: robot.loadCapacity || null,
-      batteryCapacity: robot.batteryCapacity || null,
-      runtime: robot.runtime || null,
-      dimensions: robot.dimensions || null,
-      operatingTemperature: robot.operatingTemperature || null,
+      
+      // Basic info
+      category: robot.category?.name || 'N/A',
+      manufacturer: robot.manufacturer?.name || 'N/A',
+      
+      // Specifications (flattened structure - direct access)
+      powerSource: robot.powerSource?.name || robot.specifications?.powerSource?.name || 'N/A',
+      weight: robot.weight || robot.specifications?.weight || null,
+      speed: robot.speed || robot.specifications?.speed || null,
+      range: robot.range || robot.specifications?.range || null,
+      loadCapacity: robot.LoadCapacity || robot.specifications?.loadCapacity || null,
+      batteryCapacity: robot.batteryCapacity || robot.specifications?.batteryCapacity || null,
+      runtime: robot.runtime || robot.specifications?.runtime || null,
+      dimensions: robot.dimensions || robot.specifications?.dimensions || null,
+      operatingTemperature: robot.operatingTemperature || robot.specifications?.operatingTemperature || null,
+      
+      // Capabilities (flattened structure - direct access)
+      primaryFunction: robot.primaryFunction?.name || robot.capabilities?.primaryFunction?.name || 'N/A',
+      autonomyLevel: robot.autonomyLevel?.name || robot.capabilities?.autonomyLevel?.name || 'N/A',
+      navigationTypes: robot.navigationType?.map(n => n.name) || robot.capabilities?.navigationTypes?.map(n => n.name) || [],
+      communicationMethods: robot.communicationMethod?.map(c => c.name) || robot.capabilities?.communicationMethods?.map(c => c.name || c) || [],
+      
+      // Operational Environment (flattened structure - direct access)
+      operatingEnvironment: robot.operatingEnvironment?.name || robot.operationalEnvironmentAndApplications?.operatingEnvironment?.name || 'N/A',
+      terrainCapabilities: robot.terrainCapability?.map(t => t.name) || robot.operationalEnvironmentAndApplications?.terrainCapabilities?.map(t => t.name) || [],
+      
+      // Sensors & Software (flattened structure - direct access)
+      sensors: robot.sensors?.map(s => s.name) || robot.sensorsAndSoftware?.sensors?.map(s => s.name) || [],
+      aiSoftwareFeatures: robot.aiSoftwareFeatures?.map(a => a.name) || robot.sensorsAndSoftware?.aiSoftwareFeatures?.map(a => a.name) || [],
+      
+      // Payloads & Attachments (flattened structure - direct access)
+      payloadTypes: robot.payloadTypesSupported?.map(p => p.name) || robot.payloadsAndAttachments?.payloadTypes?.map(p => p.name) || [],
+      
+      // Materials and Colors (flattened structure - direct access)
+      materials: robot.material?.map(m => m.name) || robot.specifications?.materials?.map(m => m.name) || [],
+      colors: robot.colors?.map(c => c.name) || robot.specifications?.color?.map(c => c.name) || [],
     };
     
     return transformed;
@@ -64,11 +79,8 @@ export default function RobotCompare() {
       return;
     }
 
-    console.log('Context compare robots:', contextCompareRobots);
-    
     // Transform the robots data for better display
     const transformedRobots = contextCompareRobots.map(transformRobotForComparison);
-    console.log('Transformed robots:', transformedRobots);
     setRobots(transformedRobots);
     setLoading(false);
   }, [contextCompareRobots]);
@@ -91,6 +103,9 @@ export default function RobotCompare() {
   const formatSpecification = (spec) => {
     if (!spec || spec === null || spec === undefined) return 'N/A';
     if (typeof spec === 'object') {
+      // Check if it's an empty object
+      if (Object.keys(spec).length === 0) return 'N/A';
+      
       if (spec.value && spec.unit) {
         return `${spec.value} ${spec.unit}`;
       }

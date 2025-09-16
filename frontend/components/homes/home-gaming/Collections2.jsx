@@ -6,34 +6,6 @@ import Link from "next/link";
 import Image from "next/image";
 import useSubCategories from "@/hooks/useSubCategories";
 
-// Static fallback data from your provided static code
-const staticCollections17 = [
-  {
-    id: 1,
-    imageSrc: "/images/collections/list-cls/gaming-1.jpg",
-    alt: "Category 1",
-    title: "Headphones Collection",
-    description: "Clear sound, all-day comfort.",
-    delay: "0s",
-  },
-  {
-    id: 2,
-    imageSrc: "/images/collections/list-cls/gaming-2.jpg",
-    alt: "Category 2",
-    title: "Laptop Collection",
-    description: "Style meets functionality.",
-    delay: "0.1s",
-  },
-  {
-    id: 3,
-    imageSrc: "/images/collections/list-cls/gaming-3.jpg",
-    alt: "Category 3",
-    title: "Mouse & Keyboard",
-    description: "Unleash Speed, Accuracy, and Control for the Ultimate Gaming Edge!",
-    delay: "0.2s",
-  },
-];
-
 export default function Collections2() {
   const { subcategories, loading, error } = useSubCategories();
 
@@ -56,83 +28,34 @@ export default function Collections2() {
     return `http://localhost:5000/${imagePath}`;
   };
 
-  // Use API data if available, otherwise fallback to static data
-  const displayCategories = subcategories && subcategories.length > 0 ? subcategories.slice(0, 3) : staticCollections17;
+  // Use only API data
+  const displayCategories = subcategories && subcategories.length > 0 ? subcategories.slice(0, 3) : [];
 
   // Show loading state while fetching categories
   if (loading) {
     return (
       <section className="flat-spacing">
         <div className="container">
-          <Swiper
-            dir="ltr"
-            className="swiper tf-sw-recent"
-            spaceBetween={15}
-            breakpoints={{
-              0: { slidesPerView: 1 },
-              575: {
-                slidesPerView: 1,
-              },
-              768: {
-                slidesPerView: 2,
-                spaceBetween: 20,
-              },
-              992: {
-                spaceBetween: 30,
-                slidesPerView: 3,
-              },
-            }}
-            modules={[Pagination]}
-            pagination={{
-              clickable: true,
-              el: ".spd26",
-            }}
-          >
-            {[1, 2, 3].map((index) => (
-              <SwiperSlide className="swiper-slide" key={index}>
-                <div
-                  className="collection-default hover-button abs-left-bottom type-2 hover-img wow fadeInUp"
-                  data-wow-delay="0s"
-                >
-                  <a className="img-style">
-                    <Image
-                      className="lazyload"
-                      data-src="/images/collections/list-cls/gaming-1.jpg"
-                      alt="Loading..."
-                      src="/images/collections/list-cls/gaming-1.jpg"
-                      width={410}
-                      height={546}
-                    />
-                  </a>
-                  <div className="content text-start">
-                    <div className="box-title">
-                      <h5 className="title">
-                        <Link
-                          href={`/shop-default-grid`}
-                          className="link text-white fw-bold"
-                        >
-                          Loading...
-                        </Link>
-                      </h5>
-                      <p className="text-white body-text">
-                        Please wait while we fetch categories...
-                      </p>
-                    </div>
-                    <div className="box-btn">
-                      <Link
-                        href={`/shop-default-grid`}
-                        className="tf-btn btn-fill btn-white btn-md"
-                      >
-                        <span className="text">Shop now</span>
-                        <i className="icon icon-arrowUpRight" />
-                      </Link>
-                    </div>
-                  </div>
-                </div>
-              </SwiperSlide>
-            ))}
-            <div className="sw-pagination-recent sw-dots type-circle justify-content-center spd26" />
-          </Swiper>
+          <div className="text-center py-5">
+            <div className="spinner-border text-primary" role="status">
+              <span className="visually-hidden">Loading categories...</span>
+            </div>
+            <p className="mt-3 text-muted">Loading categories...</p>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  // Show empty state if no categories available
+  if (error || !displayCategories || displayCategories.length === 0) {
+    return (
+      <section className="flat-spacing">
+        <div className="container">
+          <div className="text-center py-5">
+            <h4 className="text-muted">No subcategories available</h4>
+            <p className="text-muted">Please check your subcategory configuration in the admin panel.</p>
+          </div>
         </div>
       </section>
     );
@@ -180,7 +103,7 @@ export default function Collections2() {
                     width={410}
                     height={546}
                     onError={(e) => {
-                      e.target.src = staticCollections17[index]?.imageSrc || '/images/collections/list-cls/gaming-1.jpg';
+                      e.target.src = '/images/collections/list-cls/gaming-1.jpg';
                     }}
                   />
                 </a>

@@ -92,14 +92,10 @@ export default function Context({ children }) {
 
   // Robot comparison functions
   const addRobotToCompare = (robotData) => {
-    console.log('addRobotToCompare called with:', robotData);
-    console.log('Current compareRobots:', compareRobots);
-    console.log('Current compareItem:', compareItem);
-    
     if (!robotData || !robotData.id) {
-      console.error('Invalid robot data provided for comparison:', robotData);
       return;
     }
+
 
     if (!compareRobots.find(robot => robot.id === robotData.id)) {
       if (compareRobots.length >= 3) {
@@ -108,46 +104,30 @@ export default function Context({ children }) {
         }
         return;
       }
-      console.log('Adding robot to compare lists...');
       setCompareRobots((pre) => {
         const newList = [...pre, robotData];
-        console.log('New compareRobots list:', newList);
         return newList;
       });
       setCompareItem((pre) => {
         const newList = [...pre, robotData.id];
-        console.log('New compareItem list:', newList);
         return newList;
       });
-      
-      // Show success message
-      if (typeof window !== 'undefined') {
-        console.log(`✅ Added "${robotData.title}" to comparison (${compareRobots.length + 1}/3)`);
-        // You can replace this with a proper toast notification
-        // For now, we'll just log to console
-      }
     } else {
       // Robot already in compare list
       if (typeof window !== 'undefined') {
-        console.log(`ℹ️ "${robotData.title}" is already in comparison list`);
+        alert('This robot is already in your comparison list.');
       }
     }
   };
 
   const removeRobotFromCompare = (robotId) => {
-    console.log('removeRobotFromCompare called with:', robotId);
-    console.log('Current compareRobots before removal:', compareRobots);
-    console.log('Current compareItem before removal:', compareItem);
-    
     setCompareRobots((pre) => {
       const newList = pre.filter((robot) => robot.id !== robotId);
-      console.log('New compareRobots list:', newList);
       return newList;
     });
     
     setCompareItem((pre) => {
       const newList = pre.filter((id) => id !== robotId);
-      console.log('New compareItem list:', newList);
       return newList;
     });
   };
