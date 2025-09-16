@@ -9,8 +9,8 @@ export default function Description({ product }) {
     return {
       title,
       value: unitValue.value && unitValue.unit 
-        ? `${unitValue.value} ${unitValue.unit}`
-        : unitValue.value || unitValue.unit || "N/A"
+              ? `${unitValue.value} ${unitValue.unit}`
+              : unitValue.value || unitValue.unit || "N/A"
     };
   };
 
@@ -19,8 +19,8 @@ export default function Description({ product }) {
     return {
       title,
       value: rangeValue.min && rangeValue.max 
-        ? `${rangeValue.min}${rangeValue.unit || '°C'} to ${rangeValue.max}${rangeValue.unit || '°C'}`
-        : rangeValue.min || rangeValue.max || "N/A"
+              ? `${rangeValue.min}${rangeValue.unit || '°C'} to ${rangeValue.max}${rangeValue.unit || '°C'}`
+              : rangeValue.min || rangeValue.max || "N/A"
     };
   };
 
@@ -50,8 +50,8 @@ export default function Description({ product }) {
       specList.push({
         title: "Power Source",
         value: typeof specs.powerSource === 'object' 
-          ? specs.powerSource.name || specs.powerSource.title
-          : specs.powerSource
+                    ? specs.powerSource.name || specs.powerSource.title
+                    : specs.powerSource
       });
     }
 
@@ -69,7 +69,7 @@ export default function Description({ product }) {
       specList.push({
         title: "Materials",
         value: specs.materials.map(mat => 
-          typeof mat === 'object' ? mat.name || mat.title : mat
+                    typeof mat === 'object' ? mat.name || mat.title : mat
         ).join(', ')
       });
     }
@@ -79,7 +79,7 @@ export default function Description({ product }) {
       specList.push({
         title: "Available Colors",
         value: specs.color.map(c => 
-          typeof c === 'object' ? c.name || c.title : c
+                    typeof c === 'object' ? c.name || c.title : c
         ).join(', ')
       });
     }
@@ -137,6 +137,6 @@ export default function Description({ product }) {
           ))}
         </tbody>
       </table>
-    </div>
+      </div>
   );
 }

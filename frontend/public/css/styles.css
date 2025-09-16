@@ -4048,7 +4048,7 @@ footer {
   color: var(--white);
 }
 .tf-btn.btn-white::after {
-  background-color: var(--primary);
+  background-color: #000000;
 }
 .tf-btn.btn-white.has-border {
   border: 1px solid var(--main);
@@ -4112,7 +4112,7 @@ footer {
 }
 .btn-line.style-white {
   color: var(--white);
-  background: linear-gradient(to right, var(--primary) 50%, var(--white) 50%);
+  background: linear-gradient(to right, #000000 50%, var(--white) 50%);
   background-size: 200% 100%;
   background-position: right;
   -webkit-background-clip: text;
@@ -10461,6 +10461,47 @@ input[type="radio"]:checked::after {
   background-size: 100% 100%;
   transition-delay: 0.2s;
   font-weight: 600;
+  text-decoration: none !important;
+  color: #9ca3af !important;
+  background: none !important;
+  background-image: none !important;
+}
+
+/* Specific fix for home-gaming blogs */
+.wg-blog.style-abs:hover .title a {
+  text-decoration: none !important;
+  color: #9ca3af !important;
+  background: none !important;
+  background-image: none !important;
+}
+
+/* More specific rule for home-gaming blogs to override any conflicting styles */
+section .wg-blog.style-abs:hover .title a,
+.wg-blog.style-abs.hover-image:hover .title a {
+  text-decoration: none !important;
+  color: #9ca3af !important;
+  background: none !important;
+  background-image: none !important;
+}
+
+/* Ultra-specific rule to override any red gradient */
+.wg-blog.style-abs.hover-image.wow.fadeInUp:hover .title a,
+.wg-blog.style-abs.hover-image.wow.fadeInUp:hover .content .title a {
+  text-decoration: none !important;
+  color: #9ca3af !important;
+  background: none !important;
+  background-image: none !important;
+  background-size: 100% 100% !important;
+}
+
+/* Force gray color for all blog title links on hover */
+.wg-blog:hover .title a,
+.wg-blog .title a:hover {
+  text-decoration: none !important;
+  color: #9ca3af !important;
+  background: none !important;
+  background-image: none !important;
+  background-size: 100% 100% !important;
 }
 .wg-blog.style-1 .image {
   margin-bottom: 24px;

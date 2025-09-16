@@ -94,22 +94,22 @@ export default function About() {
                   >
                     <ul>
                       <li>
-                        🌍 <strong>Comprehensive Coverage</strong> – From
+                       <strong>Comprehensive Coverage</strong> – From
                         humanoid robots to industrial machines, AI-driven bots,
                         and upcoming concepts.
                       </li>
                       <li>
-                        📖 <strong>Educational Approach</strong> –
+                       <strong>Educational Approach</strong> –
                         Easy-to-understand explanations designed for learners at
                         all levels.
                       </li>
                       <li>
-                        🔍 <strong>Updated Content</strong> – Constantly adding
+                       <strong>Updated Content</strong> – Constantly adding
                         new information about the latest trends and technologies
                         in robotics.
                       </li>
                       <li>
-                        🤖 <strong>One-Stop Resource</strong> – No distractions,
+                       <strong>One-Stop Resource</strong> – No distractions,
                         no e-commerce — just pure robotics knowledge.
                       </li>
                     </ul>

@@ -10,8 +10,8 @@ export default function SensorsAndSoftware({ product }) {
     return {
       title: label,
       value: unitValue.value && unitValue.unit 
-        ? `${unitValue.value} ${unitValue.unit}`
-        : unitValue.value || unitValue.unit || "N/A"
+            ? `${unitValue.value} ${unitValue.unit}`
+            : unitValue.value || unitValue.unit || "N/A"
     };
   };
 
@@ -24,7 +24,7 @@ export default function SensorsAndSoftware({ product }) {
       dataList.push({
         title: "Sensors",
         value: sensorsData.sensors.map((sensor, index) => 
-          typeof sensor === 'object' ? sensor.name || sensor.title : sensor
+                    typeof sensor === 'object' ? sensor.name || sensor.title : sensor
         ).join(", ")
       });
     }
@@ -34,7 +34,7 @@ export default function SensorsAndSoftware({ product }) {
       dataList.push({
         title: "AI Software Features",
         value: sensorsData.aiSoftwareFeatures.map((feature, index) => 
-          typeof feature === 'object' ? feature.name || feature.title : feature
+                    typeof feature === 'object' ? feature.name || feature.title : feature
         ).join(", ")
       });
     }
@@ -98,6 +98,6 @@ export default function SensorsAndSoftware({ product }) {
           ))}
         </tbody>
       </table>
-    </div>
+      </div>
   );
 }
