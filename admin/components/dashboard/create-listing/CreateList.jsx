@@ -528,50 +528,68 @@ const CreateList = () => {
         formData.append("metaDescription", metadescription.trim());
 
       // Handle array fields - always send as arrays, even if empty
-      if (feature && feature.trim() !== "") {
-        formData.append("capabilities.features", feature.trim());
+      // Safely handle feature field
+      const safeFeature = typeof feature === 'string' ? feature : (Array.isArray(feature) ? feature.join(", ") : "");
+      if (safeFeature && safeFeature.trim() !== "") {
+        formData.append("capabilities.features", safeFeature.trim());
       } else {
         formData.append("capabilities.features", "[]");
       }
       
-      if (interoperability && interoperability.trim() !== "") {
-        formData.append("capabilities.interoperability", interoperability.trim());
+      // Safely handle interoperability field
+      const safeInteroperability = typeof interoperability === 'string' ? interoperability : (Array.isArray(interoperability) ? interoperability.join(", ") : "");
+      if (safeInteroperability && safeInteroperability.trim() !== "") {
+        formData.append("capabilities.interoperability", safeInteroperability.trim());
       } else {
         formData.append("capabilities.interoperability", "[]");
       }
-      if (attachments && attachments.trim() !== "") {
-        formData.append("payloadsAndAttachments.attachments", attachments.trim());
+      
+      // Safely handle attachments field
+      const safeAttachments = typeof attachments === 'string' ? attachments : (Array.isArray(attachments) ? attachments.join(", ") : "");
+      if (safeAttachments && safeAttachments.trim() !== "") {
+        formData.append("payloadsAndAttachments.attachments", safeAttachments.trim());
       } else {
         formData.append("payloadsAndAttachments.attachments", "[]");
       }
       
-      if (accessoryPorts && accessoryPorts.trim() !== "") {
-        formData.append("payloadsAndAttachments.accessoryPorts", accessoryPorts.trim());
+      // Safely handle accessoryPorts field
+      const safeAccessoryPorts = typeof accessoryPorts === 'string' ? accessoryPorts : (Array.isArray(accessoryPorts) ? accessoryPorts.join(", ") : "");
+      if (safeAccessoryPorts && safeAccessoryPorts.trim() !== "") {
+        formData.append("payloadsAndAttachments.accessoryPorts", safeAccessoryPorts.trim());
       } else {
         formData.append("payloadsAndAttachments.accessoryPorts", "[]");
       }
       if (operatingSystem && operatingSystem.trim() !== "") formData.append("sensorsAndSoftware.operatingSystem", operatingSystem.trim());
       if (firmwareVersion && firmwareVersion.trim() !== "") formData.append("sensorsAndSoftware.firmwareVersion", firmwareVersion.trim());
       // Handle array fields - always send as arrays, even if empty
-      if (securityFeatures && securityFeatures.trim() !== "") {
-        formData.append("sensorsAndSoftware.securityFeatures", securityFeatures.trim());
+      // Safely handle securityFeatures field
+      const safeSecurityFeatures = typeof securityFeatures === 'string' ? securityFeatures : (Array.isArray(securityFeatures) ? securityFeatures.join(", ") : "");
+      if (safeSecurityFeatures && safeSecurityFeatures.trim() !== "") {
+        formData.append("sensorsAndSoftware.securityFeatures", safeSecurityFeatures.trim());
       } else {
         formData.append("sensorsAndSoftware.securityFeatures", "[]");
       }
       
-      if (applications && applications.trim() !== "") {
-        formData.append("operationalEnvironmentAndApplications.applications", applications.trim());
+      // Safely handle applications field
+      const safeApplications = typeof applications === 'string' ? applications : (Array.isArray(applications) ? applications.join(", ") : "");
+      if (safeApplications && safeApplications.trim() !== "") {
+        formData.append("operationalEnvironmentAndApplications.applications", safeApplications.trim());
       } else {
         formData.append("operationalEnvironmentAndApplications.applications", "[]");
       }
       
-      if (enduranceExtremeConditions && enduranceExtremeConditions.trim() !== "") {
-        formData.append("operationalEnvironmentAndApplications.enduranceExtremeConditions", enduranceExtremeConditions.trim());
+      // Safely handle enduranceExtremeConditions field
+      const safeEnduranceExtremeConditions = typeof enduranceExtremeConditions === 'string' ? enduranceExtremeConditions : (Array.isArray(enduranceExtremeConditions) ? enduranceExtremeConditions.join(", ") : "");
+      if (safeEnduranceExtremeConditions && safeEnduranceExtremeConditions.trim() !== "") {
+        formData.append("operationalEnvironmentAndApplications.enduranceExtremeConditions", safeEnduranceExtremeConditions.trim());
       } else {
         formData.append("operationalEnvironmentAndApplications.enduranceExtremeConditions", "[]");
       }
-      if (deploymentLogistics && deploymentLogistics.trim() !== "") {
-        formData.append("operationalEnvironmentAndApplications.deploymentLogistics", deploymentLogistics.trim());
+      
+      // Safely handle deploymentLogistics field
+      const safeDeploymentLogistics = typeof deploymentLogistics === 'string' ? deploymentLogistics : (Array.isArray(deploymentLogistics) ? deploymentLogistics.join(", ") : "");
+      if (safeDeploymentLogistics && safeDeploymentLogistics.trim() !== "") {
+        formData.append("operationalEnvironmentAndApplications.deploymentLogistics", safeDeploymentLogistics.trim());
       } else {
         formData.append("operationalEnvironmentAndApplications.deploymentLogistics", "[]");
       }
@@ -645,7 +663,7 @@ const CreateList = () => {
       formData.append("payloadsAndAttachments.hotSwappable", hotSwappable ? "true" : "false");
 
       // isFeatured
-      formData.append("payloadsAndAttachments.isFeatured", isFeatured ? "true" : "false");
+      formData.append("isFeatured", isFeatured ? "true" : "false");
 
       // Other specifications (optional)
       if (batteryCapacity && batteryCapacity !== "" && !isNaN(batteryCapacity)) {

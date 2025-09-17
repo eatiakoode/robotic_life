@@ -289,16 +289,86 @@ const EditList = () => {
           }
 
           // Additional fields from add form
-          setFeature(robotData.capabilities?.features || "");
-          setInteroperability(robotData.capabilities?.interoperability?.[0] || "");
-          setAttachments(robotData.payloadsAndAttachments?.attachments?.[0] || "");
-          setAccessoryPorts(robotData.payloadsAndAttachments?.accessoryPorts?.[0] || "");
+          // Handle features as array - convert to string if needed
+          const featuresData = robotData.capabilities?.features;
+          if (Array.isArray(featuresData)) {
+            setFeature(featuresData.join(", ") || "");
+          } else if (typeof featuresData === 'string') {
+            setFeature(featuresData || "");
+          } else {
+            setFeature("");
+          }
+          
+          // Handle interoperability as array - convert to string if needed
+          const interoperabilityData = robotData.capabilities?.interoperability;
+          if (Array.isArray(interoperabilityData)) {
+            setInteroperability(interoperabilityData.join(", ") || "");
+          } else if (typeof interoperabilityData === 'string') {
+            setInteroperability(interoperabilityData || "");
+          } else {
+            setInteroperability("");
+          }
+          
+          // Handle attachments as array - convert to string if needed
+          const attachmentsData = robotData.payloadsAndAttachments?.attachments;
+          if (Array.isArray(attachmentsData)) {
+            setAttachments(attachmentsData.join(", ") || "");
+          } else if (typeof attachmentsData === 'string') {
+            setAttachments(attachmentsData || "");
+          } else {
+            setAttachments("");
+          }
+          // Handle accessoryPorts as array - convert to string if needed
+          const accessoryPortsData = robotData.payloadsAndAttachments?.accessoryPorts;
+          if (Array.isArray(accessoryPortsData)) {
+            setAccessoryPorts(accessoryPortsData.join(", ") || "");
+          } else if (typeof accessoryPortsData === 'string') {
+            setAccessoryPorts(accessoryPortsData || "");
+          } else {
+            setAccessoryPorts("");
+          }
+          
           setOperatingSystem(robotData.sensorsAndSoftware?.operatingSystem || "");
           setFirmwareVersion(robotData.sensorsAndSoftware?.firmwareVersion || "");
-          setSecurityFeatures(robotData.sensorsAndSoftware?.securityFeatures?.[0] || "");
-          setApplications(robotData.operationalEnvironmentAndApplications?.applications?.[0] || "");
-          setEnduranceExtremeConditions(robotData.operationalEnvironmentAndApplications?.enduranceExtremeConditions?.[0] || "");
-          setDeploymentLogistics(robotData.operationalEnvironmentAndApplications?.deploymentLogistics?.[0] || "");
+          
+          // Handle securityFeatures as array - convert to string if needed
+          const securityFeaturesData = robotData.sensorsAndSoftware?.securityFeatures;
+          if (Array.isArray(securityFeaturesData)) {
+            setSecurityFeatures(securityFeaturesData.join(", ") || "");
+          } else if (typeof securityFeaturesData === 'string') {
+            setSecurityFeatures(securityFeaturesData || "");
+          } else {
+            setSecurityFeatures("");
+          }
+          
+          // Handle applications as array - convert to string if needed
+          const applicationsData = robotData.operationalEnvironmentAndApplications?.applications;
+          if (Array.isArray(applicationsData)) {
+            setApplications(applicationsData.join(", ") || "");
+          } else if (typeof applicationsData === 'string') {
+            setApplications(applicationsData || "");
+          } else {
+            setApplications("");
+          }
+          // Handle enduranceExtremeConditions as array - convert to string if needed
+          const enduranceExtremeConditionsData = robotData.operationalEnvironmentAndApplications?.enduranceExtremeConditions;
+          if (Array.isArray(enduranceExtremeConditionsData)) {
+            setEnduranceExtremeConditions(enduranceExtremeConditionsData.join(", ") || "");
+          } else if (typeof enduranceExtremeConditionsData === 'string') {
+            setEnduranceExtremeConditions(enduranceExtremeConditionsData || "");
+          } else {
+            setEnduranceExtremeConditions("");
+          }
+          
+          // Handle deploymentLogistics as array - convert to string if needed
+          const deploymentLogisticsData = robotData.operationalEnvironmentAndApplications?.deploymentLogistics;
+          if (Array.isArray(deploymentLogisticsData)) {
+            setDeploymentLogistics(deploymentLogisticsData.join(", ") || "");
+          } else if (typeof deploymentLogisticsData === 'string') {
+            setDeploymentLogistics(deploymentLogisticsData || "");
+          } else {
+            setDeploymentLogistics("");
+          }
 
           // Data logging
           if (robotData.sensorsAndSoftware?.dataLogging?.storageCapacity) {
@@ -427,9 +497,16 @@ const EditList = () => {
             setEnergyConsumptionUnit(robotData.specifications.energyConsumption.unit || "Wh");
           }
 
-          // Capabilities
+          // Capabilities - Handle feature field properly
           if (robotData.capabilities?.feature) {
-            setFeature(robotData.capabilities.feature || "");
+            const featureData = robotData.capabilities.feature;
+            if (Array.isArray(featureData)) {
+              setFeature(featureData.join(", ") || "");
+            } else if (typeof featureData === 'string') {
+              setFeature(featureData || "");
+            } else {
+              setFeature("");
+            }
           }
           if (robotData.capabilities?.communicationRange) {
             setCommunicationRange(robotData.capabilities.communicationRange.value || "");
@@ -790,7 +867,7 @@ const EditList = () => {
       if (selectedManufacturer) formData.append("manufacturer", selectedManufacturer);
       if (launchYear && !isNaN(launchYear)) formData.append("launchYear", launchYear.toString());
       if (version) formData.append("version", version);
-      if (isFeatured) formData.append("isFeatured", isFeatured ? "true" : "false");
+      formData.append("isFeatured", isFeatured ? "true" : "false");
       if (selectedPower) formData.append("specifications.powerSource", selectedPower);
       if (videoembedcode) formData.append("videoEmbedCode", videoembedcode.trim());
       if (selectedPrimaryFunction) formData.append("capabilities.primaryFunction", selectedPrimaryFunction);
@@ -855,8 +932,10 @@ const EditList = () => {
 
       // Capabilities
       // Handle array fields - always send as arrays, even if empty
-      if (feature && feature.trim() !== "") {
-        formData.append("capabilities.features", feature.trim());
+      // Safely handle feature field - ensure it's a string before calling trim
+      const safeFeature = typeof feature === 'string' ? feature : (Array.isArray(feature) ? feature.join(", ") : "");
+      if (safeFeature && safeFeature.trim() !== "") {
+        formData.append("capabilities.features", safeFeature.trim());
       } else {
         formData.append("capabilities.features", "[]");
       }
@@ -868,21 +947,27 @@ const EditList = () => {
         formData.append("capabilities.loadHandling.grippingStrength.value", String(grippingStrength));
         formData.append("capabilities.loadHandling.grippingStrength.unit", grippingStrengthUnit);
       }
-      if (interoperability && interoperability.trim() !== "") {
-        formData.append("capabilities.interoperability", interoperability.trim());
+      // Safely handle interoperability field
+      const safeInteroperability = typeof interoperability === 'string' ? interoperability : (Array.isArray(interoperability) ? interoperability.join(", ") : "");
+      if (safeInteroperability && safeInteroperability.trim() !== "") {
+        formData.append("capabilities.interoperability", safeInteroperability.trim());
       } else {
         formData.append("capabilities.interoperability", "[]");
       }
 
       // Payloads & Attachments
-      if (attachments && attachments.trim() !== "") {
-        formData.append("payloadsAndAttachments.attachments", attachments.trim());
+      // Safely handle attachments field
+      const safeAttachments = typeof attachments === 'string' ? attachments : (Array.isArray(attachments) ? attachments.join(", ") : "");
+      if (safeAttachments && safeAttachments.trim() !== "") {
+        formData.append("payloadsAndAttachments.attachments", safeAttachments.trim());
       } else {
         formData.append("payloadsAndAttachments.attachments", "[]");
       }
       
-      if (accessoryPorts && accessoryPorts.trim() !== "") {
-        formData.append("payloadsAndAttachments.accessoryPorts", accessoryPorts.trim());
+      // Safely handle accessoryPorts field
+      const safeAccessoryPorts = typeof accessoryPorts === 'string' ? accessoryPorts : (Array.isArray(accessoryPorts) ? accessoryPorts.join(", ") : "");
+      if (safeAccessoryPorts && safeAccessoryPorts.trim() !== "") {
+        formData.append("payloadsAndAttachments.accessoryPorts", safeAccessoryPorts.trim());
       } else {
         formData.append("payloadsAndAttachments.accessoryPorts", "[]");
       }
@@ -897,8 +982,10 @@ const EditList = () => {
       formData.append("sensorsAndSoftware.operatingSystem", operatingSystem || "");
       formData.append("sensorsAndSoftware.firmwareVersion", firmwareVersion || "");
       // Handle array fields - always send as arrays, even if empty
-      if (securityFeatures && securityFeatures.trim() !== "") {
-        formData.append("sensorsAndSoftware.securityFeatures", securityFeatures.trim());
+      // Safely handle securityFeatures field
+      const safeSecurityFeatures = typeof securityFeatures === 'string' ? securityFeatures : (Array.isArray(securityFeatures) ? securityFeatures.join(", ") : "");
+      if (safeSecurityFeatures && safeSecurityFeatures.trim() !== "") {
+        formData.append("sensorsAndSoftware.securityFeatures", safeSecurityFeatures.trim());
       } else {
         formData.append("sensorsAndSoftware.securityFeatures", "[]");
       }
@@ -914,20 +1001,26 @@ const EditList = () => {
       }
 
       // Operational Environment & Applications
-      if (applications && applications.trim() !== "") {
-        formData.append("operationalEnvironmentAndApplications.applications", applications.trim());
+      // Safely handle applications field
+      const safeApplications = typeof applications === 'string' ? applications : (Array.isArray(applications) ? applications.join(", ") : "");
+      if (safeApplications && safeApplications.trim() !== "") {
+        formData.append("operationalEnvironmentAndApplications.applications", safeApplications.trim());
       } else {
         formData.append("operationalEnvironmentAndApplications.applications", "[]");
       }
       
-      if (enduranceExtremeConditions && enduranceExtremeConditions.trim() !== "") {
-        formData.append("operationalEnvironmentAndApplications.enduranceExtremeConditions", enduranceExtremeConditions.trim());
+      // Safely handle enduranceExtremeConditions field
+      const safeEnduranceExtremeConditions = typeof enduranceExtremeConditions === 'string' ? enduranceExtremeConditions : (Array.isArray(enduranceExtremeConditions) ? enduranceExtremeConditions.join(", ") : "");
+      if (safeEnduranceExtremeConditions && safeEnduranceExtremeConditions.trim() !== "") {
+        formData.append("operationalEnvironmentAndApplications.enduranceExtremeConditions", safeEnduranceExtremeConditions.trim());
       } else {
         formData.append("operationalEnvironmentAndApplications.enduranceExtremeConditions", "[]");
       }
       
-      if (deploymentLogistics && deploymentLogistics.trim() !== "") {
-        formData.append("operationalEnvironmentAndApplications.deploymentLogistics", deploymentLogistics.trim());
+      // Safely handle deploymentLogistics field
+      const safeDeploymentLogistics = typeof deploymentLogistics === 'string' ? deploymentLogistics : (Array.isArray(deploymentLogistics) ? deploymentLogistics.join(", ") : "");
+      if (safeDeploymentLogistics && safeDeploymentLogistics.trim() !== "") {
+        formData.append("operationalEnvironmentAndApplications.deploymentLogistics", safeDeploymentLogistics.trim());
       } else {
         formData.append("operationalEnvironmentAndApplications.deploymentLogistics", "[]");
       }
