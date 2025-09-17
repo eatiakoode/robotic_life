@@ -30,6 +30,11 @@ const nextConfig = {
     ],
     // Allow local images from public folder
     domains: ['localhost'],
+    // Optimize image loading
+    dangerouslyAllowSVG: true,
+    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
+    // Reduce preload warnings
+    minimumCacheTTL: 60,
   },
   sassOptions: {
     quietDeps: true, // This will silence deprecation warnings
@@ -41,6 +46,10 @@ const nextConfig = {
       exclude: ['error']
     } : false,
   },
+  // Optimize for production
+  poweredByHeader: false,
+  generateEtags: false,
+  compress: true,
   // Optimize CSS loading
   experimental: {
     optimizeCss: true,

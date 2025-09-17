@@ -6,7 +6,6 @@ const BACKEND_API_URL = process.env.NEXT_PUBLIC_BACKEND_API_URL || 'http://local
 // Fallback URLs in case the main one fails
 const FALLBACK_URLS = [
   'http://localhost:5000',
-  'http://localhost:3001',
   'http://localhost:8000'
 ];
 

@@ -892,7 +892,7 @@ a:hover {
   transition: all 0.3s ease;
   text-decoration: none;
   outline: 0;
-  background: linear-gradient(135deg, #9ca3af, #6b7280) !important;
+  background: linear-gradient(135deg, #29292a, #282a2d) !important;
   -webkit-background-clip: text !important;
   -webkit-text-fill-color: transparent !important;
   background-clip: text !important;
@@ -906,7 +906,7 @@ a:hover {
   transition: all 0.3s ease;
 }
 .link:hover {
-  background: linear-gradient(135deg, #9ca3af, #6b7280) !important;
+  background: linear-gradient(135deg, #3e3e3f, #565960) !important;
   -webkit-background-clip: text !important;
   -webkit-text-fill-color: transparent !important;
   background-clip: text !important;

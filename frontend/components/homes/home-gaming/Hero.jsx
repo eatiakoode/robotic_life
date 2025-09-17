@@ -94,56 +94,20 @@ export default function Hero() {
                 height={756}
                 priority
               />
-              <div className="box-content type-2 type-3" style={{
-                position: 'absolute',
-                left: '0',
-                top: '0',
-                width: '50%',
-                height: '100%',
-                display: 'flex',
-                alignItems: 'flex-end',
-                justifyContent: 'center',
-                padding: '0 60px 40px 60px',
-                zIndex: 2
-              }}>
-                <div className="content-slider" style={{
-                  maxWidth: '500px',
-                  width: '100%'
-                }}>
+              <div className="box-content type-2 type-3 hero-content-responsive">
+                <div className="content-slider">
                   <div className="box-title-slider">
-                    <span className="fade-item fade-item-1 fw-bold text-white title-display font-5" style={{
-                      fontSize: '3.5rem',
-                      lineHeight: '1.2',
-                      marginBottom: '0.50rem',
-                      fontWeight: '700',
-                      display: 'block'
-                    }}>
+                    <span className="fade-item fade-item-1 fw-bold text-white title-display font-5 hero-title-responsive">
                       {slide.title || "Title"}
                     </span>
-                    <p className="fade-item fade-item-2 body-text-1 text-white" style={{
-                      fontSize: '1.2rem',
-                      lineHeight: '1.6',
-                      marginBottom: '2rem',
-                      opacity: '0.9'
-                    }}>
+                    <p className="fade-item fade-item-2 body-text-1 text-white hero-description-responsive">
                       {slide.description || "Description"}
                     </p>
                   </div>
                   <div className="fade-item fade-item-3 box-btn-slider">
                     <Link
                       href={slide.buttonLink || "/shop-default-grid"}
-                      className="tf-btn btn-fill btn-white"
-                      style={{
-                        padding: '15px 30px',
-                        fontSize: '1.1rem',
-                        fontWeight: '600',
-                        borderRadius: '8px',
-                        textDecoration: 'none',
-                        display: 'inline-flex',
-                        alignItems: 'center',
-                        gap: '10px',
-                        transition: 'all 0.3s ease'
-                      }}
+                      className="tf-btn btn-fill btn-white hero-button-responsive"
                     >
                       <span className="text">{slide.buttonText || "Explore Robots"}</span>
                       <i className="icon icon-arrowUpRight" />

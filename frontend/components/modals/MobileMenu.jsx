@@ -108,39 +108,9 @@ export default function MobileMenu() {
             <ul className="nav-ul-mb" id="wrapper-menu-navigation">
               <li className="nav-mb-item active">
                 <a
-                  href="#dropdown-menu-one"
-                  className={`collapsed mb-menu-link ${
-                    [...demoItems].some(
-                      (elm) => elm.href.split("/")[1] == pathname.split("/")[1]
-                    )
-                      ? "active"
-                      : ""
-                  } `}
-                  data-bs-toggle="collapse"
-                  aria-expanded="true"
-                  aria-controls="dropdown-menu-one"
-                >
+                  href="/">
                   <span>Home</span>
-                  <span className="btn-open-sub" />
                 </a>
-                <div id="dropdown-menu-one" className="collapse">
-                  <ul className="sub-nav-menu">
-                    {demoItems.map((link, i) => (
-                      <li key={i}>
-                        <Link
-                          href={link.href}
-                          className={`sub-nav-link ${
-                            pathname.split("/")[1] == link.href.split("/")[1]
-                              ? "active"
-                              : ""
-                          } `}
-                        >
-                          {link.name}
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
               </li>
               <li className="nav-mb-item">
                 <a
@@ -174,7 +144,7 @@ export default function MobileMenu() {
                       categories.map((category, index) => {
                         const categorySubcategories = subcategories[category._id] || [];
                         return (
-                          <li key={category._id || index}>
+                          <li key={category.slug || index}>
                             <a
                               href={`#sub-robot-${index}`}
                               className={`sub-nav-link collapsed ${
@@ -195,9 +165,9 @@ export default function MobileMenu() {
                               <ul className="sub-nav-menu sub-menu-level-2">
                                 {categorySubcategories.length > 0 ? (
                                   categorySubcategories.map((subcategory, subIndex) => (
-                                    <li key={subcategory._id || subIndex}>
+                                    <li key={subcategory.slug || subIndex}>
                                       <Link
-                                        href={`/shop-filter-canvas?category=${category._id}&subcategory=${subcategory._id}`}
+                                        href={`/shop-default-grid?category=${subcategory.slug}&categoryName=${encodeURIComponent(subcategory.name)}&type=subcategory`}
                                         className={`sub-nav-link ${
                                           pathname.includes("shop-default-grid") ||
                                           pathname.includes("filter-canvas") ||
@@ -213,7 +183,7 @@ export default function MobileMenu() {
                                 ) : (
                                   <li>
                                     <Link
-                                      href={`/shop-filter-canvas?category=${category._id}`}
+                                      href={`/shop-default-grid?category=${category.slug}&categoryName=${encodeURIComponent(category.name)}&type=parent`}
                                       className={`sub-nav-link ${
                                         pathname.includes("shop-default-grid") ||
                                         pathname.includes("filter-canvas") ||
@@ -257,7 +227,7 @@ export default function MobileMenu() {
               </li>
                <li className="nav-mb-item">
                 <a
-                  href="/contact-us"
+                  href="/contact"
                   className={`mb-menu-link ${
                     pathname.split("/")[1] === "contact-us" ? "active" : ""
                   }`}
@@ -271,7 +241,8 @@ export default function MobileMenu() {
           <div className="mb-other-content">
             <div className="mb-contact">
               <p className="text-caption-1">
-                549 Oak St.Crystal Lake, IL 60014
+                Tower B4, SPAZE ITECH PARK, UN 616, Badshahpur Sohna Rd
+                Hwy, Sector 49, Gurugram, Haryana 122018
               </p>
               <Link
                 href={`/contact`}
@@ -284,11 +255,11 @@ export default function MobileMenu() {
             <ul className="mb-info">
               <li>
                 <i className="icon icon-mail" />
-                <p>themesflat@gmail.com</p>
+                <p>hello@thebotsworld.com</p>
               </li>
               <li>
                 <i className="icon icon-phone" />
-                <p>315-666-6688</p>
+                <p>098993 00017</p>
               </li>
             </ul>
           </div>
