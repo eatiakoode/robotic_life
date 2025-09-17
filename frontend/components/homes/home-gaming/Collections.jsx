@@ -70,16 +70,16 @@ export default function Collections() {
         const isSubcategory = category.parent && category.parent !== null;
         const categoryType = isSubcategory ? 'subcategory' : 'parent';
         
-        return `/shop-filter-canvas?category=${category.slug}&type=${categoryType}`;
+        return `/shop-default-grid?category=${category.slug}&type=${categoryType}`;
       } else if (category && category.name) {
         // Generate slug from name if slug is missing
         const generatedSlug = generateSlug(category.name);
-        return `/shop-filter-canvas?category=${generatedSlug}&type=parent`;
+        return `/shop-default-grid?category=${generatedSlug}&type=parent`;
       } else {
-        return '/shop-filter-canvas';
+        return '/shop-default-grid';
       }
     } catch (error) {
-      return '/shop-filter-canvas';
+      return '/shop-default-grid';
     }
   };
 
@@ -187,7 +187,7 @@ export default function Collections() {
               <div className="content text-start">
                 <div className="box-title">
                   <h3 className="title">
-                    <Link href="/shop-filter-canvas" className="link text-white fw-bold font-5">
+                    <Link href="/shop-default-grid" className="link text-white fw-bold font-5">
                       {displayCategories[2].name || "Category"}
                     </Link>
                   </h3>

@@ -3,9 +3,6 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import CountdownTimer from "../common/Countdown";
-import { useContextElement } from "@/context/Context";
-// import { transformRobotForComparison } from "@/api/robotCompare"; // No longer needed
-import { openOffcanvasModal } from "@/utils/modalUtils";
 
 export default function ProductCard1({
   product,
@@ -24,10 +21,6 @@ export default function ProductCard1({
 
   const [currentImage, setCurrentImage] = useState(getValidImageSrc(product.imgSrc));
 
-  const {
-    addRobotToCompare,
-    isAddedtoCompareItem,
-  } = useContextElement();
 
   useEffect(() => {
     setCurrentImage(getValidImageSrc(product.imgSrc));
@@ -69,6 +62,8 @@ export default function ProductCard1({
             alt={product.title || 'Robot'}
             width={600}
             height={800}
+            sizes="(max-width: 576px) 150px, (max-width: 768px) 200px, (max-width: 992px) 250px, 300px"
+            loading="lazy"
           />
           <Image
             className="lazyload img-hover"
@@ -76,6 +71,8 @@ export default function ProductCard1({
             alt={product.title || 'Robot'}
             width={600}
             height={800}
+            sizes="(max-width: 576px) 150px, (max-width: 768px) 200px, (max-width: 992px) 250px, 300px"
+            loading="lazy"
           />
         </Link>
         {product.hotSale && (
@@ -207,42 +204,12 @@ export default function ProductCard1({
           ""
         )}
         <div className="list-btn-main">
-          <a
+          <Link
+            href={`/product-detail/${product.slug && product.slug.trim() ? product.slug : product.id}`}
             className="btn-main-product"
-            href="#compare"
-            data-bs-toggle="offcanvas"
-            aria-controls="compare"
-            onClick={(e) => {
-              e.preventDefault();
-              // Pass the raw product data directly to addRobotToCompare
-              // The transformation will happen in the comparison component
-              if (product && (product._id || product.id)) {
-                const productId = product._id || product.id;
-                if (isAddedtoCompareItem(productId)) {
-                  openOffcanvasModal('compare');
-                  return;
-                }
-                addRobotToCompare(product);
-                setTimeout(() => {
-                  openOffcanvasModal('compare');
-                }, 100);
-              } else {
-                const productId = product._id || product.id;
-                if (isAddedtoCompareItem(productId)) {
-                  openOffcanvasModal('compare');
-                  return;
-                }
-                addToCompareItem(productId);
-                setTimeout(() => {
-                  openOffcanvasModal('compare');
-                }, 100);
-              }
-            }}
           >
-            {isAddedtoCompareItem(product._id || product.id)
-              ? "Already Compared"
-              : "Add to Compare"}
-          </a>
+            View Details
+          </Link>
         </div>
       </div>
       <div className="card-product-info">

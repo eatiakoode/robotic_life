@@ -596,7 +596,7 @@ export default function Products1({ parentClass = "flat-spacing",products ,produ
     <>
       <section className={parentClass}>
         <div className="container">
-          <div className="tf-shop-control">
+          <div className="tf-shop-control d-flex flex-wrap align-items-center justify-content-between">
             <div className="tf-control-filter">
               <a
                 href="#filterShop"
@@ -605,14 +605,15 @@ export default function Products1({ parentClass = "flat-spacing",products ,produ
                 className="tf-btn-filter"
               >
                 <span className="icon icon-filter" />
-                <span className="text">Filters</span>
+                <span className="text d-none d-sm-inline">Filters</span>
+                <span className="text d-sm-none">Filter</span>
               </a>
             </div>
-            <ul className="tf-control-layout">
+            <ul className="tf-control-layout d-flex align-items-center">
               {/* Layout controls removed as per user request */}
             </ul>
-            <div className="tf-control-sorting">
-              <p className="d-none d-lg-block text-caption-1">Sort by:</p>
+            <div className="tf-control-sorting d-flex align-items-center">
+              <p className="d-none d-lg-block text-caption-1 mb-0 me-2">Sort by:</p>
               <Sorting allProps={allProps} />
             </div>
           </div>
@@ -715,7 +716,7 @@ export default function Products1({ parentClass = "flat-spacing",products ,produ
             ) : (
               <>
                 <div
-                  className={`tf-grid-layout wrapper-shop tf-col-${activeLayout}`}
+                  className={`tf-grid-layout wrapper-shop tf-col-${activeLayout} responsive-grid`}
                   id="gridLayout"
                 >
                   <GridView 

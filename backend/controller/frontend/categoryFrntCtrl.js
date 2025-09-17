@@ -94,14 +94,6 @@ const getRobotsByCategorySlug = asyncHandler(async (req, res) => {
       });
     }
 
-    console.log('🔍 Category found:', {
-      slug: category.slug,
-      name: category.name,
-      parent: category.parent,
-      isSubcategory: !!category.parent,
-      requestedType: type,
-      categoryId: category._id
-    });
 
     let categoryIds = [category._id];
 
@@ -134,7 +126,6 @@ const getRobotsByCategorySlug = asyncHandler(async (req, res) => {
     // If it's a subcategory, only include that specific subcategory (don't include parent)
     // This ensures subcategory filtering shows only robots from that subcategory
 
-    console.log('🔍 Querying robots with categoryIds:', categoryIds);
 
     const robots = await Robot.find({
       category: { $in: categoryIds },

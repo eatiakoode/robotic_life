@@ -75,9 +75,14 @@ export default function MobileMenu() {
                   defaultValue=""
                   aria-required="true"
                   required
+                  autoComplete="off"
                 />
               </fieldset>
-              <button className="" type="submit">
+              <button 
+                className="" 
+                type="submit"
+                aria-label="Search"
+              >
                 <svg
                   width={24}
                   height={24}

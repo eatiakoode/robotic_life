@@ -11,29 +11,41 @@ export default function Header1({ fullWidth = false }) {
     >
       <div className={fullWidth ? "" : "container"}>
         <div className="row wrapper-header align-items-center">
+          {/* Mobile Menu Button - Hidden on XL screens */}
           <div className="col-md-4 col-3 d-xl-none">
             <a
               href="#mobileMenu"
               className="mobile-menu"
               data-bs-toggle="offcanvas"
               aria-controls="mobileMenu"
+              aria-label="Open mobile menu"
             >
               <i className="icon icon-categories" />
             </a>
           </div>
+          
+          {/* Logo - Responsive sizing */}
           <div className="col-xl-3 col-md-4 col-6">
             <Link href={`/`} className="logo-header">
               <Image
-                alt="logo"
+                alt="Robotic Life Logo"
                 className="logo"
                 src="/images/logo/logoB.png"
                 width={144}
                 height={25}
                 priority
-                style={{ width: 'auto', height: 'auto' }}
+                style={{ 
+                  width: 'auto', 
+                  height: 'auto',
+                  maxWidth: '100%',
+                  height: 'auto'
+                }}
+                sizes="(max-width: 576px) 100px, (max-width: 768px) 120px, (max-width: 992px) 140px, 144px"
               />
             </Link>
           </div>
+          
+          {/* Desktop Navigation - Hidden on mobile/tablet */}
           <div className="col-xl-6 d-none d-xl-block">
             <nav className="box-navigation text-center">
               <ul className="box-nav-ul d-flex align-items-center justify-content-center">
@@ -41,6 +53,8 @@ export default function Header1({ fullWidth = false }) {
               </ul>
             </nav>
           </div>
+          
+          {/* Social Icons and Search - Responsive layout */}
           <div className="col-xl-3 col-md-4 col-3">
             <ul className="nav-icon d-flex justify-content-end align-items-center">
               <li className="nav-search">
@@ -48,6 +62,7 @@ export default function Header1({ fullWidth = false }) {
                   href="#search"
                   data-bs-toggle="modal"
                   className="nav-icon-item"
+                  aria-label="Search"
                 >
                   <svg
                     className="icon"
@@ -74,18 +89,38 @@ export default function Header1({ fullWidth = false }) {
                   </svg>
                 </a>
               </li>
-              <li>
-                <a href="https://www.facebook.com" className="social-facebook">
+              
+              {/* Social Icons - Hidden on small mobile screens */}
+              <li className="d-none d-md-block">
+                <a 
+                  href="https://www.facebook.com" 
+                  className="social-facebook"
+                  aria-label="Facebook"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   <i className="icon icon-fb" />
                 </a>
               </li>
-              <li>
-                <a href="https://twitter.com" className="social-twiter">
+              <li className="d-none d-md-block">
+                <a 
+                  href="https://twitter.com" 
+                  className="social-twiter"
+                  aria-label="Twitter"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   <i className="icon icon-x" />
                 </a>
               </li>
-              <li>
-                <a href="https://www.instagram.com" className="social-instagram">
+              <li className="d-none d-md-block">
+                <a 
+                  href="https://www.instagram.com" 
+                  className="social-instagram"
+                  aria-label="Instagram"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   <i className="icon icon-instagram" />
                 </a>
               </li>

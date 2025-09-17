@@ -10,6 +10,7 @@ export default function RobotCompare() {
     compareRobots: contextCompareRobots,
     removeRobotFromCompare,
     clearAllCompareRobots,
+    forceClearComparisonData,
   } = useContextElement();
   
   const [robots, setRobots] = useState([]);
@@ -116,7 +117,7 @@ export default function RobotCompare() {
 
   const getImageUrl = (images) => {
     if (!images || images.length === 0) {
-      return "/images/products/default.jpg";
+      return "/images/product/placeholder.jpg";
     }
     
     const imagePath = images[0];
@@ -184,7 +185,7 @@ export default function RobotCompare() {
               <p className="text-muted mb-4">
                 Add robots to your comparison list to make informed decisions!
               </p>
-              <Link className="btn btn-primary" href="/shop-filter-canvas">
+              <Link className="btn btn-primary" href="/shop-default-grid">
                 Explore Robots
               </Link>
             </div>
@@ -193,18 +194,30 @@ export default function RobotCompare() {
           <>
             <div className="d-flex justify-content-between align-items-center mb-4">
               <h3>Compare Robots ({robots.length}/3)</h3>
-              <button 
-                className="btn btn-outline-danger btn-sm"
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  clearAllCompareRobots();
-                  // Reset cursor to default
-                  document.body.style.cursor = 'default';
-                }}
-              >
-                Clear All
-              </button>
+              <div className="d-flex gap-2">
+                <button 
+                  className="btn btn-outline-warning btn-sm"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    clearAllCompareRobots();
+                  }}
+                >
+                  Clear All
+                </button>
+                <button 
+                  className="btn btn-outline-danger btn-sm"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    clearAllCompareRobots();
+                    // Reset cursor to default
+                    document.body.style.cursor = 'default';
+                  }}
+                >
+                  Clear All
+                </button>
+              </div>
             </div>
 
             <div className={`tf-compare-table ${robots.length === 1 ? 'one-product' : robots.length === 2 ? 'two-products' : 'three-products'}`}>

@@ -41,7 +41,7 @@ export default function Compare() {
   // Helper function to get valid image URL
   const getImageUrl = (images) => {
     if (!images || images.length === 0) {
-      return "/images/products/default.jpg";
+      return "/images/logo/logoB.png";
     }
     
     const imagePath = images[0];

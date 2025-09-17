@@ -94,22 +94,30 @@ export default function Products() {
               }];
             }
             
-            return {
-              ...robot, // Preserve all original robot data including nested structures
-              id: robot._id,
-              imgSrc: imgSrc,
-              imgHover: imgHover,
-              price: robot.totalPrice || 0,
-              inStock: robot.status !== false, // Use robot status if available
-              oldPrice: robot.oldPrice || null,
-              rating: robot.rating || 0,
-              isOnSale: robot.isOnSale || false,
-              sizes: robot.sizes || null,
-              wowDelay: "0.1s",
-              colors: colors,
-              tabFilterOptions: [activeCategory?.name || '']
-            };
+          // Create the transformed robot object - PRESERVE ALL BACKEND DATA
+          const transformedRobot = {
+            // Spread the original robot data FIRST to preserve all nested structures
+            ...robot,
+            
+            // Override specific fields for display
+            id: robot._id,
+            imgSrc: imgSrc,
+            imgHover: imgHover,
+            price: robot.totalPrice || 0,
+            inStock: robot.status !== false,
+            oldPrice: robot.oldPrice || null,
+            rating: robot.rating || 0,
+            isOnSale: robot.isOnSale || false,
+            sizes: robot.sizes || null,
+            wowDelay: "0.1s",
+            colors: colors,
+            tabFilterOptions: [activeCategory?.name || ''],
+          };
+          
+            
+          return transformedRobot;
           });
+          
           setRobots(transformedRobots);
         } else {
           // No robots found for this category
