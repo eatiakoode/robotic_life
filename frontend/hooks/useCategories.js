@@ -14,7 +14,6 @@ const useCategories = () => {
         // Try multiple backend URLs for robustness
         const backendUrls = [
           'http://localhost:5000',
-          'http://localhost:3001',
           'http://localhost:8000',
           process.env.NEXT_PUBLIC_API_URL
         ].filter(Boolean);

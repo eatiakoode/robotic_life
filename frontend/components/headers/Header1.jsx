@@ -26,21 +26,13 @@ export default function Header1({ fullWidth = false }) {
           
           {/* Logo - Responsive sizing */}
           <div className="col-xl-3 col-md-4 col-6">
-            <Link href={`/`} className="logo-header">
-              <Image
+            <Link href={`/`} className="logo-header logo-fix">
+              <img
                 alt="Robotic Life Logo"
-                className="logo"
+                className="logo logo-image-fix"
                 src="/images/logo/logoB.png"
-                width={144}
-                height={25}
-                priority
-                style={{ 
-                  width: 'auto', 
-                  height: 'auto',
-                  maxWidth: '100%',
-                  height: 'auto'
-                }}
-                sizes="(max-width: 576px) 100px, (max-width: 768px) 120px, (max-width: 992px) 140px, 144px"
+                width="144"
+                height="25"
               />
             </Link>
           </div>

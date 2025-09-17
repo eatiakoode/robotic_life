@@ -86,12 +86,12 @@ export default function Footer1({
                   <div className="footer-infor">
                     <div className="footer-logo">
                       <Link href={`/`}>
-                        <Image
+                        <img
                           alt="logo"
                           src={"/images/logo/logoB.png"}
-                          width={144}
-                          height={25}
-                          style={{ width: "auto", height: "auto" }}
+                          width="144"
+                          height="25"
+                          className="footer-logo-img"
                         />
                       </Link>
                     </div>

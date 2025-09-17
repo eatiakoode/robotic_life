@@ -9,3 +9,123 @@
 @import "/css/animate.css";
 @include meta.load-css("app.scss");
 @include meta.load-css("responsive-enhancements.scss");
+
+// CRITICAL: Logo visibility fix - Must be last to override all other styles
+.header-default .logo-header .logo-image-fix,
+.logo-header .logo-image-fix,
+.logo-fix .logo-image-fix,
+.header-default .logo-header img,
+.logo-header img,
+.logo-fix img,
+.header-default .logo-header .logo,
+.logo-header .logo,
+.logo-fix .logo,
+img[src*="logoB.png"] {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  width: 144px !important;
+  height: auto !important;
+  max-width: 144px !important;
+  max-height: none !important;
+  aspect-ratio: 144/25 !important;
+  object-fit: contain !important;
+  object-position: center !important;
+}
+
+// CRITICAL: Navigation hover effects - Text color only (no background)
+.box-nav-ul .menu-item.active .item-link,
+.box-nav-ul .menu-item:hover .item-link,
+.header-default .box-nav-ul .menu-item.active .item-link,
+.header-default .box-nav-ul .menu-item:hover .item-link {
+  color: #666666 !important;
+  transition: color 0.3s ease !important;
+}
+
+// CRITICAL: Product card title hover effects - Text color only (no background)
+.card-product-info .title:hover,
+.card-product-info .link:hover,
+.card-product .title:hover,
+.card-product .link:hover {
+  color: #666666 !important;
+  transition: color 0.3s ease !important;
+}
+
+// CRITICAL: Blog link hover effects - Text color only (no background)
+.wg-blog .title a:hover,
+.wg-blog .content .title a:hover,
+.blog-item .title a:hover,
+.blog-card .title a:hover,
+.wg-blog:hover .title a {
+  color: #666666 !important;
+  background: none !important;
+  -webkit-background-clip: unset !important;
+  -webkit-text-fill-color: unset !important;
+  background-clip: unset !important;
+  text-decoration: none !important;
+  transition: color 0.3s ease !important;
+}
+
+// CRITICAL: Blog tags and read more hover effects
+ul.list-tags a:hover,
+.btn-readmore:hover,
+.blog-readmore:hover,
+.read-more:hover,
+.blog-title a:hover,
+.blog-heading a:hover,
+.blog-post-title a:hover,
+.relatest-post-item .title a:hover {
+  color: #666666 !important;
+  background: none !important;
+  -webkit-background-clip: unset !important;
+  -webkit-text-fill-color: unset !important;
+  background-clip: unset !important;
+  text-decoration: none !important;
+  transition: color 0.3s ease !important;
+}
+
+// CRITICAL: Blog pagination hover effects
+.wg-pagination li:hover .pagination-item {
+  background-color: #666666 !important;
+  border-color: #666666 !important;
+  color: var(--white) !important;
+}
+
+// CRITICAL: Blog meta links hover effects (Admin, Categories, Read More)
+.meta a:hover,
+.meta-item a:hover,
+.blog-detail-wrap .meta a:hover,
+.blog-detail-wrap .related-post a:hover,
+.blog-detail-wrap .inner .related-post .text-btn-uppercase a:hover,
+.btn-readmore:hover,
+.bot-button:hover,
+.read-more-btn:hover {
+  color: #666666 !important;
+  text-decoration: none !important;
+  transition: color 0.3s ease !important;
+}
+
+// CRITICAL: Sidebar category links hover effects (Humanoid Robots, Service Robots, etc.)
+.categories-item:hover,
+.tf-list-categories .categories-item:hover,
+.sidebar-categories li:hover,
+.sidebar-categories a:hover {
+  color: #666666 !important;
+  .icon {
+    color: #666666 !important;
+  }
+  a {
+    color: #666666 !important;
+  }
+}
+
+// CRITICAL: Breadcrumb navigation links hover effects
+.breadcrumbs a:hover,
+.tf-breadcrumb-list a:hover,
+.tf-breadcrumb-wrap a:hover,
+ul.breadcrumbs a:hover,
+.breadcrumbs-default a:hover,
+.link:hover {
+  color: #666666 !important;
+  transition: color 0.3s ease !important;
+}
