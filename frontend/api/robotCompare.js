@@ -69,16 +69,35 @@ export const getRobotById = async (robotId) => {
   }
 };
 
+// Helper function to format specifications
+const formatSpecification = (spec) => {
+  if (!spec || spec === null || spec === undefined) return 'N/A';
+  if (typeof spec === 'object') {
+    // Check if it's an empty object
+    if (Object.keys(spec).length === 0) return 'N/A';
+    
+    if (spec.value && spec.unit) {
+      return `${spec.value} ${spec.unit}`;
+    }
+    if (spec.name) {
+      return spec.name;
+    }
+    if (Array.isArray(spec) && spec.length > 0) {
+      return spec.map(item => item.name || item).join(', ');
+    }
+    return 'N/A';
+  }
+  if (typeof spec === 'string' && spec.trim() === '') return 'N/A';
+  return spec.toString();
+};
+
 /**
  * Transform robot data for comparison display
  * @param {Object} robot - Raw robot data from API
  * @returns {Object} Transformed robot data
  */
 export const transformRobotForComparison = (robot) => {
-  console.log('transformRobotForComparison called with:', robot);
-  
   if (!robot) {
-    console.log('No robot data provided, returning null');
     return null;
   }
 
@@ -90,31 +109,43 @@ export const transformRobotForComparison = (robot) => {
     price: robot.totalPrice || robot.price || 0,
     launchYear: robot.launchYear || '',
     images: robot.images || (robot.imgSrc ? [robot.imgSrc] : []),
-    category: robot.category?.name || 'N/A',
-    manufacturer: robot.manufacturer?.name || 'N/A',
-    powerSource: robot.powerSource?.name || 'N/A',
-    primaryFunction: robot.primaryFunction?.name || 'N/A',
-    operatingEnvironment: robot.operatingEnvironment?.name || 'N/A',
-    autonomyLevel: robot.autonomyLevel?.name || 'N/A',
-    colors: robot.color?.map(c => c.name) || [],
-    materials: robot.material?.map(m => m.name) || [],
-    navigationTypes: robot.navigationType?.map(n => n.name) || [],
-    sensors: robot.sensors?.map(s => s.name) || [],
-    aiSoftwareFeatures: robot.aiSoftwareFeatures?.map(a => a.name) || [],
-    terrainCapabilities: robot.terrainCapability?.map(t => t.name) || [],
-    communicationMethods: robot.communicationMethod?.map(c => c.name) || [],
-    payloadTypes: robot.payloadTypesSupported?.map(p => p.name) || [],
-    // Specifications
-    weight: robot.weight || null,
-    speed: robot.speed || null,
-    range: robot.range || null,
-    loadCapacity: robot.loadCapacity || null,
-    batteryCapacity: robot.batteryCapacity || null,
-    runtime: robot.runtime || null,
-    dimensions: robot.dimensions || null,
-    operatingTemperature: robot.operatingTemperature || null,
+    
+    // Basic info - try multiple possible paths
+    category: robot.category?.name || robot.category?.title || (typeof robot.category === 'string' ? robot.category : 'N/A'),
+    manufacturer: robot.manufacturer?.name || robot.manufacturer?.title || 'N/A',
+    
+    // Specifications - try multiple possible paths
+    powerSource: robot.specifications?.powerSource?.name || robot.specifications?.powerSource?.title || robot.powerSource?.name || robot.powerSource?.title || 'N/A',
+    weight: formatSpecification(robot.specifications?.weight || robot.weight),
+    speed: formatSpecification(robot.specifications?.speed || robot.speed),
+    range: formatSpecification(robot.specifications?.range || robot.range),
+    loadCapacity: formatSpecification(robot.specifications?.loadCapacity || robot.loadCapacity || robot.LoadCapacity),
+    batteryCapacity: formatSpecification(robot.specifications?.batteryCapacity || robot.batteryCapacity),
+    runtime: formatSpecification(robot.specifications?.runtime || robot.runtime),
+    dimensions: formatSpecification(robot.specifications?.dimensions || robot.dimensions),
+    operatingTemperature: formatSpecification(robot.specifications?.operatingTemperature || robot.operatingTemperature),
+    
+    // Capabilities - try multiple possible paths
+    primaryFunction: robot.capabilities?.primaryFunction?.name || robot.capabilities?.primaryFunction?.title || robot.primaryFunction?.name || robot.primaryFunction?.title || 'N/A',
+    autonomyLevel: robot.capabilities?.autonomyLevel?.name || robot.capabilities?.autonomyLevel?.title || robot.autonomyLevel?.name || robot.autonomyLevel?.title || 'N/A',
+    navigationTypes: robot.capabilities?.navigationTypes?.map(n => n.name || n.title) || robot.navigationType?.map(n => n.name || n.title) || [],
+    communicationMethods: robot.capabilities?.communicationMethods?.map(c => c.name || c.title) || robot.communicationMethod?.map(c => c.name || c.title) || [],
+    
+    // Operational Environment - try multiple possible paths
+    operatingEnvironment: robot.operationalEnvironmentAndApplications?.operatingEnvironment?.name || robot.operationalEnvironmentAndApplications?.operatingEnvironment?.title || robot.operatingEnvironment?.name || robot.operatingEnvironment?.title || 'N/A',
+    terrainCapabilities: robot.operationalEnvironmentAndApplications?.terrainCapabilities?.map(t => t.name || t.title) || robot.terrainCapability?.map(t => t.name || t.title) || [],
+    
+    // Sensors & Software - try multiple possible paths
+    sensors: robot.sensorsAndSoftware?.sensors?.map(s => s.name || s.title) || robot.sensors?.map(s => s.name || s.title) || [],
+    aiSoftwareFeatures: robot.sensorsAndSoftware?.aiSoftwareFeatures?.map(a => a.name || a.title) || robot.aiSoftwareFeatures?.map(a => a.name || a.title) || [],
+    
+    // Payloads & Attachments - try multiple possible paths
+    payloadTypes: robot.payloadsAndAttachments?.payloadTypes?.map(p => p.name || p.title) || robot.payloadTypesSupported?.map(p => p.name || p.title) || [],
+    
+    // Materials and Colors - try multiple possible paths
+    materials: robot.specifications?.materials?.map(m => m.name || m.title) || robot.material?.map(m => m.name || m.title) || [],
+    colors: robot.specifications?.color?.map(c => c.name || c.title) || robot.colors?.map(c => c.name || c.title) || [],
   };
   
-  console.log('Transformed robot data:', transformed);
   return transformed;
 };

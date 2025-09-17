@@ -49,6 +49,16 @@ const useCategories = () => {
 
         
         if (data.success && data.data && Array.isArray(data.data)) {
+          // Function to generate slug from name
+          const generateSlug = (name) => {
+            if (!name) return 'category';
+            return name.toLowerCase()
+              .replace(/[^a-z0-9\s-]/g, '') // Remove special characters
+              .replace(/\s+/g, '-') // Replace spaces with hyphens
+              .replace(/-+/g, '-') // Replace multiple hyphens with single hyphen
+              .trim();
+          };
+
           // Transform the data to match the expected format
           const transformedCategories = data.data.map((category, index) => {
             try {
@@ -57,11 +67,11 @@ const useCategories = () => {
                 name: category.name || 'Category',
                 description: category.description || 'No description available',
                 logoimage: category.logoimage || null,
-                slug: category.slug || 'category',
+                slug: category.slug || generateSlug(category.name) || 'category',
                 parent: category.parent || null
               };
             } catch (error) {
-              console.error('Error transforming category:', category, error);
+              // Silently handle transformation errors
               return {
                 _id: `category-${index + 1}`,
                 name: 'Category',
@@ -76,11 +86,11 @@ const useCategories = () => {
 
           setCategories(transformedCategories);
         } else {
-          console.log('No data or success false:', data);
+          // Silently set empty categories when no data
           setCategories([]);
         }
       } catch (err) {
-        console.error('Error fetching categories:', err);
+        // Silently handle errors in production
         setError(err.message);
         setCategories([]);
       } finally {

@@ -42,7 +42,8 @@ import { getBlogBySlug } from "@/api/blog";
 
 export async function generateMetadata({ params }) {
   try {
-    const blog = await getBlogBySlug(params.id);
+    const { id } = await params;
+    const blog = await getBlogBySlug(id);
 
     if (!blog) {
       return {

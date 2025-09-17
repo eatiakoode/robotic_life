@@ -19,7 +19,7 @@ export const useRecentlyViewed = () => {
         setRecentlyViewedIds(Array.isArray(parsed) ? parsed : []);
       }
     } catch (error) {
-      console.warn('Error parsing recently viewed from localStorage:', error);
+      // Silently handle localStorage parsing errors
       setRecentlyViewedIds([]);
     } finally {
       setIsInitialized(true);
@@ -29,22 +29,17 @@ export const useRecentlyViewed = () => {
   const addToRecentlyViewed = useCallback((productId) => {
     if (!productId || typeof window === 'undefined') return;
 
-    console.log('➕ Adding product to recently viewed:', productId);
-
     setRecentlyViewedIds(prev => {
       // Remove if already exists
       const filtered = prev.filter(id => id !== productId);
       // Add to beginning
       const updated = [productId, ...filtered].slice(0, MAX_RECENTLY_VIEWED);
       
-      console.log('📝 Updated recently viewed IDs:', updated);
-      
       try {
         // Save to localStorage
         localStorage.setItem(RECENTLY_VIEWED_KEY, JSON.stringify(updated));
-        console.log('💾 Saved to localStorage');
       } catch (error) {
-        console.warn('Error saving to localStorage:', error);
+        // Silently handle localStorage errors
       }
       
       return updated;
@@ -57,7 +52,7 @@ export const useRecentlyViewed = () => {
       try {
         localStorage.removeItem(RECENTLY_VIEWED_KEY);
       } catch (error) {
-        console.warn('Error clearing localStorage:', error);
+        // Silently handle localStorage errors
       }
     }
   }, []);

@@ -12,7 +12,6 @@ const useSlider = () => {
         
         // Try different possible backend URLs
         const backendUrls = [
-          '/frontend/api/slider',
           'http://localhost:5000/frontend/api/slider',
           'http://localhost:3001/frontend/api/slider',
           'http://127.0.0.1:5000/frontend/api/slider',
@@ -35,7 +34,9 @@ const useSlider = () => {
         }
 
         if (!response || !response.ok) {
-          throw new Error(lastError?.message || 'Failed to fetch sliders from any backend URL');
+          // Silently handle API failures - use fallback data
+          setSliders([]);
+          return;
         }
 
         const data = await response.json();
@@ -43,11 +44,11 @@ const useSlider = () => {
         if (data.success) {
           setSliders(data.data);
         } else {
-          throw new Error(data.error || 'Failed to fetch sliders');
+          // Silently handle API failures - use fallback data
+          setSliders([]);
         }
       } catch (err) {
-        setError(err.message);
-        // Fallback to empty array if API fails
+        // Silently handle errors - use fallback data
         setSliders([]);
       } finally {
         setLoading(false);

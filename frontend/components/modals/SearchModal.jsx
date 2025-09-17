@@ -48,16 +48,9 @@ export default function SearchModal() {
   // Load recently viewed products when IDs are available
   useEffect(() => {
     const loadRecentlyViewed = async () => {
-      console.log('🔄 Loading recently viewed products...', { 
-        isInitialized, 
-        recentlyViewedIds: recentlyViewedIds.length,
-        allProducts: allProducts.length 
-      });
-
       if (!isInitialized || !recentlyViewedIds.length) {
         // If no recently viewed IDs, show first 4 products as fallback
         if (allProducts.length > 0) {
-          console.log('📦 Using fallback products (no recently viewed)');
           setRecentlyViewed(allProducts.slice(0, 4));
         }
         return;
@@ -65,15 +58,11 @@ export default function SearchModal() {
 
       try {
         setLoading(true);
-        console.log('🔍 Fetching recently viewed products from API...', recentlyViewedIds);
         const recentlyViewedProducts = await getRecentlyViewed(recentlyViewedIds);
-        console.log('✅ Recently viewed products loaded:', recentlyViewedProducts.length);
         setRecentlyViewed(recentlyViewedProducts);
       } catch (error) {
-        console.error('❌ Error loading recently viewed products:', error);
         // Fallback to first 4 products
         if (allProducts.length > 0) {
-          console.log('📦 Using fallback products (API error)');
           setRecentlyViewed(allProducts.slice(0, 4));
         }
       } finally {

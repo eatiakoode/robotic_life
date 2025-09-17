@@ -16,11 +16,33 @@ export default function RobotCompare() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
+  const formatSpecification = (spec) => {
+    if (!spec || spec === null || spec === undefined) return 'N/A';
+    if (typeof spec === 'object') {
+      // Check if it's an empty object
+      if (Object.keys(spec).length === 0) return 'N/A';
+      
+      if (spec.value && spec.unit) {
+        return `${spec.value} ${spec.unit}`;
+      }
+      if (spec.name) {
+        return spec.name;
+      }
+      if (Array.isArray(spec) && spec.length > 0) {
+        return spec.map(item => item.name || item).join(', ');
+      }
+      return 'N/A';
+    }
+    if (typeof spec === 'string' && spec.trim() === '') return 'N/A';
+    return spec.toString();
+  };
+
   // Transform robot data for comparison display
   const transformRobotForComparison = (robot) => {
     if (!robot) {
       return null;
     }
+
 
     const transformed = {
       id: robot._id || robot.id,
@@ -30,29 +52,50 @@ export default function RobotCompare() {
       price: robot.totalPrice || robot.price || 0,
       launchYear: robot.launchYear || '',
       images: robot.images || (robot.imgSrc ? [robot.imgSrc] : []),
-      category: robot.category?.name || robot.category || 'N/A',
-      manufacturer: robot.manufacturer?.name || robot.manufacturer || 'N/A',
-      powerSource: robot.powerSource?.name || robot.powerSource || 'N/A',
-      primaryFunction: robot.primaryFunction?.name || robot.primaryFunction || 'N/A',
-      operatingEnvironment: robot.operatingEnvironment?.name || robot.operatingEnvironment || 'N/A',
-      autonomyLevel: robot.autonomyLevel?.name || robot.autonomyLevel || 'N/A',
-      colors: robot.color?.map(c => c.name) || robot.colors || [],
-      materials: robot.material?.map(m => m.name) || robot.materials || [],
-      navigationTypes: robot.navigationType?.map(n => n.name) || robot.navigationTypes || [],
-      sensors: robot.sensors?.map(s => s.name) || robot.sensors || [],
-      aiSoftwareFeatures: robot.aiSoftwareFeatures?.map(a => a.name) || robot.aiSoftwareFeatures || [],
-      terrainCapabilities: robot.terrainCapability?.map(t => t.name) || robot.terrainCapabilities || [],
-      communicationMethods: robot.communicationMethod?.map(c => c.name) || robot.communicationMethods || [],
-      payloadTypes: robot.payloadTypesSupported?.map(p => p.name) || robot.payloadTypes || [],
-      // Specifications
-      weight: robot.weight || null,
-      speed: robot.speed || null,
-      range: robot.range || null,
-      loadCapacity: robot.loadCapacity || null,
-      batteryCapacity: robot.batteryCapacity || null,
-      runtime: robot.runtime || null,
-      dimensions: robot.dimensions || null,
-      operatingTemperature: robot.operatingTemperature || null,
+      
+      // Basic info - handle both object and string formats
+      category: typeof robot.category === 'object' ? (robot.category?.name || robot.category?.title) : robot.category || 'N/A',
+      manufacturer: typeof robot.manufacturer === 'object' ? (robot.manufacturer?.name || robot.manufacturer?.title) : robot.manufacturer || 'N/A',
+      
+      // Specifications - handle both object and string formats
+      powerSource: typeof robot.specifications?.powerSource === 'object' ? (robot.specifications?.powerSource?.name || robot.specifications?.powerSource?.title) : 
+                   typeof robot.powerSource === 'object' ? (robot.powerSource?.name || robot.powerSource?.title) : 
+                   robot.specifications?.powerSource || robot.powerSource || 'N/A',
+      weight: formatSpecification(robot.specifications?.weight || robot.weight),
+      speed: formatSpecification(robot.specifications?.speed || robot.speed),
+      range: formatSpecification(robot.specifications?.range || robot.range),
+      loadCapacity: formatSpecification(robot.specifications?.loadCapacity || robot.loadCapacity || robot.LoadCapacity),
+      batteryCapacity: formatSpecification(robot.specifications?.batteryCapacity || robot.batteryCapacity),
+      runtime: formatSpecification(robot.specifications?.runtime || robot.runtime),
+      dimensions: formatSpecification(robot.specifications?.dimensions || robot.dimensions),
+      operatingTemperature: formatSpecification(robot.specifications?.operatingTemperature || robot.operatingTemperature),
+      
+      // Capabilities - handle both object and string formats
+      primaryFunction: typeof robot.capabilities?.primaryFunction === 'object' ? (robot.capabilities?.primaryFunction?.name || robot.capabilities?.primaryFunction?.title) : 
+                       typeof robot.primaryFunction === 'object' ? (robot.primaryFunction?.name || robot.primaryFunction?.title) : 
+                       robot.capabilities?.primaryFunction || robot.primaryFunction || 'N/A',
+      autonomyLevel: typeof robot.capabilities?.autonomyLevel === 'object' ? (robot.capabilities?.autonomyLevel?.name || robot.capabilities?.autonomyLevel?.title) : 
+                     typeof robot.autonomyLevel === 'object' ? (robot.autonomyLevel?.name || robot.autonomyLevel?.title) : 
+                     robot.capabilities?.autonomyLevel || robot.autonomyLevel || 'N/A',
+      navigationTypes: robot.capabilities?.navigationTypes?.map(n => n.name || n.title) || robot.navigationType?.map(n => n.name || n.title) || [],
+      communicationMethods: robot.capabilities?.communicationMethods?.map(c => c.name || c.title) || robot.communicationMethod?.map(c => c.name || c.title) || [],
+      
+      // Operational Environment - handle both object and string formats
+      operatingEnvironment: typeof robot.operationalEnvironmentAndApplications?.operatingEnvironment === 'object' ? (robot.operationalEnvironmentAndApplications?.operatingEnvironment?.name || robot.operationalEnvironmentAndApplications?.operatingEnvironment?.title) : 
+                           typeof robot.operatingEnvironment === 'object' ? (robot.operatingEnvironment?.name || robot.operatingEnvironment?.title) : 
+                           robot.operationalEnvironmentAndApplications?.operatingEnvironment || robot.operatingEnvironment || 'N/A',
+      terrainCapabilities: robot.operationalEnvironmentAndApplications?.terrainCapabilities?.map(t => t.name || t.title) || robot.terrainCapability?.map(t => t.name || t.title) || [],
+      
+      // Sensors & Software - try multiple possible paths
+      sensors: robot.sensorsAndSoftware?.sensors?.map(s => s.name || s.title) || robot.sensors?.map(s => s.name || s.title) || [],
+      aiSoftwareFeatures: robot.sensorsAndSoftware?.aiSoftwareFeatures?.map(a => a.name || a.title) || robot.aiSoftwareFeatures?.map(a => a.name || a.title) || [],
+      
+      // Payloads & Attachments - try multiple possible paths
+      payloadTypes: robot.payloadsAndAttachments?.payloadTypes?.map(p => p.name || p.title) || robot.payloadTypesSupported?.map(p => p.name || p.title) || [],
+      
+      // Materials and Colors - try multiple possible paths
+      materials: robot.specifications?.materials?.map(m => m.name || m.title) || robot.material?.map(m => m.name || m.title) || [],
+      colors: robot.specifications?.color?.map(c => c.name || c.title) || robot.colors?.map(c => c.name || c.title) || [],
     };
     
     return transformed;
@@ -64,11 +107,9 @@ export default function RobotCompare() {
       return;
     }
 
-    console.log('Context compare robots:', contextCompareRobots);
-    
     // Transform the robots data for better display
     const transformedRobots = contextCompareRobots.map(transformRobotForComparison);
-    console.log('Transformed robots:', transformedRobots);
+    
     setRobots(transformedRobots);
     setLoading(false);
   }, [contextCompareRobots]);
@@ -86,24 +127,6 @@ export default function RobotCompare() {
       return imagePath;
     }
     return `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/${imagePath}`;
-  };
-
-  const formatSpecification = (spec) => {
-    if (!spec || spec === null || spec === undefined) return 'N/A';
-    if (typeof spec === 'object') {
-      if (spec.value && spec.unit) {
-        return `${spec.value} ${spec.unit}`;
-      }
-      if (spec.name) {
-        return spec.name;
-      }
-      if (Array.isArray(spec) && spec.length > 0) {
-        return spec.map(item => item.name || item).join(', ');
-      }
-      return 'N/A';
-    }
-    if (typeof spec === 'string' && spec.trim() === '') return 'N/A';
-    return spec.toString();
   };
 
   const formatArraySpec = (arr) => {

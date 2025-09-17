@@ -122,6 +122,24 @@ export default function RootLayout({ children }) {
   }, [pathname]);
   return (
     <html lang="en">
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              // Suppress React DevTools message
+              if (typeof window !== 'undefined') {
+                const originalConsoleLog = console.log;
+                console.log = function(...args) {
+                  if (args[0] && typeof args[0] === 'string' && args[0].includes('Download the React DevTools')) {
+                    return;
+                  }
+                  originalConsoleLog.apply(console, args);
+                };
+              }
+            `,
+          }}
+        />
+      </head>
       <body className="preload-wrapper popup-loader">
         <Context>
           <div id="wrapper">{children}</div>

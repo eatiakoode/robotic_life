@@ -155,7 +155,7 @@ export default function Nav() {
             : ""
         } `}
       >
-        <a href="shop-filter-canvas" className="item-link">
+        <a href="shop-default-grid" className="item-link">
           Robot
           <i className="icon icon-arrow-down" />
         </a>
