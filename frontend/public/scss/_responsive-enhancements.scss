@@ -1,0 +1,600 @@
+// Responsive Enhancements for Robotic Life Frontend
+// Additional responsive improvements for better mobile experience
+
+// =============================================================================
+// HEADER RESPONSIVE IMPROVEMENTS
+// =============================================================================
+
+.header-default {
+  .wrapper-header {
+    // Better mobile header spacing
+    @media (max-width: 767px) {
+      min-height: 60px;
+      padding: 10px 0;
+    }
+    
+    // Tablet header adjustments
+    @media (min-width: 768px) and (max-width: 1199px) {
+      min-height: 70px;
+    }
+  }
+  
+  // Logo responsive sizing
+  .logo-header {
+    img {
+      @media (max-width: 575px) {
+        max-width: 100px;
+        height: auto;
+      }
+      
+      @media (min-width: 576px) and (max-width: 767px) {
+        max-width: 120px;
+        height: auto;
+      }
+      
+      @media (min-width: 768px) and (max-width: 991px) {
+        max-width: 140px;
+        height: auto;
+      }
+    }
+  }
+  
+  // Navigation icon improvements
+  .nav-icon {
+    @media (max-width: 767px) {
+      gap: 12px;
+      
+      .nav-icon-item {
+        padding: 8px;
+        border-radius: 50%;
+        transition: background-color 0.3s ease;
+        
+        &:hover {
+          background-color: rgba(0, 0, 0, 0.05);
+        }
+      }
+    }
+  }
+}
+
+// Mobile menu improvements
+.canvas-mb {
+  @media (max-width: 575px) {
+    max-width: 95% !important;
+    
+    .mb-canvas-content {
+      min-width: 95% !important;
+      max-width: 95% !important;
+    }
+  }
+  
+  .mb-body {
+    @media (max-width: 575px) {
+      padding: 15px;
+    }
+  }
+  
+  .form-search {
+    @media (max-width: 575px) {
+      margin-bottom: 20px;
+      
+      input {
+        font-size: 16px; // Prevents zoom on iOS
+        padding: 12px 15px;
+      }
+    }
+  }
+  
+  .nav-ul-mb {
+    @media (max-width: 575px) {
+      .nav-mb-item {
+        .mb-menu-link {
+          min-height: 44px; // Better touch target
+          font-size: 16px;
+          padding: 12px 0;
+        }
+      }
+    }
+  }
+}
+
+// =============================================================================
+// MEGA MENU RESPONSIVE IMPROVEMENTS
+// =============================================================================
+
+.mega-menu {
+  @media (max-width: 1199px) {
+    display: none !important;
+  }
+  
+  @media (min-width: 1200px) {
+    .container {
+      max-width: 1200px;
+    }
+    
+    .row {
+      margin: 0 -10px;
+      
+      > div {
+        padding: 0 10px;
+      }
+    }
+  }
+}
+
+// =============================================================================
+// PRODUCT CARDS RESPONSIVE IMPROVEMENTS
+// =============================================================================
+
+.card-product {
+  // Better mobile product cards
+  @media (max-width: 575px) {
+    .card-product-wrapper {
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    
+    .card-product-info {
+      padding: 12px;
+      
+      .title {
+        font-size: 14px;
+        line-height: 20px;
+        margin-bottom: 8px;
+      }
+      
+      .price {
+        font-size: 16px;
+        font-weight: 600;
+      }
+    }
+    
+    .list-btn-main {
+      .btn-main-product {
+        padding: 8px 12px;
+        font-size: 12px;
+        min-height: 36px;
+      }
+    }
+  }
+  
+  // Tablet product cards
+  @media (min-width: 576px) and (max-width: 991px) {
+    .card-product-info {
+      padding: 15px;
+      
+      .title {
+        font-size: 16px;
+        line-height: 24px;
+      }
+    }
+  }
+}
+
+// =============================================================================
+// SWIPER RESPONSIVE IMPROVEMENTS
+// =============================================================================
+
+.swiper {
+  // Better mobile swiper spacing
+  @media (max-width: 575px) {
+    margin: 0 -10px;
+    padding: 0 10px;
+    
+    .swiper-slide {
+      padding: 0 5px;
+    }
+  }
+  
+  // Swiper pagination improvements
+  .sw-dots {
+    @media (max-width: 575px) {
+      margin-top: 20px;
+      
+      .swiper-pagination-bullet {
+        width: 8px;
+        height: 8px;
+        margin: 0 4px;
+      }
+    }
+  }
+}
+
+// =============================================================================
+// FILTER SIDEBAR RESPONSIVE IMPROVEMENTS
+// =============================================================================
+
+.sidebar-filter {
+  @media (max-width: 1199px) {
+    .canvas-body {
+      padding: 20px 15px;
+    }
+    
+    .widget-facet {
+      margin-bottom: 25px;
+      
+      .facet-title {
+        font-size: 16px;
+        margin-bottom: 12px;
+      }
+      
+      .facet-content {
+        li {
+          a {
+            padding: 10px 0;
+            font-size: 14px;
+          }
+        }
+      }
+    }
+  }
+  
+  @media (max-width: 575px) {
+    .canvas-body {
+      padding: 15px 10px;
+    }
+  }
+}
+
+// =============================================================================
+// FORMS RESPONSIVE IMPROVEMENTS
+// =============================================================================
+
+.form-search {
+  @media (max-width: 575px) {
+    input {
+      font-size: 16px; // Prevents zoom on iOS
+      padding: 12px 15px;
+      border-radius: 8px;
+    }
+    
+    button {
+      padding: 12px;
+      border-radius: 8px;
+    }
+  }
+}
+
+.tf-btn {
+  // Better touch targets on mobile
+  @media (max-width: 575px) {
+    min-height: 44px;
+    padding: 12px 20px;
+    font-size: 14px;
+    border-radius: 8px;
+  }
+}
+
+// =============================================================================
+// GRID LAYOUT RESPONSIVE IMPROVEMENTS
+// =============================================================================
+
+.tf-grid-layout {
+  // Better mobile grid spacing
+  @media (max-width: 575px) {
+    gap: 15px;
+    
+    &.sm-col-1 {
+      grid-template-columns: 1fr;
+    }
+    
+    &.sm-col-2 {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+  }
+  
+  // Tablet grid improvements
+  @media (min-width: 576px) and (max-width: 991px) {
+    gap: 20px;
+    
+    &.md-col-2 {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    
+    &.md-col-3 {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+}
+
+// =============================================================================
+// TYPOGRAPHY RESPONSIVE IMPROVEMENTS
+// =============================================================================
+
+h1, .h1 {
+  @media (max-width: 575px) {
+    font-size: 28px;
+    line-height: 36px;
+  }
+}
+
+h2, .h2 {
+  @media (max-width: 575px) {
+    font-size: 24px;
+    line-height: 32px;
+  }
+}
+
+h3, .h3 {
+  @media (max-width: 575px) {
+    font-size: 20px;
+    line-height: 28px;
+  }
+}
+
+// =============================================================================
+// SPACING RESPONSIVE IMPROVEMENTS
+// =============================================================================
+
+.flat-spacing, .flat-spacing-8, .flat-spacing-10 {
+  @media (max-width: 575px) {
+    padding: 30px 0;
+  }
+  
+  @media (min-width: 576px) and (max-width: 991px) {
+    padding: 40px 0;
+  }
+}
+
+.container {
+  @media (max-width: 575px) {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+}
+
+// =============================================================================
+// ACCESSIBILITY IMPROVEMENTS
+// =============================================================================
+
+// Better focus indicators
+@media (prefers-reduced-motion: no-preference) {
+  *:focus {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+  }
+}
+
+// Touch-friendly hover states
+@media (hover: none) and (pointer: coarse) {
+  .card-product:hover {
+    transform: none;
+    box-shadow: none;
+  }
+  
+  .btn:hover {
+    transform: none;
+  }
+}
+
+// =============================================================================
+// UTILITY CLASSES FOR RESPONSIVE DESIGN
+// =============================================================================
+
+// Mobile-first utility classes
+.mobile-hidden {
+  @media (max-width: 767px) {
+    display: none !important;
+  }
+}
+
+.tablet-hidden {
+  @media (min-width: 768px) and (max-width: 1199px) {
+    display: none !important;
+  }
+}
+
+.desktop-hidden {
+  @media (min-width: 1200px) {
+    display: none !important;
+  }
+}
+
+// Touch-friendly spacing
+.touch-target {
+  @media (max-width: 767px) {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+
+// Better text scaling
+.text-responsive {
+  @media (max-width: 575px) {
+    font-size: 14px;
+    line-height: 20px;
+  }
+  
+  @media (min-width: 576px) and (max-width: 991px) {
+    font-size: 15px;
+    line-height: 22px;
+  }
+}
+
+// =============================================================================
+// PERFORMANCE OPTIMIZATIONS
+// =============================================================================
+
+// Reduce animations on mobile for better performance
+@media (max-width: 767px) {
+  * {
+    animation-duration: 0.3s !important;
+    transition-duration: 0.3s !important;
+  }
+  
+  .wow {
+    animation-duration: 0.5s !important;
+  }
+}
+
+// =============================================================================
+// DARK MODE SUPPORT (if needed in future)
+// =============================================================================
+
+@media (prefers-color-scheme: dark) {
+  // Future dark mode styles can be added here
+}
+
+// =============================================================================
+// SHOP GRID RESPONSIVE FIXES
+// =============================================================================
+
+// Fix shop-default-grid responsive layout
+.tf-grid-layout {
+  // Mobile: 1 column
+  @media (max-width: 575px) {
+    &.tf-col-2,
+    &.tf-col-3,
+    &.tf-col-4,
+    &.tf-col-5,
+    &.tf-col-6,
+    &.tf-col-7 {
+      grid-template-columns: 1fr !important;
+      column-gap: 15px;
+      row-gap: 20px;
+    }
+  }
+  
+  // Small mobile: 1 column
+  @media (min-width: 576px) and (max-width: 767px) {
+    &.tf-col-2,
+    &.tf-col-3,
+    &.tf-col-4,
+    &.tf-col-5,
+    &.tf-col-6,
+    &.tf-col-7 {
+      grid-template-columns: 1fr !important;
+      column-gap: 20px;
+      row-gap: 25px;
+    }
+  }
+  
+  // Tablet: 2 columns
+  @media (min-width: 768px) and (max-width: 991px) {
+    &.tf-col-2 {
+      grid-template-columns: 1fr 1fr !important;
+    }
+    &.tf-col-3,
+    &.tf-col-4,
+    &.tf-col-5,
+    &.tf-col-6,
+    &.tf-col-7 {
+      grid-template-columns: repeat(2, 1fr) !important;
+    }
+    column-gap: 20px;
+    row-gap: 25px;
+  }
+  
+  // Small desktop: 3 columns
+  @media (min-width: 992px) and (max-width: 1199px) {
+    &.tf-col-2 {
+      grid-template-columns: 1fr 1fr !important;
+    }
+    &.tf-col-3 {
+      grid-template-columns: repeat(3, 1fr) !important;
+    }
+    &.tf-col-4,
+    &.tf-col-5,
+    &.tf-col-6,
+    &.tf-col-7 {
+      grid-template-columns: repeat(3, 1fr) !important;
+    }
+    column-gap: 25px;
+    row-gap: 30px;
+  }
+  
+  // Large desktop: Original columns
+  @media (min-width: 1200px) {
+    column-gap: 30px;
+    row-gap: 30px;
+    
+    &.tf-col-2 {
+      grid-template-columns: 1fr 1fr !important;
+    }
+    &.tf-col-3 {
+      grid-template-columns: repeat(3, 1fr) !important;
+    }
+    &.tf-col-4 {
+      grid-template-columns: repeat(4, 1fr) !important;
+    }
+    &.tf-col-5 {
+      grid-template-columns: repeat(5, 1fr) !important;
+    }
+    &.tf-col-6 {
+      grid-template-columns: repeat(6, 1fr) !important;
+    }
+    &.tf-col-7 {
+      grid-template-columns: repeat(7, 1fr) !important;
+    }
+  }
+}
+
+// Shop control responsive improvements
+.tf-shop-control {
+  @media (max-width: 767px) {
+    flex-direction: column;
+    gap: 15px;
+    
+    .tf-control-filter,
+    .tf-control-sorting {
+      width: 100%;
+      justify-content: center;
+    }
+    
+    .tf-control-layout {
+      order: -1;
+      justify-content: center;
+    }
+  }
+  
+  @media (min-width: 768px) and (max-width: 991px) {
+    .tf-control-filter {
+      flex: 0 0 auto;
+    }
+    
+    .tf-control-sorting {
+      flex: 1;
+      justify-content: flex-end;
+    }
+  }
+}
+
+// Filter button responsive improvements
+.tf-btn-filter {
+  @media (max-width: 575px) {
+    padding: 10px 15px;
+    font-size: 14px;
+    
+    .icon {
+      margin-right: 8px;
+    }
+  }
+  
+  @media (min-width: 576px) and (max-width: 767px) {
+    padding: 12px 18px;
+    font-size: 15px;
+  }
+}
+
+// Pagination responsive improvements
+.pagination-container {
+  @media (max-width: 767px) {
+    margin-top: 30px;
+    
+    .pagination {
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 5px;
+    }
+    
+    .page-item {
+      margin: 0 2px;
+    }
+    
+    .page-link {
+      padding: 8px 12px;
+      font-size: 14px;
+    }
+  }
+}

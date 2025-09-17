@@ -77,11 +77,6 @@ const getRobotBySlug = asyncHandler(async (req, res) => {
     }
 
     // Debug logging
-    console.log('🔍 Backend - Robot specifications:', robot.specifications);
-    console.log('🔍 Backend - Robot capabilities:', robot.capabilities);
-    console.log('🔍 Backend - Robot payloadsAndAttachments:', robot.payloadsAndAttachments);
-    console.log('🔍 Backend - Robot sensorsAndSoftware:', robot.sensorsAndSoftware);
-    console.log('🔍 Backend - Robot operationalEnvironmentAndApplications:', robot.operationalEnvironmentAndApplications);
 
     res.json({
       success: true,

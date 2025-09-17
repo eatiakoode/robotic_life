@@ -5,7 +5,7 @@ import "photoswipe/style.css";
 import "react-range-slider-input/dist/style.css";
 import "../public/css/image-compare-viewer.min.css";
 import "@fortawesome/fontawesome-svg-core/styles.css";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faRobot, faBookOpen, faFlask, faUsers } from '@fortawesome/free-solid-svg-icons';
 
@@ -23,6 +23,9 @@ import "font-awesome/css/font-awesome.min.css";
 
 export default function RootLayout({ children }) {
   const pathname = usePathname();
+  const [scrollDirection, setScrollDirection] = useState("down");
+  const lastScrollY = useRef(0);
+  
   useEffect(() => {
     if (typeof window !== "undefined") {
       // Import the script only on the client side
@@ -47,8 +50,6 @@ export default function RootLayout({ children }) {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []); 
-
-  const [scrollDirection, setScrollDirection] = useState("down");
 
   useEffect(() => {
     setScrollDirection("up");
@@ -83,22 +84,25 @@ export default function RootLayout({ children }) {
   }, [pathname]);
   useEffect(() => {
     // Close any open modal
-    const bootstrap = require("bootstrap"); 
-    const modalElements = document.querySelectorAll(".modal.show");
-    modalElements.forEach((modal) => {
-      const modalInstance = bootstrap.Modal.getInstance(modal);
-      if (modalInstance) {
-        modalInstance.hide();
-      }
-    });
+    import("bootstrap").then((bootstrap) => {
+      const modalElements = document.querySelectorAll(".modal.show");
+      modalElements.forEach((modal) => {
+        const modalInstance = bootstrap.Modal.getInstance(modal);
+        if (modalInstance) {
+          modalInstance.hide();
+        }
+      });
 
-    // Close any open offcanvas
-    const offcanvasElements = document.querySelectorAll(".offcanvas.show");
-    offcanvasElements.forEach((offcanvas) => {
-      const offcanvasInstance = bootstrap.Offcanvas.getInstance(offcanvas);
-      if (offcanvasInstance) {
-        offcanvasInstance.hide();
-      }
+      // Close any open offcanvas
+      const offcanvasElements = document.querySelectorAll(".offcanvas.show");
+      offcanvasElements.forEach((offcanvas) => {
+        const offcanvasInstance = bootstrap.Offcanvas.getInstance(offcanvas);
+        if (offcanvasInstance) {
+          offcanvasInstance.hide();
+        }
+      });
+    }).catch((error) => {
+      console.warn("Bootstrap not available:", error);
     });
   }, [pathname]);
 
@@ -123,6 +127,8 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+        <meta name="format-detection" content="telephone=no" />
         <script
           dangerouslySetInnerHTML={{
             __html: `

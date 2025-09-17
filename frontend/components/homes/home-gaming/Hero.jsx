@@ -131,7 +131,7 @@ export default function Hero() {
                   </div>
                   <div className="fade-item fade-item-3 box-btn-slider">
                     <Link
-                      href={slide.buttonLink || "/shop-filter-canvas"}
+                      href={slide.buttonLink || "/shop-default-grid"}
                       className="tf-btn btn-fill btn-white"
                       style={{
                         padding: '15px 30px',

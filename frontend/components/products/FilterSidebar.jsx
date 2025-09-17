@@ -8,11 +8,10 @@ import {
   colors,
   sizes,
 } from "@/data/productFilterOptions";
-import { productMain } from "@/data/products";
 import { getParentCategories, getSubCategories } from "@/api/category";
 
 import RangeSlider from "react-range-slider-input";
-export default function FilterSidebar({ allProps }) {
+export default function FilterSidebar({ allProps, products = [] }) {
   const router = useRouter();
   const [parentCategories, setParentCategories] = useState([]);
   const [subCategories, setSubCategories] = useState([]);
@@ -220,7 +219,7 @@ export default function FilterSidebar({ allProps }) {
                     <span className="count-stock">
                       (
                       {
-                        productMain.filter((el) => el.inStock == option.value)
+                        products.filter((el) => el.inStock == option.value)
                           .length
                       }
                       )
@@ -251,8 +250,8 @@ export default function FilterSidebar({ allProps }) {
                     <span className="count-brand">
                       ({" "}
                       {
-                        productMain.filter((el) =>
-                          el.filterBrands.includes(brand.label)
+                        products.filter((el) =>
+                          el.filterBrands && el.filterBrands.includes(brand.label)
                         ).length
                       }
                       )

@@ -174,7 +174,7 @@ export default function Nav() {
               ) : (
                 <>
                   {/* Column 1 - First quarter of categories */}
-                  <div className="col-lg-2">
+                  <div className="col-xl-2 col-lg-3 col-md-6 col-12">
                     <div className="mega-menu-item">
                       {getCategoriesForColumn(
                         0,
@@ -281,7 +281,7 @@ export default function Nav() {
                   </div>
 
                   {/* Column 2 - Second quarter of categories */}
-                  <div className="col-lg-2">
+                  <div className="col-xl-2 col-lg-3 col-md-6 col-12">
                     <div className="mega-menu-item">
                       {getCategoriesForColumn(
                         Math.ceil(categories.length / 4),
@@ -388,7 +388,7 @@ export default function Nav() {
                   </div>
 
                   {/* Column 3 - Third quarter of categories */}
-                  <div className="col-lg-2">
+                  <div className="col-xl-2 col-lg-3 col-md-6 col-12">
                     <div className="mega-menu-item">
                       {getCategoriesForColumn(
                         Math.ceil(categories.length / 2),
@@ -495,7 +495,7 @@ export default function Nav() {
                   </div>
 
                   {/* Column 4 - Fourth quarter of categories */}
-                  <div className="col-lg-2">
+                  <div className="col-xl-2 col-lg-3 col-md-6 col-12">
                     <div className="mega-menu-item">
                       {getCategoriesForColumn(
                         Math.ceil((3 * categories.length) / 4),
@@ -602,7 +602,7 @@ export default function Nav() {
                   </div>
                 </>
               )}
-              <div className="col-lg-4">
+              <div className="col-xl-4 col-lg-12 col-md-12 col-12">
                 <div className="wrapper-sub-shop">
                   {hoveredCategory &&
                   subcategories[hoveredCategory._id] &&

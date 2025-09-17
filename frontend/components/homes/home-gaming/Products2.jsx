@@ -39,47 +39,59 @@ export default function Products2() {
   };
 
   // Transform robot data to match ProductCard1 expected format
-  const transformedRobots = (robots || []).map(robot => ({
-    id: robot._id,
-    title: robot.title,
-    slug: robot.slug, // Add slug field
-    price: parseFloat(robot.totalPrice) || 0, // Only totalPrice, no old price
-    imgSrc: robot.images && robot.images.length > 0 
-      ? (robot.images[0].startsWith('http') 
-          ? robot.images[0] 
-          : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}${robot.images[0].startsWith('/') ? robot.images[0] : `/${robot.images[0]}`}`)
-      : '/images/product/placeholder.jpg',
-    imgHover: robot.images && robot.images.length > 1 
-      ? (robot.images[1].startsWith('http') 
-          ? robot.images[1] 
-          : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}${robot.images[1].startsWith('/') ? robot.images[1] : `/${robot.images[1]}`}`)
-      : robot.images && robot.images.length > 0 
-        ? (robot.images[0].startsWith('http') 
-            ? robot.images[0] 
-            : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}${robot.images[0].startsWith('/') ? robot.images[0] : `/${robot.images[0]}`}`)
-        : '/images/product/placeholder.jpg',
-    colors: robot.specifications?.color && robot.specifications.color.length > 0 ? robot.specifications.color.map(color => ({
-      bgColor: getColorClass(color.name),
-      colorName: color.name || 'Unknown',
+  const transformedRobots = (robots || []).map(robot => {
+    // Create the transformed robot object - PRESERVE ALL BACKEND DATA
+    const transformedRobot = {
+      // Spread the original robot data FIRST to preserve all nested structures
+      ...robot,
+      
+      // Override specific fields for display
+      id: robot._id,
+      price: parseFloat(robot.totalPrice) || 0,
+      
+      // Image fields
       imgSrc: robot.images && robot.images.length > 0 
         ? (robot.images[0].startsWith('http') 
             ? robot.images[0] 
             : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}${robot.images[0].startsWith('/') ? robot.images[0] : `/${robot.images[0]}`}`)
-        : '/images/product/placeholder.jpg'
-    })) : (robot.images && robot.images.length > 0 ? [{
-      bgColor: 'bg-primary',
-      colorName: 'Default',
-      imgSrc: robot.images[0].startsWith('http')
-        ? robot.images[0]
-        : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}${robot.images[0].startsWith('/') ? robot.images[0] : `/${robot.images[0]}`}`
-    }] : []),
-    slug: robot.slug,
-    isOnSale: false,
-    salePercentage: 0,
-    sizes: [],
-    countdown: null,
-    hotSale: false
-  }));
+        : '/images/product/placeholder.jpg',
+      imgHover: robot.images && robot.images.length > 1 
+        ? (robot.images[1].startsWith('http') 
+            ? robot.images[1] 
+            : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}${robot.images[1].startsWith('/') ? robot.images[1] : `/${robot.images[1]}`}`)
+        : robot.images && robot.images.length > 0 
+          ? (robot.images[0].startsWith('http') 
+              ? robot.images[0] 
+              : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}${robot.images[0].startsWith('/') ? robot.images[0] : `/${robot.images[0]}`}`)
+          : '/images/product/placeholder.jpg',
+      
+      // Colors
+      colors: robot.specifications?.color && robot.specifications.color.length > 0 ? robot.specifications.color.map(color => ({
+        bgColor: getColorClass(color.name),
+        colorName: color.name || 'Unknown',
+        imgSrc: robot.images && robot.images.length > 0 
+          ? (robot.images[0].startsWith('http') 
+              ? robot.images[0] 
+              : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}${robot.images[0].startsWith('/') ? robot.images[0] : `/${robot.images[0]}`}`)
+          : '/images/product/placeholder.jpg'
+      })) : (robot.images && robot.images.length > 0 ? [{
+        bgColor: 'bg-primary',
+        colorName: 'Default',
+        imgSrc: robot.images[0].startsWith('http')
+          ? robot.images[0]
+          : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}${robot.images[0].startsWith('/') ? robot.images[0] : `/${robot.images[0]}`}`
+      }] : []),
+      
+      // Display fields
+      isOnSale: false,
+      salePercentage: 0,
+      sizes: [],
+      countdown: null,
+      hotSale: false,
+    };
+    
+    return transformedRobot;
+  });
 
   if (loading) {
     return (

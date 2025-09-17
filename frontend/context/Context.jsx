@@ -96,7 +96,6 @@ export default function Context({ children }) {
       return;
     }
 
-
     if (!compareRobots.find(robot => robot.id === robotData.id)) {
       if (compareRobots.length >= 3) {
         if (typeof window !== 'undefined') {
@@ -140,6 +139,15 @@ export default function Context({ children }) {
     }
   };
 
+  // Force clear all comparison data (for debugging)
+  const forceClearComparisonData = () => {
+    setCompareRobots([]);
+    setCompareItem([]);
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem("compareRobots");
+      localStorage.removeItem("compareItem");
+    }
+  };
 
   // Function to open compare modal
   const openCompareModal = () => {
@@ -255,6 +263,7 @@ export default function Context({ children }) {
     addRobotToCompare,
     removeRobotFromCompare,
     clearAllCompareRobots,
+    forceClearComparisonData,
     openCompareModal,
   };
   return (
