@@ -3246,7 +3246,7 @@ footer .footer-wrap {
 }
 
 footer .footer-body {
-  padding: 0px 0;
+  padding: 80px 0;
 }
 
 footer .footer-bottom-wrap {
@@ -18653,7 +18653,7 @@ ul.list-text.type-number {
     margin-bottom: 30px;
   }
   footer .footer-body {
-    padding: 0px 0;
+    padding: 40px 0;
   }
   footer.has-pb {
     padding-bottom: 165px;
@@ -20533,9 +20533,9 @@ ul.list-text.type-number {
 .header-default .logo-fix .logo,
 .header-default .logo-fix .logo-image-fix {
   display: block !important;
-  width: 144px !important;
+  width: 200px !important;
   height: auto !important;
-  max-width: 144px !important;
+  max-width: 200px !important;
   max-height: none !important;
   visibility: visible !important;
   opacity: 1 !important;
@@ -20599,8 +20599,8 @@ ul.list-text.type-number {
   .header-default .logo-fix img,
   .header-default .logo-fix .logo,
   .header-default .logo-fix .logo-image-fix {
-    width: 144px !important;
-    max-width: 144px !important;
+    width: 200px !important;
+    max-width: 200px !important;
     height: auto !important;
   }
 }
@@ -20614,7 +20614,7 @@ ul.list-text.type-number {
   display: block !important;
   visibility: visible !important;
   opacity: 1 !important;
-  width: 144px !important;
+  width: 200px !important;
   height: auto !important;
 }
 
@@ -21281,9 +21281,9 @@ ul.breadcrumbs a:hover,
     font-size: 14px;
   }
 }
-img[src*="logo1.svg"]:not(.logo-responsive-img),
-.logo:not(.logo-responsive-img),
-.logo-image-fix:not(.logo-responsive-img),
+img[src*="logo1.svg"],
+.logo,
+.logo-image-fix,
 .footer-logo-img {
   width: 144px !important;
   height: auto !important;
@@ -21295,59 +21295,12 @@ img[src*="logo1.svg"]:not(.logo-responsive-img),
 }
 
 @media (max-width: 575px) {
-  img[src*="logo1.svg"]:not(.logo-responsive-img),
-  .logo:not(.logo-responsive-img),
-  .logo-image-fix:not(.logo-responsive-img),
+  img[src*="logo1.svg"],
+  .logo,
+  .logo-image-fix,
   .footer-logo-img {
     width: 100px !important;
     max-width: 100px !important;
-  }
-}
-.logo-responsive-img {
-  width: 200px !important;
-  height: auto !important;
-  max-width: 100% !important;
-  max-height: none !important;
-  aspect-ratio: unset !important;
-  object-fit: contain !important;
-  object-position: center !important;
-}
-
-@media (max-width: 1200px) {
-  .logo-responsive-img {
-    width: 180px !important;
-  }
-}
-@media (max-width: 992px) {
-  .logo-responsive-img {
-    width: 160px !important;
-  }
-}
-@media (max-width: 768px) {
-  .logo-responsive-img {
-    width: 140px !important;
-  }
-}
-@media (max-width: 576px) {
-  .logo-responsive-img {
-    width: 120px !important;
-  }
-}
-@media (max-width: 480px) {
-  .logo-responsive-img {
-    width: 100px !important;
-  }
-}
-@media (max-width: 767px) {
-  .logo-responsive-img {
-    width: 120px !important;
-    max-width: 120px !important;
-  }
-}
-@media (max-width: 991px) {
-  .logo-responsive-img {
-    width: 140px !important;
-    max-width: 140px !important;
   }
 }
 .collection-default img,
@@ -21367,9 +21320,10 @@ img[src*="logo1.svg"]:not(.logo-responsive-img),
 .header-default .logo-header img,
 .logo-header img,
 .logo-fix img,
-.header-default .logo-header .logo:not(.logo-responsive-img),
-.logo-header .logo:not(.logo-responsive-img),
-.logo-fix .logo:not(.logo-responsive-img) {
+.header-default .logo-header .logo,
+.logo-header .logo,
+.logo-fix .logo,
+img[src*="logo1.svg"] {
   display: block !important;
   visibility: visible !important;
   opacity: 1 !important;
@@ -21380,44 +21334,6 @@ img[src*="logo1.svg"]:not(.logo-responsive-img),
   aspect-ratio: 144/25 !important;
   object-fit: contain !important;
   object-position: center !important;
-}
-
-.logo-responsive-img {
-  display: block !important;
-  visibility: visible !important;
-  opacity: 1 !important;
-  width: 200px !important;
-  height: auto !important;
-  max-width: 100% !important;
-  max-height: none !important;
-  aspect-ratio: unset !important;
-  object-fit: contain !important;
-  object-position: center !important;
-}
-@media (max-width: 1200px) {
-  .logo-responsive-img {
-    width: 180px !important;
-  }
-}
-@media (max-width: 992px) {
-  .logo-responsive-img {
-    width: 160px !important;
-  }
-}
-@media (max-width: 768px) {
-  .logo-responsive-img {
-    width: 140px !important;
-  }
-}
-@media (max-width: 576px) {
-  .logo-responsive-img {
-    width: 120px !important;
-  }
-}
-@media (max-width: 480px) {
-  .logo-responsive-img {
-    width: 100px !important;
-  }
 }
 
 .box-nav-ul .menu-item.active .item-link,
