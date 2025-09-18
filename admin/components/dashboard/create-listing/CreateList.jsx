@@ -608,6 +608,16 @@ const CreateList = () => {
         formData.append("specifications.dimensions.height.unit", heightUnit);
       }
 
+      // Wingspan and Reach (dimensions)
+      if (wingspan && wingspan !== "" && !isNaN(wingspan)) {
+        formData.append("specifications.dimensions.wingspan.value", String(wingspan));
+        formData.append("specifications.dimensions.wingspan.unit", wingspanUnit);
+      }
+      if (reach && reach !== "" && !isNaN(reach)) {
+        formData.append("specifications.dimensions.reach.value", String(reach));
+        formData.append("specifications.dimensions.reach.unit", reachUnit);
+      }
+
       // Weight
       if (weight && weight !== "" && !isNaN(weight)) {
         formData.append("specifications.weight.value", String(weight));
