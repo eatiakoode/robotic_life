@@ -5,7 +5,7 @@ const BACKEND_API_URL = process.env.NEXT_PUBLIC_BACKEND_API_URL || 'http://local
 
 // Helper function to normalize image URLs
 const normalizeImageUrl = (imagePath, baseUrl = BACKEND_API_URL) => {
-  if (!imagePath) return `${baseUrl}/images/logo/logoB.png`;
+  if (!imagePath) return `${baseUrl}/images/logo/logo1.svg`;
   
   // If it's already a full URL, return as is
   if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
@@ -118,7 +118,7 @@ export const getAllProducts = async () => {
               price: convertedPrice, // Safe price conversion with fallback
               imgSrc: product.images && product.images[0] ? 
                 normalizeImageUrl(product.images[0], baseUrl) : 
-                `${baseUrl}/images/products/logoB.png`,
+                `${baseUrl}/images/products/logo1.svg`,
               imgHover: product.images && product.images[1] ? 
                 normalizeImageUrl(product.images[1], baseUrl) : 
                 // If no second image, use the same image for hover (no broken hover effect)
@@ -127,7 +127,7 @@ export const getAllProducts = async () => {
                     `${baseUrl}/${product.images[0].replace('public/', '')}` : 
                     `${baseUrl}/${product.images[0]}`
                   ) : 
-                  `${baseUrl}/images/products/logoB.png`
+                  `${baseUrl}/images/products/logo1.svg`
                 ),
               description: product.description || '',
               inStock: true, // Default to true since backend doesn't have this field
@@ -145,7 +145,7 @@ export const getAllProducts = async () => {
                   const imageIndex = colorIndex < (product.images?.length || 0) ? colorIndex : 0;
                   const imageSrc = product.images && product.images[imageIndex] ? 
                     normalizeImageUrl(product.images[imageIndex], baseUrl) : 
-                    `${baseUrl}/images/products/logoB.png`;
+                    `${baseUrl}/images/products/logo1.svg`;
                   
                   return {
                     imgSrc: imageSrc,
@@ -160,7 +160,7 @@ export const getAllProducts = async () => {
                       `${baseUrl}/${product.images[0].replace('public/', '')}` : 
                       `${baseUrl}/${product.images[0]}`
                     ) : 
-                    `${baseUrl}/images/products/logoB.png`,
+                    `${baseUrl}/images/products/logo1.svg`,
                   bgColor: getColorClass('Default'),
                   name: 'Default',
                   color: 'default'
@@ -261,7 +261,7 @@ export const getRobotBySlug = async (slug) => {
             price: convertedPrice,
             imgSrc: robot.images && robot.images[0] ? 
               normalizeImageUrl(robot.images[0], baseUrl) : 
-              `${baseUrl}/images/products/logoB.png`,
+              `${baseUrl}/images/products/logo1.svg`,
             imgHover: robot.images && robot.images[1] ? 
               normalizeImageUrl(robot.images[1], baseUrl) : 
               (robot.images && robot.images[0] ? 
@@ -269,7 +269,7 @@ export const getRobotBySlug = async (slug) => {
                   `${baseUrl}/${robot.images[0].replace('public/', '')}` : 
                   `${baseUrl}/${robot.images[0]}`
                 ) : 
-                `${baseUrl}/images/products/logoB.png`
+                `${baseUrl}/images/products/logo1.svg`
               ),
             description: robot.description || '',
             inStock: true,
@@ -321,7 +321,7 @@ export const getRobotBySlug = async (slug) => {
                 const imageIndex = colorIndex < (robot.images?.length || 0) ? colorIndex : 0;
                 const imageSrc = robot.images && robot.images[imageIndex] ? 
                   normalizeImageUrl(robot.images[imageIndex], baseUrl) : 
-                  `${baseUrl}/images/products/logoB.png`;
+                  `${baseUrl}/images/products/logo1.svg`;
                 
                 return {
                   id: `values-${colorItem.name?.toLowerCase().replace(/\s+/g, '-') || 'default'}`,
@@ -342,7 +342,7 @@ export const getRobotBySlug = async (slug) => {
                     `${baseUrl}/${robot.images[0].replace('public/', '')}` : 
                     `${baseUrl}/${robot.images[0]}`
                   ) : 
-                  `${baseUrl}/images/products/logoB.png`,
+                  `${baseUrl}/images/products/logo1.svg`,
                 name: 'Default'
               }],
             
@@ -351,7 +351,7 @@ export const getRobotBySlug = async (slug) => {
               robot.images.map(img => 
                 normalizeImageUrl(img, baseUrl)
               ) : 
-              [`${baseUrl}/images/products/logoB.png`],
+              [`${baseUrl}/images/products/logo1.svg`],
             
             // Additional populated fields
             manufacturer: robot.manufacturer,
@@ -468,7 +468,7 @@ export const searchProducts = async (query, filters = {}) => {
               price: convertedPrice,
               imgSrc: product.images && product.images[0] ? 
                 normalizeImageUrl(product.images[0], baseUrl) : 
-                `${baseUrl}/images/products/logoB.png`,
+                `${baseUrl}/images/products/logo1.svg`,
               imgHover: product.images && product.images[1] ? 
                 normalizeImageUrl(product.images[1], baseUrl) : 
                 (product.images && product.images[0] ? 
@@ -476,7 +476,7 @@ export const searchProducts = async (query, filters = {}) => {
                     `${baseUrl}/${product.images[0].replace('public/', '')}` : 
                     `${baseUrl}/${product.images[0]}`
                   ) : 
-                  `${baseUrl}/images/products/logoB.png`
+                  `${baseUrl}/images/products/logo1.svg`
                 ),
               description: product.description || '',
               inStock: true,
@@ -622,7 +622,7 @@ export const getProductsByCategory = async (category, additionalFilters = {}) =>
               price: convertedPrice, // Safe price conversion with fallback
               imgSrc: product.images && product.images[0] ? 
                 normalizeImageUrl(product.images[0], baseUrl) : 
-                `${baseUrl}/images/products/logoB.png`,
+                `${baseUrl}/images/products/logo1.svg`,
               imgHover: product.images && product.images[1] ? 
                 normalizeImageUrl(product.images[1], baseUrl) : 
                 // If no second image, use the same image for hover (no broken hover effect)
@@ -631,7 +631,7 @@ export const getProductsByCategory = async (category, additionalFilters = {}) =>
                     `${baseUrl}/${product.images[0].replace('public/', '')}` : 
                     `${baseUrl}/${product.images[0]}`
                   ) : 
-                  `${baseUrl}/images/products/logoB.png`
+                  `${baseUrl}/images/products/logo1.svg`
                 ),
               description: product.description || '',
               inStock: true,
@@ -649,7 +649,7 @@ export const getProductsByCategory = async (category, additionalFilters = {}) =>
                   const imageIndex = colorIndex < (product.images?.length || 0) ? colorIndex : 0;
                   const imageSrc = product.images && product.images[imageIndex] ? 
                     normalizeImageUrl(product.images[imageIndex], baseUrl) : 
-                    `${baseUrl}/images/products/logoB.png`;
+                    `${baseUrl}/images/products/logo1.svg`;
                   
                   return {
                     imgSrc: imageSrc,
@@ -664,7 +664,7 @@ export const getProductsByCategory = async (category, additionalFilters = {}) =>
                       `${baseUrl}/${product.images[0].replace('public/', '')}` : 
                       `${baseUrl}/${product.images[0]}`
                     ) : 
-                    `${baseUrl}/images/products/logoB.png`,
+                    `${baseUrl}/images/products/logo1.svg`,
                   bgColor: getColorClass('Default'),
                   name: 'Default',
                   color: 'default'
@@ -763,7 +763,7 @@ export const getRelatedProducts = async (slug) => {
               price: convertedPrice,
               imgSrc: product.images && product.images[0] ? 
                 normalizeImageUrl(product.images[0], baseUrl) : 
-                `${baseUrl}/images/products/logoB.png`,
+                `${baseUrl}/images/products/logo1.svg`,
               imgHover: product.images && product.images[1] ? 
                 normalizeImageUrl(product.images[1], baseUrl) : 
                 (product.images && product.images[0] ? 
@@ -771,7 +771,7 @@ export const getRelatedProducts = async (slug) => {
                     `${baseUrl}/${product.images[0].replace('public/', '')}` : 
                     `${baseUrl}/${product.images[0]}`
                   ) : 
-                  `${baseUrl}/images/products/logoB.png`
+                  `${baseUrl}/images/products/logo1.svg`
                 ),
               description: product.description || '',
               inStock: true,
@@ -789,7 +789,7 @@ export const getRelatedProducts = async (slug) => {
                   const imageIndex = colorIndex < (product.images?.length || 0) ? colorIndex : 0;
                   const imageSrc = product.images && product.images[imageIndex] ? 
                     normalizeImageUrl(product.images[imageIndex], baseUrl) : 
-                    `${baseUrl}/images/products/logoB.png`;
+                    `${baseUrl}/images/products/logo1.svg`;
                   
                   return {
                     imgSrc: imageSrc,
@@ -804,7 +804,7 @@ export const getRelatedProducts = async (slug) => {
                       `${baseUrl}/${product.images[0].replace('public/', '')}` : 
                       `${baseUrl}/${product.images[0]}`
                     ) : 
-                    `${baseUrl}/images/products/logoB.png`,
+                    `${baseUrl}/images/products/logo1.svg`,
                   bgColor: getColorClass('Default'),
                   name: 'Default',
                   color: 'default'
@@ -913,7 +913,7 @@ export const getRecentlyViewed = async (ids) => {
               price: convertedPrice,
               imgSrc: product.images && product.images[0] ? 
                 normalizeImageUrl(product.images[0], baseUrl) : 
-                `${baseUrl}/images/products/logoB.png`,
+                `${baseUrl}/images/products/logo1.svg`,
               imgHover: product.images && product.images[1] ? 
                 normalizeImageUrl(product.images[1], baseUrl) : 
                 (product.images && product.images[0] ? 
@@ -921,7 +921,7 @@ export const getRecentlyViewed = async (ids) => {
                     `${baseUrl}/${product.images[0].replace('public/', '')}` : 
                     `${baseUrl}/${product.images[0]}`
                   ) : 
-                  `${baseUrl}/images/products/logoB.png`
+                  `${baseUrl}/images/products/logo1.svg`
                 ),
               description: product.description || '',
               inStock: true,
@@ -939,7 +939,7 @@ export const getRecentlyViewed = async (ids) => {
                   const imageIndex = colorIndex < (product.images?.length || 0) ? colorIndex : 0;
                   const imageSrc = product.images && product.images[imageIndex] ? 
                     normalizeImageUrl(product.images[imageIndex], baseUrl) : 
-                    `${baseUrl}/images/products/logoB.png`;
+                    `${baseUrl}/images/products/logo1.svg`;
                   
                   return {
                     imgSrc: imageSrc,
@@ -954,7 +954,7 @@ export const getRecentlyViewed = async (ids) => {
                       `${baseUrl}/${product.images[0].replace('public/', '')}` : 
                       `${baseUrl}/${product.images[0]}`
                     ) : 
-                    `${baseUrl}/images/products/logoB.png`,
+                    `${baseUrl}/images/products/logo1.svg`,
                   bgColor: getColorClass('Default'),
                   name: 'Default',
                   color: 'default'

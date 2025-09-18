@@ -34,9 +34,9 @@
     .logo,
     .logo-image-fix {
       display: block !important;
-      width: 144px !important;
+      width: 200px !important;
       height: auto !important;
-      max-width: 144px !important;
+      max-width: 200px !important;
       max-height: none !important;
       visibility: visible !important;
       opacity: 1 !important;
@@ -63,8 +63,8 @@
       }
       
       @media (min-width: 992px) {
-        width: 144px !important;
-        max-width: 144px !important;
+        width: 200px !important;
+        max-width: 200px !important;
         height: auto !important;
       }
     }
@@ -79,7 +79,7 @@
     display: block !important;
     visibility: visible !important;
     opacity: 1 !important;
-    width: 144px !important;
+    width: 200px !important;
     height: auto !important;
   }
   
@@ -984,22 +984,53 @@ ul.breadcrumbs a,
 // IMAGE ASPECT RATIO FIXES
 // =============================================================================
 
-// Fix for regular img tags - logo aspect ratio
-img[src*="logoB.png"],
-.logo,
-.logo-image-fix,
+// Fix for regular img tags - logo aspect ratio (excluding responsive logos)
+img[src*="logo1.svg"]:not(.logo-responsive-img),
+.logo:not(.logo-responsive-img),
+.logo-image-fix:not(.logo-responsive-img),
 .footer-logo-img {
-  width: 144px !important;
+  width: 350px !important;
   height: auto !important;
-  max-width: 144px !important;
+  max-width: 350px !important;
   max-height: none !important;
-  aspect-ratio: 144/25 !important;
+  aspect-ratio: 170/25 !important;
   object-fit: contain !important;
   object-position: center !important;
   
   @media (max-width: 575px) {
     width: 100px !important;
     max-width: 100px !important;
+  }
+}
+
+// Responsive logo overrides with higher specificity
+.logo-responsive-img {
+  width: 200px !important;
+  height: auto !important;
+  max-width: 100% !important;
+  max-height: none !important;
+  aspect-ratio: unset !important;
+  object-fit: contain !important;
+  object-position: center !important;
+  
+  @media (max-width: 1200px) {
+    width: 180px !important;
+  }
+  
+  @media (max-width: 992px) {
+    width: 160px !important;
+  }
+  
+  @media (max-width: 768px) {
+    width: 140px !important;
+  }
+  
+  @media (max-width: 576px) {
+    width: 120px !important;
+  }
+  
+  @media (max-width: 480px) {
+    width: 100px !important;
   }
   
   @media (max-width: 767px) {

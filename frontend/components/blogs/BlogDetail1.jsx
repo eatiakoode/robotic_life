@@ -94,6 +94,7 @@ export default function BlogDetail1({ blog }) {
                   width={623}
                   height={468}
                   style={{ width: '100%', maxWidth: '623px', height: 'auto', objectFit: 'cover', borderRadius: '15px'}}
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 />
               </div>
             ) : (
@@ -106,6 +107,7 @@ export default function BlogDetail1({ blog }) {
                     width={623}
                     height={468}
                     style={{ width: '100%', height: 'auto', objectFit: 'cover', borderRadius: '15px'}}
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                   />
                 </div>
                 <div>
@@ -115,6 +117,7 @@ export default function BlogDetail1({ blog }) {
                     width={623}
                     height={468}
                     style={{ width: '100%', height: 'auto', objectFit: 'cover', borderRadius: '15px'}}
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                   />
                 </div>
               </>
@@ -128,6 +131,7 @@ export default function BlogDetail1({ blog }) {
                 width={623}
                 height={468}
                 style={{ width: '100%', maxWidth: '623px', height: 'auto', objectFit: 'cover', borderRadius: '15px'}}
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
               />
             </div>
           )}

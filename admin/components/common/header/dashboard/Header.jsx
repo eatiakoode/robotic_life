@@ -33,8 +33,8 @@ const Header = () => {
             width={170}
             height={75}
             className="logo1 img-fluid"
-            src="/assets/images/logo.svg"
-            alt="logo.svg"
+            src="/assets/images/logo1.svg"
+            alt="logo1.svg"
           />
           <SafeImage
             width={40}

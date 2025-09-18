@@ -98,9 +98,9 @@ const SidebarMenu = () => {
             <Image
               width={170}
               height={65}
-              // src="/assets/images/logo.svg"
-              src="/assets/images/logo.svg"
-              alt="logo.svg"
+              // src="/assets/images/logo1.svg"
+              src="/assets/images/logo1.svg"
+              alt="logo1.svg"
             />
             {/* <span>WeGrow</span> */}
           </Link>

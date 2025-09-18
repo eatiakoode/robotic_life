@@ -206,8 +206,8 @@ const SidebarMenu = () => {
             <SafeImage
               width={275}
               height={100}
-              src="/assets/images/logoB.png"
-              alt="logoB.png"
+              src="/assets/images/logo1.svg"
+              alt="logo1.svg"
             />
             {/* <span>WeGrow</span> */}
           </Link>

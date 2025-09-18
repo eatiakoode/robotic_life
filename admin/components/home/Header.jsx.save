@@ -34,8 +34,8 @@ const Header = () => {
             width={170}
             height={65}
             className="logo1 contain"
-            src="/assets/images/logo.svg"
-            alt="logo.svg"
+            src="/assets/images/logo1.svg"
+            alt="logo1.svg"
 
           /> <Image
             width={170}

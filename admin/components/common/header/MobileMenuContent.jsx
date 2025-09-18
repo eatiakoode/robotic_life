@@ -332,8 +332,8 @@ const MobileMenuContent = () => {
               width={100}
               height={38}
               className="nav_logo_img img-fluid mt20"
-              src="/assets/images/logoB.png"
-              alt="logoB.png"
+              src="/assets/images/logo1.svg"
+              alt="logo1.svg"
               style={{ width: "auto", height: "auto" }}
             />
             {/* <span className="brand-text">WeGrow</span> */}

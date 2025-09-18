@@ -22,7 +22,7 @@
   <Image
     alt="Robotic Life Logo"
     className="logo"
-    src="/images/logo/logoB.png"
+    src="/images/logo/logo1.svg"
     width={144}
     height={25}
     priority
@@ -298,7 +298,7 @@
 5. **Touch-Friendly**: Ensured buttons and links are accessible on touch devices
 
 ### **Maintenance Tips:**
-1. **Logo Updates**: Replace `/images/logo/logoB.png` to update logo
+1. **Logo Updates**: Replace `/images/logo/logo1.svg` to update logo
 2. **Responsive Testing**: Test on actual devices for best results
 3. **Performance**: Logo uses `priority` loading for above-the-fold content
 4. **Accessibility**: Proper alt text and ARIA labels included
