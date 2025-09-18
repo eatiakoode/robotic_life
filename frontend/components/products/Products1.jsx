@@ -716,7 +716,7 @@ export default function Products1({ parentClass = "flat-spacing",products ,produ
             ) : (
               <>
                 <div
-                  className={`tf-grid-layout wrapper-shop tf-col-${activeLayout} responsive-grid`}
+                  className={`tf-grid-layout wrapper-shop tf-col-4 responsive-grid`}
                   id="gridLayout"
                 >
                   <GridView 
