@@ -52,7 +52,10 @@ export default function Products() {
         }
         
         if (robotsData.length > 0) {
-          const transformedRobots = robotsData.map(robot => {
+          // Limit to 4 robots per category for Popular Categories display
+          const limitedRobotsData = robotsData.slice(0, 4);
+          console.log(`📊 Category ${categorySlug}: Found ${robotsData.length} robots, limiting to ${limitedRobotsData.length} for Popular Categories`);
+          const transformedRobots = limitedRobotsData.map(robot => {
             const imgSrc = robot.images && robot.images.length > 0 ? 
               (robot.images[0].startsWith('public/') ? 
                 `${backendUrl}/${robot.images[0].replace('public/', '')}` : 
