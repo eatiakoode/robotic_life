@@ -48,6 +48,8 @@ export default function BlogDetail2({ blog }) {
                     src="/images/blog/blog-details-2.jpg"
                     width={1275}
                     height={717}
+                    style={{ width: '100%', height: 'auto', objectFit: 'cover' }}
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                   />
                 </div>
                 <div className="content">

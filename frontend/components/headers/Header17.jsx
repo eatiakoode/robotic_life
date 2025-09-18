@@ -26,7 +26,7 @@ export default function Header17() {
                 <Image
                   alt="logo"
                   className="logo w-auto"
-                  src="/images/logo/logo-2.svg"
+                  src="/images/logo/logo1.svg"
                   width={131}
                   height={25}
                 />

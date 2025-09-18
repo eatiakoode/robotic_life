@@ -53,30 +53,36 @@ export default function RootLayout({ children }) {
 
   useEffect(() => {
     setScrollDirection("up");
+    let ticking = false;
+    
     const handleScroll = () => {
-      const currentScrollY = window.scrollY;
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          const currentScrollY = window.scrollY;
 
-      if (currentScrollY > 250) {
-        if (currentScrollY > lastScrollY.current) {
-          // Scrolling down
-          setScrollDirection("down");
-        } else {
-          // Scrolling up
-          setScrollDirection("up");
-        }
-      } else {
-        // Below 250px
-        setScrollDirection("down");
+          if (currentScrollY > 100) {
+            if (currentScrollY > lastScrollY.current) {
+              // Scrolling down
+              setScrollDirection("down");
+            } else {
+              // Scrolling up
+              setScrollDirection("up");
+            }
+          } else {
+            // At the top of the page - always show navbar
+            setScrollDirection("up");
+          }
+
+          lastScrollY.current = currentScrollY;
+          ticking = false;
+        });
+        ticking = true;
       }
-
-      lastScrollY.current = currentScrollY;
     };
 
     const lastScrollY = { current: window.scrollY };
 
-
-    window.addEventListener("scroll", handleScroll);
-
+    window.addEventListener("scroll", handleScroll, { passive: true });
     
     return () => {
       window.removeEventListener("scroll", handleScroll);
@@ -109,10 +115,18 @@ export default function RootLayout({ children }) {
   useEffect(() => {
     const header = document.querySelector("header");
     if (header) {
-      if (scrollDirection == "up") {
-        header.style.top = "0px";
+      if (scrollDirection === "up") {
+        header.style.transform = "translateY(0)";
+        header.style.transition = "transform 0.3s ease-in-out";
+        header.style.visibility = "visible";
       } else {
-        header.style.top = "-185px";
+        // Add a small delay to prevent flickering
+        const timeoutId = setTimeout(() => {
+          header.style.transform = "translateY(-100%)";
+          header.style.transition = "transform 0.3s ease-in-out";
+        }, 50);
+        
+        return () => clearTimeout(timeoutId);
       }
     }
   }, [scrollDirection]);
@@ -132,14 +146,27 @@ export default function RootLayout({ children }) {
         <script
           dangerouslySetInnerHTML={{
             __html: `
-              // Suppress React DevTools message
+              // Suppress React DevTools message and other development warnings
               if (typeof window !== 'undefined') {
                 const originalConsoleLog = console.log;
+                const originalConsoleWarn = console.warn;
+                
                 console.log = function(...args) {
-                  if (args[0] && typeof args[0] === 'string' && args[0].includes('Download the React DevTools')) {
+                  if (args[0] && typeof args[0] === 'string' && 
+                      (args[0].includes('Download the React DevTools') || 
+                       args[0].includes('Fast Refresh'))) {
                     return;
                   }
                   originalConsoleLog.apply(console, args);
+                };
+                
+                console.warn = function(...args) {
+                  if (args[0] && typeof args[0] === 'string' && 
+                      (args[0].includes('Skipping auto-scroll behavior') ||
+                       args[0].includes('Image with src') && args[0].includes('has either width or height modified'))) {
+                    return;
+                  }
+                  originalConsoleWarn.apply(console, args);
                 };
               }
             `,

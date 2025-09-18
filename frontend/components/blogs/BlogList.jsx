@@ -107,6 +107,8 @@ export default function BlogList() {
                       src={getImageUrl(post.logoimage)}
                       width={600}
                       height={399}
+                      style={{ width: '100%', height: 'auto', objectFit: 'cover' }}
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     />
                   </div>
                   <div className="content">

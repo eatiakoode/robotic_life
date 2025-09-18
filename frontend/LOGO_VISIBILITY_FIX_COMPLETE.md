@@ -38,7 +38,7 @@ The logo was disappearing due to **conflicting CSS rules** and **inline style co
 <Link href={`/`} className="logo-header logo-fix">
   <Image
     className="logo logo-image-fix"
-    src="/images/logo/logoB.png"
+    src="/images/logo/logo1.svg"
     width={144}
     height={25}
     priority

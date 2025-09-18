@@ -110,7 +110,7 @@ export const getFilteredProducts = async (filters = {}) => {
                 `http://localhost:5000/${product.images[0].replace('public/', '')}` : 
                 `http://localhost:5000/${product.images[0]}`
               ) : 
-              `http://localhost:5000/images/products/logoB.png`,
+              `http://localhost:5000/images/products/logo1.svg`,
             imgHover: product.images && product.images[1] ? 
               (product.images[1].startsWith('public/') ? 
                 `http://localhost:5000/${product.images[1].replace('public/', '')}` : 
@@ -121,7 +121,7 @@ export const getFilteredProducts = async (filters = {}) => {
                   `http://localhost:5000/${product.images[0].replace('public/', '')}` : 
                   `http://localhost:5000/${product.images[0]}`
                 ) : 
-                `http://localhost:5000/images/products/logoB.png`
+                `http://localhost:5000/images/products/logo1.svg`
               ),
             description: product.description || '',
             inStock: true,
@@ -140,7 +140,7 @@ export const getFilteredProducts = async (filters = {}) => {
                     `http://localhost:5000/${product.images[0].replace('public/', '')}` : 
                     `http://localhost:5000/${product.images[0]}`
                   ) : 
-                  `http://localhost:5000/images/products/logoB.png`,
+                  `http://localhost:5000/images/products/logo1.svg`,
                 bgColor: getColorClass(colorItem.name),
                 name: colorItem.name || 'Default'
               })) : 
@@ -150,7 +150,7 @@ export const getFilteredProducts = async (filters = {}) => {
                     `http://localhost:5000/${product.images[0].replace('public/', '')}` : 
                     `http://localhost:5000/${product.images[0]}`
                   ) : 
-                  `http://localhost:5000/images/products/logoB.png`,
+                  `http://localhost:5000/images/products/logo1.svg`,
                                   bgColor: getColorClass('Default'),
                 name: 'Default'
               }],
