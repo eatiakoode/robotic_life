@@ -17,10 +17,10 @@
 .header-default .logo-header img,
 .logo-header img,
 .logo-fix img,
-// Responsive logo styles - only apply to non-responsive logos
-.header-default .logo-header .logo:not(.logo-responsive-img),
-.logo-header .logo:not(.logo-responsive-img),
-.logo-fix .logo:not(.logo-responsive-img) {
+.header-default .logo-header .logo,
+.logo-header .logo,
+.logo-fix .logo,
+img[src*="logo1.svg"] {
   display: block !important;
   visibility: visible !important;
   opacity: 1 !important;
@@ -31,40 +31,6 @@
   aspect-ratio: 144/25 !important;
   object-fit: contain !important;
   object-position: center !important;
-}
-
-// Responsive logo overrides
-.logo-responsive-img {
-  display: block !important;
-  visibility: visible !important;
-  opacity: 1 !important;
-  width: 200px !important;
-  height: auto !important;
-  max-width: 100% !important;
-  max-height: none !important;
-  aspect-ratio: unset !important;
-  object-fit: contain !important;
-  object-position: center !important;
-  
-  @media (max-width: 1200px) {
-    width: 180px !important;
-  }
-  
-  @media (max-width: 992px) {
-    width: 160px !important;
-  }
-  
-  @media (max-width: 768px) {
-    width: 140px !important;
-  }
-  
-  @media (max-width: 576px) {
-    width: 120px !important;
-  }
-  
-  @media (max-width: 480px) {
-    width: 100px !important;
-  }
 }
 
 // CRITICAL: Navigation hover effects - Text color only (no background)

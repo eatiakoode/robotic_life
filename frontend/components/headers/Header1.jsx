@@ -25,12 +25,14 @@ export default function Header1({ fullWidth = false }) {
           </div>
           
           {/* Logo - Responsive sizing */}
-          <div className="col-xl-3 col-md-4 col-6 d-flex align-items-center">
-            <Link href={`/`} className="logo-header logo-responsive">
+          <div className="col-xl-3 col-md-4 col-6">
+            <Link href={`/`} className="logo-header logo-fix">
               <img
                 alt="Robotic Life Logo"
-                className="logo logo-responsive-img"
+                className="logo logo-image-fix"
                 src="/images/logo/logo1.svg"
+                width="144"
+                height="25"
               />
             </Link>
           </div>
