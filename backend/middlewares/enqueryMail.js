@@ -68,7 +68,7 @@ let messagehtml =`<head>
                         </td>
                         <td width="50%" style="width: 80px;" align="center">
                             <a href="${process.env.SITE_URL}" target="_blank">
-                                <img src="https://wegrowinfraventures.com/assets/images/header-logo2.png" alt="WEGROW INFRAVENTURES PRIVATE LIMITED" style="max-width: 100%;height: auto;display: block;">
+                                <img src="https://wegrowinfraventures.com/assets/images/logo1.svg" alt="WEGROW INFRAVENTURES PRIVATE LIMITED" style="max-width: 100%;height: auto;display: block;">
                             </a>
                         </td>
                         <td width="25%" style="width: 250px;">
@@ -255,7 +255,7 @@ let messagehtml =`<head>
                         </td>
                         <td width="50%" style="width: 80px;" align="center">
                             <a href="${process.env.SITE_URL}" target="_blank">
-                                <img src="https://wegrowinfraventures.com/assets/images/header-logo2.png" alt="WEGROW INFRAVENTURES PRIVATE LIMITED" style="max-width: 100%;height: auto;display: block;">
+                                <img src="https://wegrowinfraventures.com/assets/images/logo1.svg" alt="WEGROW INFRAVENTURES PRIVATE LIMITED" style="max-width: 100%;height: auto;display: block;">
                             </a>
                         </td>
                         <td width="25%" style="width: 250px;">
@@ -447,7 +447,7 @@ const enqueryContactMail = async (req, res) => {
                         </td>
                         <td width="50%" style="width: 80px;" align="center">
                             <a href="${process.env.SITE_URL}" target="_blank">
-                                <img src="https://wegrowinfraventures.com/assets/images/header-logo2.png" alt="WEGROW INFRAVENTURES PRIVATE LIMITED" style="max-width: 100%;height: auto;display: block;">
+                                <img src="https://wegrowinfraventures.com/assets/images/logo1.svg" alt="WEGROW INFRAVENTURES PRIVATE LIMITED" style="max-width: 100%;height: auto;display: block;">
                             </a>
                         </td>
                         <td width="25%" style="width: 250px;">
@@ -626,7 +626,7 @@ const enqueryBrochureMail = async (req, res) => {
                         </td>
                         <td width="50%" style="width: 80px;" align="center">
                             <a href="${process.env.SITE_URL}" target="_blank">
-                                <img src="https://wegrowinfraventures.com/assets/images/header-logo2.png" alt="WEGROW INFRAVENTURES PRIVATE LIMITED" style="max-width: 100%;height: auto;display: block;">
+                                <img src="https://wegrowinfraventures.com/assets/images/logo1.svg" alt="WEGROW INFRAVENTURES PRIVATE LIMITED" style="max-width: 100%;height: auto;display: block;">
                             </a>
                         </td>
                         <td width="25%" style="width: 250px;">
@@ -773,7 +773,7 @@ const enquerySubscribeMail = async (req, res) => {
                         </td>
                         <td width="50%" style="width: 80px;" align="center">
                             <a href="${process.env.SITE_URL}" target="_blank">
-                                <img src="https://wegrowinfraventures.com/assets/images/header-logo2.png" alt="WEGROW INFRAVENTURES PRIVATE LIMITED" style="max-width: 100%;height: auto;display: block;">
+                                <img src="https://wegrowinfraventures.com/assets/images/logo1.svg" alt="WEGROW INFRAVENTURES PRIVATE LIMITED" style="max-width: 100%;height: auto;display: block;">
                             </a>
                         </td>
                         <td width="25%" style="width: 250px;">
@@ -909,7 +909,7 @@ const enqueryLandingMail = async (req, res) => {
                         </td>
                         <td width="50%" style="width: 80px;" align="center">
                             <a href="${process.env.SITE_URL}" target="_blank">
-                                <img src="https://wegrowinfraventures.com/assets/images/header-logo2.png" alt="WEGROW INFRAVENTURES PRIVATE LIMITED" style="max-width: 100%;height: auto;display: block;">
+                                <img src="https://wegrowinfraventures.com/assets/images/logo1.svg" alt="WEGROW INFRAVENTURES PRIVATE LIMITED" style="max-width: 100%;height: auto;display: block;">
                             </a>
                         </td>
                         <td width="25%" style="width: 250px;">

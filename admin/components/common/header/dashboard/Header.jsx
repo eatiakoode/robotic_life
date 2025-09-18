@@ -40,8 +40,8 @@ const Header = () => {
             width={40}
             height={45}
             className="logo2 img-fluid"
-            src="/assets/images/header-logo2.png"
-            alt="header-logo2.png"
+            src="/assets/images/logo1.svg"
+            alt="logo1.svg"
           />
           {/* <span>WeGrow</span> */}
         </Link>

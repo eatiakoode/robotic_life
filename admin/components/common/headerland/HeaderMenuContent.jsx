@@ -28,7 +28,7 @@ const Header = () => {
             width={170}
             height={65}
             className="logo1 img-fluid"
-                          src="/assets/images/header-logo2.png"
+                          src="/assets/images/logo1.svg"
             alt="header logo"
           />
         </a>
