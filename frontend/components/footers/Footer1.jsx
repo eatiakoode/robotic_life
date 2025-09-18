@@ -88,7 +88,7 @@ export default function Footer1({
                       <Link href={`/`}>
                         <img
                           alt="logo"
-                          src={"/images/logo/logo1.svg"}
+                          src={"/images/logo/logoF.svg"}
                           width="170"
                           height="25"
                           className="footer-logo-img"
