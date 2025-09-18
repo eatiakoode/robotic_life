@@ -13,8 +13,8 @@ const MobileMenu = () => {
               width={170}
               height={65}
               className="nav_logo_img contain mt20"
-              src="/assets/images/header-logo2.png"
-              alt="header-logo2.png"
+              src="/assets/images/logo1.svg"
+              alt="logo1.svg"
             />
             {/* <span className="mt20">WeGrow</span> */}
           </a>
