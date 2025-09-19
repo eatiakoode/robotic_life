@@ -42,12 +42,12 @@ const faqRouter = require("./routes/faqRouter");
 // const landingPlanRouter = require("./routes/landingPlanRouter");
 // const landingPaymentRouter = require("./routes/landingPaymentRouter");
 const enqRouter = require("./routes/enqRoute");
-const enqPropertyRouter = require("./routes/enqPropertyRoute");
-const enqLandingRouter = require("./routes/enqLandingRoute");
+// const enqPropertyRouter = require("./routes/enqPropertyRoute");
+// const enqLandingRouter = require("./routes/enqLandingRoute");
 // const cityGlimpseRouter = require("./routes/cityGlimpseRouter");
 // const sellerRouter = require("./routes/sellerRouter");
-const enqSubscribeRouter = require("./routes/enqSubscribeRoute");
-const enqBrochureRouter = require("./routes/enqBrochureRoute");
+// const enqSubscribeRouter = require("./routes/enqSubscribeRoute");
+// const enqBrochureRouter = require("./routes/enqBrochureRoute");
 
 
 
@@ -89,7 +89,7 @@ const sliderRouter = require("./routes/sliderRouter.js");
 const sliderfrontendRouter = require("./routes/frontend/sliderFrntRouter.js");
 const categoryFrontendRouter = require("./routes/frontend/categoryFrntRouter.js");
 const robotFrontendRouter = require("./routes/frontend/robotFrntRouter.js");
-const colorFrontendRouter = require("./routes/frontend/colorFrntRouter.js");
+// const colorFrontendRouter = require("./routes/frontend/colorFrntRouter.js");
 const manufacturerFrontendRouter = require("./routes/frontend/manufacturerFrntRouter.js");
 const countryFrontendRouter = require("./routes/frontend/countryFrntRouter.js");
 const testimonialRouter = require("./routes/testimonialRouter.js");
@@ -142,13 +142,13 @@ app.use("/admin/api/faq", faqRouter);
 // app.use("/admin/api/landingplan", landingPlanRouter);
 // app.use("/admin/api/landingpayment", landingPaymentRouter);
 app.use("/admin/api/enquiry", enqRouter);
-app.use("/admin/api/propertyenquiry", enqPropertyRouter);
-app.use("/admin/api/landingenquiry", enqLandingRouter);
+// app.use("/admin/api/propertyenquiry", enqPropertyRouter);
+// app.use("/admin/api/landingenquiry", enqLandingRouter);
 // app.use("/admin/api/cityglimpse", cityGlimpseRouter);
 
 // app.use("/admin/api/seller", sellerRouter);
-app.use("/admin/api/subscribeenquiry", enqSubscribeRouter);
-app.use("/admin/api/brochureenquiry", enqBrochureRouter);
+// app.use("/admin/api/subscribeenquiry", enqSubscribeRouter);
+// app.use("/admin/api/brochureenquiry", enqBrochureRouter);
 
 
 
@@ -187,7 +187,7 @@ app.use("/admin/api/slider", sliderRouter);
 app.use("/frontend/api/slider", sliderfrontendRouter);
 app.use("/frontend/api/category", categoryFrontendRouter);
 app.use("/frontend/api/robot", robotFrontendRouter);
-app.use("/frontend/api/color", colorFrontendRouter);
+// app.use("/frontend/api/color", colorFrontendRouter);
 app.use("/frontend/api/manufacturer", manufacturerFrontendRouter);
 app.use("/frontend/api/country", countryFrontendRouter);
 app.use("/admin/api/testimonial", testimonialRouter);
