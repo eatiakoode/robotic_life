@@ -30,7 +30,7 @@ const getallBlog = asyncHandler(async (req, res) => {
     const getallBlog = await Blog.find({"status": true})
       .select("title slug description source date logoimage createdAt")
       .populate("blogcategory", "title")
-      .sort({ createdAt: -1 }) // Sort by newest first
+      .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limit)
       .lean();
@@ -120,7 +120,6 @@ const getRelatedBlogs = asyncHandler(async (req, res) => {
 
 const getPopularTags = async (req, res) => {
   try {
-    // First check if there are any blogs with tags
     const blogsWithTags = await Blog.countDocuments({ 
       tags: { $exists: true, $ne: [], $not: { $size: 0 } } 
     });
@@ -131,7 +130,7 @@ const getPopularTags = async (req, res) => {
       tags = await Blog.aggregate([
         { $match: { tags: { $exists: true, $ne: [], $not: { $size: 0 } } } },
         { $unwind: "$tags" },
-        { $match: { tags: { $ne: null, $ne: "" } } }, // Filter out empty tags
+        { $match: { tags: { $ne: null, $ne: "" } } },
         { $group: { _id: "$tags", count: { $sum: 1 } } }, 
         { $sort: { count: -1 } },
         { $limit: 10 }

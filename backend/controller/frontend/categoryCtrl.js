@@ -39,7 +39,6 @@ const getallCategory = asyncHandler(async (req, res) => {
       data: getallCategory
     });
   } catch (error) {
-    console.error('❌ Backend category error:', error);
     res.status(500).json({
       success: false,
       error: error.message
