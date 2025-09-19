@@ -33,14 +33,14 @@ export default async function ProductDetailPage({ params }) {
             <h3 className="heading text-center text-white">Robots</h3>
             <ul className="breadcrumbs d-flex align-items-center justify-content-center">
               <li>
-                <Link className="link text-white" href={`/`}>
+                <Link className="text-white hover:text-gray-300 transition duration-300" href={`/`}>
                   Homepage
                 </Link>
               </li>
               <li>
-                <i className="icon-arrRight" />
+                <i className="icon-arrRight text-white" />
               </li>
-              <li>Robots</li>
+              <li className="text-white">Robots</li>
             </ul>
           </div>
         </div>
@@ -73,14 +73,14 @@ export default async function ProductDetailPage({ params }) {
             <h3 className="heading text-center text-white">Robots</h3>
             <ul className="breadcrumbs d-flex align-items-center justify-content-center">
               <li>
-                <Link className="link text-white" href={`/`}>
+                <Link className="text-white hover:text-gray-300 transition duration-300" href={`/`}>
                   Homepage
                 </Link>
               </li>
               <li>
-                <i className="icon-arrRight" />
+                <i className="icon-arrRight text-white" />
               </li>
-              <li>Robots</li>
+              <li className="text-white">Robots</li>
             </ul>
           </div>
         </div>

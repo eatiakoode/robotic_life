@@ -88,7 +88,7 @@ const BlogDetailsDynamic = async ({params}) => {
         <div className="container-full">
           <div className="row">
             <div className="col-12">
-              <h3 className="heading text-center text-white">Blog Default</h3>
+              <h3 className="heading text-center text-white">Blogs</h3>
               <ul className="breadcrumbs d-flex align-items-center justify-content-center">
                 <li>
                   <Link className="link text-white" href={`/`}>

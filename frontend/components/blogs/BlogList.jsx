@@ -66,7 +66,7 @@ export default function BlogList() {
     const date = new Date(dateString);
     return date.toLocaleDateString('en-US', {
       year: 'numeric',
-      month: 'long',
+      month: 'short',
       day: 'numeric'
     });
   };
@@ -112,24 +112,22 @@ export default function BlogList() {
                     />
                   </div>
                   <div className="content">
-                    <div className="d-flex align-items-center justify-content-between flex-wrap gap-10">
-                      <div className="meta">
-                        <div className="meta-item gap-8">
+                    <div className="blog-meta-horizontal d-flex align-items-center justify-content-between mb-3">
+                      <div className="blog-date-author d-flex align-items-center gap-3">
+                        <div className="meta-item d-flex align-items-center gap-2">
                           <div className="icon">
                             <i className="icon-calendar" />
                           </div>
-                          <p className="text-caption-1">{formatDate(post.date || post.createdAt)}</p>
+                          <span className="blog-date text-caption-1">{formatDate(post.date || post.createdAt)}</span>
                         </div>
-                        <div className="meta-item gap-8">
+                        <span className="blog-separator">|</span>
+                        <div className="meta-item d-flex align-items-center gap-2">
                           <div className="icon">
                             <i className="icon-user" />
                           </div>
-                          <p className="text-caption-1">
-                            by{" "}
-                            <a className="link" href="#">
-                              {post.source || "Admin"}
-                            </a>
-                          </p>
+                          <span className="blog-author text-caption-1">
+                            by <a className="link" href="#">{post.source || "Admin"}</a>
+                          </span>
                         </div>
                       </div>
                     </div>

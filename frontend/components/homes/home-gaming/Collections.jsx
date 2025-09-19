@@ -87,7 +87,7 @@ export default function Collections() {
     return (
       <section className="flat-spacing">
         <div className="container">
-          <div className="tf-grid-layout md-col-2">
+          <div className="tf-grid-layout md-col-2 collections-responsive">
             <div className="text-center" style={{ gridColumn: '1 / -1', padding: '40px' }}>
               <div className="spinner-border text-primary" role="status">
                 <span className="visually-hidden">Loading categories...</span>
@@ -104,7 +104,7 @@ export default function Collections() {
     return (
       <section className="flat-spacing">
         <div className="container">
-          <div className="tf-grid-layout md-col-2">
+          <div className="tf-grid-layout md-col-2 collections-responsive">
             <div className="text-center" style={{ gridColumn: '1 / -1', padding: '40px' }}>
               <h4 className="text-muted">No categories available</h4>
               <p className="text-muted">Please check your category configuration in the admin panel.</p>
@@ -118,7 +118,7 @@ export default function Collections() {
   return (
     <section className="flat-spacing">
       <div className="container">
-        <div className="tf-grid-layout md-col-2">
+        <div className="tf-grid-layout md-col-2 collections-responsive">
           {displayCategories.slice(0, 2).map((category, index) => {
             const imageUrl = getImageUrl(category.logoimage);
             const { line1, line2 } = getTitleLines(category.description);

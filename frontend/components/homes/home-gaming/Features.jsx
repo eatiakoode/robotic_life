@@ -11,21 +11,61 @@ export default function Features({ parentClass = "flat-spacing" }) {
         .feature-card:hover {
           transform: translateY(-12px) !important;
           box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2) !important;
-          z-index: 20 !important;
+          z-index: 999 !important;
+          position: relative !important;
         }
         .feature-card:hover .icon-box {
           transform: scale(1.1) !important;
           box-shadow: 0 6px 20px rgba(192, 199, 229, 0.4) !important;
         }
         
+         .features-responsive {
+           margin: 60px 20px !important;
+         }
+         
+         @media (max-width: 575px) {
+           .features-responsive {
+             margin: 40px 15px !important;
+           }
+         }
+         
+         @media (min-width: 576px) and (max-width: 767px) {
+           .features-responsive {
+             margin: 50px 20px !important;
+           }
+         }
+         
+         @media (min-width: 768px) {
+           .features-responsive {
+             margin: 60px 30px !important;
+           }
+         }
+         
+         /* Mobile responsive fixes */
+         @media (max-width: 575px) {
+           .features-responsive {
+             margin: 40px 10px !important;
+             overflow: visible !important;
+           }
+           .features-responsive .container {
+             padding: 0 10px !important;
+             overflow: visible !important;
+           }
+           .features-responsive .swiper {
+             overflow: visible !important;
+           }
+           .features-responsive .swiper-wrapper {
+             overflow: visible !important;
+           }
+         }
         
       `}</style>
-      <section className={`${parentClass} features-banner`} style={{
+      <section className={`${parentClass} features-banner features-responsive`} style={{
       background: '#f8f9fa',
       border: '1px solid #e9ecef',
       borderRadius: '21px',
       boxShadow: '2px 8px 15px rgba(0, 0, 0, 0.08)',
-      margin: '80px 55px',
+      margin: '60px 20px',
       position: 'relative',
       overflow: 'visible',
       zIndex: 1
@@ -35,12 +75,13 @@ export default function Features({ parentClass = "flat-spacing" }) {
           dir="ltr"
           className="swiper tf-sw-iconbox"
           spaceBetween={15}
-          breakpoints={{
-            1200: { slidesPerView: 4 },
-            768: { slidesPerView: 3 },
-            576: { slidesPerView: 2 },
-            0: { slidesPerView: 1 },
-          }}
+           breakpoints={{
+             1200: { slidesPerView: 4, spaceBetween: 30 },
+             992: { slidesPerView: 3, spaceBetween: 25 },
+             768: { slidesPerView: 2, spaceBetween: 20 },
+             576: { slidesPerView: 1, spaceBetween: 15 },
+             0: { slidesPerView: 1, spaceBetween: 15 },
+           }}
           modules={[Pagination]}
           pagination={{
             clickable: true,

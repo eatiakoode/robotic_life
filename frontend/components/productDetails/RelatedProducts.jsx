@@ -27,7 +27,7 @@ export default function RelatedProducts({ productSlug, recentlyViewedIds = [] })
       const related = await getRelatedProducts(slug);
       return Array.isArray(related) ? related : [];
     } catch (err) {
-      console.warn('Error fetching related products:', err);
+      console.warn('Error fetching related robots:', err);
       return [];
     }
   }, []);
@@ -39,7 +39,7 @@ export default function RelatedProducts({ productSlug, recentlyViewedIds = [] })
       const recentlyViewed = await getRecentlyViewed(ids);
       return Array.isArray(recentlyViewed) ? recentlyViewed : [];
     } catch (err) {
-      console.warn('Error fetching recently viewed products:', err);
+      console.warn('Error fetching recently viewed robots:', err);
       return [];
     }
   }, []);
@@ -77,8 +77,8 @@ export default function RelatedProducts({ productSlug, recentlyViewedIds = [] })
 
       } catch (err) {
         // Handle errors without fallback data
-        setError('Unable to load products. Please try refreshing the page.');
-        console.error('Error fetching products:', err);
+        setError('Unable to load robots. Please try refreshing the page.');
+        console.error('Error fetching robots:', err);
       } finally {
         setLoading(false);
       }
@@ -105,7 +105,7 @@ export default function RelatedProducts({ productSlug, recentlyViewedIds = [] })
                 aria-selected="true"
                 role="tab"
               >
-                Related Products
+                Related Robots
               </a>
             </li>
             <li className="nav-tab-item" role="presentation">
@@ -126,7 +126,7 @@ export default function RelatedProducts({ productSlug, recentlyViewedIds = [] })
                 <div className="spinner-border" role="status">
                   <span className="visually-hidden">Loading...</span>
                 </div>
-                <p className="mt-3">Loading related products...</p>
+                <p className="mt-3">Loading related robots...</p>
               </div>
             </div>
             <div className="tab-pane" id="recentlyViewed" role="tabpanel">
@@ -158,7 +158,7 @@ export default function RelatedProducts({ productSlug, recentlyViewedIds = [] })
               aria-selected="true"
               role="tab"
             >
-              Related Products
+              Related Robots
             </a>
           </li>
           <li className="nav-tab-item" role="presentation">
@@ -210,11 +210,11 @@ export default function RelatedProducts({ productSlug, recentlyViewedIds = [] })
                 <div className="text-center py-5">
                   <div className="empty-state">
                     <i className="fas fa-robot fa-3x text-muted mb-3"></i>
-                    <h5 className="text-muted">No Related Products Found</h5>
+                    <h5 className="text-muted">No Related Robots Found</h5>
                     <p className="text-muted">
                       {productSlug 
-                        ? "We couldn't find any related products for this robot. This might be the only robot in this category."
-                        : "No related products available at the moment."
+                        ? "We couldn't find any related robots for this robot. This might be the only robot in this category."
+                        : "No related robots available at the moment."
                       }
                     </p>
                   </div>
@@ -256,11 +256,11 @@ export default function RelatedProducts({ productSlug, recentlyViewedIds = [] })
                 <div className="text-center py-5">
                   <div className="empty-state">
                     <i className="fas fa-history fa-3x text-muted mb-3"></i>
-                    <h5 className="text-muted">No Recently Viewed Products</h5>
+                    <h5 className="text-muted">No Recently Viewed Robots</h5>
                     <p className="text-muted">
                       {memoizedRecentlyViewedIds.length === 0
-                        ? "Start browsing robots to see your recently viewed products here."
-                        : "Unable to load your recently viewed products. Please try refreshing the page."
+                        ? "Start browsing robots to see your recently viewed robots here."
+                        : "Unable to load your recently viewed robots. Please try refreshing the page."
                       }
                     </p>
                   </div>

@@ -20,6 +20,7 @@
     "@types/three": "^0.180.0",
     "axios": "^1.7.9",
     "bootstrap": "^5.3.2",
+    "critters": "^0.0.23",
     "drift-zoom": "^1.5.1",
     "font-awesome": "^4.7.0",
     "lucide-react": "^0.542.0",

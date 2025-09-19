@@ -44,6 +44,31 @@ export default function RobotCompare() {
       return null;
     }
 
+    // Helper function to safely extract values from objects or arrays
+    const safeExtract = (value, fallback = 'N/A') => {
+      if (!value) return fallback;
+      if (typeof value === 'string') return value.trim() || fallback;
+      if (typeof value === 'object') {
+        if (Array.isArray(value)) {
+          return value.length > 0 ? value.map(item => 
+            typeof item === 'object' ? (item.name || item.title || item) : item
+          ).join(', ') : fallback;
+        }
+        return value.name || value.title || value.value || fallback;
+      }
+      return value.toString();
+    };
+
+    // Helper function to safely extract array values
+    const safeExtractArray = (value, fallback = []) => {
+      if (!value) return fallback;
+      if (Array.isArray(value)) {
+        return value.map(item => 
+          typeof item === 'object' ? (item.name || item.title || item) : item
+        ).filter(Boolean);
+      }
+      return fallback;
+    };
 
     const transformed = {
       id: robot._id || robot.id,
@@ -55,13 +80,11 @@ export default function RobotCompare() {
       images: robot.images || (robot.imgSrc ? [robot.imgSrc] : []),
 
       // Basic info - handle both object and string formats
-      category: typeof robot.category === 'object' ? (robot.category?.name || robot.category?.title) : robot.category || 'N/A',
-      manufacturer: typeof robot.manufacturer === 'object' ? (robot.manufacturer?.name || robot.manufacturer?.title) : robot.manufacturer || 'N/A',
+      category: safeExtract(robot.category),
+      manufacturer: safeExtract(robot.manufacturer),
 
       // Specifications - handle both object and string formats
-      powerSource: typeof robot.specifications?.powerSource === 'object' ? (robot.specifications?.powerSource?.name || robot.specifications?.powerSource?.title) :
-        typeof robot.powerSource === 'object' ? (robot.powerSource?.name || robot.powerSource?.title) :
-          robot.specifications?.powerSource || robot.powerSource || 'N/A',
+      powerSource: safeExtract(robot.specifications?.powerSource || robot.powerSource),
       weight: formatSpecification(robot.specifications?.weight || robot.weight),
       speed: formatSpecification(robot.specifications?.speed || robot.speed),
       range: formatSpecification(robot.specifications?.range || robot.range),
@@ -72,31 +95,25 @@ export default function RobotCompare() {
       operatingTemperature: formatSpecification(robot.specifications?.operatingTemperature || robot.operatingTemperature),
 
       // Capabilities - handle both object and string formats
-      primaryFunction: typeof robot.capabilities?.primaryFunction === 'object' ? (robot.capabilities?.primaryFunction?.name || robot.capabilities?.primaryFunction?.title) :
-        typeof robot.primaryFunction === 'object' ? (robot.primaryFunction?.name || robot.primaryFunction?.title) :
-          robot.capabilities?.primaryFunction || robot.primaryFunction || 'N/A',
-      autonomyLevel: typeof robot.capabilities?.autonomyLevel === 'object' ? (robot.capabilities?.autonomyLevel?.name || robot.capabilities?.autonomyLevel?.title) :
-        typeof robot.autonomyLevel === 'object' ? (robot.autonomyLevel?.name || robot.autonomyLevel?.title) :
-          robot.capabilities?.autonomyLevel || robot.autonomyLevel || 'N/A',
-      navigationTypes: robot.capabilities?.navigationTypes?.map(n => n.name || n.title) || robot.navigationType?.map(n => n.name || n.title) || [],
-      communicationMethods: robot.capabilities?.communicationMethods?.map(c => c.name || c.title) || robot.communicationMethod?.map(c => c.name || c.title) || [],
+      primaryFunction: safeExtract(robot.capabilities?.primaryFunction || robot.primaryFunction),
+      autonomyLevel: safeExtract(robot.capabilities?.autonomyLevel || robot.autonomyLevel),
+      navigationTypes: safeExtractArray(robot.capabilities?.navigationTypes || robot.navigationType),
+      communicationMethods: safeExtractArray(robot.capabilities?.communicationMethods || robot.communicationMethod),
 
       // Operational Environment - handle both object and string formats
-      operatingEnvironment: typeof robot.operationalEnvironmentAndApplications?.operatingEnvironment === 'object' ? (robot.operationalEnvironmentAndApplications?.operatingEnvironment?.name || robot.operationalEnvironmentAndApplications?.operatingEnvironment?.title) :
-        typeof robot.operatingEnvironment === 'object' ? (robot.operatingEnvironment?.name || robot.operatingEnvironment?.title) :
-          robot.operationalEnvironmentAndApplications?.operatingEnvironment || robot.operatingEnvironment || 'N/A',
-      terrainCapabilities: robot.operationalEnvironmentAndApplications?.terrainCapabilities?.map(t => t.name || t.title) || robot.terrainCapability?.map(t => t.name || t.title) || [],
+      operatingEnvironment: safeExtract(robot.operationalEnvironmentAndApplications?.operatingEnvironment || robot.operatingEnvironment),
+      terrainCapabilities: safeExtractArray(robot.operationalEnvironmentAndApplications?.terrainCapabilities || robot.terrainCapability),
 
       // Sensors & Software - try multiple possible paths
-      sensors: robot.sensorsAndSoftware?.sensors?.map(s => s.name || s.title) || robot.sensors?.map(s => s.name || s.title) || [],
-      aiSoftwareFeatures: robot.sensorsAndSoftware?.aiSoftwareFeatures?.map(a => a.name || a.title) || robot.aiSoftwareFeatures?.map(a => a.name || a.title) || [],
+      sensors: safeExtractArray(robot.sensorsAndSoftware?.sensors || robot.sensors),
+      aiSoftwareFeatures: safeExtractArray(robot.sensorsAndSoftware?.aiSoftwareFeatures || robot.aiSoftwareFeatures),
 
       // Payloads & Attachments - try multiple possible paths
-      payloadTypes: robot.payloadsAndAttachments?.payloadTypes?.map(p => p.name || p.title) || robot.payloadTypesSupported?.map(p => p.name || p.title) || [],
+      payloadTypes: safeExtractArray(robot.payloadsAndAttachments?.payloadTypes || robot.payloadTypesSupported),
 
       // Materials and Colors - try multiple possible paths
-      materials: robot.specifications?.materials?.map(m => m.name || m.title) || robot.material?.map(m => m.name || m.title) || [],
-      colors: robot.specifications?.color?.map(c => c.name || c.title) || robot.colors?.map(c => c.name || c.title) || [],
+      materials: safeExtractArray(robot.specifications?.materials || robot.material),
+      colors: safeExtractArray(robot.specifications?.color || robot.colors),
     };
 
     return transformed;
@@ -111,6 +128,10 @@ export default function RobotCompare() {
     // Transform the robots data for better display
     const transformedRobots = contextCompareRobots.map(transformRobotForComparison);
 
+    // Debug logging to help identify missing data
+    console.log('Original robots data:', contextCompareRobots);
+    console.log('Transformed robots data:', transformedRobots);
+
     setRobots(transformedRobots);
     setLoading(false);
   }, [contextCompareRobots]);
@@ -121,6 +142,10 @@ export default function RobotCompare() {
     }
 
     const imagePath = images[0];
+    if (!imagePath) {
+      return "/images/product/placeholder.jpg";
+    }
+    
     if (imagePath.startsWith('public/')) {
       return `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/${imagePath.replace('public/', '')}`;
     }
@@ -133,11 +158,11 @@ export default function RobotCompare() {
   const formatArraySpec = (arr) => {
     if (!arr || !Array.isArray(arr) || arr.length === 0) return 'N/A';
     return arr.map(item => {
-      if (typeof item === 'object' && item.name) {
-        return item.name;
+      if (typeof item === 'object' && (item.name || item.title)) {
+        return item.name || item.title;
       }
       return item;
-    }).join(', ');
+    }).filter(Boolean).join(', ');
   };
 
   if (loading) {
@@ -185,8 +210,9 @@ export default function RobotCompare() {
               <p className="text-muted mb-4">
                 Add robots to your comparison list to make informed decisions!
               </p>
-              <Link className="btn btn-primary" href="/shop-default-grid">
-                Explore Robots
+              <Link className="tf-btn btn-fill btn-white" href="/shop-default-grid">
+                <span className="text">Explore Robots</span>
+                <i className="icon icon-arrowUpRight" />
               </Link>
             </div>
           </div>
@@ -251,6 +277,15 @@ export default function RobotCompare() {
                           src={getImageUrl(robot.images)}
                           width={250}
                           height={250}
+                          style={{
+                            width: '100%',
+                            height: 'auto',
+                            maxHeight: '260px',
+                            minHeight: '200px',
+                            objectFit: 'contain',
+                            objectPosition: 'center'
+                          }}
+                          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                         />
                       </Link>
                       <div className="tf-compare-content">
@@ -326,7 +361,7 @@ export default function RobotCompare() {
                 </div>
                 {robots.map((robot, i) => (
                   <div key={i} className="tf-compare-col tf-compare-field">
-                    <span>{robot.powerSource}</span>
+                    <span>{robot.powerSource || 'N/A'}</span>
                   </div>
                 ))}
               </div>
@@ -338,7 +373,7 @@ export default function RobotCompare() {
                 </div>
                 {robots.map((robot, i) => (
                   <div key={i} className="tf-compare-col tf-compare-field">
-                    <span>{robot.primaryFunction}</span>
+                    <span>{robot.primaryFunction || 'N/A'}</span>
                   </div>
                 ))}
               </div>
@@ -350,7 +385,7 @@ export default function RobotCompare() {
                 </div>
                 {robots.map((robot, i) => (
                   <div key={i} className="tf-compare-col tf-compare-field">
-                    <span>{robot.operatingEnvironment}</span>
+                    <span>{robot.operatingEnvironment || 'N/A'}</span>
                   </div>
                 ))}
               </div>
@@ -362,7 +397,7 @@ export default function RobotCompare() {
                 </div>
                 {robots.map((robot, i) => (
                   <div key={i} className="tf-compare-col tf-compare-field">
-                    <span>{robot.autonomyLevel}</span>
+                    <span>{robot.autonomyLevel || 'N/A'}</span>
                   </div>
                 ))}
               </div>

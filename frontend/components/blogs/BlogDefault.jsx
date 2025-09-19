@@ -28,23 +28,21 @@ export default function BlogDefault() {
                   </div>
                   <div className="content">
                     <div className="d-flex align-items-center justify-content-between flex-wrap gap-10">
-                      <div className="meta">
-                        <div className="meta-item gap-8">
+                      <div className="meta blog-meta-horizontal d-flex align-items-center gap-3">
+                        <div className="meta-item d-flex align-items-center gap-2">
                           <div className="icon">
                             <i className="icon-calendar" />
                           </div>
-                          <p>{post.date}</p>
+                          <span className="blog-date text-caption-1">{post.date}</span>
                         </div>
-                        <div className="meta-item gap-8">
+                        <span className="blog-separator">|</span>
+                        <div className="meta-item d-flex align-items-center gap-2">
                           <div className="icon">
                             <i className="icon-user" />
                           </div>
-                          <p>
-                            by{" "}
-                            <a className="link" href="#">
-                              {post.author}
-                            </a>
-                          </p>
+                          <span className="blog-author text-caption-1">
+                            by <a className="link" href="#">{post.author}</a>
+                          </span>
                         </div>
                       </div>
                       <div className="meta">

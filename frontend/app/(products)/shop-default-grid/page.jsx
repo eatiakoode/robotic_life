@@ -62,14 +62,14 @@ export default function ShopDefaultGridPage() {
               </h3>
               <ul className="breadcrumbs d-flex align-items-center justify-content-center">
                 <li>
-                  <Link className="link text-white" href={`/`}>
+                  <Link className="text-white hover:text-gray-300 transition duration-300" href={`/`}>
                     Homepage
                   </Link>
                 </li>
                 <li>
-                  <i className="icon-arrRight" />
+                  <i className="icon-arrRight text-white" />
                 </li>
-                <li>{loading ? "Loading..." : categoryName}</li>
+                <li className="text-white">{loading ? "Loading..." : categoryName}</li>
               </ul>
             </div>
           </div>

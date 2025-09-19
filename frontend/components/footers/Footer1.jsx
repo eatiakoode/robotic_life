@@ -103,6 +103,7 @@ export default function Footer1({
                           marginTop: "14px",
                           fontSize: "14px",
                           color: "#ccc",
+                          fontFamily: '"Kumbh Sans", sans-serif',
                         }}
                       >
                         Your destination for learning and exploring the
@@ -131,6 +132,7 @@ export default function Footer1({
                             fontSize: "16px",
                             marginBottom: "12px",
                             color: "#fff",
+                            fontFamily: '"Kumbh Sans", sans-serif',
                           }}
                         >
                           {section.heading}
@@ -158,6 +160,7 @@ export default function Footer1({
                                       fontSize: "14px",
                                       color: "#ccc",
                                       textDecoration: "none",
+                                      fontFamily: '"Kumbh Sans", sans-serif',
                                     }}
                                   >
                                     {item.label}
@@ -170,6 +173,7 @@ export default function Footer1({
                                       fontSize: "14px",
                                       color: "#ccc",
                                       textDecoration: "none",
+                                      fontFamily: '"Kumbh Sans", sans-serif',
                                     }}
                                   >
                                     {item.label}
@@ -197,6 +201,7 @@ export default function Footer1({
                         fontSize: "16px",
                         marginBottom: "12px",
                         color: "#fff",
+                        fontFamily: '"Kumbh Sans", sans-serif',
                       }}
                     >
                       Stay Connected
@@ -210,6 +215,7 @@ export default function Footer1({
                           lineHeight: "1.6",
                           color: "#ccc",
                           maxWidth: "300px",
+                          fontFamily: '"Kumbh Sans", sans-serif',
                         }}
                       >
                         Tower B4, SPAZE ITECH PARK, UN 616, Badshahpur Sohna Rd
@@ -225,6 +231,7 @@ export default function Footer1({
                           alignItems: "center",
                           fontSize: "13px",
                           marginTop: "4px",
+                          fontFamily: '"Kumbh Sans", sans-serif',
                         }}
                       >
                         GET DIRECTION <i className="icon-arrowUpRight" />
@@ -246,6 +253,7 @@ export default function Footer1({
                           marginBottom: "6px",
                           fontSize: "14px",
                           color: "#ccc",
+                          fontFamily: '"Kumbh Sans", sans-serif',
                         }}
                       >
                         <i
@@ -256,7 +264,7 @@ export default function Footer1({
                             color: "#aaa",
                           }}
                         />
-                        <p style={{ margin: 0 }}>hello@thebotsworld.com</p>
+                        <p style={{ margin: 0, fontFamily: '"Kumbh Sans", sans-serif' }}>hello@thebotsworld.com</p>
                       </li>
                       <li
                         style={{
@@ -265,6 +273,7 @@ export default function Footer1({
                           marginBottom: "8px",
                           fontSize: "14px",
                           color: "#ccc",
+                          fontFamily: '"Kumbh Sans", sans-serif',
                         }}
                       >
                         <i
@@ -275,7 +284,7 @@ export default function Footer1({
                             color: "#aaa",
                           }}
                         />
-                        <p style={{ margin: 0 }}>098993 00017</p>
+                        <p style={{ margin: 0, fontFamily: '"Kumbh Sans", sans-serif' }}>098993 00017</p>
                       </li>
                     </ul>
 
@@ -326,7 +335,6 @@ export default function Footer1({
           {/* -------- Bottom -------- */}
           <div
             className="footer-bottom"
-            style={{ borderTop: "1px solid #333" }}
           >
             <div className="container">
               <div className="row">
@@ -338,9 +346,10 @@ export default function Footer1({
                       justifyContent: "space-between",
                       alignItems: "center",
                       flexWrap: "wrap",
-                      padding: "16px 0",
+                      padding: "8px 0",
                       color: "#aaa",
                       fontSize: "13px",
+                      fontFamily: '"Kumbh Sans", sans-serif',
                     }}
                   >
                     <div className="col-12">
@@ -350,18 +359,19 @@ export default function Footer1({
                           textAlign: "center",
                           color: "#ccc",
                           fontSize: "14px",
+                          fontFamily: '"Kumbh Sans", sans-serif',
                         }}
                       >
-                        <span>
+                        <span style={{ fontFamily: '"Kumbh Sans", sans-serif' }}>
                           © 2025 RoboticLife. All rights reserved | Made With{" "}
                           <a
                             target="_blank"
                             href="https://www.akoode.com/"
-                            style={{ color: "red", textDecoration: "none" }}
+                            style={{ color: "red"}}
                           >
                             <i
                               className="fa fa-heart"
-                              style={{ color: "red" }}
+                              style={{ color: "gray" }}
                             ></i>
                           </a>
                         </span>

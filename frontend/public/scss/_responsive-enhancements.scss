@@ -19,68 +19,24 @@
     }
   }
   
-  // Logo responsive sizing and visibility - Override ALL conflicting styles
-  .header-default .logo-header,
-  .logo-header,
-  .logo-fix {
-    display: block !important;
-    text-decoration: none !important;
-    width: auto !important;
-    height: auto !important;
-    justify-content: flex-start !important;
-    align-items: center !important;
-    
-    img,
-    .logo,
-    .logo-image-fix {
-      display: block !important;
-      width: 200px !important;
+  // Minimal logo responsive adjustments - preserve original design
+  .header-default .logo-header img,
+  .logo-header img,
+  .logo-fix img {
+    @media (max-width: 575px) {
+      max-width: 120px !important;
       height: auto !important;
-      max-width: 200px !important;
-      max-height: none !important;
-      visibility: visible !important;
-      opacity: 1 !important;
-      margin: 0 !important;
-      padding: 0 !important;
-      aspect-ratio: auto !important;
-      
-      @media (max-width: 575px) {
-        width: 100px !important;
-        max-width: 100px !important;
-        height: auto !important;
-      }
-      
-      @media (min-width: 576px) and (max-width: 767px) {
-        width: 120px !important;
-        max-width: 120px !important;
-        height: auto !important;
-      }
-      
-      @media (min-width: 768px) and (max-width: 991px) {
-        width: 140px !important;
-        max-width: 140px !important;
-        height: auto !important;
-      }
-      
-      @media (min-width: 992px) {
-        width: 200px !important;
-        max-width: 200px !important;
-        height: auto !important;
-      }
     }
     
-    &:hover {
-      text-decoration: none !important;
+    @media (min-width: 576px) and (max-width: 767px) {
+      max-width: 130px !important;
+      height: auto !important;
     }
-  }
-
-  // Additional specific overrides for logo visibility
-  .logo-image-fix {
-    display: block !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-    width: 200px !important;
-    height: auto !important;
+    
+    @media (min-width: 768px) and (max-width: 991px) {
+      max-width: 140px !important;
+      height: auto !important;
+    }
   }
   
   // Navigation icon improvements

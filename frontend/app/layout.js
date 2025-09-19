@@ -1,6 +1,7 @@
 "use client";
 import { usePathname } from "next/navigation";
 import "../public/scss/main.scss";
+import "../public/css/responsive-fixes.css";
 import "photoswipe/style.css";
 import "react-range-slider-input/dist/style.css";
 import "../public/css/image-compare-viewer.min.css";
@@ -130,14 +131,15 @@ export default function RootLayout({ children }) {
       }
     }
   }, [scrollDirection]);
-  useEffect(() => {
-    const WOW = require("@/utlis/wow");
-    const wow = new WOW.default({
-      mobile: false,
-      live: false,
-    });
-    wow.init();
-  }, [pathname]);
+  // WOW animations removed for stability
+  // useEffect(() => {
+  //   const WOW = require("@/utils/wow");
+  //   const wow = new WOW.default({
+  //     mobile: false,
+  //     live: false,
+  //   });
+  //   wow.init();
+  // }, [pathname]);
   return (
     <html lang="en">
       <head>

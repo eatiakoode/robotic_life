@@ -21,31 +21,31 @@ export default function Descriptions1({ product }) {
                   className={`item-title ${activeTab == 1 ? "active" : ""} `}
                   onClick={() => setActiveTab(1)}
                 >
-                  <span className="inner">Specification</span>
+                  <span className="inner">Core Framework</span>
                 </li>
                 <li
                   className={`item-title ${activeTab == 2 ? "active" : ""} `}
                   onClick={() => setActiveTab(2)}
                 >
-                  <span className="inner">Capabilities</span>
+                  <span className="inner">Performance Spectrum</span>
                 </li>
                 <li
                   className={`item-title ${activeTab == 5 ? "active" : ""} `}
                   onClick={() => setActiveTab(5)}
                 >
-                  <span className="inner">Payloads & Attachments</span>
+                  <span className="inner">Interfaces</span>
                 </li>
                 <li
                   className={`item-title ${activeTab == 6 ? "active" : ""} `}
                   onClick={() => setActiveTab(6)}
                 >
-                  <span className="inner">Sensors & Softwares</span>
+                  <span className="inner">Perceptive Systems</span>
                 </li>
                 <li
                   className={`item-title ${activeTab == 7 ? "active" : ""} `}
                   onClick={() => setActiveTab(7)}
                 >
-                  <span className="inner">Operational Environment</span>
+                  <span className="inner">Active Domain</span>
                 </li>
                 <li
                   className={`item-title ${activeTab == 3 ? "active" : ""} `}
@@ -57,7 +57,7 @@ export default function Descriptions1({ product }) {
                   className={`item-title ${activeTab == 4 ? "active" : ""} `}
                   onClick={() => setActiveTab(4)}
                 >
-                  <span className="inner">FAQs</span>
+                  <span className="inner">Clarity Hub</span>
                 </li>
               </ul>
               <div className="widget-content-tab">

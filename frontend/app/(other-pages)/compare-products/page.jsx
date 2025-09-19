@@ -18,22 +18,14 @@ export default function CompareProductsPage() {
           <h3 className="heading text-center text-white">Compare Robots</h3>
           <ul className="breadcrumbs d-flex align-items-center justify-content-center">
             <li>
-              <Link className="text-white bg-gradient-to-r from-gray-200 to-gray-400 bg-clip-text text-transparent hover:from-gray-300 hover:to-gray-500 transition duration-300" href={`/`}>
+              <Link className="text-white hover:text-gray-300 transition duration-300" href={`/`}>
                 Homepage
               </Link>
             </li>
             <li>
-              <i className="icon-arrRight" />
+              <i className="icon-arrRight text-white" />
             </li>
-            {/* <li>
-              <Link className="link" href={`/shop-filter-canvas`}>
-                Shop
-              </Link>
-            </li> */}
-            {/* <li>
-              <i className="icon-arrRight" />
-            </li> */}
-            <li>Compare</li>
+            <li className="text-white">Compare</li>
           </ul>
         </div>
       </div>

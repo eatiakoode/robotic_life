@@ -215,30 +215,32 @@ export default function Products() {
         <div className="heading-section-4 wow fadeInUp">
           <div className="heading-left">
             <h3 className="heading font-5 fw-bold">Popular Categories</h3>
-            <ul
-              className="tab-product style-2 justify-content-sm-center mb-0"
-              role="tablist"
-            >
-              {categories.map((category, index) => (
-                <React.Fragment key={category._id}>
-                  <li className="nav-tab-item">
-                    <a
-                      href="#"
-                      className={activeCategory && activeCategory._id === category._id ? "active" : ""}
-                      onClick={(e) => {
-                        e.preventDefault();
-                        handleCategoryClick(category);
-                      }}
-                    >
-                      {category.name}
-                    </a>
-                  </li>
-                  {index < categories.length - 1 && (
-                    <li className="text-line d-none d-sm-block">/</li>
-                  )}
-                </React.Fragment>
-              ))}
-            </ul>
+            <div className="categories-scroll-container">
+              <ul
+                className="tab-product style-2 justify-content-sm-center mb-0 categories-list"
+                role="tablist"
+              >
+                {categories.map((category, index) => (
+                  <React.Fragment key={category._id}>
+                    <li className="nav-tab-item">
+                      <a
+                        href="#"
+                        className={activeCategory && activeCategory._id === category._id ? "active" : ""}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          handleCategoryClick(category);
+                        }}
+                      >
+                        {category.name}
+                      </a>
+                    </li>
+                    {index < categories.length - 1 && (
+                      <li className="text-line d-none d-sm-block">/</li>
+                    )}
+                  </React.Fragment>
+                ))}
+              </ul>
+            </div>
           </div>
           <Link href="/shop-default-grid" className="btn-line">
             View All Robots

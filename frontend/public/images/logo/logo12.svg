@@ -1,0 +1,11 @@
+<svg version="1.2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 144 25" width="144" height="25">
+	<title>New Project</title>
+	<style>
+		tspan { white-space:pre } 
+		.t0 { font-size: 48px;fill: #000000;font-weight: 700;font-family: "DejaVuSans-Bold", "DejaVu Sans" } 
+	</style>
+	<text id="theBotsworld" style="transform: matrix(.402,0,0,.402,.353,18.719)" >
+		<tspan x="0" y="0" class="t0">t</tspan><tspan  y="0" class="t0">h</tspan><tspan  y="0" class="t0">e</tspan><tspan  y="0" class="t0">B</tspan><tspan  y="0" class="t0">o</tspan><tspan  y="0" class="t0">t</tspan><tspan  y="0" class="t0">s</tspan><tspan  y="0" class="t0">w</tspan><tspan  y="0" class="t0">o</tspan><tspan  y="0" class="t0">r</tspan><tspan  y="0" class="t0">l</tspan><tspan  y="0" class="t0">d</tspan><tspan  y="0" class="t0">
+</tspan>
+	</text>
+</svg>

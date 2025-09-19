@@ -161,3 +161,45 @@ export const initializeBootstrap = () => {
     console.warn('Bootstrap not found. Modal functionality may be limited.');
   }
 };
+
+/**
+ * Open cart modal
+ */
+export const openCartModal = () => {
+  try {
+    const cartModal = document.getElementById('cartModal');
+    if (cartModal) {
+      if (window.bootstrap && window.bootstrap.Modal) {
+        const modal = new window.bootstrap.Modal(cartModal);
+        modal.show();
+      } else {
+        cartModal.classList.add('show');
+        cartModal.style.display = 'block';
+        document.body.classList.add('modal-open');
+      }
+    }
+  } catch (error) {
+    console.error('Error opening cart modal:', error);
+  }
+};
+
+/**
+ * Open wishlist modal
+ */
+export const openWistlistModal = () => {
+  try {
+    const wishlistModal = document.getElementById('wishlistModal');
+    if (wishlistModal) {
+      if (window.bootstrap && window.bootstrap.Modal) {
+        const modal = new window.bootstrap.Modal(wishlistModal);
+        modal.show();
+      } else {
+        wishlistModal.classList.add('show');
+        wishlistModal.style.display = 'block';
+        document.body.classList.add('modal-open');
+      }
+    }
+  } catch (error) {
+    console.error('Error opening wishlist modal:', error);
+  }
+};

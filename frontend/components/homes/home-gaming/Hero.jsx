@@ -94,20 +94,20 @@ export default function Hero() {
                 height={756}
                 priority
               />
-              <div className="box-content type-2 type-3 hero-content-responsive">
+              <div className="box-content type-2 type-3">
                 <div className="content-slider">
                   <div className="box-title-slider">
-                    <span className="fade-item fade-item-1 fw-bold text-white title-display font-5 hero-title-responsive">
-                      {slide.title || "Title"}
+                    <span className="fade-item fade-item-1 fw-bold text-white title-display font-5">
+                      {slide.title || "Future of Surgery"}
                     </span>
-                    <p className="fade-item fade-item-2 body-text-1 text-white hero-description-responsive">
-                      {slide.description || "Description"}
+                    <p className="fade-item fade-item-2 body-text-1 text-white">
+                      {slide.description || "Surgical & rehabilitation robots designed for accuracy, safety, and faster recovery."}
                     </p>
                   </div>
                   <div className="fade-item fade-item-3 box-btn-slider">
                     <Link
                       href={slide.buttonLink || "/shop-default-grid"}
-                      className="tf-btn btn-fill btn-white hero-button-responsive"
+                      className="tf-btn btn-fill btn-white"
                     >
                       <span className="text">{slide.buttonText || "Explore Robots"}</span>
                       <i className="icon icon-arrowUpRight" />
