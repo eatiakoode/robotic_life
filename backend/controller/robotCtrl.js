@@ -55,10 +55,18 @@ const createRobot = asyncHandler(async (req, res) => {
   }
 });
 
-// Get all robots
+// Get all robots with pagination and search
 const getRobots = async (req, res) => {
   try {
-    const { category, manufacturer, country, year, search } = req.query;
+    const { 
+      category, 
+      manufacturer, 
+      country, 
+      year, 
+      search, 
+      limit = 10, 
+      skip = 0 
+    } = req.query;
 
     const filter = {};
     if (category) filter.category = category;
@@ -69,13 +77,31 @@ const getRobots = async (req, res) => {
       filter.title = { $regex: search, $options: "i" };
     }
 
+    // Convert limit and skip to numbers
+    const limitNum = parseInt(limit);
+    const skipNum = parseInt(skip);
+
+    // Get total count for pagination
+    const totalCount = await Robot.countDocuments(filter);
+
+    // Get robots with pagination
     const robots = await Robot.find(filter)
       .populate("category", "name parent")
       .populate("manufacturer", "name")
       .populate("countryOfOrigin", "name")
-      .sort({ createdAt: -1 });
+      .sort({ createdAt: -1 })
+      .skip(skipNum)
+      .limit(limitNum);
 
-    res.json(robots);
+    // Return paginated response
+    res.json({
+      items: robots,
+      totalCount: totalCount,
+      currentPage: Math.floor(skipNum / limitNum) + 1,
+      totalPages: Math.ceil(totalCount / limitNum),
+      hasNextPage: skipNum + limitNum < totalCount,
+      hasPrevPage: skipNum > 0
+    });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

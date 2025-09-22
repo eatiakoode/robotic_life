@@ -44,15 +44,16 @@ export const addRobotAPI = async (formData: FormData) => {
   }
 };
 
-//  Get robot table data with pagination
+//  Get robot table data with pagination and search
 export async function getRobotTableData(
-  filter?: { limit?: number; page?: number },
+  filter?: { limit?: number; page?: number; search?: string },
   passedToken?: string
 ) {
   // Provide default values if no filter is passed
   const defaultFilter = {
     limit: 10,
     page: 1,
+    search: "",
     ...filter
   };
 
@@ -76,7 +77,18 @@ export async function getRobotTableData(
     const skip = Math.max(0, (defaultFilter.page - 1) * defaultFilter.limit);
     const limit = Math.max(1, defaultFilter.limit);
 
-    const url = `${process.env.NEXT_PUBLIC_ADMIN_API_URL}admin/api/robot?limit=${limit}&skip=${skip}`;
+    // Build query parameters
+    const queryParams = new URLSearchParams({
+      limit: limit.toString(),
+      skip: skip.toString(),
+    });
+
+    // Add search parameter if provided
+    if (defaultFilter.search && defaultFilter.search.trim()) {
+      queryParams.append('search', defaultFilter.search.trim());
+    }
+
+    const url = `${process.env.NEXT_PUBLIC_ADMIN_API_URL}admin/api/robot?${queryParams.toString()}`;
 
     const response = await fetch(url, {
       method: "GET",

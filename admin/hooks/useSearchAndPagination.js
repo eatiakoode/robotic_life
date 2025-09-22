@@ -84,26 +84,49 @@ export const useSearchAndPagination = (fetchFunction, itemsPerPage = 10, searchF
     }
   }, [fetchFunction, itemsPerPage, currentPage]);
 
-  // Search functionality
-  const handleSearch = useCallback((query) => {
+  // Search functionality - now uses server-side search
+  const handleSearch = useCallback(async (query) => {
     setSearchQuery(query);
     setCurrentPage(1); // Reset to first page when searching
     
-    if (!query.trim()) {
-      setFilteredData(allData);
-      return;
-    }
-    
-    const filtered = allData.filter(item => {
-      return searchFields.some(field => {
-        const value = item[field];
-        if (value === null || value === undefined) return false;
-        return value.toString().toLowerCase().includes(query.toLowerCase());
+    try {
+      setLoading(true);
+      setError(null);
+      
+      // Call the API with search parameter
+      const data = await fetchFunction({
+        limit: itemsPerPage,
+        page: 1,
+        search: query.trim()
       });
-    });
-    
-    setFilteredData(filtered);
-  }, [allData, searchFields]);
+      
+      // Handle different response formats
+      let dataArray = [];
+      if (Array.isArray(data)) {
+        dataArray = data;
+      } else if (data && Array.isArray(data.items)) {
+        dataArray = data.items;
+      } else if (data && typeof data === 'object') {
+        const arrayProps = Object.values(data).filter(val => Array.isArray(val));
+        if (arrayProps.length > 0) {
+          dataArray = arrayProps[0];
+        }
+      }
+      
+      setFilteredData(dataArray);
+      
+      // Update allData for reference (keep original data for comparison)
+      if (!query.trim()) {
+        setAllData(dataArray);
+      }
+      
+    } catch (err) {
+      setError(err.message || "Failed to search data");
+      setFilteredData([]);
+    } finally {
+      setLoading(false);
+    }
+  }, [fetchFunction, itemsPerPage]);
 
   // Pagination calculations
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
@@ -112,13 +135,49 @@ export const useSearchAndPagination = (fetchFunction, itemsPerPage = 10, searchF
   const currentData = filteredData.slice(startIndex, endIndex);
 
   // Handle page change
-  const handlePageChange = useCallback((page) => {
+  const handlePageChange = useCallback(async (page) => {
     setCurrentPage(page);
-    // Refetch data when page changes (for server-side pagination)
-    if (page !== currentPage) {
-      fetchData();
+    
+    // If we have a search query, refetch with search + pagination
+    if (searchQuery.trim()) {
+      try {
+        setLoading(true);
+        setError(null);
+        
+        const data = await fetchFunction({
+          limit: itemsPerPage,
+          page: page,
+          search: searchQuery.trim()
+        });
+        
+        // Handle different response formats
+        let dataArray = [];
+        if (Array.isArray(data)) {
+          dataArray = data;
+        } else if (data && Array.isArray(data.items)) {
+          dataArray = data.items;
+        } else if (data && typeof data === 'object') {
+          const arrayProps = Object.values(data).filter(val => Array.isArray(val));
+          if (arrayProps.length > 0) {
+            dataArray = arrayProps[0];
+          }
+        }
+        
+        setFilteredData(dataArray);
+        
+      } catch (err) {
+        setError(err.message || "Failed to fetch page data");
+        setFilteredData([]);
+      } finally {
+        setLoading(false);
+      }
+    } else {
+      // No search query, use regular pagination
+      if (page !== currentPage) {
+        fetchData();
+      }
     }
-  }, [currentPage, fetchData]);
+  }, [currentPage, fetchData, searchQuery, fetchFunction, itemsPerPage]);
 
   // Refresh data
   const refreshData = useCallback(() => {
@@ -126,11 +185,43 @@ export const useSearchAndPagination = (fetchFunction, itemsPerPage = 10, searchF
   }, [fetchData]);
 
   // Clear search
-  const clearSearch = useCallback(() => {
+  const clearSearch = useCallback(async () => {
     setSearchQuery("");
-    setFilteredData(allData);
     setCurrentPage(1);
-  }, [allData]);
+    
+    // Refetch all data without search
+    try {
+      setLoading(true);
+      setError(null);
+      
+      const data = await fetchFunction({
+        limit: itemsPerPage,
+        page: 1
+      });
+      
+      // Handle different response formats
+      let dataArray = [];
+      if (Array.isArray(data)) {
+        dataArray = data;
+      } else if (data && Array.isArray(data.items)) {
+        dataArray = data.items;
+      } else if (data && typeof data === 'object') {
+        const arrayProps = Object.values(data).filter(val => Array.isArray(val));
+        if (arrayProps.length > 0) {
+          dataArray = arrayProps[0];
+        }
+      }
+      
+      setAllData(dataArray);
+      setFilteredData(dataArray);
+      
+    } catch (err) {
+      setError(err.message || "Failed to clear search");
+      setFilteredData([]);
+    } finally {
+      setLoading(false);
+    }
+  }, [fetchFunction, itemsPerPage]);
 
   // Memoized values
   const searchInfo = useMemo(() => ({
