@@ -173,7 +173,7 @@ export default function Products2() {
           >
             {transformedRobots.map((robot, i) => (
               <SwiperSlide className="swiper-slide" key={i}>
-                <ProductCard1 isNotImageRatio product={robot} />
+                <ProductCard1 isNotImageRatio product={robot} priority={i < 3} />
               </SwiperSlide>
             ))}
 

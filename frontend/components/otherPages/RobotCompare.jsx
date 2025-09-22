@@ -128,9 +128,7 @@ export default function RobotCompare() {
     // Transform the robots data for better display
     const transformedRobots = contextCompareRobots.map(transformRobotForComparison);
 
-    // Debug logging to help identify missing data
-    console.log('Original robots data:', contextCompareRobots);
-    console.log('Transformed robots data:', transformedRobots);
+    // Transform robots data for comparison
 
     setRobots(transformedRobots);
     setLoading(false);
@@ -220,30 +218,33 @@ export default function RobotCompare() {
           <>
             <div className="d-flex justify-content-between align-items-center mb-4">
               <h3>Compare Robots ({robots.length}/3)</h3>
-              <div className="d-flex gap-2">
-                <button
-                  className="btn btn-outline-warning btn-sm"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    clearAllCompareRobots();
-                  }}
-                >
-                  Clear All
-                </button>
-                <button
-                  className="btn btn-outline-danger btn-sm"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    clearAllCompareRobots();
-                    // Reset cursor to default
-                    document.body.style.cursor = 'default';
-                  }}
-                >
-                  Clear All
-                </button>
-              </div>
+              <button
+                className="btn btn-sm"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  clearAllCompareRobots();
+                }}
+                style={{
+                  backgroundColor: '#000',
+                  color: '#fff',
+                  border: '1px solid #000',
+                  padding: '8px 16px',
+                  borderRadius: '4px',
+                  transition: 'all 0.3s ease',
+                  cursor: 'pointer'
+                }}
+                onMouseEnter={(e) => {
+                  e.target.style.backgroundColor = '#fff';
+                  e.target.style.color = '#000';
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.backgroundColor = '#000';
+                  e.target.style.color = '#fff';
+                }}
+              >
+                Clear All
+              </button>
             </div>
 
             <div className={`tf-compare-table ${robots.length === 1 ? 'one-product' : robots.length === 2 ? 'two-products' : 'three-products'}`}>

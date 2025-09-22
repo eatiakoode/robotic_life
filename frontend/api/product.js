@@ -232,10 +232,11 @@ export const getRobotBySlug = async (slug) => {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-          'Cache-Control': 'no-cache',
-          'Pragma': 'no-cache'
         },
-        signal: controller.signal
+        signal: controller.signal,
+        // Enable caching for better performance
+        cache: 'force-cache',
+        next: { revalidate: 300 } // Revalidate every 5 minutes
       });
 
       clearTimeout(timeoutId);

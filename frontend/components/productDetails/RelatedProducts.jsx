@@ -27,7 +27,7 @@ export default function RelatedProducts({ productSlug, recentlyViewedIds = [] })
       const related = await getRelatedProducts(slug);
       return Array.isArray(related) ? related : [];
     } catch (err) {
-      console.warn('Error fetching related robots:', err);
+      // Error fetching related robots
       return [];
     }
   }, []);
@@ -39,7 +39,7 @@ export default function RelatedProducts({ productSlug, recentlyViewedIds = [] })
       const recentlyViewed = await getRecentlyViewed(ids);
       return Array.isArray(recentlyViewed) ? recentlyViewed : [];
     } catch (err) {
-      console.warn('Error fetching recently viewed robots:', err);
+      // Error fetching recently viewed robots
       return [];
     }
   }, []);

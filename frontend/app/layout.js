@@ -2,9 +2,6 @@
 import { usePathname } from "next/navigation";
 import "../public/scss/main.scss";
 import "../public/css/responsive-fixes.css";
-import "photoswipe/style.css";
-import "react-range-slider-input/dist/style.css";
-import "../public/css/image-compare-viewer.min.css";
 import "@fortawesome/fontawesome-svg-core/styles.css";
 import { useEffect, useState, useRef } from "react";
 import { library } from '@fortawesome/fontawesome-svg-core';
@@ -15,6 +12,7 @@ library.add(faRobot, faBookOpen, faFlask, faUsers);
 import Context from "@/context/Context";
 import Compare from "@/components/modals/Compare";
 import MobileMenu from "@/components/modals/MobileMenu";
+import PageTransitionLoader from "@/components/common/PageTransitionLoader";
 
 import SearchModal from "@/components/modals/SearchModal";
 import Categories from "@/components/modals/Categories";
@@ -29,27 +27,11 @@ export default function RootLayout({ children }) {
   
   useEffect(() => {
     if (typeof window !== "undefined") {
-      // Import the script only on the client side
-      import("bootstrap/dist/js/bootstrap.esm").then(() => {
-        // Module is imported, you can access any exported functionality if
+      // Import Bootstrap only on client side
+      import("bootstrap/dist/js/bootstrap.esm").catch(() => {
+        // Bootstrap not available
       });
     }
-  }, []);
-  useEffect(() => {
-    const handleScroll = () => {
-      const header = document.querySelector("header");
-      if (window.scrollY > 100) {
-        header.classList.add("header-bg");
-      } else {
-        header.classList.remove("header-bg");
-      }
-    };
-
-    window.addEventListener("scroll", handleScroll);
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
   }, []); 
 
   useEffect(() => {
@@ -60,17 +42,17 @@ export default function RootLayout({ children }) {
       if (!ticking) {
         requestAnimationFrame(() => {
           const currentScrollY = window.scrollY;
+          const header = document.querySelector("header");
 
           if (currentScrollY > 100) {
+            header?.classList.add("header-bg");
             if (currentScrollY > lastScrollY.current) {
-              // Scrolling down
               setScrollDirection("down");
             } else {
-              // Scrolling up
               setScrollDirection("up");
             }
           } else {
-            // At the top of the page - always show navbar
+            header?.classList.remove("header-bg");
             setScrollDirection("up");
           }
 
@@ -80,8 +62,6 @@ export default function RootLayout({ children }) {
         ticking = true;
       }
     };
-
-    const lastScrollY = { current: window.scrollY };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
     
@@ -109,7 +89,7 @@ export default function RootLayout({ children }) {
         }
       });
     }).catch((error) => {
-      console.warn("Bootstrap not available:", error);
+      // Bootstrap not available
     });
   }, [pathname]);
 
@@ -177,6 +157,7 @@ export default function RootLayout({ children }) {
       </head>
       <body className="preload-wrapper popup-loader">
         <Context>
+          <PageTransitionLoader />
           <div id="wrapper">{children}</div>
           <Compare />
           <MobileMenu />

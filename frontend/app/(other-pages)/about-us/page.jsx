@@ -11,8 +11,8 @@ import Testimonials from "@/components/homes/home-gaming/Testimonials";
 import React from "react";
 
 export const metadata = {
-  title: "About Us || TheBotsWorld ",
-  description: "TheBotsWorld - Your Trusted Platform in Robotics Education",
+        title: 'About Us | TheBotsWorld - Learn, Explore & Innovate with Robots',
+        description: 'Learn more about TheBotsWorld, our mission, and our commitment to advancing robotics education and innovation.',
 };
 
 export default function AboutUsPage() {

@@ -395,7 +395,7 @@ export default function SearchModal() {
         setAllProducts(products);
         setCategories(categoriesData);
       } catch (error) {
-        console.error('Error loading data:', error);
+        // Error loading data
       } finally {
         setLoading(false);
         setCategoriesLoading(false);

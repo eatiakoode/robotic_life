@@ -1665,7 +1665,7 @@ section:not(.features-banner) {
 
 /* Ensure proper spacing from the horizontal line above */
 .footer-bottom::before {
-  content: '';
+  /* content: ''; */
   display: block;
   height: 1px;
   background-color: #333;

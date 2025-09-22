@@ -34,7 +34,7 @@ const useCategories = () => {
               break;
             }
           } catch (err) {
-            console.log('Failed to fetch from', backendUrl, ':', err.message);
+            // Failed to fetch from backend
             lastError = err;
             continue;
           }

@@ -54,7 +54,7 @@ export default function Products() {
         if (robotsData.length > 0) {
           // Limit to 4 robots per category for Popular Categories display
           const limitedRobotsData = robotsData.slice(0, 4);
-          console.log(`📊 Category ${categorySlug}: Found ${robotsData.length} robots, limiting to ${limitedRobotsData.length} for Popular Categories`);
+          // Limit robots for Popular Categories display
           const transformedRobots = limitedRobotsData.map(robot => {
             const imgSrc = robot.images && robot.images.length > 0 ? 
               (robot.images[0].startsWith('public/') ? 
@@ -293,7 +293,7 @@ export default function Products() {
                 ) : (
                   robots.map((product, i) => (
                     <SwiperSlide className="swiper-slide" key={product._id || i}>
-                      <ProductCard1 product={product} isNotImageRatio />
+                      <ProductCard1 product={product} isNotImageRatio priority={i < 4} />
                     </SwiperSlide>
                   ))
                 )}

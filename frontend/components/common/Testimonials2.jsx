@@ -1,38 +1,15 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { testimonialAPI } from "@/api/testimonial";
+import React from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import Image from "next/image";
 import { useContextElement } from "@/context/Context";
 import { Pagination } from "swiper/modules";
+import { useTestimonials } from "@/hooks/useTestimonials";
 
 export default function Testimonials2() {
   const { setQuickViewItem } = useContextElement();
-  const [testimonials, setTestimonials] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    const fetchTestimonials = async () => {
-      try {
-        setLoading(true);
-        const response = await testimonialAPI.getTestimonials();
-        if (response.success) {
-          setTestimonials(response.data);
-        } else {
-          setError("Failed to fetch testimonials");
-        }
-      } catch (err) {
-        console.error("Error fetching testimonials:", err);
-        setError("Failed to fetch testimonials");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchTestimonials();
-  }, []);
+  const { testimonials, loading, error } = useTestimonials();
   // Loading state
   if (loading) {
     return (

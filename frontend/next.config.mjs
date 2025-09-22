@@ -53,6 +53,32 @@ const nextConfig = {
   // Optimize CSS loading
   experimental: {
     optimizeCss: true,
+    optimizePackageImports: ['@fortawesome/react-fontawesome', 'swiper', 'lucide-react'],
+  },
+  // Enable static optimization
+  trailingSlash: false,
+  // Optimize bundle
+  webpack: (config, { dev, isServer }) => {
+    if (!dev && !isServer) {
+      // Optimize bundle size
+      config.optimization.splitChunks = {
+        chunks: 'all',
+        cacheGroups: {
+          vendor: {
+            test: /[\\/]node_modules[\\/]/,
+            name: 'vendors',
+            chunks: 'all',
+          },
+          common: {
+            name: 'common',
+            minChunks: 2,
+            chunks: 'all',
+            enforce: true,
+          },
+        },
+      };
+    }
+    return config;
   },
   // Suppress preload warnings
   onDemandEntries: {

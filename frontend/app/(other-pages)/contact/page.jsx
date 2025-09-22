@@ -5,8 +5,8 @@ import Contact1 from "@/components/otherPages/Contact1";
 import React from "react";
 
 export const metadata = {
-  title: "Enquiry || TheBotsWorld ",
-  description: "TheBotsWorld - Your Trusted Platform in Robotics Education",
+  title: 'Enquiry | TheBotsWorld - Learn, Explore & Innovate with Robots',
+  description: 'Get in touch with TheBotsWorld for inquiries, support, and collaboration opportunities in the field of robotics.',
 };
 
 export default function ContactPage() {

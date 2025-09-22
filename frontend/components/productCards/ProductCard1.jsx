@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import ProductLink from "../common/ProductLink";
 import CountdownTimer from "../common/Countdown";
 
 export default function ProductCard1({
@@ -10,6 +11,7 @@ export default function ProductCard1({
   parentClass = "card-product",
   isNotImageRatio = false,
   radiusClass = "",
+  priority = false,
 }) {
   // Helper function to get a valid image source
   const getValidImageSrc = (imgSrc) => {
@@ -55,7 +57,10 @@ export default function ProductCard1({
           isNotImageRatio ? "aspect-ratio-0" : ""
         } ${radiusClass} `}
       >
-        <Link href={`/product-detail/${product.slug && product.slug.trim() ? product.slug : product.id}`} className="product-img">
+        <ProductLink 
+          href={`/product-detail/${product.slug && product.slug.trim() ? product.slug : product.id}`} 
+          className="product-img"
+        >
           <Image
             className="lazyload img-product"
             src={getValidImageSrc(currentImage)}
@@ -63,7 +68,8 @@ export default function ProductCard1({
             width={600}
             height={800}
             sizes="(max-width: 576px) 150px, (max-width: 768px) 200px, (max-width: 992px) 250px, 300px"
-            loading="lazy"
+            priority={priority}
+            loading={priority ? "eager" : "lazy"}
           />
           <Image
             className="lazyload img-hover"
@@ -74,7 +80,7 @@ export default function ProductCard1({
             sizes="(max-width: 576px) 150px, (max-width: 768px) 200px, (max-width: 992px) 250px, 300px"
             loading="lazy"
           />
-        </Link>
+        </ProductLink>
         {product.hotSale && (
           <div className="marquee-product bg-main">
             <div className="marquee-wrapper">

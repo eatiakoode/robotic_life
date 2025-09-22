@@ -13,8 +13,8 @@ import Testimonials from "@/components/homes/home-gaming/Testimonials";
 import React from "react";
 
 export const metadata = {
-  title: "TheBotsWorld -  ",
-  description: "Modave - Multipurpose React Nextjs eCommerce Template",
+  title: "TheBotsWorld - Learn, Explore & Innovate with Robots",
+  description: "TheBotsWorld is an educational platform dedicated to robotics. Discover the latest innovations in robotics to learn, explore, and create the future of automation.",
 };
 export default function page() {
   return (

@@ -66,7 +66,7 @@ export const getParentCategories = async () => {
 export const getSubCategories = async (parentId) => {
   // Validate parentId
   if (!parentId) {
-    console.warn('⚠️ No parentId provided to getSubCategories');
+    // No parentId provided
     return [];
   }
 
@@ -200,7 +200,7 @@ export const getAllCategories = async () => {
 export const getRobotsByCategorySlug = async (categorySlug, categoryType = null) => {
   // Validate categorySlug
   if (!categorySlug) {
-    console.warn('⚠️ No categorySlug provided to getRobotsByCategorySlug');
+    // No categorySlug provided
     return [];
   }
 
@@ -220,11 +220,11 @@ export const getRobotsByCategorySlug = async (categorySlug, categoryType = null)
         apiUrl += `?type=${categoryType}`;
       }
       
-      console.log('🔍 Attempting API call:', { baseUrl, apiUrl, categorySlug, categoryType });
+      // Attempting API call
       
       // Check if this is a localhost URL and if the server is likely not running
       if (baseUrl.includes('localhost') && !baseUrl.includes('3001')) {
-        console.log('⚠️ Backend server might not be running on', baseUrl);
+        // Backend server might not be running
       }
       
       // Add timeout to prevent hanging requests
@@ -269,26 +269,22 @@ export const getRobotsByCategorySlug = async (categorySlug, categoryType = null)
       if (response.ok) {
         const data = await response.json();
         
-        console.log('🔍 Category API Response:', { 
-          categorySlug, 
-          status: response.status, 
-          data: data 
-        });
+        // Process API response
 
         // Handle different response formats
         let robots = [];
         if (data.success && data.data && Array.isArray(data.data)) {
           // Backend returns { success: true, data: [...] }
           robots = data.data;
-          console.log('✅ Found robots via success.data format:', robots.length);
+          // Found robots via success.data format
 
         } else if (Array.isArray(data)) {
           // Backend returns array directly
           robots = data;
-          console.log('✅ Found robots via direct array format:', robots.length);
+          // Found robots via direct array format
 
         } else {
-          console.log('❌ Unexpected response format:', data);
+          // Unexpected response format
           continue; // Try next URL
         }
 
@@ -299,15 +295,11 @@ export const getRobotsByCategorySlug = async (categorySlug, categoryType = null)
           manufacturer: robot.manufacturer
         }));
 
-        console.log('🔄 Transformed robots for listing page:', transformedRobots.length);
+        // Transformed robots for listing page
         return transformedRobots;
       } else {
         const errorText = await response.text();
-        console.log('❌ Category API Error:', { 
-          categorySlug, 
-          status: response.status, 
-          error: errorText 
-        });
+        // Category API Error
 
       }
     } catch (error) {
@@ -320,8 +312,7 @@ export const getRobotsByCategorySlug = async (categorySlug, categoryType = null)
     }
   }
 
-  console.log('❌ All backend URLs failed for getRobotsByCategorySlug. Backend server might not be running.');
-  console.log('💡 Please start the backend server with: cd backend && npm start');
+  // All backend URLs failed
   return [];
 };
 
@@ -329,7 +320,7 @@ export const getRobotsByCategorySlug = async (categorySlug, categoryType = null)
 export const getRobotsByParentCategory = async (parentSlug) => {
   // Validate parentSlug
   if (!parentSlug) {
-    console.warn('⚠️ No parentSlug provided to getRobotsByParentCategory');
+    // No parentSlug provided
     return [];
   }
 
@@ -372,13 +363,13 @@ export const getRobotsByParentCategory = async (parentSlug) => {
         return robots;
       } else {
         const errorText = await response.text();
-        console.warn(`Failed to fetch robots for parent category ${parentSlug}:`, errorText);
+        // Failed to fetch robots for parent category
       }
     } catch (error) {
       if (error.name === 'AbortError') {
-        console.warn(`Request timeout for parent category ${parentSlug}`);
+        // Request timeout for parent category
       } else {
-        console.warn(`Error fetching robots for parent category ${parentSlug}:`, error);
+        // Error fetching robots for parent category
       }
       continue; // Try next URL
     }

@@ -3,6 +3,7 @@ import Header1 from "@/components/headers/Header1";
 import Descriptions1 from "@/components/productDetails/descriptions/Descriptions1";
 import Details1 from "@/components/productDetails/details/Details1";
 import ProductDetailWrapper from "./ProductDetailWrapper";
+import ProductDetailSkeleton from "@/components/productDetails/ProductDetailSkeleton";
 import { getRobotBySlug } from "@/api/product";
 import React, { Suspense } from "react";
 import Link from "next/link";
@@ -87,16 +88,16 @@ export default async function ProductDetailPage({ params }) {
       </div>
     </div>
 
-      {/* Suspense se smooth loading */}
-      <Suspense fallback={<p className="text-center mt-5">Loading robot details...</p>}>
+      {/* Optimized loading with skeleton */}
+      <Suspense fallback={<ProductDetailSkeleton />}>
         <Details1 product={product} />
       </Suspense>
 
-      <Suspense fallback={null}>
+      <Suspense fallback={<div className="skeleton-section" style={{ height: '200px', backgroundColor: '#f8f9fa', margin: '20px 0', borderRadius: '8px' }}></div>}>
         <Descriptions1 product={product} />
       </Suspense>
 
-      <Suspense fallback={null}>
+      <Suspense fallback={<div className="skeleton-section" style={{ height: '300px', backgroundColor: '#f8f9fa', margin: '20px 0', borderRadius: '8px' }}></div>}>
         <ProductDetailWrapper product={product} slug={slug} />
       </Suspense>
 

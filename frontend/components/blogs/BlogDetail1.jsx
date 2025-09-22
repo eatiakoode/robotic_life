@@ -22,28 +22,19 @@ export default function BlogDetail1({ blog }) {
     });
   };
 
-  // Helper function to get image URL
-  const getImageUrl = (imagePath) => {
-    if (!imagePath) return "/images/blog/blog-details-1.jpg"; // fallback image
-    
-    // If it's already a full URL, return as is
-    if (imagePath.startsWith('http')) {
-      return imagePath;
-    }
-    
-    // If it's a filename, construct the backend URL
-    if (!imagePath.includes('/')) {
-      return `http://localhost:5000/images/blogs/${imagePath}`;
-    }
-    
-    // If it's a full path, extract filename and construct URL
-    const filename = imagePath.split('/').pop();
-    return `http://localhost:5000/images/blogs/${filename}`;
-  };
 
   return (
     <div className="blog-detail-wrap">
-      <div className="image" />
+      <div 
+        className="image" 
+        style={{
+          backgroundImage: `url(/images/blog/blog-bg.png)`,
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+          backgroundSize: 'cover',
+          backgroundAttachment: 'fixed'
+        }}
+      />
       <div className="inner">
         <div className="heading">
           <ul className="list-tags has-bg justify-content-center">
@@ -90,7 +81,7 @@ export default function BlogDetail1({ blog }) {
               <div className="w-100 d-flex justify-content-center">
                 <Image
                   alt={`${blog.title} - Image`}
-                  src={getImageUrl(blog.additionalImages[0])}
+                  src={`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/images/blogs/${blog.additionalImages[0].split('/').pop()}`}
                   width={623}
                   height={468}
                   style={{ width: '100%', maxWidth: '623px', height: 'auto', objectFit: 'cover', borderRadius: '15px'}}
@@ -103,7 +94,7 @@ export default function BlogDetail1({ blog }) {
                 <div>
                   <Image
                     alt={`${blog.title} - Image 1`}
-                    src={getImageUrl(blog.additionalImages[0])}
+                    src={`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/images/blogs/${blog.additionalImages[0].split('/').pop()}`}
                     width={623}
                     height={468}
                     style={{ width: '100%', height: 'auto', objectFit: 'cover', borderRadius: '15px'}}
@@ -113,7 +104,7 @@ export default function BlogDetail1({ blog }) {
                 <div>
                   <Image
                     alt={`${blog.title} - Image 2`}
-                    src={getImageUrl(blog.additionalImages[1])}
+                    src={`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/images/blogs/${blog.additionalImages[1].split('/').pop()}`}
                     width={623}
                     height={468}
                     style={{ width: '100%', height: 'auto', objectFit: 'cover', borderRadius: '15px'}}
@@ -127,7 +118,7 @@ export default function BlogDetail1({ blog }) {
             <div className="w-100 d-flex justify-content-center">
               <Image
                 alt={`${blog.title} - Main image`}
-                src={blog.logoimage ? getImageUrl(blog.logoimage) : "/images/blog/blog-details-1.jpg"}
+                src={blog.logoimage ? `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/images/blogs/${blog.logoimage.split('/').pop()}` : "/images/blog/blog-details-1.jpg"}
                 width={623}
                 height={468}
                 style={{ width: '100%', maxWidth: '623px', height: 'auto', objectFit: 'cover', borderRadius: '15px'}}
@@ -202,11 +193,6 @@ export default function BlogDetail1({ blog }) {
               <li>
                 <a href="#" className="social-twiter">
                   <i className="icon icon-x" />
-                </a>
-              </li>
-              <li>
-                <a href="#" className="social-pinterest">
-                  <i className="icon icon-pinterest" />
                 </a>
               </li>
               <li>

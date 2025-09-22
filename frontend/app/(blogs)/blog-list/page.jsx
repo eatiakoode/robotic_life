@@ -5,39 +5,6 @@ import Header1 from "@/components/headers/Header1";
 import Link from "next/link";
 import React from "react";
 
-// export default function BlogListPage() {
-//   return (
-//     <>
-//       <Header1 />
-//       <div
-//         className="page-title"
-//         style={{ backgroundImage: "url(/images/section/detail-card.png)" }}
-//       >
-//         <div className="container-full">
-//           <div className="row">
-//             <div className="col-12">
-//               <h3 className="heading text-center text-white">Blog Default</h3>
-//               <ul className="breadcrumbs d-flex align-items-center justify-content-center">
-//                 <li>
-//                   <Link className="link text-white" href={`/`}>
-//                     Homepage
-//                   </Link>
-//                 </li>
-//                 <li>
-//                   <i className="icon-arrRight" />
-//                 </li>
-//                 <li>Blog List</li>
-//               </ul>
-//             </div>
-//           </div>
-//         </div>
-//       </div>
-//       <BlogList />
-//       <Footer1 dark/>
-//     </>
-//   );
-// }
-
 import { getBlogBySlug } from "@/api/blog";
 
 export async function generateMetadata({ params }) {
@@ -47,14 +14,14 @@ export async function generateMetadata({ params }) {
 
     if (!blog) {
       return {
-        title: 'Property Not Found | WeGrow',
-        description: 'The requested blog was not found.',
+        title: 'Blogs | TheBotsWorld - Learn, Explore & Innovate with Robots',
+        description: 'Read the latest blogs on robotics, AI, and innovation at TheBotsWorld. Explore insights, and trends that help you learn and stay ahead in the world of robots.',
       };
     }
 
     return {
-      title: blog.metatitle? blog.metatitle : blog.title || 'Property Details | WeGrow',
-      description: blog.metadescription?.slice(0, 200) ? blog.metadescription : blog.description?.slice(0, 200)|| 'Read more on WeGrow blog.',
+      title: blog.metatitle? blog.metatitle : blog.title || 'Blog Details | TheBotsWorld',
+      description: blog.metadescription?.slice(0, 200) ? blog.metadescription : blog.description?.slice(0, 200)|| 'Read more on TheBotsWorld blog.',
       openGraph: {
         title: blog.title,
         description: blog.description?.slice(0, 150),

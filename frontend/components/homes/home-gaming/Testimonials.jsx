@@ -1,40 +1,11 @@
 "use client";
-import React, { useState, useEffect } from "react";
-import { testimonialAPI } from "@/api/testimonial";
+import React from "react";
 import { Navigation } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
+import { useTestimonials } from "@/hooks/useTestimonials";
 
 export default function Testimonials() {
-  const [testimonials, setTestimonials] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    const fetchTestimonials = async () => {
-      try {
-        setLoading(true);
-        console.log("Fetching testimonials...");
-        const response = await testimonialAPI.getTestimonials();
-        console.log("Testimonials API response:", response);
-        
-        if (response.success && response.data && response.data.length > 0) {
-          console.log("Testimonials data:", response.data);
-          setTestimonials(response.data);
-        } else {
-          console.log("API returned no data or success: false, using fallback");
-          setTestimonials([]); // This will trigger the fallback testimonials
-        }
-      } catch (err) {
-        console.error("Error fetching testimonials:", err);
-        console.log("Using fallback testimonials due to error");
-        setTestimonials([]); // This will trigger the fallback testimonials
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchTestimonials();
-  }, []);
+  const { testimonials, loading, error } = useTestimonials();
   // Loading state
   if (loading) {
     return (

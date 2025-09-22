@@ -20,7 +20,12 @@ export default function GridView({
   return (
     <>
       {paginatedProducts.map((product, index) => (
-        <ProductCard1 key={product.id || index} product={product} isNotImageRatio />
+        <ProductCard1 
+          key={product.id || index} 
+          product={product} 
+          isNotImageRatio 
+          priority={index < 4} // Set priority for first 4 products (above the fold)
+        />
       ))}
       
       {/* pagination */}

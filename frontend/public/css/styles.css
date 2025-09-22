@@ -3251,7 +3251,7 @@ footer .footer-body {
 
 footer .footer-bottom-wrap {
   padding-top: 17px;
-  /* border-top: 1px solid var(--line); */
+  /* border-top: none !important;  */
   padding-bottom: 17px;
   display: flex;
   gap: 15px 30px;
@@ -3397,13 +3397,32 @@ footer.bg-main .footer-menu .footer-menu_item:hover {
   color: var(--primary);
 }
 
-/* footer.bg-main .footer-bottom-wrap {
-  border-color: rgba(255, 255, 255, 0.1);
-} */
+footer.bg-main .footer-bottom-wrap {
+  border-top: none !important; 
+}
 
-footer.bg-main .footer-heading-mobile::after,
-footer.bg-main .footer-heading-mobile::before {
+footer.bg-main .footer-heading-mobile::after {
   background-color: var(--white);
+}
+footer.bg-main .footer-heading-mobile::before {
+  display: none !important;
+}
+
+/* Additional fix to ensure all horizontal lines in footer are hidden */
+footer .footer-heading-mobile::before,
+footer.bg-main .footer-heading-mobile::before {
+  display: none !important; /* Force hide all first horizontal lines */
+}
+
+/* Hide any other potential horizontal line elements in footer */
+footer *::before {
+  border-top: none !important;
+  border-bottom: none !important;
+}
+
+footer.bg-main *::before {
+  border-top: none !important;
+  border-bottom: none !important;
 }
 
 footer.has-pb {
@@ -14462,7 +14481,7 @@ ul.breadcrumbs i {
 
 .blog-detail-wrap > .image {
   height: 568px;
-  background-image: url(./../images/blog/blog-details-1.jpg);
+  background-image: url(/images/blog/blog-bg.png);
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
@@ -18822,15 +18841,7 @@ ul.list-text.type-number {
     transition: 0.25s ease-in-out;
   }
   .footer .footer-heading-mobile::before {
-    position: absolute;
-    content: "";
-    right: 15px;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    width: 1px;
-    height: 12px;
-    background-color: var(--main);
-    transition: 0.25s ease-in-out;
+    display: none; /* Hide the first horizontal line */
   }
   .footer .footer-col-block.open .footer-heading-mobile::before {
     opacity: 0;
@@ -20345,7 +20356,61 @@ ul.list-text.type-number {
 }
 
 /* Responsive Design */
+@media (max-width: 1024px) and (min-width: 769px) {
+  /* Page Title Banner Responsive - Tablet */
+  .page-title {
+    padding: 50px 0 60px;
+    background-size: cover;
+    background-position: center right;
+    background-repeat: no-repeat;
+    min-height: 200px;
+  }
+  
+  .page-title .heading {
+    font-size: 2.5rem;
+  }
+  
+  .page-title .breadcrumbs {
+    font-size: 15px;
+  }
+}
+
 @media (max-width: 768px) {
+  /* Page Title Banner Responsive */
+  .page-title {
+    padding: 40px 0 50px;
+    background-size: cover;
+    background-position: center right;
+    background-repeat: no-repeat;
+    min-height: 180px;
+  }
+  
+  .page-title .heading {
+    font-size: 2rem;
+    margin-bottom: 8px;
+  }
+  
+  .page-title .breadcrumbs {
+    font-size: 14px;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+  }
+  
+  .page-title .breadcrumbs li {
+    margin: 0;
+  }
+  
+  .page-title .container-full {
+    padding: 0 20px;
+    position: relative;
+    z-index: 2;
+  }
+  
+  .page-title .row {
+    max-width: 60%;
+  }
+  
   .pagination-wrapper {
     gap: 16px;
     margin: 30px 0;
@@ -20374,6 +20439,39 @@ ul.list-text.type-number {
   }
 }
 @media (max-width: 480px) {
+  /* Page Title Banner Responsive - Small Mobile */
+  .page-title {
+    padding: 30px 0 40px;
+    background-size: cover;
+    background-position: center right;
+    background-repeat: no-repeat;
+    min-height: 160px;
+  }
+  
+  .page-title .heading {
+    font-size: 1.5rem;
+    margin-bottom: 6px;
+  }
+  
+  .page-title .breadcrumbs {
+    font-size: 12px;
+    gap: 6px;
+  }
+  
+  .page-title .breadcrumbs li i {
+    font-size: 10px;
+  }
+  
+  .page-title .container-full {
+    padding: 0 15px;
+    position: relative;
+    z-index: 2;
+  }
+  
+  .page-title .row {
+    max-width: 70%;
+  }
+  
   .pagination-nav {
     padding: 8px 12px;
     min-width: 60px;
@@ -20390,6 +20488,27 @@ ul.list-text.type-number {
     width: 36px;
     height: 36px;
     font-size: 12px;
+  }
+}
+
+/* Extra small devices (≤360px) */
+@media (max-width: 360px) {
+  .page-title {
+    min-height: 140px;
+    background-position: center right;
+    background-size: contain;
+  }
+  
+  .page-title .row {
+    max-width: 80%;
+  }
+  
+  .page-title .heading {
+    font-size: 1.25rem;
+  }
+  
+  .page-title .breadcrumbs {
+    font-size: 11px;
   }
 }
 #shoppingCart.show .tf-progress-bar .value {

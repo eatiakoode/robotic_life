@@ -7,6 +7,9 @@ import React, { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { getParentCategories } from "@/api/category";
 
+// Metadata cannot be exported from client components
+// Use dynamic title updates in useEffect instead
+
 export default function ShopDefaultGridPage() {
   const searchParams = useSearchParams();
   const [categoryName, setCategoryName] = useState("All Robots");
@@ -45,6 +48,12 @@ export default function ShopDefaultGridPage() {
       setCategoryName("All Robots");
     }
   }, [searchParams]);
+
+  // Update document title dynamically
+  useEffect(() => {
+    const title = loading ? "Loading..." : `${categoryName} || TheBotsWorld - Advanced Robotics Solutions`;
+    document.title = title;
+  }, [categoryName, loading]);
 
   return (
     <>

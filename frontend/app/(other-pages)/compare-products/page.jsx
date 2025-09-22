@@ -5,6 +5,11 @@ import RobotCompare from "@/components/otherPages/RobotCompare";
 import Link from "next/link";
 import React from "react";
 
+export const metadata = {
+        title: 'Compare Robots | TheBotsWorld - Learn, Explore & Innovate with Robots',
+        description: 'Compare the latest robots and automation solutions at TheBotsWorld. Find the perfect robot for your needs and stay ahead in the world of robotics.',
+};
+
 export default function CompareProductsPage() {
   return (
     <>

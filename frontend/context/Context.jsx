@@ -168,33 +168,38 @@ export default function Context({ children }) {
     }
     return false;
   };
+  // Initialize cart and wishlist from localStorage
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      const items = JSON.parse(localStorage.getItem("cartList") || "[]");
-      if (items?.length) {
-        setCartProducts(items);
+      try {
+        const cartItems = JSON.parse(localStorage.getItem("cartList") || "[]");
+        const wishlistItems = JSON.parse(localStorage.getItem("wishlist") || "[]");
+        
+        if (cartItems?.length) setCartProducts(cartItems);
+        if (wishlistItems?.length) setWishList(wishlistItems);
+      } catch (error) {
+        // Handle localStorage errors silently
       }
     }
   }, []);
 
+  // Save cart to localStorage with debouncing
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      localStorage.setItem("cartList", JSON.stringify(cartProducts));
+    if (typeof window !== 'undefined' && cartProducts.length > 0) {
+      const timeoutId = setTimeout(() => {
+        localStorage.setItem("cartList", JSON.stringify(cartProducts));
+      }, 300);
+      return () => clearTimeout(timeoutId);
     }
   }, [cartProducts]);
-  
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const items = JSON.parse(localStorage.getItem("wishlist") || "[]");
-      if (items?.length) {
-        setWishList(items);
-      }
-    }
-  }, []);
 
+  // Save wishlist to localStorage with debouncing
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      localStorage.setItem("wishlist", JSON.stringify(wishList));
+    if (typeof window !== 'undefined' && wishList.length > 0) {
+      const timeoutId = setTimeout(() => {
+        localStorage.setItem("wishlist", JSON.stringify(wishList));
+      }, 300);
+      return () => clearTimeout(timeoutId);
     }
   }, [wishList]);
 

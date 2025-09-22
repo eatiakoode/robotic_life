@@ -158,7 +158,7 @@ export const isBootstrapLoaded = () => {
 export const initializeBootstrap = () => {
   if (typeof window !== 'undefined' && !window.bootstrap) {
     // Try to load Bootstrap dynamically if not available
-    console.warn('Bootstrap not found. Modal functionality may be limited.');
+    // Bootstrap not found
   }
 };
 

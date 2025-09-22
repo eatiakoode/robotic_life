@@ -4,6 +4,7 @@ import Sorting from "./Sorting";
 import Listview from "./Listview";
 import GridView from "./GridView";
 import Pagination from "../common/Pagination";
+import ProductGridSkeleton from "./ProductGridSkeleton";
 import { useEffect, useReducer, useState, useCallback } from "react";
 import { useSearchParams } from "next/navigation";
 import FilterModal from "./FilterModal";
@@ -480,7 +481,7 @@ export default function Products1({ parentClass = "flat-spacing",products ,produ
             setUrlCategoryLoaded(true);
           }
         } catch (error) {
-          console.error('Error loading category from URL:', error);
+          // Error loading category from URL
           setUrlCategoryLoaded(true);
         } finally {
           setLoading(false);
@@ -524,7 +525,7 @@ export default function Products1({ parentClass = "flat-spacing",products ,produ
           // Also set the sorted products to show all products initially
           dispatch({ type: "SET_SORTED", payload: transformedProducts });
         } catch (error) {
-          console.error('❌ Error fetching products:', error);
+          // Error fetching products
           setProductMain([]);
         } finally {
           setLoading(false);
@@ -683,12 +684,7 @@ export default function Products1({ parentClass = "flat-spacing",products ,produ
             )}
 
             {loading ? (
-              <div className="loading-container" style={{ textAlign: 'center', padding: '50px' }}>
-                <div className="spinner-border text-primary" role="status">
-                  <span className="visually-hidden">Loading...</span>
-                </div>
-                <p className="mt-3">Loading products from backend...</p>
-              </div>
+              <ProductGridSkeleton count={12} />
             ) : activeLayout == 1 ? (
               <>
                 <div className="tf-list-layout wrapper-shop eati" id="listLayout">

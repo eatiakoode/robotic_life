@@ -4,9 +4,7 @@ export const testimonialAPI = {
   // Get all testimonials
   getTestimonials: async () => {
     try {
-      console.log('API_BASE_URL:', API_BASE_URL);
       const url = `${API_BASE_URL}/frontend/api/testimonial`;
-      console.log('Fetching from URL:', url);
       
       const response = await fetch(url, {
         method: 'GET',
@@ -17,15 +15,14 @@ export const testimonialAPI = {
         credentials: 'omit',
       });
 
-      console.log('Response status:', response.status);
-      console.log('Response headers:', response.headers);
+      // Process response
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
       const data = await response.json();
-      console.log('API response data:', data);
+      // API response processed
       return data;
     } catch (error) {
       console.error('Error fetching testimonials:', error);

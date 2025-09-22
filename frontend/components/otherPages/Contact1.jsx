@@ -50,7 +50,7 @@ export default function Contact1() {
             break;
           }
         } catch (err) {
-          console.log('Failed to send enquiry to', backendUrl, ':', err.message);
+          // Failed to send enquiry
           lastError = err;
           continue;
         }

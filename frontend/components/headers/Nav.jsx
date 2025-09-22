@@ -17,10 +17,16 @@ export default function Nav() {
   const [hoveredCategory, setHoveredCategory] = useState(null);
   const [robots, setRobots] = useState([]);
   const [robotsLoading, setRobotsLoading] = useState(false);
+  const [isClient, setIsClient] = useState(false);
   const leaveTimeoutRef = useRef(null);
   
   // Use the recently viewed hook for consistent data management
   const { recentlyViewedIds, isInitialized } = useRecentlyViewed();
+
+  // Set client state after hydration to prevent hydration mismatch
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   // Fetch parent categories and subcategories on component mount
   useEffect(() => {
@@ -32,16 +38,13 @@ export default function Nav() {
         const parentCategories = await getParentCategories();
         setCategories(parentCategories);
 
-        // Fetch subcategories for all parent categories
-        const subcategoryPromises = parentCategories.map(async (category) => {
+        // Only fetch subcategories for first few categories to improve performance
+        const categoriesToFetch = parentCategories.slice(0, 8);
+        const subcategoryPromises = categoriesToFetch.map(async (category) => {
           try {
             const subs = await getSubCategories(category._id);
             return { categoryId: category._id, subcategories: subs };
           } catch (error) {
-            console.error(
-              `Error fetching subcategories for ${category.name}:`,
-              error
-            );
             return { categoryId: category._id, subcategories: [] };
           }
         });
@@ -54,7 +57,7 @@ export default function Nav() {
 
         setSubcategories(subcategoryMap);
       } catch (error) {
-        console.error("Error fetching data:", error);
+        // Error fetching data
       } finally {
         setLoading(false);
       }
@@ -149,8 +152,8 @@ export default function Nav() {
       </li>
       <li
         className={`menu-item ${
-          pathname.includes("shop-default-grid") ||
-          pathname.includes("filter-canvas")
+          isClient && (pathname.includes("shop-default-grid") ||
+          pathname.includes("filter-canvas"))
             ? "active"
             : ""
         } `}
@@ -656,7 +659,7 @@ export default function Nav() {
                               key={robot.id || i}
                               className="swiper-slide"
                             >
-                              <ProductCard1 product={robot} />
+                              <ProductCard1 product={robot} priority={i < 2} />
                             </SwiperSlide>
                           ))}
                         </Swiper>

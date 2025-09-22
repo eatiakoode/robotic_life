@@ -57,7 +57,7 @@ export default function Descriptions1({ product }) {
                   className={`item-title ${activeTab == 4 ? "active" : ""} `}
                   onClick={() => setActiveTab(4)}
                 >
-                  <span className="inner">Clarity Hub</span>
+                  <span className="inner">FAQ</span>
                 </li>
               </ul>
               <div className="widget-content-tab">
