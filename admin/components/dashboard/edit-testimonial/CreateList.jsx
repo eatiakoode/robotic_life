@@ -66,7 +66,7 @@ const CreateList = () => {
         if (data.success === true) {
           toast.success(data.message || "Testimonial updated successfully!");
           setTimeout(() => {
-            router.push("/cmsroboticlife/my-testimonial");
+            router.push("/cmsthebotsworld/my-testimonial");
           }, 1000);
         } else {
           toast.error(data.message || "Failed to update testimonial");
@@ -194,7 +194,7 @@ const CreateList = () => {
 
       <div className="col-xl-12">
         <div className="my_profile_setting_input">
-          <button className="btn btn1 float-start" type="button" onClick={() => window.location.href = '/cmsroboticlife/my-testimonial'}>Back</button>
+          <button className="btn btn1 float-start" type="button" onClick={() => window.location.href = '/cmsthebotsworld/my-testimonial'}>Back</button>
           <button 
             className="btn btn2 float-end" 
             type="submit"

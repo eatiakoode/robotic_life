@@ -151,7 +151,7 @@ const TableData = ({ sliders = [], loading = false, error = null, onRefresh }) =
         >
           <ul className="view_edit_delete_list mb0 d-flex justify-content-center">
             <li className="list-inline-item" title="Edit">
-              <button onClick={() => router.push(`/cmsroboticlife/edit-slider/${item._id}`)}>
+              <button onClick={() => router.push(`/cmsthebotsworld/edit-slider/${item._id}`)}>
                 <span className="flaticon-edit"></span>
               </button>
             </li>

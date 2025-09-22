@@ -92,7 +92,7 @@ const TableData = ({ sensors = [], loading = false, error = null, onRefresh }) =
       <td className="align-middle text-center">
         <ul className="view_edit_delete_list mb0 d-flex justify-content-center">
           <li className="list-inline-item" title="Edit">
-            <button onClick={() => router.push(`/cmsroboticlife/edit-sensor/${item._id}`)}>
+            <button onClick={() => router.push(`/cmsthebotsworld/edit-sensor/${item._id}`)}>
               <span className="flaticon-edit"></span>
             </button>
           </li>

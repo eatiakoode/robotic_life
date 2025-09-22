@@ -7,7 +7,7 @@ export default function useAuth() {
   useEffect(() => {
     const token = localStorage.getItem('user');
     if (!token) {
-      router.replace('/cmsroboticlife'); // redirect to login if no token
+      router.replace('/cmsthebotsworld'); // redirect to login if no token
     }
   }, []);
 }

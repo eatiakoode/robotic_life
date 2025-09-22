@@ -115,7 +115,7 @@ const TableData = ({ categoryList, setCategoryList, loading = false }) => {
             >
               <button
                 onClick={() =>
-                  router.push(`/cmsroboticlife/edit-category/${item._id}`)
+                  router.push(`/cmsthebotsworld/edit-category/${item._id}`)
                 }
               >
                 <span className="flaticon-edit"></span>

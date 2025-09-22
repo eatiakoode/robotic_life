@@ -1138,7 +1138,7 @@ const EditList = () => {
       }
 
       toast.success(res.message || `Robot ${isEditMode ? 'updated' : 'created'} successfully!`);
-      router.push("/cmsroboticlife/my-robot");
+      router.push("/cmsthebotsworld/my-robot");
       setError({});
     } catch (err) {
       console.error(err);

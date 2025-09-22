@@ -3,7 +3,7 @@ const { default: mongoose } = require("mongoose");
 const dbConnect = () => {
   try {
     // Fixed: Use the correct database name where your data exists
-    const MONGODB_URL = process.env.MONGODB_URL || 'mongodb://localhost:27017/roboticLife';
+    const MONGODB_URL = process.env.MONGODB_URL || 'mongodb://localhost:27017/TheBotsWorld';
     
     const conn = mongoose.connect(MONGODB_URL, {
       useNewUrlParser: true,

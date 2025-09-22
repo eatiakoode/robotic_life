@@ -41,7 +41,7 @@ const Form = () => {
               // toast.success("Login successful!");
               localStorage.setItem("user", JSON.stringify(data.data));
               // alert(data.message);
-              router.push("/cmsroboticlife/my-dashboard");
+              router.push("/cmsthebotsworld/my-dashboard");
               const userData = JSON.parse(localStorage.getItem("user"));
               
             } else

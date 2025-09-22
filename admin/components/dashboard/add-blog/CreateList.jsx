@@ -112,7 +112,7 @@ const CreateList = () => {
 
       if (data.status == "success") {
         setTimeout(() => {
-          router.push("/cmsroboticlife/my-blog");
+          router.push("/cmsthebotsworld/my-blog");
         }, 1500);
       }
 
@@ -357,7 +357,7 @@ const CreateList = () => {
               className="btn btn1 float-start"
               type="button"
               onClick={() =>
-                (window.location.href = "/cmsroboticlife/my-dashboard")
+                (window.location.href = "/cmsthebotsworld/my-dashboard")
               }
             >
               Back

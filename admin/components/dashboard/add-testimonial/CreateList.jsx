@@ -58,7 +58,7 @@ const CreateList = () => {
         setStatus(true);
         // Redirect after a short delay
         setTimeout(() => {
-          router.push("/cmsroboticlife/my-testimonial");
+          router.push("/cmsthebotsworld/my-testimonial");
         }, 1000);
       } else {
         toast.error(data.message || "Failed to add testimonial");
@@ -168,7 +168,7 @@ const CreateList = () => {
               className="btn btn1 float-start"
               type="button"
               onClick={() =>
-                (window.location.href = "/cmsroboticlife/my-dashboard")
+                (window.location.href = "/cmsthebotsworld/my-dashboard")
               }
             >
               Back

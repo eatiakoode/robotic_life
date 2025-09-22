@@ -44,7 +44,7 @@ const TableData = ({ testimonials = [], loading = false, error = null, onRefresh
 
   // Memoized edit function
   const editTestimonial = useCallback((id) => {
-    router.push(`/cmsroboticlife/edit-testimonial/${id}`);
+    router.push(`/cmsthebotsworld/edit-testimonial/${id}`);
   }, [router]);
   // Format date helper
   const formatDate = useCallback((dateString) => {

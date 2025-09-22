@@ -150,7 +150,7 @@ const CreateList = () => {
 
       if (res.status === "success") {
         setTimeout(() => {
-          router.push("/cmsroboticlife/my-blog");
+          router.push("/cmsthebotsworld/my-blog");
         }, 1500);
       }
     } catch (error) {
@@ -397,7 +397,7 @@ const CreateList = () => {
             <button
               className="btn btn1 float-start"
               type="button"
-              onClick={() => router.push("/cmsroboticlife/my-blog")}
+              onClick={() => router.push("/cmsthebotsworld/my-blog")}
             >
               Back
             </button>

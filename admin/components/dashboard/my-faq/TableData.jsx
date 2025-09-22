@@ -75,7 +75,7 @@ const TableData = ({faqList,setFaqList}) => {
             title="Edit"
           >
             <button 
-              onClick={() => router.push(`/cmsroboticlife/edit-faq/${item._id}`)}
+              onClick={() => router.push(`/cmsthebotsworld/edit-faq/${item._id}`)}
               style={{
                 background: 'none',
                 border: 'none',

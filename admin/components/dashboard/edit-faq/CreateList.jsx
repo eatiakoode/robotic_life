@@ -66,11 +66,11 @@ const CreateList = () => {
           "robotid":selectedRobot,};
         const data =await updateFaqAPI(id, formData);
         // alert("Faq updated successfully!");
-        // router.push("/cmsroboticlife/my-faq");
+        // router.push("/cmsthebotsworld/my-faq");
         toast.success(data.message);
         if(data.status=="success"){
           setTimeout(() => {
-          router.push("/cmsroboticlife/my-faq");
+          router.push("/cmsthebotsworld/my-faq");
           }, 1500); 
         }
         
@@ -155,7 +155,7 @@ const CreateList = () => {
 
       <div className="col-xl-12">
         <div className="my_profile_setting_input">
-          <button className="btn btn1 float-start" type="button" onClick={() => window.location.href = '/cmsroboticlife/my-faq'}>Back</button>
+          <button className="btn btn1 float-start" type="button" onClick={() => window.location.href = '/cmsthebotsworld/my-faq'}>Back</button>
           <button className="btn btn2 float-end">Submit</button>
         </div>
       </div>

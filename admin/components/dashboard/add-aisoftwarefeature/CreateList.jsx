@@ -37,7 +37,7 @@ const CreateList = () => {
       toast.success(data.message || "AI/Software Feature added successfully!");
 
       setTimeout(() => {
-        router.push("/cmsroboticlife/my-aisoftwarefeature");
+        router.push("/cmsthebotsworld/my-aisoftwarefeature");
       }, 1000);
 
       setTitle("");
@@ -79,7 +79,7 @@ const CreateList = () => {
 
         <div className="col-xl-12">
           <div className="my_profile_setting_input">
-            <button className="btn btn1 float-start" type="button" onClick={() => window.location.href = '/cmsroboticlife/my-dashboard'}>Back</button>
+            <button className="btn btn1 float-start" type="button" onClick={() => window.location.href = '/cmsthebotsworld/my-dashboard'}>Back</button>
             <button type="submit" className="btn btn2 float-end" disabled={isSubmitting} >{isSubmitting ? 'Sending...' : 'Submit'}</button>
           </div>
         </div>

@@ -363,7 +363,7 @@ export default function Footer1({
                         }}
                       >
                         <span style={{ fontFamily: '"Kumbh Sans", sans-serif' }}>
-                          © 2025 RoboticLife. All rights reserved | Made With{" "}
+                          © 2025 TheBotsWorld. All rights reserved | Made With{" "}
                           <a
                             target="_blank"
                             href="https://www.akoode.com/"

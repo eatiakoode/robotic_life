@@ -41,7 +41,7 @@ const TableData = ({ robots = [], loading = false, error = null, onRefresh }) =>
 
   // Memoized edit function
   const editRobot = useCallback((id) => {
-    router.push(`/cmsroboticlife/edit-robot/${id}`);
+    router.push(`/cmsthebotsworld/edit-robot/${id}`);
   }, [router]);
 
   // Optimized image error handler

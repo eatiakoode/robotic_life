@@ -92,7 +92,7 @@ const TableData = ({ terrainCapabilities = [], loading = false, error = null, on
       <td className="align-middle text-center">
         <ul className="view_edit_delete_list mb0 d-flex justify-content-center">
           <li className="list-inline-item" title="Edit">
-            <button onClick={() => router.push(`/cmsroboticlife/edit-terraincapability/${item._id}`)}>
+            <button onClick={() => router.push(`/cmsthebotsworld/edit-terraincapability/${item._id}`)}>
               <span className="flaticon-edit"></span>
             </button>
           </li>

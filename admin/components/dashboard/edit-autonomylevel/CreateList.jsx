@@ -41,7 +41,7 @@ const CreateList = () => {
       toast.success(data.message);
 
       setTimeout(() => {
-        router.push("/cmsroboticlife/my-autonomylevel");
+        router.push("/cmsthebotsworld/my-autonomylevel");
       }, 1500);
     } catch (error) {
       toast.error("Failed to update Autonomy Level.");
@@ -104,7 +104,7 @@ const CreateList = () => {
 
         <div className="col-xl-12">
           <div className="my_profile_setting_input">
-            <button className="btn btn1 float-start" type="button" onClick={() => window.location.href = '/cmsroboticlife/my-autonomylevel'}>Back</button>
+            <button className="btn btn1 float-start" type="button" onClick={() => window.location.href = '/cmsthebotsworld/my-autonomylevel'}>Back</button>
             <button className="btn btn2 float-end">Submit</button>
           </div>
         </div>

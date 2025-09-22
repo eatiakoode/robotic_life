@@ -312,7 +312,7 @@ const index = () => {
   
   
       const res = await addPropertyAPI(formData);
-      // router.push("/cmsroboticlife/my-properties");
+      // router.push("/cmsthebotsworld/my-properties");
       alert(res.message);
   
       // Reset fields and errors

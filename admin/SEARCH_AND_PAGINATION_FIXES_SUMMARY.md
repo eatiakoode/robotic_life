@@ -155,7 +155,7 @@ const index = () => {
 - Verify search function calls
 
 ### **2. Test Search**
-1. Go to any listing page (e.g., `/cmsroboticlife/my-color`)
+1. Go to any listing page (e.g., `/cmsthebotsworld/my-color`)
 2. Type in the search box
 3. Verify data filters in real-time
 4. Check search result counters

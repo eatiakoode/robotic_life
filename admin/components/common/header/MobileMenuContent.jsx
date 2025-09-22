@@ -356,10 +356,10 @@ const MobileMenuContent = () => {
         <Menu>
         <MenuItem>
             <div
-            onClick={()=>router.push("/cmsroboticlife/my-dashboard")}
+            onClick={()=>router.push("/cmsthebotsworld/my-dashboard")}
              
               className={
-                pathname === "/cmsroboticlife/my-dashboard" ? "ui-active" : 'inactive-mobile-menu'
+                pathname === "/cmsthebotsworld/my-dashboard" ? "ui-active" : 'inactive-mobile-menu'
               }
             >
               Dashboard

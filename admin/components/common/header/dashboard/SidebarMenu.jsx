@@ -14,111 +14,111 @@ const SidebarMenu = () => {
   const pathname = usePathname();
 
   const myRobots = [
-    { id: 1, name: "Add Robot", route: "/cmsroboticlife/create-listing" },
-    { id: 2, name: "Robot List", route: "/cmsroboticlife/my-robot" },
+    { id: 1, name: "Add Robot", route: "/cmsthebotsworld/create-listing" },
+    { id: 2, name: "Robot List", route: "/cmsthebotsworld/my-robot" },
   ];
   const RoboCategory = [
-    { id: 1, name: "Add Category", route: "/cmsroboticlife/add-category" },
-    { id: 2, name: "Category List", route: "/cmsroboticlife/my-category" },
+    { id: 1, name: "Add Category", route: "/cmsthebotsworld/add-category" },
+    { id: 2, name: "Category List", route: "/cmsthebotsworld/my-category" },
   ];
   const MasterData = [
-    { id: 1, name: "Add Country", route: "/cmsroboticlife/add-country" },
-    { id: 2, name: "Country List", route: "/cmsroboticlife/my-country" },
+    { id: 1, name: "Add Country", route: "/cmsthebotsworld/add-country" },
+    { id: 2, name: "Country List", route: "/cmsthebotsworld/my-country" },
     {
       id: 3,
       name: "Add Power Source",
-      route: "/cmsroboticlife/add-powersource",
+      route: "/cmsthebotsworld/add-powersource",
     },
     {
       id: 4,
       name: "Power Source List",
-      route: "/cmsroboticlife/my-powersource",
+      route: "/cmsthebotsworld/my-powersource",
     },
-    { id: 5, name: "Add Color", route: "/cmsroboticlife/add-color" },
-    { id: 6, name: "Color List", route: "/cmsroboticlife/my-color" },
-    { id: 7, name: "Add Material", route: "/cmsroboticlife/add-material" },
-    { id: 8, name: "Material List", route: "/cmsroboticlife/my-material" },
+    { id: 5, name: "Add Color", route: "/cmsthebotsworld/add-color" },
+    { id: 6, name: "Color List", route: "/cmsthebotsworld/my-color" },
+    { id: 7, name: "Add Material", route: "/cmsthebotsworld/add-material" },
+    { id: 8, name: "Material List", route: "/cmsthebotsworld/my-material" },
     {
       id: 9,
       name: "Add Navigation Type",
-      route: "/cmsroboticlife/add-navigationtype",
+      route: "/cmsthebotsworld/add-navigationtype",
     },
     {
       id: 10,
       name: "Navigation Type List",
-      route: "/cmsroboticlife/my-navigationtype",
+      route: "/cmsthebotsworld/my-navigationtype",
     },
-    { id: 11, name: "Add Sensor", route: "/cmsroboticlife/add-sensor" },
-    { id: 12, name: "Sensor List", route: "/cmsroboticlife/my-sensor" },
+    { id: 11, name: "Add Sensor", route: "/cmsthebotsworld/add-sensor" },
+    { id: 12, name: "Sensor List", route: "/cmsthebotsworld/my-sensor" },
     {
       id: 13,
       name: "Add Primary Function",
-      route: "/cmsroboticlife/add-primaryfunction",
+      route: "/cmsthebotsworld/add-primaryfunction",
     },
     {
       id: 14,
       name: "Primary Function List",
-      route: "/cmsroboticlife/my-primaryfunction",
+      route: "/cmsthebotsworld/my-primaryfunction",
     },
     {
       id: 15,
       name: "Add AI/Software Feature",
-      route: "/cmsroboticlife/add-aisoftwarefeature",
+      route: "/cmsthebotsworld/add-aisoftwarefeature",
     },
     {
       id: 16,
       name: "AI/Software Feature List",
-      route: "/cmsroboticlife/my-aisoftwarefeature",
+      route: "/cmsthebotsworld/my-aisoftwarefeature",
     },
     {
       id: 17,
       name: "Add Operating Environment",
-      route: "/cmsroboticlife/add-operatingenvironment",
+      route: "/cmsthebotsworld/add-operatingenvironment",
     },
     {
       id: 18,
       name: "Operating Environment List",
-      route: "/cmsroboticlife/my-operatingenvironment",
+      route: "/cmsthebotsworld/my-operatingenvironment",
     },
     {
       id: 19,
       name: "Add Terrain Capability",
-      route: "/cmsroboticlife/add-terraincapability",
+      route: "/cmsthebotsworld/add-terraincapability",
     },
     {
       id: 20,
       name: "Terrain Capability List",
-      route: "/cmsroboticlife/my-terraincapability",
+      route: "/cmsthebotsworld/my-terraincapability",
     },
     {
       id: 21,
       name: "Add Autonomy Level",
-      route: "/cmsroboticlife/add-autonomylevel",
+      route: "/cmsthebotsworld/add-autonomylevel",
     },
     {
       id: 22,
       name: "Autonomy Level List",
-      route: "/cmsroboticlife/my-autonomylevel",
+      route: "/cmsthebotsworld/my-autonomylevel",
     },
     {
       id: 23,
       name: "Add Communication Method",
-      route: "/cmsroboticlife/add-communicationmethod",
+      route: "/cmsthebotsworld/add-communicationmethod",
     },
     {
       id: 24,
       name: "Communication Method List",
-      route: "/cmsroboticlife/my-communicationmethod",
+      route: "/cmsthebotsworld/my-communicationmethod",
     },
     {
       id: 25,
       name: "Add Payload Type",
-      route: "/cmsroboticlife/add-payloadtype",
+      route: "/cmsthebotsworld/add-payloadtype",
     },
     {
       id: 26,
       name: "Payload Type List",
-      route: "/cmsroboticlife/my-payloadtype",
+      route: "/cmsthebotsworld/my-payloadtype",
     },
   ];
 
@@ -126,60 +126,60 @@ const SidebarMenu = () => {
     {
       id: 1,
       name: "Add Manufacturer",
-      route: "/cmsroboticlife/add-manufacturer",
+      route: "/cmsthebotsworld/add-manufacturer",
     },
     {
       id: 2,
       name: "Manufacturer List",
-      route: "/cmsroboticlife/my-manufacturer",
+      route: "/cmsthebotsworld/my-manufacturer",
     },
   ];
 
   const Slider = [
-    { id: 1, name: "Add Slider", route: "/cmsroboticlife/add-slider" },
-    { id: 2, name: "Slider List", route: "/cmsroboticlife/my-slider" },
+    { id: 1, name: "Add Slider", route: "/cmsthebotsworld/add-slider" },
+    { id: 2, name: "Slider List", route: "/cmsthebotsworld/my-slider" },
   ];
 
   const Blog = [
     {
       id: 1,
       name: "Add Blog category",
-      route: "/cmsroboticlife/add-blogcategory",
+      route: "/cmsthebotsworld/add-blogcategory",
     },
     {
       id: 2,
       name: "Blog category List",
-      route: "/cmsroboticlife/my-blogcategory",
+      route: "/cmsthebotsworld/my-blogcategory",
     },
-    { id: 3, name: "Add Blog", route: "/cmsroboticlife/add-blog" },
-    { id: 4, name: "Blog List", route: "/cmsroboticlife/my-blog" },
+    { id: 3, name: "Add Blog", route: "/cmsthebotsworld/add-blog" },
+    { id: 4, name: "Blog List", route: "/cmsthebotsworld/my-blog" },
   ];
 
   const Faq = [
-    { id: 1, name: "Add FAQ", route: "/cmsroboticlife/add-faq" },
-    { id: 2, name: "FAQ List", route: "/cmsroboticlife/my-faq" },
+    { id: 1, name: "Add FAQ", route: "/cmsthebotsworld/add-faq" },
+    { id: 2, name: "FAQ List", route: "/cmsthebotsworld/my-faq" },
   ];
 
   const testimonial = [
     {
       id: 1,
       name: "Add Testimonial",
-      route: "/cmsroboticlife/add-testimonial",
+      route: "/cmsthebotsworld/add-testimonial",
     },
     {
       id: 2,
       name: "Testimonial List",
-      route: "/cmsroboticlife/my-testimonial",
+      route: "/cmsthebotsworld/my-testimonial",
     },
   ];
 
   const reviews = [
-    { id: 1, name: "My Reviews", route: "/cmsroboticlife/my-review" },
-    { id: 2, name: "Visitor Reviews", route: "/cmsroboticlife/my-review" },
+    { id: 1, name: "My Reviews", route: "/cmsthebotsworld/my-review" },
+    { id: 2, name: "Visitor Reviews", route: "/cmsthebotsworld/my-review" },
   ];
 
   const enquerylist = [
-    { id: 1, name: "My enquery list", route: "/cmsroboticlife/my-enquiry" },
+    { id: 1, name: "My enquery list", route: "/cmsthebotsworld/my-enquiry" },
   ];
 
   const manageAccount = [
@@ -202,7 +202,7 @@ const SidebarMenu = () => {
     <>
       <ul className="sidebar-menu">
         <li className="sidebar_header header">
-          <Link href="/cmsroboticlife/my-dashboard">
+          <Link href="/cmsthebotsworld/my-dashboard">
             <SafeImage
               width={275}
               height={100}
@@ -222,7 +222,7 @@ const SidebarMenu = () => {
                 isSinglePageActive("/my-dashboard", pathname) ? "active" : ""
               }`}
             >
-              <Link href="/cmsroboticlife/my-dashboard">
+              <Link href="/cmsthebotsworld/my-dashboard">
                 <i className="flaticon-layers"></i>
                 <span> Dashboard</span>
               </Link>

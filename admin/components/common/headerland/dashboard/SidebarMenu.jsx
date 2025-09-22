@@ -13,66 +13,66 @@ const SidebarMenu = () => {
   const pathname = usePathname()
 
   const myCountry = [
-    { id: 1, name: "Add Country", route: "/cmsroboticlife/add-country" },
-    { id: 2, name: "Country List", route: "/cmsroboticlife/my-country" }
+    { id: 1, name: "Add Country", route: "/cmsthebotsworld/add-country" },
+    { id: 2, name: "Country List", route: "/cmsthebotsworld/my-country" }
   ];
   const myState = [
-    { id: 1, name: "Add State", route: "/cmsroboticlife/add-state" },
-    { id: 2, name: "State List", route: "/cmsroboticlife/my-state" }
+    { id: 1, name: "Add State", route: "/cmsthebotsworld/add-state" },
+    { id: 2, name: "State List", route: "/cmsthebotsworld/my-state" }
   ];
   const myCity = [
-    { id: 1, name: "Add City", route: "/cmsroboticlife/add-city" },
-    { id: 2, name: "City List", route: "/cmsroboticlife/my-cities" }
+    { id: 1, name: "Add City", route: "/cmsthebotsworld/add-city" },
+    { id: 2, name: "City List", route: "/cmsthebotsworld/my-cities" }
   ];
  
   const myLocation = [
-    { id: 1, name: "Add Location", route: "/cmsroboticlife/add-location" },
-    { id: 2, name: "Location List", route: "/cmsroboticlife/my-location" }
+    { id: 1, name: "Add Location", route: "/cmsthebotsworld/add-location" },
+    { id: 2, name: "Location List", route: "/cmsthebotsworld/my-location" }
   ];
   const myAmenity = [
-    { id: 1, name: "Add Amenity", route: "/cmsroboticlife/add-amenities" },
-    { id: 2, name: "Amenity List", route: "/cmsroboticlife/my-amenities" }
+    { id: 1, name: "Add Amenity", route: "/cmsthebotsworld/add-amenities" },
+    { id: 2, name: "Amenity List", route: "/cmsthebotsworld/my-amenities" }
   ];
   const myPropertytype = [
-    { id: 1, name: "Add Property type", route: "/cmsroboticlife/add-propertytype" },
-    { id: 2, name: "Property type List", route: "/cmsroboticlife/my-propertytype" }
+    { id: 1, name: "Add Property type", route: "/cmsthebotsworld/add-propertytype" },
+    { id: 2, name: "Property type List", route: "/cmsthebotsworld/my-propertytype" }
   ];
   const myBuilder = [
-    { id: 1, name: "Add Builder", route: "/cmsroboticlife/add-builder" },
-    { id: 2, name: "Builder List", route: "/cmsroboticlife/my-builder" }
+    { id: 1, name: "Add Builder", route: "/cmsthebotsworld/add-builder" },
+    { id: 2, name: "Builder List", route: "/cmsthebotsworld/my-builder" }
   ];
   const myAgent = [
-    { id: 1, name: "Add Agent", route: "/cmsroboticlife/add-agent" },
-    { id: 2, name: "Agent List", route: "/cmsroboticlife/my-agent" }
+    { id: 1, name: "Add Agent", route: "/cmsthebotsworld/add-agent" },
+    { id: 2, name: "Agent List", route: "/cmsthebotsworld/my-agent" }
   ];
   
   const myProperties = [
-    { id: 1, name: "Add Property", route: "/cmsroboticlife/create-listing" },
-    { id: 2, name: "Property List", route: "/cmsroboticlife/my-properties" }
+    { id: 1, name: "Add Property", route: "/cmsthebotsworld/create-listing" },
+    { id: 2, name: "Property List", route: "/cmsthebotsworld/my-properties" }
   ];
   const myBlog = [
-    { id: 1, name: "Add Blog category", route: "/cmsroboticlife/add-blogcategory" },
-    { id: 2, name: "Blog category List", route: "/cmsroboticlife/my-blogcategory" },
-    { id: 3, name: "Add Blog", route: "/cmsroboticlife/add-blog" },
-    { id: 4, name: "Blog List", route: "/cmsroboticlife/my-blog" },
+    { id: 1, name: "Add Blog category", route: "/cmsthebotsworld/add-blogcategory" },
+    { id: 2, name: "Blog category List", route: "/cmsthebotsworld/my-blogcategory" },
+    { id: 3, name: "Add Blog", route: "/cmsthebotsworld/add-blog" },
+    { id: 4, name: "Blog List", route: "/cmsthebotsworld/my-blog" },
     
   ];
   const myPropertypage = [
-    { id: 1, name: "Add Property page", route: "/cmsroboticlife/add-propertypage" },
-    { id: 2, name: "Property page List", route: "/cmsroboticlife/my-propertypage" }
+    { id: 1, name: "Add Property page", route: "/cmsthebotsworld/add-propertypage" },
+    { id: 2, name: "Property page List", route: "/cmsthebotsworld/my-propertypage" }
   ];
   const myTestimonial = [
-    { id: 1, name: "Add Testimonial", route: "/cmsroboticlife/add-testimonial" },
-    { id: 2, name: "Testimonial List", route: "/cmsroboticlife/my-testimonial" }
+    { id: 1, name: "Add Testimonial", route: "/cmsthebotsworld/add-testimonial" },
+    { id: 2, name: "Testimonial List", route: "/cmsthebotsworld/my-testimonial" }
   ];
   
   const myFaq = [
-    { id: 1, name: "Add FAQ", route: "/cmsroboticlife/add-faq" },
-    { id: 2, name: "FAQ List", route: "/cmsroboticlife/my-faq" }
+    { id: 1, name: "Add FAQ", route: "/cmsthebotsworld/add-faq" },
+    { id: 2, name: "FAQ List", route: "/cmsthebotsworld/my-faq" }
   ];
   const reviews = [
-    { id: 1, name: "My Reviews", route: "/cmsroboticlife/my-review" },
-    { id: 2, name: "Visitor Reviews", route: "/cmsroboticlife/my-review" },
+    { id: 1, name: "My Reviews", route: "/cmsthebotsworld/my-review" },
+    { id: 2, name: "Visitor Reviews", route: "/cmsthebotsworld/my-review" },
   ];
   const manageAccount = [
     {
@@ -117,7 +117,7 @@ const SidebarMenu = () => {
                   : ""
               }`}
             >
-              <Link href="/cmsroboticlife/my-dashboard">
+              <Link href="/cmsthebotsworld/my-dashboard">
                 <i className="flaticon-layers"></i>
                 <span> Dashboard</span>
               </Link>

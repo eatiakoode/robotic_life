@@ -13,7 +13,7 @@ const MyAccount = () => {
   const router = useRouter();
   const handleLogout = () => {
     localStorage.removeItem('user');
-    router.push('/cmsroboticlife');
+    router.push('/cmsthebotsworld');
   };
   const pathname = usePathname()
   const profileMenuItems = [

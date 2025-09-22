@@ -79,7 +79,7 @@ const CreateList = () => {
 
       if (data.status === "success") {
         setTimeout(() => {
-          router.push("/cmsroboticlife/my-category");
+          router.push("/cmsthebotsworld/my-category");
         }, 1500);
       }
 
@@ -230,7 +230,7 @@ const CreateList = () => {
           <button
             className="btn btn1 float-start"
             type="button"
-            onClick={() => (window.location.href = "/cmsroboticlife/my-dashboard")}
+            onClick={() => (window.location.href = "/cmsthebotsworld/my-dashboard")}
           >
             Back
           </button>

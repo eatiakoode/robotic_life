@@ -37,7 +37,7 @@ const CreateList = () => {
         toast.success(data.message);
         if(data.status=="success"){
           setTimeout(() => {
-          router.push("/cmsroboticlife/my-country");
+          router.push("/cmsthebotsworld/my-country");
           }, 1000); 
         }
   
@@ -78,7 +78,7 @@ const CreateList = () => {
 
       <div className="col-xl-12">
         <div className="my_profile_setting_input">
-          <button className="btn btn1 float-start" type="button" onClick={() => window.location.href = '/cmsroboticlife/my-dashboard'}>Back</button>
+          <button className="btn btn1 float-start" type="button" onClick={() => window.location.href = '/cmsthebotsworld/my-dashboard'}>Back</button>
            <button type="submit" className="btn btn2 float-end" disabled={isSubmitting} >{isSubmitting ? 'Sending...' : 'Submit'}</button>
         </div>
       </div>
