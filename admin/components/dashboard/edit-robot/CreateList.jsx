@@ -937,7 +937,7 @@ const EditList = () => {
       if (safeFeature && safeFeature.trim() !== "") {
         formData.append("capabilities.features", safeFeature.trim());
       } else {
-        formData.append("capabilities.features", "[]");
+        formData.append("capabilities.features", "");
       }
       if (communicationRange && !isNaN(communicationRange)) {
         formData.append("capabilities.communicationRange.value", String(communicationRange));
@@ -952,7 +952,7 @@ const EditList = () => {
       if (safeInteroperability && safeInteroperability.trim() !== "") {
         formData.append("capabilities.interoperability", safeInteroperability.trim());
       } else {
-        formData.append("capabilities.interoperability", "[]");
+        formData.append("capabilities.interoperability", "");
       }
 
       // Payloads & Attachments
@@ -961,7 +961,7 @@ const EditList = () => {
       if (safeAttachments && safeAttachments.trim() !== "") {
         formData.append("payloadsAndAttachments.attachments", safeAttachments.trim());
       } else {
-        formData.append("payloadsAndAttachments.attachments", "[]");
+        formData.append("payloadsAndAttachments.attachments", "");
       }
       
       // Safely handle accessoryPorts field
@@ -969,7 +969,7 @@ const EditList = () => {
       if (safeAccessoryPorts && safeAccessoryPorts.trim() !== "") {
         formData.append("payloadsAndAttachments.accessoryPorts", safeAccessoryPorts.trim());
       } else {
-        formData.append("payloadsAndAttachments.accessoryPorts", "[]");
+        formData.append("payloadsAndAttachments.accessoryPorts", "");
       }
       formData.append("payloadsAndAttachments.hotSwappable", hotSwappable ? "true" : "false");
       
@@ -987,7 +987,7 @@ const EditList = () => {
       if (safeSecurityFeatures && safeSecurityFeatures.trim() !== "") {
         formData.append("sensorsAndSoftware.securityFeatures", safeSecurityFeatures.trim());
       } else {
-        formData.append("sensorsAndSoftware.securityFeatures", "[]");
+        formData.append("sensorsAndSoftware.securityFeatures", "");
       }
 
       // Data logging fields
@@ -1006,7 +1006,7 @@ const EditList = () => {
       if (safeApplications && safeApplications.trim() !== "") {
         formData.append("operationalEnvironmentAndApplications.applications", safeApplications.trim());
       } else {
-        formData.append("operationalEnvironmentAndApplications.applications", "[]");
+        formData.append("operationalEnvironmentAndApplications.applications", "");
       }
       
       // Safely handle enduranceExtremeConditions field
@@ -1014,7 +1014,7 @@ const EditList = () => {
       if (safeEnduranceExtremeConditions && safeEnduranceExtremeConditions.trim() !== "") {
         formData.append("operationalEnvironmentAndApplications.enduranceExtremeConditions", safeEnduranceExtremeConditions.trim());
       } else {
-        formData.append("operationalEnvironmentAndApplications.enduranceExtremeConditions", "[]");
+        formData.append("operationalEnvironmentAndApplications.enduranceExtremeConditions", "");
       }
       
       // Safely handle deploymentLogistics field
@@ -1022,7 +1022,7 @@ const EditList = () => {
       if (safeDeploymentLogistics && safeDeploymentLogistics.trim() !== "") {
         formData.append("operationalEnvironmentAndApplications.deploymentLogistics", safeDeploymentLogistics.trim());
       } else {
-        formData.append("operationalEnvironmentAndApplications.deploymentLogistics", "[]");
+        formData.append("operationalEnvironmentAndApplications.deploymentLogistics", "");
       }
 
       // Append nested unit/value fields with number validation

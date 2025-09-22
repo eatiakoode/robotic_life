@@ -84,7 +84,7 @@ export default function Testimonials() {
                     <div className="quote-box">
                       <span className="icon icon-quote" />
                       <div className="text-btn-uppercase text-secondary-2">
-                        Customer Say!
+                        Testimonials
                       </div>
                     </div>
                     <h4>"{testimonial.message}"</h4>
@@ -96,9 +96,9 @@ export default function Testimonials() {
                       </div>
                       <h6>
                         {testimonial.name}
-                        <span className="text-title text-se">
+                        {/* <span className="text-title text-se">
                           / {testimonial.designation}
-                        </span>
+                        </span> */}
                       </h6>
                     </div>
                   </div>
@@ -137,7 +137,7 @@ export default function Testimonials() {
                   <div className="quote-box">
                     <span className="icon icon-quote" />
                     <div className="text-btn-uppercase text-secondary-2">
-                      Customer Say!
+                      Testimonials
                     </div>
                   </div>
                   <h4>"{testimonial.message}"</h4>
@@ -149,9 +149,9 @@ export default function Testimonials() {
                     </div>
                     <h6>
                       {testimonial.name}
-                      <span className="text-title text-se">
+                      {/* <span className="text-title text-se">
                         / {testimonial.designation}
-                      </span>
+                      </span> */}
                     </h6>
                   </div>
                 </div>

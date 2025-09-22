@@ -533,7 +533,7 @@ const CreateList = () => {
       if (safeFeature && safeFeature.trim() !== "") {
         formData.append("capabilities.features", safeFeature.trim());
       } else {
-        formData.append("capabilities.features", "[]");
+        formData.append("capabilities.features", "");
       }
       
       // Safely handle interoperability field
@@ -541,7 +541,7 @@ const CreateList = () => {
       if (safeInteroperability && safeInteroperability.trim() !== "") {
         formData.append("capabilities.interoperability", safeInteroperability.trim());
       } else {
-        formData.append("capabilities.interoperability", "[]");
+        formData.append("capabilities.interoperability", "");
       }
       
       // Safely handle attachments field
@@ -549,7 +549,7 @@ const CreateList = () => {
       if (safeAttachments && safeAttachments.trim() !== "") {
         formData.append("payloadsAndAttachments.attachments", safeAttachments.trim());
       } else {
-        formData.append("payloadsAndAttachments.attachments", "[]");
+        formData.append("payloadsAndAttachments.attachments", "");
       }
       
       // Safely handle accessoryPorts field
@@ -557,7 +557,7 @@ const CreateList = () => {
       if (safeAccessoryPorts && safeAccessoryPorts.trim() !== "") {
         formData.append("payloadsAndAttachments.accessoryPorts", safeAccessoryPorts.trim());
       } else {
-        formData.append("payloadsAndAttachments.accessoryPorts", "[]");
+        formData.append("payloadsAndAttachments.accessoryPorts", "");
       }
       if (operatingSystem && operatingSystem.trim() !== "") formData.append("sensorsAndSoftware.operatingSystem", operatingSystem.trim());
       if (firmwareVersion && firmwareVersion.trim() !== "") formData.append("sensorsAndSoftware.firmwareVersion", firmwareVersion.trim());
@@ -567,7 +567,7 @@ const CreateList = () => {
       if (safeSecurityFeatures && safeSecurityFeatures.trim() !== "") {
         formData.append("sensorsAndSoftware.securityFeatures", safeSecurityFeatures.trim());
       } else {
-        formData.append("sensorsAndSoftware.securityFeatures", "[]");
+        formData.append("sensorsAndSoftware.securityFeatures", "");
       }
       
       // Safely handle applications field
@@ -575,7 +575,7 @@ const CreateList = () => {
       if (safeApplications && safeApplications.trim() !== "") {
         formData.append("operationalEnvironmentAndApplications.applications", safeApplications.trim());
       } else {
-        formData.append("operationalEnvironmentAndApplications.applications", "[]");
+        formData.append("operationalEnvironmentAndApplications.applications", "");
       }
       
       // Safely handle enduranceExtremeConditions field
@@ -583,7 +583,7 @@ const CreateList = () => {
       if (safeEnduranceExtremeConditions && safeEnduranceExtremeConditions.trim() !== "") {
         formData.append("operationalEnvironmentAndApplications.enduranceExtremeConditions", safeEnduranceExtremeConditions.trim());
       } else {
-        formData.append("operationalEnvironmentAndApplications.enduranceExtremeConditions", "[]");
+        formData.append("operationalEnvironmentAndApplications.enduranceExtremeConditions", "");
       }
       
       // Safely handle deploymentLogistics field
@@ -591,7 +591,7 @@ const CreateList = () => {
       if (safeDeploymentLogistics && safeDeploymentLogistics.trim() !== "") {
         formData.append("operationalEnvironmentAndApplications.deploymentLogistics", safeDeploymentLogistics.trim());
       } else {
-        formData.append("operationalEnvironmentAndApplications.deploymentLogistics", "[]");
+        formData.append("operationalEnvironmentAndApplications.deploymentLogistics", "");
       }
 
       // Dimensions with validation

@@ -9,7 +9,6 @@ export default function FAQs({ product }) {
 
   useEffect(() => {
     const fetchFAQs = async () => {
-      // Check for both product.id and product._id to handle different data structures
       const productId = product?.id || product?._id;
       
       if (!productId) {
@@ -20,8 +19,6 @@ export default function FAQs({ product }) {
       try {
         setLoading(true);
         setError(null);
-        
-        // Ensure the base URL is always present, with a fallback to common backend ports
         const baseUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL || 'http://localhost:5000/';
         const apiUrl = `${baseUrl}frontend/api/faq/robot/${productId}`;
         const response = await fetch(apiUrl);
@@ -31,8 +28,7 @@ export default function FAQs({ product }) {
         }
         
         const data = await response.json();
-        
-        // Handle the response data structure
+
         if (data.success && Array.isArray(data.data)) {
           setFaqs(data.data);
         } else if (Array.isArray(data)) {
@@ -43,7 +39,7 @@ export default function FAQs({ product }) {
       } catch (err) {
         console.error('Error fetching FAQs:', err);
         setError(err.message);
-        setFaqs([]); // Don't show default FAQs, show empty state
+        setFaqs([]); 
       } finally {
         setLoading(false);
       }
@@ -94,10 +90,10 @@ export default function FAQs({ product }) {
   return (
     <div className="tab-faqs">
       <div className="faq-section">
-        <h4 className="mb-4">Frequently Asked Questions</h4>
+        {/* <h4 className="mb-4">Frequently Asked Questions</h4>
         <p className="text-muted mb-4">
           Find answers to common questions about this robot. If you don't see your question here, feel free to contact us.
-        </p>
+        </p> */}
         
         <div className="accordion" id="faqAccordion">
           {faqs.map((faq, index) => (
@@ -166,7 +162,7 @@ export default function FAQs({ product }) {
              </div>
              <h5 className="text-muted">No FAQs Available</h5>
              <p className="text-muted">
-               There are no frequently asked questions available for this robot yet. Check back later or contact us for more information.
+               There are no frequently asked questions available for this robot yet.
              </p>
            </div>
          )}

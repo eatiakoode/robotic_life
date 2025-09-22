@@ -14,7 +14,7 @@ export const addTestimonialAPI = async (formData) => {
     if (!token) {
       throw new Error("User not authenticated!");
     }
-    const response = await fetch(process.env.NEXT_PUBLIC_ADMIN_API_URL+"api/testimonial", {
+    const response = await fetch(process.env.NEXT_PUBLIC_ADMIN_API_URL+"admin/api/testimonial", {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -75,7 +75,7 @@ const token =userData.token
       throw new Error("User not authenticated!");
     }
   
-    const response = await fetch(process.env.NEXT_PUBLIC_ADMIN_API_URL+`api/testimonial/${id}`, {
+    const response = await fetch(process.env.NEXT_PUBLIC_ADMIN_API_URL+`admin/api/testimonial/${id}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -98,25 +98,27 @@ const token =userData.token
 
   export const getTestimonialById = async (id: string) => {
     const userData = JSON.parse(localStorage.getItem("user"));
-const token =userData.token
+    const token = userData?.token;
+    
     if (!token) {
       throw new Error("User not authenticated!");
     }
+
+    const apiUrl = (process.env.NEXT_PUBLIC_ADMIN_API_URL || "http://localhost:5000/") + `admin/api/testimonial/${id}`;
   
-    const response = await fetch(process.env.NEXT_PUBLIC_ADMIN_API_URL+`api/testimonial/${id}`, {
+    const response = await fetch(apiUrl, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
-      // body: JSON.stringify({ id }),
     });
   
     if (!response.ok) {
       const errorData = await response.json();
       throw new Error(errorData.message || "Failed to get testimonial");
     }
-  
+
     return response.json();
   };
 
@@ -131,7 +133,7 @@ const token =userData.token
       throw new Error("User not authenticated!");
     }
     
-    const response = await fetch(process.env.NEXT_PUBLIC_ADMIN_API_URL+`api/testimonial/${id}`, {
+    const response = await fetch(process.env.NEXT_PUBLIC_ADMIN_API_URL+`admin/api/testimonial/${id}`, {
       method: "PUT",
       headers: {
         // "Content-Type": "application/json",

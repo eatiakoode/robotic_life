@@ -19,17 +19,28 @@ const CreateList = () => {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [error, setError] = useState("");
     useEffect(() => {
-      if (!id) return;      
+      if (!id) {
+        setLoading(false);
+        return;
+      }      
       const fetchTestimonial = async () => {
         try {
-          const data = await getTestimonialById(id);
+          setLoading(true);
+          const response = await getTestimonialById(id);
           
-          setName(data.data.name || "");
-          setDesignation(data.data.designation || "");
-          setMessage(data.data.message || "");
-          setRating(data.data.rating || 5);
-          setStatus(data.data.status !== undefined ? data.data.status : true);
+          if (response.success && response.data) {
+            setName(response.data.name || "");
+            setDesignation(response.data.designation || "");
+            setMessage(response.data.message || "");
+            setRating(response.data.rating || 5);
+            setStatus(response.data.status !== undefined ? response.data.status : true);
+          } else {
+            setError("Failed to load testimonial data");
+            toast.error("Failed to load testimonial data");
+          }
         } catch (error) {
+          setError(error.message || "Failed to load testimonial");
+          toast.error(error.message || "Failed to load testimonial");
         } finally {
           setLoading(false);
         }
@@ -42,23 +53,6 @@ const CreateList = () => {
       e.preventDefault();
       setIsSubmitting(true);
       setError("");
-      
-      // Validate required fields
-      if (!name.trim()) {
-        setError("Name is required");
-        setIsSubmitting(false);
-        return;
-      }
-      if (!designation.trim()) {
-        setError("Designation is required");
-        setIsSubmitting(false);
-        return;
-      }
-      if (!message.trim()) {
-        setError("Message is required");
-        setIsSubmitting(false);
-        return;
-      }
       
       try {
         const formData = new FormData();
@@ -93,13 +87,31 @@ const CreateList = () => {
     //   setTestimonial((prev) => ({ ...prev, status: !prev.status }));
     // };
   
-    if (loading) return <p>Loading...</p>;
+    if (loading) {
+      return (
+        <div className="col-lg-12">
+          <div className="text-center py-5">
+            <div className="spinner-border text-primary" role="status">
+              <span className="visually-hidden">Loading...</span>
+            </div>
+            <p className="mt-3">Loading testimonial data...</p>
+          </div>
+        </div>
+      );
+    }
   return (
     <>
+    {error && (
+      <div className="col-lg-12 mb-3">
+        <div className="alert alert-danger" role="alert">
+          {error}
+        </div>
+      </div>
+    )}
     <form onSubmit={handleSubmit} className="row">
       <div className="col-lg-6 col-xl-6">
         <div className="my_profile_setting_input form-group">
-          <label htmlFor="CustomerName">Customer Name *</label>
+          <label htmlFor="CustomerName">Customer Name</label>
           <input
             type="text"
             className="form-control"
@@ -108,15 +120,13 @@ const CreateList = () => {
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder="Enter customer name"
-            required
           />
-          {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
         </div>
       </div>
       {/* End .col */}
       <div className="col-lg-6 col-xl-6">
         <div className="my_profile_setting_input form-group">
-          <label htmlFor="CustomerDesignation">Customer Designation *</label>
+          <label htmlFor="CustomerDesignation">Customer Designation</label>
           <input
             type="text"
             className="form-control"
@@ -125,21 +135,18 @@ const CreateList = () => {
             value={designation}
             onChange={(e) => setDesignation(e.target.value)}
             placeholder="e.g., CEO, Manager, Designer"
-            required
           />
-          {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
         </div>
       </div>
       {/* End .col */}
       <div className="col-lg-6 col-xl-6">
         <div className="my_profile_setting_input form-group">
-          <label htmlFor="Rating">Rating *</label>
+          <label htmlFor="Rating">Rating</label>
           <select
             className="form-control"
             id="Rating"
             value={rating}
             onChange={(e) => setRating(parseInt(e.target.value))}
-            required
           >
             <option value={1}>1 Star</option>
             <option value={2}>2 Stars</option>
@@ -168,7 +175,7 @@ const CreateList = () => {
       {/* End .col */}
       <div className="col-lg-12">
         <div className="my_profile_setting_textarea form-group">
-          <label htmlFor="TestimonialMessage">Testimonial Message *</label>
+          <label htmlFor="TestimonialMessage">Testimonial Message</label>
           <textarea 
             id="TestimonialMessage" 
             className="form-control" 
@@ -177,9 +184,7 @@ const CreateList = () => {
             value={message} 
             onChange={(e) => setMessage(e.target.value)} 
             placeholder="Enter the customer's testimonial message"
-            required
           ></textarea>
-          {error && <span className="text-danger">{error}</span>}
         </div>
       </div>
       {/* End .col */}
