@@ -1,4 +1,4 @@
-
+ 
 function getAuthToken(): string | null {
   if (typeof window === "undefined") {
     return null;
@@ -10,13 +10,13 @@ function getAuthToken(): string | null {
     return null;
   }
 }
-
+ 
 //  Add new robot
-
+ 
 export const addRobotAPI = async (formData: FormData) => {
   const token = getAuthToken();
   if (!token) throw new Error("User not authenticated!");
-
+ 
   try {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_ADMIN_API_URL}admin/api/robot`,
@@ -26,13 +26,13 @@ export const addRobotAPI = async (formData: FormData) => {
         body: formData,
       }
     );
-
+ 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
       console.error("Robot creation error:", errorData);
       throw new Error(errorData.error || errorData.message || "Failed to add Robot");
     }
-
+ 
     return response.json();
   } catch (error) {
     // Handle network errors
@@ -43,7 +43,7 @@ export const addRobotAPI = async (formData: FormData) => {
     throw error;
   }
 };
-
+ 
 //  Get robot table data with pagination and search
 export async function getRobotTableData(
   filter?: { limit?: number; page?: number; search?: string },
@@ -56,9 +56,9 @@ export async function getRobotTableData(
     search: "",
     ...filter
   };
-
+ 
   let token = passedToken || getAuthToken();
-
+ 
   // 🚀 On server, return empty instead of throwing
   if (!token && typeof window === "undefined") {
     return {
@@ -70,26 +70,26 @@ export async function getRobotTableData(
       hasPrevPage: false,
     };
   }
-
+ 
   if (!token) throw new Error("Authentication required. Please log in.");
-
+ 
   try {
     const skip = Math.max(0, (defaultFilter.page - 1) * defaultFilter.limit);
     const limit = Math.max(1, defaultFilter.limit);
-
+ 
     // Build query parameters
     const queryParams = new URLSearchParams({
       limit: limit.toString(),
       skip: skip.toString(),
     });
-
+ 
     // Add search parameter if provided
     if (defaultFilter.search && defaultFilter.search.trim()) {
       queryParams.append('search', defaultFilter.search.trim());
     }
-
+ 
     const url = `${process.env.NEXT_PUBLIC_ADMIN_API_URL}admin/api/robot?${queryParams.toString()}`;
-
+ 
     const response = await fetch(url, {
       method: "GET",
       headers: {
@@ -100,34 +100,34 @@ export async function getRobotTableData(
         next: { revalidate: 300 },
       }),
     });
-
+ 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
       let errorMessage =
         errorData.message || errorData.error || `HTTP ${response.status}`;
-
+ 
       if (response.status === 401) errorMessage = "Authentication failed.";
       if (response.status === 403) errorMessage = "Access denied.";
       if (response.status >= 500) errorMessage = "Server error.";
-
+ 
       throw new Error(errorMessage);
     }
-
+ 
     const data = await response.json();
-
+ 
     const items = Array.isArray(data.items)
       ? data.items
       : Array.isArray(data)
       ? data
       : [];
-
+ 
     const totalCount =
       typeof data.totalCount === "number"
         ? data.totalCount
         : typeof data.total === "number"
         ? data.total
         : items.length;
-
+ 
     return {
       items,
       totalCount,
@@ -138,10 +138,10 @@ export async function getRobotTableData(
     };
   } catch (error: any) {
     console.error("getRobotTableData error:", error.message);
-
+ 
     // 🚀 Only bubble up auth error so UI can redirect
     if (error.message.includes("Authentication")) throw error;
-
+ 
     return {
       items: [],
       totalCount: 0,
@@ -153,7 +153,7 @@ export async function getRobotTableData(
     };
   }
 }
-
+ 
 /**
  * SWR-compatible fetcher
  */
@@ -167,14 +167,14 @@ export const robotFetcher = (url: string) => {
     return res.json();
   });
 };
-
+ 
 /**
  * Delete robot
  */
 export const deleteRobotAPI = async (id: string) => {
   const token = getAuthToken();
   if (!token) throw new Error("User not authenticated!");
-
+ 
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_ADMIN_API_URL}admin/api/robot/${id}`,
     {
@@ -185,22 +185,22 @@ export const deleteRobotAPI = async (id: string) => {
       },
     }
   );
-
+ 
   if (!response.ok) {
     const errorData = await response.json().catch(() => ({}));
     throw new Error(errorData.message || "Failed to delete Robot");
   }
-
+ 
   return response.json();
 };
-
+ 
 /**
  * Get robot by ID
  */
 export const getRobotById = async (id: string, passedToken?: string) => {
   const token = passedToken || getAuthToken();
   if (!token) throw new Error("User not authenticated!");
-
+ 
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_ADMIN_API_URL}admin/api/robot/${id}`,
     {
@@ -208,15 +208,15 @@ export const getRobotById = async (id: string, passedToken?: string) => {
       headers: { Authorization: `Bearer ${token}` },
     }
   );
-
+ 
   if (!response.ok) {
     const errorData = await response.json().catch(() => ({}));
     throw new Error(errorData.message || "Failed to get Robot");
   }
-
+ 
   return response.json();
 };
-
+ 
 /**
  * Update robot
  */
@@ -233,16 +233,16 @@ export const updateRobotAPI = async (id: string, formData, passedToken?: string)
       body: formData,
     }
   );
-
+ 
 if (!response.ok) {
-  let errorText = await response.text(); 
+  let errorText = await response.text();
   console.error("Update Robot API error:", errorText);
   throw new Error(errorText || "Failed to update Robot");
 }
-
+ 
   return response.json();
 };
-
+ 
 /**
  * Delete single robot image
  */
@@ -252,7 +252,7 @@ export const deleteRobotSingleImagesAPI = async (payload: {
 }) => {
   const token = getAuthToken();
   if (!token) throw new Error("User not authenticated!");
-
+ 
   const response = await fetch(
       `${process.env.NEXT_PUBLIC_ADMIN_API_URL}admin/api/robot/image`,
     {
@@ -268,6 +268,8 @@ export const deleteRobotSingleImagesAPI = async (payload: {
     const errorData = await response.json().catch(() => ({}));
     throw new Error(errorData.message || "Failed to delete Robot image");
   }
-
+ 
   return response.json();
 };
+ 
+ 

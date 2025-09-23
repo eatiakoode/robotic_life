@@ -11,6 +11,7 @@ export const useSearchAndPagination = (fetchFunction, itemsPerPage = 10, searchF
   // Data state
   const [allData, setAllData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
+  const [totalCount, setTotalCount] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -23,7 +24,7 @@ export const useSearchAndPagination = (fetchFunction, itemsPerPage = 10, searchF
     fetchData();
   }, []);
 
-  // Fetch data from API
+  // Fetch data from API - use server-side pagination
   const fetchData = useCallback(async () => {
     try {
       setLoading(true);
@@ -33,56 +34,47 @@ export const useSearchAndPagination = (fetchFunction, itemsPerPage = 10, searchF
         throw new Error('fetchFunction is not provided');
       }
       
-      
       if (typeof fetchFunction !== 'function') {
         throw new Error('fetchFunction is not a function');
       }
       
-      // Check if the function expects parameters (like pagination filters)
-      // If it has parameters, pass the current pagination state
-      let data;
-      try {
-        // First try calling without parameters (for simple API functions)
-        data = await fetchFunction();
-      } catch (paramError) {
-        // If that fails, try calling with pagination parameters
-        data = await fetchFunction({
-          limit: itemsPerPage,
-          page: currentPage
-        });
-      }
-      
+      // Always call with pagination parameters for server-side pagination
+      const data = await fetchFunction({
+        limit: itemsPerPage,
+        page: currentPage,
+        search: searchQuery.trim()
+      });
       
       // Handle different response formats
       let dataArray = [];
+      let totalCount = 0;
+      
       if (Array.isArray(data)) {
-        // Direct array response
         dataArray = data;
       } else if (data && Array.isArray(data.items)) {
-        // Response with items property
         dataArray = data.items;
+        totalCount = data.totalCount || data.total || 0;
       } else if (data && typeof data === 'object') {
-        // Try to find any array property
         const arrayProps = Object.values(data).filter(val => Array.isArray(val));
         if (arrayProps.length > 0) {
           dataArray = arrayProps[0];
-        } else {
         }
+        totalCount = data.totalCount || data.total || 0;
       }
-      
       
       setAllData(dataArray);
       setFilteredData(dataArray);
-      
+      setTotalCount(totalCount);
       
     } catch (err) {
       setError(err.message || "Failed to fetch data");
       setAllData([]);
       setFilteredData([]);
+      setTotalCount(0);
     } finally {
       setLoading(false);
     }
-  }, [fetchFunction, itemsPerPage, currentPage]);
+  }, [fetchFunction, itemsPerPage, currentPage, searchQuery]);
 
   // Search functionality - now uses server-side search
   const handleSearch = useCallback(async (query) => {
@@ -102,18 +94,23 @@ export const useSearchAndPagination = (fetchFunction, itemsPerPage = 10, searchF
       
       // Handle different response formats
       let dataArray = [];
+      let totalCount = 0;
+      
       if (Array.isArray(data)) {
         dataArray = data;
       } else if (data && Array.isArray(data.items)) {
         dataArray = data.items;
+        totalCount = data.totalCount || data.total || 0;
       } else if (data && typeof data === 'object') {
         const arrayProps = Object.values(data).filter(val => Array.isArray(val));
         if (arrayProps.length > 0) {
           dataArray = arrayProps[0];
         }
+        totalCount = data.totalCount || data.total || 0;
       }
       
       setFilteredData(dataArray);
+      setTotalCount(totalCount);
       
       // Update allData for reference (keep original data for comparison)
       if (!query.trim()) {
@@ -128,56 +125,65 @@ export const useSearchAndPagination = (fetchFunction, itemsPerPage = 10, searchF
     }
   }, [fetchFunction, itemsPerPage]);
 
-  // Pagination calculations
-  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const currentData = filteredData.slice(startIndex, endIndex);
+  // Server-side pagination - use data directly from API response
+  const currentData = filteredData;
+  
+  // Get total pages from API response or calculate from total count
+  const totalPages = useMemo(() => {
+    // Use totalCount from server response for accurate pagination
+    if (totalCount > 0) {
+      return Math.ceil(totalCount / itemsPerPage);
+    }
+    // Fallback to current data length if no totalCount
+    return Math.ceil(filteredData.length / itemsPerPage);
+  }, [totalCount, filteredData.length, itemsPerPage]);
 
-  // Handle page change
+  // Handle page change - always use server-side pagination
   const handlePageChange = useCallback(async (page) => {
     setCurrentPage(page);
     
-    // If we have a search query, refetch with search + pagination
-    if (searchQuery.trim()) {
-      try {
-        setLoading(true);
-        setError(null);
-        
-        const data = await fetchFunction({
-          limit: itemsPerPage,
-          page: page,
-          search: searchQuery.trim()
-        });
-        
-        // Handle different response formats
-        let dataArray = [];
-        if (Array.isArray(data)) {
-          dataArray = data;
-        } else if (data && Array.isArray(data.items)) {
-          dataArray = data.items;
-        } else if (data && typeof data === 'object') {
-          const arrayProps = Object.values(data).filter(val => Array.isArray(val));
-          if (arrayProps.length > 0) {
-            dataArray = arrayProps[0];
-          }
+    try {
+      setLoading(true);
+      setError(null);
+      
+      // Always call API with pagination parameters
+      const data = await fetchFunction({
+        limit: itemsPerPage,
+        page: page,
+        search: searchQuery.trim()
+      });
+      
+      // Handle different response formats
+      let dataArray = [];
+      let totalCount = 0;
+      
+      if (Array.isArray(data)) {
+        dataArray = data;
+      } else if (data && Array.isArray(data.items)) {
+        dataArray = data.items;
+        totalCount = data.totalCount || data.total || 0;
+      } else if (data && typeof data === 'object') {
+        const arrayProps = Object.values(data).filter(val => Array.isArray(val));
+        if (arrayProps.length > 0) {
+          dataArray = arrayProps[0];
         }
-        
-        setFilteredData(dataArray);
-        
-      } catch (err) {
-        setError(err.message || "Failed to fetch page data");
-        setFilteredData([]);
-      } finally {
-        setLoading(false);
+        totalCount = data.totalCount || data.total || 0;
       }
-    } else {
-      // No search query, use regular pagination
-      if (page !== currentPage) {
-        fetchData();
+      
+      setFilteredData(dataArray);
+      
+      // Update allData reference for total count
+      if (!searchQuery.trim()) {
+        setAllData(dataArray);
       }
+      
+    } catch (err) {
+      setError(err.message || "Failed to fetch page data");
+      setFilteredData([]);
+    } finally {
+      setLoading(false);
     }
-  }, [currentPage, fetchData, searchQuery, fetchFunction, itemsPerPage]);
+  }, [searchQuery, fetchFunction, itemsPerPage]);
 
   // Refresh data
   const refreshData = useCallback(() => {
@@ -189,35 +195,42 @@ export const useSearchAndPagination = (fetchFunction, itemsPerPage = 10, searchF
     setSearchQuery("");
     setCurrentPage(1);
     
-    // Refetch all data without search
+    // Refetch all data without search using server-side pagination
     try {
       setLoading(true);
       setError(null);
       
       const data = await fetchFunction({
         limit: itemsPerPage,
-        page: 1
+        page: 1,
+        search: ""
       });
       
       // Handle different response formats
       let dataArray = [];
+      let totalCount = 0;
+      
       if (Array.isArray(data)) {
         dataArray = data;
       } else if (data && Array.isArray(data.items)) {
         dataArray = data.items;
+        totalCount = data.totalCount || data.total || 0;
       } else if (data && typeof data === 'object') {
         const arrayProps = Object.values(data).filter(val => Array.isArray(val));
         if (arrayProps.length > 0) {
           dataArray = arrayProps[0];
         }
+        totalCount = data.totalCount || data.total || 0;
       }
       
       setAllData(dataArray);
       setFilteredData(dataArray);
+      setTotalCount(totalCount);
       
     } catch (err) {
       setError(err.message || "Failed to clear search");
       setFilteredData([]);
+      setTotalCount(0);
     } finally {
       setLoading(false);
     }
@@ -226,12 +239,12 @@ export const useSearchAndPagination = (fetchFunction, itemsPerPage = 10, searchF
   // Memoized values
   const searchInfo = useMemo(() => ({
     hasSearchQuery: searchQuery.trim().length > 0,
-    totalResults: filteredData.length,
-    totalItems: allData.length,
+    totalResults: totalCount, // Use server total count instead of current page data length
+    totalItems: totalCount,
     currentPage,
     totalPages,
     itemsPerPage
-  }), [searchQuery, filteredData.length, allData.length, currentPage, totalPages, itemsPerPage]);
+  }), [searchQuery, totalCount, currentPage, totalPages, itemsPerPage]);
 
 
   return {

@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 import { SafeImage } from "../../../utils/imageUtils";
 import { deleteSliderAPI } from "../../../api/slider";
 import { useRouter } from "next/navigation";
@@ -99,7 +100,7 @@ const TableData = ({ sliders = [], loading = false, error = null, onRefresh }) =
             className="img-whp cover"
             src={
               item?.images && item.images.length > 0
-                ? `${process.env.NEXT_PUBLIC_API_URL}${item.images[0]}`
+                ? `${process.env.NEXT_PUBLIC_BACKEND_API_URL}${item.images[0]}`
                 : `${process.env.NEXT_PUBLIC_API_URL}public/assets/images/thumbnail.webp`
             }
             alt={`${item?.title || 'Slider'}`}

@@ -88,7 +88,7 @@ const CreateList = () => {
               htmlFor="image1"
               style={{
                 ...(existingImages.length > 0
-                  ? { backgroundImage: `url(${process.env.NEXT_PUBLIC_API_URL}${existingImages[0]})` }
+                  ? { backgroundImage: `url(${process.env.NEXT_PUBLIC_BACKEND_API_URL}${existingImages[0]})` }
                   : images
                   ? { backgroundImage: `url(${URL.createObjectURL(images)})` }
                   : {}),

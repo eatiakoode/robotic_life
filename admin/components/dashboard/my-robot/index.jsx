@@ -117,7 +117,7 @@ const RobotIndex = () => {
                       </div>
                       {/* End .table-responsive */}
 
-                      {!loading && !error && searchInfo.totalResults > 0 && (
+                      {!loading && !error && totalPages > 1 && (
                         <div className="mbp_pagination">
                           <Pagination 
                             currentPage={currentPage}
