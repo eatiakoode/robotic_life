@@ -3,14 +3,14 @@ import Footer1 from "@/components/footers/Footer1";
 import Header1 from "@/components/headers/Header1";
 import Products1 from "@/components/products/Products1";
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { getParentCategories } from "@/api/category";
 
 // Metadata cannot be exported from client components
 // Use dynamic title updates in useEffect instead
 
-export default function ShopDefaultGridPage() {
+function ShopDefaultGridContent() {
   const searchParams = useSearchParams();
   const [categoryName, setCategoryName] = useState("All Robots");
   const [loading, setLoading] = useState(false);
@@ -87,5 +87,13 @@ export default function ShopDefaultGridPage() {
       <Products1 />
       <Footer1 dark />
     </>
+  );
+}
+
+export default function ShopDefaultGridPage() {
+  return (
+    <Suspense fallback={<div className="loading-spinner">Loading...</div>}>
+      <ShopDefaultGridContent />
+    </Suspense>
   );
 }

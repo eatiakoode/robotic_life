@@ -4,7 +4,7 @@ import Topbar6 from "@/components/headers/Topbar6";
 import Products1 from "@/components/products/Products1";
 import ShopCategories from "@/components/products/ShopCategories";
 import Link from "next/link";
-import React from "react";
+import React, { Suspense } from "react";
 
 export default function ShopCategoriesTopPage1() {
   return (
@@ -35,7 +35,9 @@ export default function ShopCategoriesTopPage1() {
         </div>
       </div>
       <ShopCategories />
-      <Products1 parentClass="flat-spacing pt-0" />
+      <Suspense fallback={<div className="loading-spinner">Loading products...</div>}>
+        <Products1 parentClass="flat-spacing pt-0" />
+      </Suspense>
       <Footer1 />
     </>
   );

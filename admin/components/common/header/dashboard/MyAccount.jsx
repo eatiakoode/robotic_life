@@ -34,10 +34,6 @@ const MyAccount = () => {
           src="/assets/images/property/man.png"
           alt="e1.png"
         />
-        {/* <p>
-          {userData.firstname}<br />
-          <span className="address">{userData.email}</span>
-        </p> */}
         <p>
           Admin<br />
           <span className="address">admin@akoode.in</span>
@@ -64,9 +60,7 @@ const MyAccount = () => {
             <a className="dropdown-item" href="#"  onClick={() => handleLogout()}>
               Log out
             </a>
-          
-
-      </div>
+          </div>
     </>
   );
 };

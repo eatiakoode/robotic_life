@@ -28,9 +28,9 @@ export default function Header1({ fullWidth = false }) {
           <div className="col-xl-3 col-md-4 col-6">
             <Link href={`/`} className="logo-header logo-fix">
               <img
-                alt="Robotic Life Logo"
+                alt="TheBotsWorld Logo"
                 className="logo logo-image-fix"
-                src="/images/logo/logo1.svg"
+                src="/images/logo/the-bots-world.svg"
                 width="144"
                 height="25"
               />
