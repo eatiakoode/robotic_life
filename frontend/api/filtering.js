@@ -1,7 +1,7 @@
 // Additional filtering API functions
 
 // Backend API base URL
-const BACKEND_API_URL = process.env.NEXT_PUBLIC_BACKEND_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'https://thebotsworld.onrender.com'}';
+const BACKEND_API_URL = process.env.NEXT_PUBLIC_BACKEND_API_URL || 'https://thebotsworld.onrender.com';
 
 // Helper function to map color names to CSS classes
 const getColorClass = (colorName) => {
@@ -33,7 +33,7 @@ const getColorClass = (colorName) => {
 
 // Fallback URLs in case the main one fails
 const FALLBACK_URLS = [
-  '${process.env.NEXT_PUBLIC_API_URL || 'https://thebotsworld.onrender.com'}',
+  'https://thebotsworld.onrender.com',
   'http://localhost:8000'
 ];
 
