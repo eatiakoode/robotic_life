@@ -123,7 +123,7 @@ const CreateList = () => {
                   >
                     <img
                       src={(() => {
-                        const backendUrl = (process.env.NEXT_PUBLIC_BACKEND_API_URL || 'http://localhost:5000').replace(/\/$/, '');
+                        const backendUrl = (process.env.NEXT_PUBLIC_BACKEND_API_URL || 'https://thebotsworld.onrender.com').replace(/\/$/, '');
                         
                         if (img.startsWith('http')) {
                           return img;
@@ -151,7 +151,7 @@ const CreateList = () => {
                       }}
                       onError={(e) => {
                         console.log(`Edit form - Image failed to load: ${e.target.src}`);
-                        const backendUrl = (process.env.NEXT_PUBLIC_BACKEND_API_URL || 'http://localhost:5000').replace(/\/$/, '');
+                        const backendUrl = (process.env.NEXT_PUBLIC_BACKEND_API_URL || 'https://thebotsworld.onrender.com').replace(/\/$/, '');
                         e.target.src = `${backendUrl}/public/assets/images/thumbnail.webp`;
                       }}
                     />

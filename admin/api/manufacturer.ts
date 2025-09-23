@@ -52,7 +52,7 @@ const token =userData.token
         return [];
       }
 
-      const apiUrl = process.env.NEXT_PUBLIC_ADMIN_API_URL || 'http://localhost:5000/';
+      const apiUrl = process.env.NEXT_PUBLIC_ADMIN_API_URL || 'https://thebotsworld.onrender.com/';
       const response = await fetch(apiUrl+"admin/api/manufacturer?limit="+defaultFilter.limit+"&skip="+defaultFilter.page, {
         method: "GET",
         headers: {

@@ -1,7 +1,7 @@
 /** @type {import('next.js')} */
 const nextConfig = {
   images: {
-    unoptimized: false, // Enable image optimization
+    unoptimized: process.env.NODE_ENV === 'development', // Disable optimization in development
     remotePatterns: [
       {
         protocol: 'http',
@@ -26,6 +26,16 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'thebotsworld.onrender.com',
         pathname: '/images/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'thebotsworld.onrender.com',
+        pathname: '/public/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'thebotsworld.onrender.com',
+        pathname: '/**',
       },
     ],
     // Allow local images from public folder

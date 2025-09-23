@@ -1,7 +1,7 @@
 // Frontend product API functions for dynamic product fetching
 
 // Backend API base URL
-const BACKEND_API_URL = process.env.NEXT_PUBLIC_BACKEND_API_URL || 'http://localhost:5000';
+const BACKEND_API_URL = process.env.NEXT_PUBLIC_BACKEND_API_URL || 'https://thebotsworld.onrender.com';
 
 // Helper function to normalize image URLs
 const normalizeImageUrl = (imagePath, baseUrl = BACKEND_API_URL) => {
@@ -63,7 +63,7 @@ const getColorClass = (colorName) => {
 
 // Fallback URLs in case the main one fails
 const FALLBACK_URLS = [
-  'http://localhost:5000' // Only use the main backend URL
+  'https://thebotsworld.onrender.com' // Only use the main backend URL
 ];
 
 // Get all products (robots) from backend

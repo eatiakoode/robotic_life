@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://thebotsworld.onrender.com';
 
 export const useAdjacentBlogs = (blogId) => {
   const [adjacentBlogs, setAdjacentBlogs] = useState({

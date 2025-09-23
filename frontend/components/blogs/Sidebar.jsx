@@ -69,12 +69,12 @@ export default function Sidebar() {
     
     // If it's a filename, construct the backend URL
     if (!imagePath.includes('/')) {
-      return `http://localhost:5000/images/blogs/${imagePath}`;
+      return `${process.env.NEXT_PUBLIC_API_URL || 'https://thebotsworld.onrender.com'}/images/blogs/${imagePath}`;
     }
     
     // If it's a full path, extract filename and construct URL
     const filename = imagePath.split('/').pop();
-    return `http://localhost:5000/images/blogs/${filename}`;
+    return `${process.env.NEXT_PUBLIC_API_URL || 'https://thebotsworld.onrender.com'}/images/blogs/${filename}`;
   };
 
   // Helper function to format date

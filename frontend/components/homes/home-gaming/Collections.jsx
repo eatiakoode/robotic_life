@@ -29,14 +29,14 @@ export default function Collections() {
     }
 
     if (imagePath.startsWith("public/")) {
-      return `http://localhost:5000/${imagePath}`;
+      return `${process.env.NEXT_PUBLIC_API_URL || 'https://thebotsworld.onrender.com'}/${imagePath}`;
     }
 
     if (!imagePath.includes("/")) {
-      return `http://localhost:5000/public/images/category/${imagePath}`;
+      return `${process.env.NEXT_PUBLIC_API_URL || 'https://thebotsworld.onrender.com'}/public/images/category/${imagePath}`;
     }
 
-    return `http://localhost:5000/${imagePath}`;
+    return `${process.env.NEXT_PUBLIC_API_URL || 'https://thebotsworld.onrender.com'}/${imagePath}`;
   };
 
   // Function to split the description for the title

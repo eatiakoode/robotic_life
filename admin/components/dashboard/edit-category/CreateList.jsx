@@ -55,7 +55,7 @@ const CreateList = () => {
           setParentCategories(Array.isArray(parents) ? parents : []);
           const imgPath = cat.logoImage || cat.logoimage;
           if (imgPath) {
-            const backendUrl = (process.env.NEXT_PUBLIC_BACKEND_API_URL || 'http://localhost:5000').replace(/\/$/, '');
+            const backendUrl = (process.env.NEXT_PUBLIC_BACKEND_API_URL || 'https://thebotsworld.onrender.com').replace(/\/$/, '');
             const cleanPath = imgPath.startsWith('/') ? imgPath.substring(1) : imgPath;
             setLogoImage(`${backendUrl}/${cleanPath}`);
           }

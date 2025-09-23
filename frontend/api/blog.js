@@ -1,11 +1,11 @@
 // Frontend API functions for fetching blog data
 
 // Backend API base URL
-const BACKEND_API_URL = process.env.NEXT_PUBLIC_BACKEND_API_URL || 'http://localhost:5000';
+const BACKEND_API_URL = process.env.NEXT_PUBLIC_BACKEND_API_URL || 'https://thebotsworld.onrender.com';
 
 // Fallback URLs in case the main one fails
 const FALLBACK_URLS = [
-  'http://localhost:5000',
+  'https://thebotsworld.onrender.com',
   'http://localhost:8000'
 ];
 

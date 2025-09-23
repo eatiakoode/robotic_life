@@ -45,7 +45,7 @@ export const addTestimonialAPI = async (formData) => {
         return [];
       }
 
-      const apiUrl = process.env.NEXT_PUBLIC_ADMIN_API_URL || 'http://localhost:5000/';
+      const apiUrl = process.env.NEXT_PUBLIC_ADMIN_API_URL || 'https://thebotsworld.onrender.com/';
       const response = await fetch(apiUrl + "admin/api/testimonial", {
         method: "GET",
         headers: {
@@ -104,7 +104,7 @@ const token =userData.token
       throw new Error("User not authenticated!");
     }
 
-    const apiUrl = (process.env.NEXT_PUBLIC_ADMIN_API_URL || "http://localhost:5000/") + `admin/api/testimonial/${id}`;
+    const apiUrl = (process.env.NEXT_PUBLIC_ADMIN_API_URL || "https://thebotsworld.onrender.com/") + `admin/api/testimonial/${id}`;
   
     const response = await fetch(apiUrl, {
       method: "GET",

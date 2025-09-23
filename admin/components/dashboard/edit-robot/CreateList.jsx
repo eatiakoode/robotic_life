@@ -176,7 +176,7 @@ const EditList = () => {
     }
 
     // Get the backend API URL and construct full image URL
-    const apiUrl = process.env.NEXT_PUBLIC_ADMIN_API_URL || "http://localhost:5000/";
+    const apiUrl = process.env.NEXT_PUBLIC_ADMIN_API_URL || "https://thebotsworld.onrender.com/";
     const cleanPath = path.replace(/^public\//, "");
     const fullImageUrl = apiUrl + cleanPath;
 

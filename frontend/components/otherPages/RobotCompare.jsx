@@ -145,12 +145,12 @@ export default function RobotCompare() {
     }
     
     if (imagePath.startsWith('public/')) {
-      return `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/${imagePath.replace('public/', '')}`;
+      return `${process.env.NEXT_PUBLIC_API_URL || 'https://thebotsworld.onrender.com'}/${imagePath.replace('public/', '')}`;
     }
     if (imagePath.startsWith('http')) {
       return imagePath;
     }
-    return `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/${imagePath}`;
+    return `${process.env.NEXT_PUBLIC_API_URL || 'https://thebotsworld.onrender.com'}/${imagePath}`;
   };
 
   const formatArraySpec = (arr) => {

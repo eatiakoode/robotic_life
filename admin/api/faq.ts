@@ -44,7 +44,7 @@ export async function getFaqTableData(filter) {
       return { items: [], totalCount: 0 };
     }
 
-    const apiUrl = process.env.NEXT_PUBLIC_ADMIN_API_URL || 'http://localhost:5000/';
+    const apiUrl = process.env.NEXT_PUBLIC_ADMIN_API_URL || 'https://thebotsworld.onrender.com/';
     const response = await fetch(apiUrl + "admin/api/faq?limit=" + filter.limit + "&skip=" + filter.page, {
       method: "GET",
       headers: {

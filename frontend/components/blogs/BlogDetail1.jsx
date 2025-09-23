@@ -81,7 +81,7 @@ export default function BlogDetail1({ blog }) {
               <div className="w-100 d-flex justify-content-center">
                 <Image
                   alt={`${blog.title} - Image`}
-                  src={`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/images/blogs/${blog.additionalImages[0].split('/').pop()}`}
+                  src={`${process.env.NEXT_PUBLIC_API_URL || 'https://thebotsworld.onrender.com'}/images/blogs/${blog.additionalImages[0].split('/').pop()}`}
                   width={623}
                   height={468}
                   style={{ width: '100%', maxWidth: '623px', height: 'auto', objectFit: 'cover', borderRadius: '15px'}}
@@ -94,7 +94,7 @@ export default function BlogDetail1({ blog }) {
                 <div>
                   <Image
                     alt={`${blog.title} - Image 1`}
-                    src={`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/images/blogs/${blog.additionalImages[0].split('/').pop()}`}
+                    src={`${process.env.NEXT_PUBLIC_API_URL || 'https://thebotsworld.onrender.com'}/images/blogs/${blog.additionalImages[0].split('/').pop()}`}
                     width={623}
                     height={468}
                     style={{ width: '100%', height: 'auto', objectFit: 'cover', borderRadius: '15px'}}
@@ -104,7 +104,7 @@ export default function BlogDetail1({ blog }) {
                 <div>
                   <Image
                     alt={`${blog.title} - Image 2`}
-                    src={`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/images/blogs/${blog.additionalImages[1].split('/').pop()}`}
+                    src={`${process.env.NEXT_PUBLIC_API_URL || 'https://thebotsworld.onrender.com'}/images/blogs/${blog.additionalImages[1].split('/').pop()}`}
                     width={623}
                     height={468}
                     style={{ width: '100%', height: 'auto', objectFit: 'cover', borderRadius: '15px'}}
@@ -118,7 +118,7 @@ export default function BlogDetail1({ blog }) {
             <div className="w-100 d-flex justify-content-center">
               <Image
                 alt={`${blog.title} - Main image`}
-                src={blog.logoimage ? `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/images/blogs/${blog.logoimage.split('/').pop()}` : "/images/blog/blog-details-1.jpg"}
+                src={blog.logoimage ? `${process.env.NEXT_PUBLIC_API_URL || 'https://thebotsworld.onrender.com'}/images/blogs/${blog.logoimage.split('/').pop()}` : "/images/blog/blog-details-1.jpg"}
                 width={623}
                 height={468}
                 style={{ width: '100%', maxWidth: '623px', height: 'auto', objectFit: 'cover', borderRadius: '15px'}}

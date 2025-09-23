@@ -38,7 +38,7 @@ export const addEnquiryAPI = async (title: string) => {
         return { items: [], totalCount: 0 };
       }
 
-      const apiUrl = process.env.NEXT_PUBLIC_ADMIN_API_URL || 'http://localhost:5000/';
+      const apiUrl = process.env.NEXT_PUBLIC_ADMIN_API_URL || 'https://thebotsworld.onrender.com/';
       const response = await fetch(apiUrl + "admin/api/enquiry", {
         method: "GET",
         headers: {

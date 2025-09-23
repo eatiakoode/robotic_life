@@ -29,7 +29,7 @@ export default function Products() {
   const fetchRobotsByCategory = async (categorySlug) => {
     try {
       setLoading(true);
-      const backendUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+      const backendUrl = process.env.NEXT_PUBLIC_API_URL || 'https://thebotsworld.onrender.com';
       const apiUrl = `${backendUrl}/frontend/api/category/${categorySlug}`;
       
       const response = await fetch(apiUrl);

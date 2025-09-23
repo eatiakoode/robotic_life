@@ -27,14 +27,14 @@ export default function Hero() {
     }
 
     if (imagePath.startsWith("public/")) {
-      return `http://localhost:5000/${imagePath}`;
+      return `${process.env.NEXT_PUBLIC_API_URL || 'https://thebotsworld.onrender.com'}/${imagePath}`;
     }
 
     if (!imagePath.includes("/")) {
-      return `http://localhost:5000/images/slider/${imagePath}`;
+      return `${process.env.NEXT_PUBLIC_API_URL || 'https://thebotsworld.onrender.com'}/images/slider/${imagePath}`;
     }
 
-    return `http://localhost:5000/${imagePath}`;
+    return `${process.env.NEXT_PUBLIC_API_URL || 'https://thebotsworld.onrender.com'}/${imagePath}`;
   };
 
   // Show loading state while fetching data

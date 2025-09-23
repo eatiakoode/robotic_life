@@ -1,7 +1,7 @@
 // Additional filtering API functions
 
 // Backend API base URL
-const BACKEND_API_URL = process.env.NEXT_PUBLIC_BACKEND_API_URL || 'http://localhost:5000';
+const BACKEND_API_URL = process.env.NEXT_PUBLIC_BACKEND_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'https://thebotsworld.onrender.com'}';
 
 // Helper function to map color names to CSS classes
 const getColorClass = (colorName) => {
@@ -33,7 +33,7 @@ const getColorClass = (colorName) => {
 
 // Fallback URLs in case the main one fails
 const FALLBACK_URLS = [
-  'http://localhost:5000',
+  '${process.env.NEXT_PUBLIC_API_URL || 'https://thebotsworld.onrender.com'}',
   'http://localhost:8000'
 ];
 
@@ -77,7 +77,7 @@ export const getFilteredProducts = async (filters = {}) => {
       params.append('weightUnit', filters.weightUnit);
     }
     
-    const apiUrl = `http://localhost:5000/frontend/api/robot/filter?${params.toString()}`;
+    const apiUrl = `${process.env.NEXT_PUBLIC_BACKEND_API_URL || 'https://thebotsworld.onrender.com'}/frontend/api/robot/filter?${params.toString()}`;
     
     // Simple fetch without timeout for debugging
     const response = await fetch(apiUrl, {
@@ -107,21 +107,21 @@ export const getFilteredProducts = async (filters = {}) => {
             price: convertedPrice,
             imgSrc: product.images && product.images[0] ? 
               (product.images[0].startsWith('public/') ? 
-                `http://localhost:5000/${product.images[0].replace('public/', '')}` : 
-                `http://localhost:5000/${product.images[0]}`
+                `${process.env.NEXT_PUBLIC_API_URL || 'https://thebotsworld.onrender.com'}/${product.images[0].replace('public/', '')}` : 
+                `${process.env.NEXT_PUBLIC_API_URL || 'https://thebotsworld.onrender.com'}/${product.images[0]}`
               ) : 
-              `http://localhost:5000/images/products/logo1.svg`,
+              `${process.env.NEXT_PUBLIC_API_URL || 'https://thebotsworld.onrender.com'}/images/products/logo1.svg`,
             imgHover: product.images && product.images[1] ? 
               (product.images[1].startsWith('public/') ? 
-                `http://localhost:5000/${product.images[1].replace('public/', '')}` : 
-                `http://localhost:5000/${product.images[1]}`
+                `${process.env.NEXT_PUBLIC_API_URL || 'https://thebotsworld.onrender.com'}/${product.images[1].replace('public/', '')}` : 
+                `${process.env.NEXT_PUBLIC_API_URL || 'https://thebotsworld.onrender.com'}/${product.images[1]}`
               ) : 
               (product.images && product.images[0] ? 
                 (product.images[0].startsWith('public/') ? 
-                  `http://localhost:5000/${product.images[0].replace('public/', '')}` : 
-                  `http://localhost:5000/${product.images[0]}`
+                  `${process.env.NEXT_PUBLIC_API_URL || 'https://thebotsworld.onrender.com'}/${product.images[0].replace('public/', '')}` : 
+                  `${process.env.NEXT_PUBLIC_API_URL || 'https://thebotsworld.onrender.com'}/${product.images[0]}`
                 ) : 
-                `http://localhost:5000/images/products/logo1.svg`
+                `${process.env.NEXT_PUBLIC_API_URL || 'https://thebotsworld.onrender.com'}/images/products/logo1.svg`
               ),
             description: product.description || '',
             inStock: true,
@@ -137,20 +137,20 @@ export const getFilteredProducts = async (filters = {}) => {
               product.color.map(colorItem => ({
                 imgSrc: product.images && product.images[0] ? 
                   (product.images[0].startsWith('public/') ? 
-                    `http://localhost:5000/${product.images[0].replace('public/', '')}` : 
-                    `http://localhost:5000/${product.images[0]}`
+                    `${process.env.NEXT_PUBLIC_API_URL || 'https://thebotsworld.onrender.com'}/${product.images[0].replace('public/', '')}` : 
+                    `${process.env.NEXT_PUBLIC_API_URL || 'https://thebotsworld.onrender.com'}/${product.images[0]}`
                   ) : 
-                  `http://localhost:5000/images/products/logo1.svg`,
+                  `${process.env.NEXT_PUBLIC_API_URL || 'https://thebotsworld.onrender.com'}/images/products/logo1.svg`,
                 bgColor: getColorClass(colorItem.name),
                 name: colorItem.name || 'Default'
               })) : 
               [{
                 imgSrc: product.images && product.images[0] ? 
                   (product.images[0].startsWith('public/') ? 
-                    `http://localhost:5000/${product.images[0].replace('public/', '')}` : 
-                    `http://localhost:5000/${product.images[0]}`
+                    `${process.env.NEXT_PUBLIC_API_URL || 'https://thebotsworld.onrender.com'}/${product.images[0].replace('public/', '')}` : 
+                    `${process.env.NEXT_PUBLIC_API_URL || 'https://thebotsworld.onrender.com'}/${product.images[0]}`
                   ) : 
-                  `http://localhost:5000/images/products/logo1.svg`,
+                  `${process.env.NEXT_PUBLIC_API_URL || 'https://thebotsworld.onrender.com'}/images/products/logo1.svg`,
                                   bgColor: getColorClass('Default'),
                 name: 'Default'
               }],

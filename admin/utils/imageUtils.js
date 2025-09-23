@@ -79,7 +79,7 @@ export const getBackendApiUrl = () => {
   
   if (!backendUrl) {
     console.warn('NEXT_PUBLIC_BACKEND_API_URL is not defined, using fallback');
-    return 'http://localhost:5000/';
+    return process.env.NEXT_PUBLIC_BACKEND_API_URL || 'https://thebotsworld.onrender.com/';
   }
   
   return backendUrl;

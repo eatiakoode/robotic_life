@@ -19,7 +19,7 @@ export default function FAQs({ product }) {
       try {
         setLoading(true);
         setError(null);
-        const baseUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL || 'http://localhost:5000/';
+        const baseUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL || 'https://thebotsworld.onrender.com/';
         const apiUrl = `${baseUrl}frontend/api/faq/robot/${productId}`;
         const response = await fetch(apiUrl);
         

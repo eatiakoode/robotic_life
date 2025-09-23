@@ -204,12 +204,12 @@ export default function Products1({ parentClass = "flat-spacing",products ,produ
       // Get the main image, prioritizing robot.imgSrc, then robot.images[0], then fallback
       const mainImage = robot.imgSrc || (robot.images && robot.images.length > 0 ? robot.images[0] : '/images/products/product-1.jpg');
       // Ensure it's a full URL if it's a relative path
-      const finalMainImage = mainImage.startsWith('http') ? mainImage : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}${mainImage.startsWith('/') ? mainImage : `/${mainImage}`}`;
+      const finalMainImage = mainImage.startsWith('http') ? mainImage : `${process.env.NEXT_PUBLIC_API_URL || 'https://thebotsworld.onrender.com'}${mainImage.startsWith('/') ? mainImage : `/${mainImage}`}`;
 
       // Get the hover image, prioritizing robot.imgHover, then robot.images[1], then fallback to main image
       const hoverImage = robot.imgHover || (robot.images && robot.images.length > 1 ? robot.images[1] : finalMainImage);
       // Ensure it's a full URL if it's a relative path
-      const finalHoverImage = hoverImage.startsWith('http') ? hoverImage : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}${hoverImage.startsWith('/') ? hoverImage : `/${hoverImage}`}`;
+      const finalHoverImage = hoverImage.startsWith('http') ? hoverImage : `${process.env.NEXT_PUBLIC_API_URL || 'https://thebotsworld.onrender.com'}${hoverImage.startsWith('/') ? hoverImage : `/${hoverImage}`}`;
 
       // Preserve the full nested structure for comparison
       return {

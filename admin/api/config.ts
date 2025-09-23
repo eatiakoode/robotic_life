@@ -3,11 +3,11 @@
 
 // Default API configuration
 const DEFAULT_API_CONFIG = {
-  // Backend API URL (fallback to localhost:5000 if env var not set)
-  BACKEND_URL: process.env.NEXT_PUBLIC_BACKEND_API_URL || 'http://localhost:5000/',
+  // Backend API URL (fallback to Render URL if env var not set)
+  BACKEND_URL: process.env.NEXT_PUBLIC_BACKEND_API_URL || 'https://thebotsworld.onrender.com/',
   
-  // Admin API URL (fallback to localhost:5000 if env var not set)
-  ADMIN_URL: process.env.NEXT_PUBLIC_ADMIN_API_URL || 'http://localhost:5000/',
+  // Admin API URL (fallback to Render URL if env var not set)
+  ADMIN_URL: process.env.NEXT_PUBLIC_ADMIN_API_URL || 'https://thebotsworld.onrender.com/',
   
   // Frontend API URL (fallback to localhost:3000 if env var not set)
   FRONTEND_URL: process.env.NEXT_PUBLIC_FRONTEND_API_URL || 'http://localhost:3000/',

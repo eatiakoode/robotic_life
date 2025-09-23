@@ -18,11 +18,11 @@ export default function Blogs() {
       } else if (blog.logoimage.includes("/")) {
         const filename = blog.logoimage.split("/").pop();
         imageSrc = `${
-          process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"
+          process.env.NEXT_PUBLIC_API_URL || "https://thebotsworld.onrender.com"
         }/images/blogs/${filename}`;
       } else {
         imageSrc = `${
-          process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"
+          process.env.NEXT_PUBLIC_API_URL || "https://thebotsworld.onrender.com"
         }/images/blogs/${blog.logoimage}`;
       }
     }

@@ -18,14 +18,14 @@ export default function Collections2() {
     }
 
     if (imagePath.startsWith('public/')) {
-      return `http://localhost:5000/${imagePath}`;
+      return `${process.env.NEXT_PUBLIC_API_URL || 'https://thebotsworld.onrender.com'}/${imagePath}`;
     }
 
     if (!imagePath.includes('/')) {
-      return `http://localhost:5000/public/images/category/${imagePath}`;
+      return `${process.env.NEXT_PUBLIC_API_URL || 'https://thebotsworld.onrender.com'}/public/images/category/${imagePath}`;
     }
 
-    return `http://localhost:5000/${imagePath}`;
+    return `${process.env.NEXT_PUBLIC_API_URL || 'https://thebotsworld.onrender.com'}/${imagePath}`;
   };
 
   // Use only API data

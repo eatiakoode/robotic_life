@@ -53,16 +53,16 @@ export default function Products2() {
       imgSrc: robot.images && robot.images.length > 0 
         ? (robot.images[0].startsWith('http') 
             ? robot.images[0] 
-            : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}${robot.images[0].startsWith('/') ? robot.images[0] : `/${robot.images[0]}`}`)
+            : `${process.env.NEXT_PUBLIC_API_URL || 'https://thebotsworld.onrender.com'}${robot.images[0].startsWith('/') ? robot.images[0] : `/${robot.images[0]}`}`)
         : '/images/product/placeholder.jpg',
       imgHover: robot.images && robot.images.length > 1 
         ? (robot.images[1].startsWith('http') 
             ? robot.images[1] 
-            : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}${robot.images[1].startsWith('/') ? robot.images[1] : `/${robot.images[1]}`}`)
+            : `${process.env.NEXT_PUBLIC_API_URL || 'https://thebotsworld.onrender.com'}${robot.images[1].startsWith('/') ? robot.images[1] : `/${robot.images[1]}`}`)
         : robot.images && robot.images.length > 0 
           ? (robot.images[0].startsWith('http') 
               ? robot.images[0] 
-              : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}${robot.images[0].startsWith('/') ? robot.images[0] : `/${robot.images[0]}`}`)
+              : `${process.env.NEXT_PUBLIC_API_URL || 'https://thebotsworld.onrender.com'}${robot.images[0].startsWith('/') ? robot.images[0] : `/${robot.images[0]}`}`)
           : '/images/product/placeholder.jpg',
       
       // Colors
@@ -72,14 +72,14 @@ export default function Products2() {
         imgSrc: robot.images && robot.images.length > 0 
           ? (robot.images[0].startsWith('http') 
               ? robot.images[0] 
-              : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}${robot.images[0].startsWith('/') ? robot.images[0] : `/${robot.images[0]}`}`)
+              : `${process.env.NEXT_PUBLIC_API_URL || 'https://thebotsworld.onrender.com'}${robot.images[0].startsWith('/') ? robot.images[0] : `/${robot.images[0]}`}`)
           : '/images/product/placeholder.jpg'
       })) : (robot.images && robot.images.length > 0 ? [{
         bgColor: 'bg-primary',
         colorName: 'Default',
         imgSrc: robot.images[0].startsWith('http')
           ? robot.images[0]
-          : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}${robot.images[0].startsWith('/') ? robot.images[0] : `/${robot.images[0]}`}`
+          : `${process.env.NEXT_PUBLIC_API_URL || 'https://thebotsworld.onrender.com'}${robot.images[0].startsWith('/') ? robot.images[0] : `/${robot.images[0]}`}`
       }] : []),
       
       // Display fields

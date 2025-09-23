@@ -12,7 +12,7 @@ const useSlider = () => {
         
         // Try different possible backend URLs
         const backendUrls = [
-          'http://localhost:5000/frontend/api/slider',
+          `${process.env.NEXT_PUBLIC_BACKEND_API_URL || 'https://thebotsworld.onrender.com'}/frontend/api/slider`,
           'http://127.0.0.1:5000/frontend/api/slider'
         ];
 
