@@ -1,38 +1,75 @@
 "use client";
 import React, { useRef, useState } from "react";
-import emailjs from "@emailjs/browser";
+import axios from "axios";
+
 export default function Contact1() {
   const formRef = useRef();
   const [success, setSuccess] = useState(true);
   const [showMessage, setShowMessage] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleShowMessage = () => {
     setShowMessage(true);
     setTimeout(() => {
       setShowMessage(false);
-    }, 2000);
+    }, 3000);
   };
 
-  const sendMail = (e) => {
+  const sendEnquiry = async (e) => {
     e.preventDefault();
-    emailjs
-      .sendForm("service_noj8796", "template_fs3xchn", formRef.current, {
-        publicKey: "iG4SCmR-YtJagQ4gV",
-      })
-      .then((res) => {
-        if (res.status === 200) {
-          setSuccess(true);
-          handleShowMessage();
+    setLoading(true);
+    
+    const formData = new FormData(formRef.current);
+    const enquiryData = {
+      name: formData.get('name'),
+      email: formData.get('email'),
+      message: formData.get('message')
+    };
 
-          formRef.current.reset();
-        } else {
-          setSuccess(false);
-          handleShowMessage();
+    try {
+      // Try multiple backend URLs for robustness
+      const backendUrls = [
+        'http://localhost:5000',
+        'http://localhost:8000',
+        process.env.NEXT_PUBLIC_API_URL
+      ].filter(Boolean);
+
+      let response = null;
+      let lastError = null;
+
+      for (const backendUrl of backendUrls) {
+        try {
+          const apiUrl = `${backendUrl}/frontend/api/enquiry`;
+          response = await axios.post(apiUrl, enquiryData, {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          });
+          
+          if (response.status === 201) {
+            break;
+          }
+        } catch (err) {
+          // Failed to send enquiry
+          lastError = err;
+          continue;
         }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+      }
+
+      if (!response || response.status !== 201) {
+        throw new Error(lastError?.response?.data?.message || 'Failed to send enquiry');
+      }
+
+      setSuccess(true);
+      handleShowMessage();
+      formRef.current.reset();
+    } catch (error) {
+      console.error("Error sending enquiry:", error);
+      setSuccess(false);
+      handleShowMessage();
+    } finally {
+      setLoading(false);
+    }
   };
   return (
     <section className="flat-spacing pt-0">
@@ -56,7 +93,7 @@ export default function Contact1() {
             <p style={{ color: "red" }}>Something went wrong</p>
           )}
         </div>
-        <form onSubmit={sendMail} ref={formRef} className="form-leave-comment">
+        <form onSubmit={sendEnquiry} ref={formRef} className="form-leave-comment">
           <div className="wrap">
             <div className="cols">
               <fieldset className="">
@@ -64,7 +101,7 @@ export default function Contact1() {
                   className=""
                   type="text"
                   placeholder="Your Name*"
-                  name="text"
+                  name="name"
                   tabIndex={2}
                   defaultValue=""
                   aria-required="true"
@@ -89,6 +126,7 @@ export default function Contact1() {
                 className=""
                 rows={4}
                 placeholder="Your Message*"
+                name="message"
                 tabIndex={2}
                 aria-required="true"
                 required
@@ -97,8 +135,14 @@ export default function Contact1() {
             </fieldset>
           </div>
           <div className="button-submit text-center">
-            <button className="tf-btn btn-fill" type="submit">
-              <span className="text text-button">Send message</span>
+            <button 
+              className="tf-btn btn-fill" 
+              type="submit"
+              disabled={loading}
+            >
+              <span className="text text-button">
+                {loading ? "Sending..." : "Send message"}
+              </span>
             </button>
           </div>
         </form>

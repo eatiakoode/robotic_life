@@ -2,60 +2,85 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import ProductLink from "../common/ProductLink";
 import CountdownTimer from "../common/Countdown";
-import { useContextElement } from "@/context/Context";
+
 export default function ProductCard1({
   product,
   gridClass = "",
-  parentClass = "card-product wow fadeInUp",
+  parentClass = "card-product",
   isNotImageRatio = false,
   radiusClass = "",
+  priority = false,
 }) {
-  const [currentImage, setCurrentImage] = useState(product.imgSrc);
+  // Helper function to get a valid image source
+  const getValidImageSrc = (imgSrc) => {
+    if (!imgSrc || imgSrc === '' || imgSrc === null || imgSrc === undefined) {
+      return '/images/products/product-1.jpg'; // Default fallback image
+    }
+    return imgSrc;
+  };
 
-  const {
-    setQuickAddItem,
-    addToWishlist,
-    isAddedtoWishlist,
-    addToCompareItem,
-    isAddedtoCompareItem,
-    setQuickViewItem,
-    addProductToCart,
-    isAddedToCartProducts,
-  } = useContextElement();
+  const [currentImage, setCurrentImage] = useState(getValidImageSrc(product.imgSrc));
+
 
   useEffect(() => {
-    setCurrentImage(product.imgSrc);
+    setCurrentImage(getValidImageSrc(product.imgSrc));
   }, [product]);
 
   return (
-    <div
-      className={`${parentClass} ${gridClass} ${
-        product.isOnSale ? "on-sale" : ""
-      } ${product.sizes ? "card-product-size" : ""}`}
-    >
+    <>
+      <style jsx>{`
+        .manufacturer-info {
+          margin-top: 8px;
+          padding: 4px 0;
+        }
+        .manufacturer-label {
+          font-size: 12px;
+          color: #666;
+          font-weight: 500;
+          margin-right: 4px;
+        }
+        .manufacturer-name {
+          font-size: 13px;
+          color: #333;
+          font-weight: 600;
+        }
+      `}</style>
+      <div
+        className={`${parentClass} ${gridClass} ${
+          product.isOnSale ? "on-sale" : ""
+        } ${product.sizes ? "card-product-size" : ""}`}
+      >
       <div
         className={`card-product-wrapper ${
           isNotImageRatio ? "aspect-ratio-0" : ""
         } ${radiusClass} `}
       >
-        <Link href={`/product-detail/${product.id}`} className="product-img">
+        <ProductLink 
+          href={`/product-detail/${product.slug && product.slug.trim() ? product.slug : product.id}`} 
+          className="product-img"
+        >
           <Image
             className="lazyload img-product"
-            src={currentImage}
-            alt={product.title}
+            src={getValidImageSrc(currentImage)}
+            alt={product.title || 'Robot'}
             width={600}
             height={800}
+            sizes="(max-width: 576px) 150px, (max-width: 768px) 200px, (max-width: 992px) 250px, 300px"
+            priority={priority}
+            loading={priority ? "eager" : "lazy"}
           />
-
           <Image
             className="lazyload img-hover"
-            src={product.imgHover}
-            alt={product.title}
+            src={getValidImageSrc(product.imgHover)}
+            alt={product.title || 'Robot'}
             width={600}
             height={800}
+            sizes="(max-width: 576px) 150px, (max-width: 768px) 200px, (max-width: 992px) 250px, 300px"
+            loading="lazy"
           />
-        </Link>
+        </ProductLink>
         {product.hotSale && (
           <div className="marquee-product bg-main">
             <div className="marquee-wrapper">
@@ -184,97 +209,35 @@ export default function ProductCard1({
         ) : (
           ""
         )}
-        <div className="list-product-btn">
-          <a
-            onClick={() => addToWishlist(product.id)}
-            className="box-icon wishlist btn-icon-action"
-          >
-            <span className="icon icon-heart" />
-            <span className="tooltip">
-              {isAddedtoWishlist(product.id)
-                ? "Already Wishlished"
-                : "Wishlist"}
-            </span>
-          </a>
-          <a
-            href="#compare"
-            data-bs-toggle="offcanvas"
-            aria-controls="compare"
-            onClick={() => addToCompareItem(product.id)}
-            className="box-icon compare btn-icon-action"
-          >
-            <span className="icon icon-gitDiff" />
-            <span className="tooltip">
-              {isAddedtoCompareItem(product.id)
-                ? "Already compared"
-                : "Compare"}
-            </span>
-          </a>
-          <a
-            href="#quickView"
-            onClick={() => setQuickViewItem(product)}
-            data-bs-toggle="modal"
-            className="box-icon quickview tf-btn-loading"
-          >
-            <span className="icon icon-eye" />
-            <span className="tooltip">Quick View</span>
-          </a>
-        </div>
         <div className="list-btn-main">
-          {product.addToCart == "Quick Add" ? (
-            <a
-              className="btn-main-product"
-              href="#quickAdd"
-              onClick={() => setQuickAddItem(product.id)}
-              data-bs-toggle="modal"
-            >
-              Quick Add
-            </a>
-          ) : (
-            <a
-              className="btn-main-product"
-              onClick={() => addProductToCart(product.id)}
-            >
-              {isAddedToCartProducts(product.id)
-                ? "Already Added"
-                : "ADD TO CART"}
-            </a>
-          )}
+          <Link
+            href={`/product-detail/${product.slug && product.slug.trim() ? product.slug : product.id}`}
+            className="btn-main-product"
+          >
+            View Details
+          </Link>
         </div>
       </div>
       <div className="card-product-info">
-        <Link href={`/product-detail/${product.id}`} className="title link">
+        <Link href={`/product-detail/${product.slug && product.slug.trim() ? product.slug : product.id}`} className="title link">
           {product.title}
         </Link>
+        <span className="manufacturer-name">
+          {product.manufacturer && (
+            <>
+            <span className="manufacturer-label">Manufacturer:</span>
+            <span className="manufacturer-name">{product.manufacturer.name || product.manufacturer}</span>
+            </>
+        )}
+        </span>
         <span className="price">
           {product.oldPrice && (
             <span className="old-price">${product.oldPrice.toFixed(2)}</span>
           )}{" "}
           ${product.price?.toFixed(2)}
         </span>
-        {product.colors && (
-          <ul className="list-color-product">
-            {product.colors.map((color, index) => (
-              <li
-                key={index}
-                className={`list-color-item color-swatch ${
-                  currentImage == color.imgSrc ? "active" : ""
-                } ${color.bgColor == "bg-white" ? "line" : ""}`}
-                onMouseOver={() => setCurrentImage(color.imgSrc)}
-              >
-                <span className={`swatch-value ${color.bgColor}`} />
-                <Image
-                  className="lazyload"
-                  src={color.imgSrc}
-                  alt="color variant"
-                  width={600}
-                  height={800}
-                />
-              </li>
-            ))}
-          </ul>
-        )}
       </div>
     </div>
+    </>
   );
 }

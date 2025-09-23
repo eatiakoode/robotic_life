@@ -124,8 +124,8 @@ const Footer = ({  showBox,setShowBox }) => {
                 width={170}
                 height={75}
                 className="logo1 img-fluid"
-                // src="/assets/images/logo.svg"
-                src={`${process.env.NEXT_PUBLIC_API_URL}public/assets/images/logo.svg`}
+                // src="/assets/images/logo1.svg"
+                src="/assets/images/logo1.svg"
                 alt="image"
               />
           {/* <span>WeGrow</span> */}
@@ -271,7 +271,7 @@ const Footer = ({  showBox,setShowBox }) => {
       
       {/* Left: Image Side */}
       <div className="modal-image-side">
-        <img src="/assets/images/buildings.webp" alt="Image" class="img-fluid"/>
+        <img src="/assets/images/buildings.webp" alt="Image" className="img-fluid"/>
       </div>
 
       {/* Right: Form Side */}

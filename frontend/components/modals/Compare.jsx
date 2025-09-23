@@ -3,14 +3,56 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useContextElement } from "@/context/Context";
-import { allProducts } from "@/data/products";
+import { getRobotById } from "@/api/robotCompare";
+import { closeOffcanvasModal } from "@/utils/modalUtils";
 export default function Compare() {
-  const { removeFromCompareItem, compareItem, setCompareItem } =
-    useContextElement();
+  const { 
+    removeRobotFromCompare, 
+    compareRobots, 
+    clearAllCompareRobots,
+    compareItem 
+  } = useContextElement();
   const [items, setItems] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [forceUpdate, setForceUpdate] = useState(0);
+
   useEffect(() => {
-    setItems([...allProducts.filter((elm) => compareItem.includes(elm.id))]);
-  }, [compareItem]);
+    const fetchRobotData = async () => {
+      if (compareRobots.length === 0) {
+        setItems([]);
+        return;
+      }
+
+      setLoading(true);
+      try {
+        // Use the robots already in context, or fetch if needed
+        setItems(compareRobots);
+      } catch (error) {
+        console.error('Error fetching robot data for compare modal:', error);
+        setItems([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchRobotData();
+  }, [compareRobots, forceUpdate]);
+
+  // Helper function to get valid image URL
+  const getImageUrl = (images) => {
+    if (!images || images.length === 0) {
+      return "/images/logo/logo1.svg";
+    }
+    
+    const imagePath = images[0];
+    if (imagePath.startsWith('public/')) {
+      return `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/${imagePath.replace('public/', '')}`;
+    }
+    if (imagePath.startsWith('http')) {
+      return imagePath;
+    }
+    return `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/${imagePath}`;
+  };
 
   return (
     <div className="offcanvas offcanvas-bottom offcanvas-compare" id="compare">
@@ -18,8 +60,28 @@ export default function Compare() {
         <div className="header">
           <span
             className="icon-close icon-close-popup"
-            data-bs-dismiss="offcanvas"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              // Force close the modal immediately
+              const modalElement = document.getElementById('compare');
+              if (modalElement) {
+                modalElement.classList.remove('show');
+                modalElement.style.display = 'none';
+                modalElement.removeAttribute('aria-modal');
+                modalElement.removeAttribute('role');
+                document.body.classList.remove('offcanvas-open');
+                // Remove backdrop
+                const backdrop = document.getElementById('offcanvas-backdrop');
+                if (backdrop) {
+                  backdrop.remove();
+                }
+              }
+              // Reset cursor to default
+              document.body.style.cursor = 'default';
+            }}
             aria-label="Close"
+            style={{ cursor: 'pointer' }}
           />
         </div>
         <div className="wrap">
@@ -30,13 +92,23 @@ export default function Compare() {
                   <div className="tf-compare-head">
                     <h5 className="title">
                       Compare <br />
-                      Products
+                      Robots
                     </h5>
+                    <p className="text-caption-1 text-muted">
+                      {items.length}/3 robots selected
+                    </p>
                   </div>
-                  {items.length ? (
+                  {loading ? (
+                    <div className="text-center py-4">
+                      <div className="spinner-border text-primary" role="status">
+                        <span className="visually-hidden">Loading...</span>
+                      </div>
+                      <p className="text-muted mt-2">Loading robots...</p>
+                    </div>
+                  ) : items.length ? (
                     <div className="tf-compare-wrap">
                       {items.map((elm, i) => (
-                        <div key={i} className="tf-compare-item file-delete">
+                        <div key={elm.id || i} className="tf-compare-item file-delete">
                           <span className="btns-repeat">
                             <svg
                               width={16}
@@ -90,16 +162,39 @@ export default function Compare() {
                           <span
                             className="icon-close remove"
                             style={{ cursor: "pointer" }}
-                            onClick={() => removeFromCompareItem(elm.id)}
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              removeRobotFromCompare(elm.id);
+                              setForceUpdate(prev => prev + 1);
+                              // Reset cursor to default
+                              document.body.style.cursor = 'default';
+                              // If no robots left, close the modal
+                              if (compareRobots.length <= 1) {
+                                const modalElement = document.getElementById('compare');
+                                if (modalElement) {
+                                  modalElement.classList.remove('show');
+                                  modalElement.style.display = 'none';
+                                  modalElement.removeAttribute('aria-modal');
+                                  modalElement.removeAttribute('role');
+                                  document.body.classList.remove('offcanvas-open');
+                                  const backdrop = document.getElementById('offcanvas-backdrop');
+                                  if (backdrop) {
+                                    backdrop.remove();
+                                  }
+                                }
+                              }
+                            }}
+                            title="Remove from comparison"
                           />
                           <Link
-                            href={`/product-detail/${elm.id}`}
+                            href={`/product-detail/${elm.slug || elm.id}`}
                             className="image"
                           >
                             <Image
                               className="lazyload"
-                              alt=""
-                              src={elm.imgSrc}
+                              alt={elm.title || 'Robot'}
+                              src={getImageUrl(elm.images)}
                               width={600}
                               height={800}
                             />
@@ -108,22 +203,30 @@ export default function Compare() {
                             <div className="text-title">
                               <Link
                                 className="link text-line-clamp-2"
-                                href={`/product-detail/${elm.id}`}
+                                href={`/product-detail/${elm.slug || elm.id}`}
                               >
-                                {elm.title}
+                                {elm.title || 'Untitled Robot'}
                               </Link>
                             </div>
                             <div className="text-button">
-                              ${elm.price.toFixed(2)}
+                              {elm.price ? `$${elm.price.toLocaleString()}` : 'Price on Request'}
                             </div>
+                            {elm.manufacturer && (
+                              <div className="text-caption-1 text-muted">
+                                {elm.manufacturer}
+                              </div>
+                            )}
                           </div>
                         </div>
                       ))}
                     </div>
                   ) : (
-                    <div>
-                      No items added to compare yet. Browse Products to find
-                      items you’d like to compare.
+                    <div className="text-center py-3">
+                      <i className="fas fa-robot fa-2x text-muted mb-2"></i>
+                      <p className="text-muted">
+                        No robots added to compare yet. Browse robots to find
+                        items you'd like to compare.
+                      </p>
                     </div>
                   )}
                   <div className="tf-compare-buttons">
@@ -131,19 +234,46 @@ export default function Compare() {
                       <Link
                         href={`/compare-products`}
                         className="tf-btn w-100 btn-fill radius-4"
+                        onClick={() => closeOffcanvasModal('compare')}
+                        style={{ 
+                          pointerEvents: items.length === 0 ? 'none' : 'auto',
+                          opacity: items.length === 0 ? 0.5 : 1 
+                        }}
                       >
                         <span className="text text-btn-uppercase">
-                          Compare Products
+                          Compare Robots ({items.length})
                         </span>
                       </Link>
-                      <div
-                        onClick={() => setCompareItem([])}
-                        className="tf-compapre-button-clear-all clear-file-delete tf-btn w-100 btn-white radius-4 has-border"
-                      >
-                        <span className="text text-btn-uppercase">
-                          Clear All Products
-                        </span>
-                      </div>
+                      {items.length > 0 && (
+                        <div
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            clearAllCompareRobots();
+                            // Reset cursor to default
+                            document.body.style.cursor = 'default';
+                            // Close the modal after clearing all
+                            const modalElement = document.getElementById('compare');
+                            if (modalElement) {
+                              modalElement.classList.remove('show');
+                              modalElement.style.display = 'none';
+                              modalElement.removeAttribute('aria-modal');
+                              modalElement.removeAttribute('role');
+                              document.body.classList.remove('offcanvas-open');
+                              const backdrop = document.getElementById('offcanvas-backdrop');
+                              if (backdrop) {
+                                backdrop.remove();
+                              }
+                            }
+                          }}
+                          className="tf-compapre-button-clear-all clear-file-delete tf-btn w-100 btn-white radius-4 has-border"
+                          style={{ cursor: 'pointer' }}
+                        >
+                          <span className="text text-btn-uppercase">
+                            Clear All Robots
+                          </span>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>

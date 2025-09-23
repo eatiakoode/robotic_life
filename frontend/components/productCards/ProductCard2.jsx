@@ -31,7 +31,7 @@ export default function ProductCard2({
       data-wow-delay={product.wowDelay}
     >
       <div className="card-product-wrapper">
-        <Link href={`/product-detail/${product.id}`} className="product-img">
+        <Link href={`/product-detail/${product.slug && product.slug.trim() ? product.slug : product.id}`} className="product-img">
           <Image
             className="lazyload img-product"
             data-src={product.imgSrc}
@@ -64,35 +64,37 @@ export default function ProductCard2({
         </div>
       </div>
       <div className="card-product-info">
-        <Link href={`/product-detail/${product.id}`} className="title link">
+        <Link href={`/product-detail/${product.slug && product.slug.trim() ? product.slug : product.id}`} className="title link">
           {product.title}
         </Link>
         <span className="price">
           <span className="old-price">${product.price.toFixed(2)}</span>$
           {product.oldPrice.toFixed(2)}
         </span>
-        <ul className="list-color-product">
-          {product.colors.map((color, idx) => (
-            <li
-              className={`list-color-item color-swatch ${
-                currentImage == color.imgSrc ? "active" : ""
-              }  ${color.bgColor == "bg-white" ? "line" : ""}`}
-              onMouseOver={() => setCurrentImage(color.imgSrc)}
-              key={idx}
-            >
-              <span className={`swatch-value ${color.bgColor}`} />
-              <Image
-                className="lazyload"
-                data-src={color.imgSrc}
-                src={color.imgSrc}
-                alt="image-product"
-                width={600}
-                height={800}
-              />
-            </li>
-          ))}
-        </ul>
+        {product.manufacturer && (
+          <div className="manufacturer-info">
+            <span className="manufacturer-label">Manufacturer:</span>
+            <span className="manufacturer-name">{product.manufacturer.name || product.manufacturer}</span>
+          </div>
+        )}
       </div>
+      <style jsx>{`
+        .manufacturer-info {
+          margin-top: 8px;
+          padding: 4px 0;
+        }
+        .manufacturer-label {
+          font-size: 12px;
+          color: #666;
+          font-weight: 500;
+          margin-right: 4px;
+        }
+        .manufacturer-name {
+          font-size: 13px;
+          color: #333;
+          font-weight: 600;
+        }
+      `}</style>
     </div>
   );
 }

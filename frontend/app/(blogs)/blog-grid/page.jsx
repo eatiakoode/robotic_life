@@ -43,7 +43,7 @@ export default function BlogGridPage() {
         </div>
       </div>
       <BlogGrid />
-      <Footer1 />
+      <Footer1 dark />
     </>
   );
 }

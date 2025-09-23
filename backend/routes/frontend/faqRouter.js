@@ -1,17 +1,14 @@
 const express = require("express");
 const {
-  getFaq,
-  getallFaq,
-  getFaqPropertId
-} = require("../../controller/frontend/faqCtrl");
+  getFAQsByRobotId,
+  getAllFAQs
+} = require("../../controller/faqCtrl");
 const router = express.Router();
 
+// Get FAQs for a specific robot
+router.get("/robot/:robotId", getFAQsByRobotId);
 
-router.get("/byid/:id", getFaq);
-router.get("/list", getallFaq);
-router.get("/byproperty/:propertyid", getFaqPropertId);
-
-
-
+// Get all FAQs
+router.get("/list", getAllFAQs);
 
 module.exports = router;

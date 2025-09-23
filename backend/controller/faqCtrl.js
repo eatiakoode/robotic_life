@@ -1,109 +1,195 @@
-const Faq = require("../models/faqModel");
 const asyncHandler = require("express-async-handler");
-const validateMongoDbId = require("../utils/validateMongodbId");
+const Faq = require("../models/faqModel");
 
-const createFaq = asyncHandler(async (req, res) => {
+// Get FAQs for a specific robot
+const getFAQsByRobotId = asyncHandler(async (req, res) => {
   try {
-    
-    const newFaq = await Faq.create(req.body);
-    const message={
-      "status":"success",
-      "message":"Data Add sucessfully",
-      "data":newFaq
+    const { robotId } = req.params;
+    console.log('Fetching FAQs for robot ID:', robotId);
+
+    if (!robotId) {
+      return res.status(400).json({
+        success: false,
+        error: "Robot ID is required"
+      });
     }
-    res.json(message);
-  } catch (error) {
-    throw new Error(error);
-  }
-});
-const updateFaq = asyncHandler(async (req, res) => {
-  const { id } = req.params;
-  validateMongoDbId(id);
-  try {
-     const updatedFaq = await Faq.findByIdAndUpdate(id, req.body, {
-      new: true,
+
+    const faqs = await Faq.find({ 
+      robotid: robotId, 
+      status: true 
+    })
+    .select("title description robotid")
+    .sort({ createdAt: -1 });
+
+    console.log('Found FAQs:', faqs.length);
+
+    // Transform the data to match frontend expectations
+    const transformedFaqs = faqs.map(faq => ({
+      _id: faq._id,
+      question: faq.title,
+      answer: faq.description,
+      robotId: faq.robotid
+    }));
+
+    res.status(200).json({
+      success: true,
+      count: transformedFaqs.length,
+      data: transformedFaqs
     });
-    const message={
-      "status":"success",
-      "message":"Data updated sucessfully",
-      "data":updatedFaq
-    }
-    res.json(message);
-    // res.json(updatedFaq);
-  } catch (error) {
-    throw new Error(error);
-  }
-});
-const deleteFaq = asyncHandler(async (req, res) => {
-  const { id } = req.params;
-  validateMongoDbId(id);
-  try {
-    const deletedFaq = await Faq.findByIdAndDelete(id);
 
-    const message={
-      "status":"success",
-      "message":"Data deleted sucessfully",
-      "data":deletedFaq
-    }
-    res.json(message);
   } catch (error) {
-    throw new Error(error);
+    console.error('Error fetching FAQs by robot ID:', error);
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
   }
 });
-const getFaq = asyncHandler(async (req, res) => {
-  const { id } = req.params;
-  validateMongoDbId(id);
+
+// Get all FAQs
+const getAllFAQs = asyncHandler(async (req, res) => {
   try {
-    const getaFaq= await Faq.findById(id);
-    const message={
-      "status":"success",
-      "message":"Data deleted sucessfully",
-      "data":getaFaq
-    }
-    res.json(message);
-   //res.json(getaFaq);
+    const faqs = await Faq.find({ status: true })
+      .populate("robotid", "title slug")
+      .select("title description robotid")
+      .sort({ createdAt: -1 });
+
+    // Transform the data
+    const transformedFaqs = faqs.map(faq => ({
+      _id: faq._id,
+      question: faq.title,
+      answer: faq.description,
+      robot: faq.robotid
+    }));
+
+    res.status(200).json({
+      success: true,
+      count: transformedFaqs.length,
+      data: transformedFaqs
+    });
+
   } catch (error) {
-    throw new Error(error);
+    console.error('Error fetching all FAQs:', error);
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
   }
 });
-const getallFaq = asyncHandler(async (req, res) => {
+
+// Create a new FAQ
+const createFAQ = asyncHandler(async (req, res) => {
   try {
-    // const getallFaq = await Faq.find();
-    // res.json(getallFaq);
-    let limit=100;
-        let skip=1;
-        
-    
-        if (req.query.limit ) {
-          limit=req.query.limit;
-          skip=req.query.skip;     
+    const { title, description, robotid } = req.body;
+
+    if (!title || !description || !robotid) {
+      return res.status(400).json({
+        success: false,
+        error: "Title, description, and robot ID are required"
+      });
+    }
+
+    const faq = await Faq.create({
+      title,
+      description,
+      robotid
+    });
+
+    res.status(201).json({
+      success: true,
+      message: "FAQ created successfully",
+      data: {
+        _id: faq._id,
+        question: faq.title,
+        answer: faq.description,
+        robotId: faq.robotid
       }
-       
-        const [propertyList, totalCount] = await Promise.all([
-                  Faq.find()
-                    .sort({ _id: -1})
-                    .skip((skip - 1) * limit)
-                    .limit(limit)
-                    .lean(),
-                
-                  Faq.countDocuments() // total matching without skip/limit
-                ]);
-                // propertyList.sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at));
-                // console.log(propertyList)
-                res.status(200).json({
-                  items: propertyList,
-                  totalCount: totalCount,
-                  currentPage: skip,
-                  totalPages: Math.ceil(totalCount / limit)
-                });
+    });
+
   } catch (error) {
-    throw new Error(error);
+    console.error('Error creating FAQ:', error);
+    res.status(400).json({
+      success: false,
+      error: error.message
+    });
   }
 });
+
+// Update FAQ
+const updateFAQ = asyncHandler(async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { title, description } = req.body;
+
+    const faq = await Faq.findByIdAndUpdate(
+      id,
+      { title, description },
+      { new: true, runValidators: true }
+    );
+
+    if (!faq) {
+      return res.status(404).json({
+        success: false,
+        error: "FAQ not found"
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "FAQ updated successfully",
+      data: {
+        _id: faq._id,
+        question: faq.title,
+        answer: faq.description,
+        robotId: faq.robotid
+      }
+    });
+
+  } catch (error) {
+    console.error('Error updating FAQ:', error);
+    res.status(400).json({
+      success: false,
+      error: error.message
+    });
+  }
+});
+
+// Delete FAQ
+const deleteFAQ = asyncHandler(async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const faq = await Faq.findByIdAndUpdate(
+      id,
+      { status: false },
+      { new: true }
+    );
+
+    if (!faq) {
+      return res.status(404).json({
+        success: false,
+        error: "FAQ not found"
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "FAQ deleted successfully"
+    });
+
+  } catch (error) {
+    console.error('Error deleting FAQ:', error);
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  }
+});
+
 module.exports = {
-  createFaq,
-  updateFaq,
-  deleteFaq,
-  getFaq,
-  getallFaq,
+  getFAQsByRobotId,
+  getAllFAQs,
+  createFAQ,
+  updateFAQ,
+  deleteFAQ
 };

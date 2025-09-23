@@ -1,17 +1,78 @@
 "use client";
-import { slides13 } from "@/data/heroSlides";
-import React from "react";
+import useSlider from "@/hooks/useSlider";
+import React, { useState, useEffect } from "react";
 import { Autoplay, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import Link from "next/link";
 import Image from "next/image";
+import styles from "./Hero.module.css";
+
 export default function Hero() {
+  const { sliders, loading, error } = useSlider();
+  const [displaySlides, setDisplaySlides] = useState([]);
+
+  useEffect(() => {
+    if (sliders && sliders.length > 0) {
+      setDisplaySlides(sliders);
+    } else {
+      setDisplaySlides([]);
+    }
+  }, [sliders]);
+
+  const getImageUrl = (imagePath) => {
+    if (!imagePath) return "/images/slider/slider-13-1.jpg";
+
+    if (imagePath.startsWith("http://") || imagePath.startsWith("https://")) {
+      return imagePath;
+    }
+
+    if (imagePath.startsWith("public/")) {
+      return `http://localhost:5000/${imagePath}`;
+    }
+
+    if (!imagePath.includes("/")) {
+      return `http://localhost:5000/images/slider/${imagePath}`;
+    }
+
+    return `http://localhost:5000/${imagePath}`;
+  };
+
+  // Show loading state while fetching data
+  if (loading) {
+    return (
+      <div className="tf-slideshow slider-default slider-effect-fade">
+        <div className="wrap-slider" style={{ height: '756px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div className="text-center">
+            <div className="spinner-border text-primary" role="status">
+              <span className="visually-hidden">Loading sliders...</span>
+            </div>
+            <p className="mt-3 text-muted">Loading slider content...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Show empty state if no slides available
+  if (!displaySlides || displaySlides.length === 0) {
+    return (
+      <div className="tf-slideshow slider-default slider-effect-fade">
+        <div className="wrap-slider" style={{ height: '756px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div className="text-center">
+            <h3 className="text-muted">No slider content available</h3>
+            <p className="text-muted">Please check your slider configuration in the admin panel.</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="tf-slideshow slider-default slider-effect-fade">
       <Swiper
         dir="ltr"
         className="swiper tf-sw-slideshow"
-        loop
+        loop={displaySlides.length > 1}
         modules={[Autoplay, Pagination]}
         autoplay={{
           delay: 2000,
@@ -22,32 +83,33 @@ export default function Hero() {
           el: ".spd24",
         }}
       >
-        {slides13.map((slide) => (
-          <SwiperSlide className="swiper-slide" key={slide.id}>
+        {displaySlides.map((slide, index) => (
+          <SwiperSlide className="swiper-slide" key={slide._id || slide.id || index}>
             <div className="wrap-slider">
               <Image
-                src={slide.imageSrc}
-                alt={slide.alt}
+                src={getImageUrl(slide.images?.[0] || slide.imageSrc)}
+                alt={slide.alt || "slider-image"}
                 className="lazyload"
                 width={1920}
                 height={756}
+                priority
               />
               <div className="box-content type-2 type-3">
                 <div className="content-slider">
                   <div className="box-title-slider">
-                    <p className="fade-item fade-item-1 fw-bold text-white title-display font-5">
-                      {slide.title}
-                    </p>
+                    <span className="fade-item fade-item-1 fw-bold text-white title-display font-5">
+                      {slide.title || "Future of Surgery"}
+                    </span>
                     <p className="fade-item fade-item-2 body-text-1 text-white">
-                      {slide.description}
+                      {slide.description || "Surgical & rehabilitation robots designed for accuracy, safety, and faster recovery."}
                     </p>
                   </div>
                   <div className="fade-item fade-item-3 box-btn-slider">
                     <Link
-                      href={`/shop-default-grid`}
+                      href={slide.buttonLink || "/shop-default-grid"}
                       className="tf-btn btn-fill btn-white"
                     >
-                      <span className="text">{slide.buttonText}</span>
+                      <span className="text">{slide.buttonText || "Explore Robots"}</span>
                       <i className="icon icon-arrowUpRight" />
                     </Link>
                   </div>
@@ -57,11 +119,13 @@ export default function Hero() {
           </SwiperSlide>
         ))}
       </Swiper>
-      <div className="wrap-pagination stype-space-3">
-        <div className="container">
-          <div className="sw-dots sw-pagination-slider type-circle white-circle justify-content-center spd24" />
+      {displaySlides.length > 1 && (
+        <div className="wrap-pagination stype-space-3">
+          <div className="container">
+            <div className="sw-dots sw-pagination-slider type-circle white-circle justify-content-center spd24" />
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }

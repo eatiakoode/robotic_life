@@ -1,0 +1,94 @@
+/* CSS to ensure images fit within card dimensions without enlarging cards */
+.collectionCard {
+  width: 630px !important;
+  height: 630px !important;
+  max-width: 630px !important;
+  max-height: 630px !important;
+  min-width: 630px !important;
+  min-height: 630px !important;
+  overflow: hidden !important;
+  position: relative !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+.collectionCardFullWidth {
+  width: 100% !important;
+  height: 630px !important;
+  max-width: 100% !important;
+  max-height: 630px !important;
+  min-height: 630px !important;
+  overflow: hidden !important;
+  position: relative !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+.imageContainer {
+  width: 100% !important;
+  height: 100% !important;
+  display: block !important;
+  overflow: hidden !important;
+  position: relative !important;
+  flex: 1 !important;
+}
+
+.imageStyle {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  object-position: center center !important;
+  max-width: 100% !important;
+  max-height: 100% !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+}
+
+/* Ensure the grid layout maintains its structure */
+.tfGridLayout {
+  display: grid !important;
+  grid-template-columns: 630px 630px !important;
+  gap: 20px !important;
+  width: 100% !important;
+  justify-content: center !important;
+}
+
+/* Force card dimensions to stay fixed */
+.collectionCard .img-style {
+  width: 630px !important;
+  height: 630px !important;
+  max-width: 630px !important;
+  max-height: 630px !important;
+  min-width: 630px !important;
+  min-height: 630px !important;
+  overflow: hidden !important;
+}
+
+.collectionCardFullWidth .img-style {
+  width: 100% !important;
+  height: 630px !important;
+  max-width: 100% !important;
+  max-height: 630px !important;
+  min-height: 630px !important;
+  overflow: hidden !important;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .tfGridLayout {
+    grid-template-columns: 1fr !important;
+  }
+  
+  .collectionCard {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: auto !important;
+  }
+  
+  .collectionCard .img-style {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: auto !important;
+  }
+}

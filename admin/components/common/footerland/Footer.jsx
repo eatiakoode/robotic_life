@@ -67,8 +67,8 @@ const Footer = ({  showBox,setShowBox }) => {
                 width={170}
                 height={75}
                 className="logo1 img-fluid"
-                // src="/assets/images/logo.svg"
-                src={`${process.env.NEXT_PUBLIC_API_URL}public/assets/images/logo.svg`}
+                // src="/assets/images/logo1.svg"
+                src="/assets/images/logo1.svg"
                 alt="image"
               />
           {/* <span>WeGrow</span> */}

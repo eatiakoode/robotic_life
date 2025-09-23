@@ -9,34 +9,38 @@ const CreateList = () => {
   const params = useParams();  
     const id = params?.id;  
     const router = useRouter();
-    const [testimonial, setTestimonial] = useState({ title: "", status: false,description: "", });
-    const [title, setTitle] = useState("");
-    const [status, setStatus] = useState("");
-    const [loading, setLoading] = useState(true);
-    const [description, setDescription] = useState("");
+    const [testimonial, setTestimonial] = useState({ name: "", status: false, message: "", });
+    const [name, setName] = useState("");
     const [designation, setDesignation] = useState("");
-    const [error, setError] = useState("");  
-    const [logo, setLogo] = useState(null);
-    const [logoimage, setLogoImage] = useState(null);
-    const uploadLogo = (e) => {
-      setLogo(e.target.files[0]);
-  };
+    const [message, setMessage] = useState("");
+    const [rating, setRating] = useState(5);
+    const [status, setStatus] = useState(true);
+    const [loading, setLoading] = useState(true);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [error, setError] = useState("");
     useEffect(() => {
-      if (!id) return;      
+      if (!id) {
+        setLoading(false);
+        return;
+      }      
       const fetchTestimonial = async () => {
         try {
-          const data = await getTestimonialById(id);
+          setLoading(true);
+          const response = await getTestimonialById(id);
           
-          // setTestimonial({ title: data.data.title, status: data.data.status, description: data.data.description });
-          setTitle(data.data.title)
-          setStatus(data.data.status)
-          setDescription(data.data.description)
-          setDesignation(data.data.designation)
-          if(data.data.logoimage) {
-          setLogoImage(process.env.NEXT_PUBLIC_API_URL+data.data.logoimage)
+          if (response.success && response.data) {
+            setName(response.data.name || "");
+            setDesignation(response.data.designation || "");
+            setMessage(response.data.message || "");
+            setRating(response.data.rating || 5);
+            setStatus(response.data.status !== undefined ? response.data.status : true);
+          } else {
+            setError("Failed to load testimonial data");
+            toast.error("Failed to load testimonial data");
           }
         } catch (error) {
-          console.error("Error fetching Testimonial:", error);
+          setError(error.message || "Failed to load testimonial");
+          toast.error(error.message || "Failed to load testimonial");
         } finally {
           setLoading(false);
         }
@@ -47,27 +51,31 @@ const CreateList = () => {
   
     const handleSubmit = async (e) => {
       e.preventDefault();
+      setIsSubmitting(true);
+      setError("");
+      
       try {
         const formData = new FormData();
-        formData.append("title", title);
-        formData.append("description", description);
-        formData.append("designation", designation);
+        formData.append("name", name.trim());
+        formData.append("designation", designation.trim());
+        formData.append("message", message.trim());
+        formData.append("rating", rating);
         formData.append("status", status);
-        if (logo) {
-          formData.append("logo", logo);
-        }
         const data = await updateTestimonialAPI(id, formData);
-        // alert("Testimonial updated successfully!");
-        // router.push("/cmswegrow/my-testimonial");
-        toast.success(data.message);
-        if(data.status=="success"){
+        
+        if (data.success === true) {
+          toast.success(data.message || "Testimonial updated successfully!");
           setTimeout(() => {
-          router.push("/cmswegrow/my-testimonial");
-          }, 1500); 
+            router.push("/cmsthebotsworld/my-testimonial");
+          }, 1000);
+        } else {
+          toast.error(data.message || "Failed to update testimonial");
         }
       } catch (error) {
-        alert("Failed to update Testimonial.");
-        console.error(error);
+        setError("Failed to update Testimonial.");
+        toast.error(error.message || "Failed to update testimonial");
+      } finally {
+        setIsSubmitting(false);
       }
     };
   
@@ -79,89 +87,104 @@ const CreateList = () => {
     //   setTestimonial((prev) => ({ ...prev, status: !prev.status }));
     // };
   
-    if (loading) return <p>Loading...</p>;
+    if (loading) {
+      return (
+        <div className="col-lg-12">
+          <div className="text-center py-5">
+            <div className="spinner-border text-primary" role="status">
+              <span className="visually-hidden">Loading...</span>
+            </div>
+            <p className="mt-3">Loading testimonial data...</p>
+          </div>
+        </div>
+      );
+    }
   return (
     <>
+    {error && (
+      <div className="col-lg-12 mb-3">
+        <div className="alert alert-danger" role="alert">
+          {error}
+        </div>
+      </div>
+    )}
     <form onSubmit={handleSubmit} className="row">
-    <div className="col-lg-12">
-                <div className="wrap-custom-file">
-                    <input
-                        type="file"
-                        id="image1"
-                        accept="image/png, image/gif, image/jpeg"
-                        onChange={uploadLogo}
-                    />
-                   <label
-                      htmlFor="image1"
-                      style={
-                        logoimage                          
-                        ? { backgroundImage: `url(${logoimage})` }
-                          : logo
-                          ? { backgroundImage: `url(${URL.createObjectURL(logo)})` }
-                          : undefined
-                      }
-                    >
-                        <span>
-                            <i className="flaticon-download"></i> Upload Photo{" "}
-                        </span>
-                    </label>
-                </div>
-                <p>*minimum 260px x 260px</p>
-            </div>
-            {/* End .col */}
       <div className="col-lg-6 col-xl-6">
         <div className="my_profile_setting_input form-group">
-          <label htmlFor="TestimonialTitle">Testimonial Title</label>
+          <label htmlFor="CustomerName">Customer Name</label>
           <input
-        type="text"
-        className="form-control"
-        id="TestimonialTitle"
-        name="title"
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
-      />
+            type="text"
+            className="form-control"
+            id="CustomerName"
+            name="name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Enter customer name"
+          />
         </div>
       </div>
       {/* End .col */}
       <div className="col-lg-6 col-xl-6">
         <div className="my_profile_setting_input form-group">
-          <label htmlFor="Testimonialdesignation">Testimonial designation</label>
+          <label htmlFor="CustomerDesignation">Customer Designation</label>
           <input
-        type="text"
-        className="form-control"
-        id="Testimonialdesignation"
-        name="designation"
-        value={designation}
-        onChange={(e) => setDesignation(e.target.value)}
-      />
+            type="text"
+            className="form-control"
+            id="CustomerDesignation"
+            name="designation"
+            value={designation}
+            onChange={(e) => setDesignation(e.target.value)}
+            placeholder="e.g., CEO, Manager, Designer"
+          />
         </div>
       </div>
       {/* End .col */}
-      <div className="col-lg-12">
-          <div className="my_profile_setting_textarea form-group">
-            <label htmlFor="TestimonialDescription">Description</label>
-            <textarea id="TestimonialDescription" className="form-control" name="description" rows="7"  value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Enter Testimonial description"></textarea>
-            {error.description && <span className="text-danger">{error.description}</span>}
-          </div>
-          
+      <div className="col-lg-6 col-xl-6">
+        <div className="my_profile_setting_input form-group">
+          <label htmlFor="Rating">Rating</label>
+          <select
+            className="form-control"
+            id="Rating"
+            value={rating}
+            onChange={(e) => setRating(parseInt(e.target.value))}
+          >
+            <option value={1}>1 Star</option>
+            <option value={2}>2 Stars</option>
+            <option value={3}>3 Stars</option>
+            <option value={4}>4 Stars</option>
+            <option value={5}>5 Stars</option>
+          </select>
         </div>
-        
-
+      </div>
       {/* End .col */}
-
       <div className="col-lg-6 col-xl-6">
         <div className="my_profile_setting_input ui_kit_select_search form-group">
           <label>Status</label>
           <select
-  className="selectpicker form-select"
-  data-live-search="true"
-  data-width="100%"
-  value={status ? "active" : "deactive"}
-  onChange={(e) => setStatus(e.target.value === "active")}
->
-        <option value="active">Active</option>
-        <option value="deactive">Deactive</option>
-      </select>
+            className="selectpicker form-select"
+            data-live-search="true"
+            data-width="100%"
+            value={status ? "active" : "inactive"}
+            onChange={(e) => setStatus(e.target.value === "active")}
+          >
+            <option value="active">Active</option>
+            <option value="inactive">Inactive</option>
+          </select>
+        </div>
+      </div>
+      {/* End .col */}
+      <div className="col-lg-12">
+        <div className="my_profile_setting_textarea form-group">
+          <label htmlFor="TestimonialMessage">Testimonial Message</label>
+          <textarea 
+            id="TestimonialMessage" 
+            className="form-control" 
+            name="message" 
+            rows="7"  
+            value={message} 
+            onChange={(e) => setMessage(e.target.value)} 
+            placeholder="Enter the customer's testimonial message"
+          ></textarea>
         </div>
       </div>
       {/* End .col */}
@@ -171,8 +194,14 @@ const CreateList = () => {
 
       <div className="col-xl-12">
         <div className="my_profile_setting_input">
-          <button className="btn btn1 float-start" type="button" onClick={() => window.location.href = '/cmswegrow/my-testimonial'}>Back</button>
-          <button className="btn btn2 float-end">Submit</button>
+          <button className="btn btn1 float-start" type="button" onClick={() => window.location.href = '/cmsthebotsworld/my-testimonial'}>Back</button>
+          <button 
+            className="btn btn2 float-end" 
+            type="submit"
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? "Updating..." : "Update"}
+          </button>
         </div>
       </div>
       </form>

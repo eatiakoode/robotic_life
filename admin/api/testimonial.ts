@@ -8,41 +8,27 @@
 // };
 
 export const addTestimonialAPI = async (formData) => {
-    // const token = localStorage.getItem("token"); // 🔹 Retrieve token
-// console.log("token")
-    // const token =process.env.NEXT_PUBLIC_TOKEN;
     const userData = JSON.parse(localStorage.getItem("user"));
-console.log(userData.name);
-// const token = localStorage.getItem("token"); // 🔹 Retrieve token
-// // console.log("token")
-//     const token =process.env.NEXT_PUBLIC_TOKEN;
-const token =userData.token
+    const token = userData?.token;
 
-  
     if (!token) {
       throw new Error("User not authenticated!");
     }
-//     console.log("formDataapi")
-//     console.log(formData)
-//     for (let [key, value] of formData.entries()) {
-//       console.log(`${key}:`, value);
-//     }
-// console.log("formDataendapi")
-    const response = await fetch(process.env.NEXT_PUBLIC_ADMIN_API_URL+"api/testimonial", {
+    const response = await fetch(process.env.NEXT_PUBLIC_ADMIN_API_URL+"admin/api/testimonial", {
       method: "POST",
       headers: {
-        // "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
       body: formData
     });
   
-    if (!response.status) {
+    if (!response.ok) {
       const errorData = await response.json();
       throw new Error(errorData.message || "Failed to add testimonial");
     }
   
-    return response.json();
+    const data = await response.json();
+    return data;
   };
   
 
@@ -50,15 +36,33 @@ const token =userData.token
     // Fake delay
     await new Promise((resolve) => setTimeout(resolve, 10));
     
-  
     try {
-      const response = await fetch(process.env.NEXT_PUBLIC_ADMIN_API_URL+"api/testimonial"); // Replace with actual API endpoint
-      if (!response.ok) {
-        throw new Error("Failed to fetch products");
+      const userData = JSON.parse(localStorage.getItem("user") || "{}");
+      const token = userData?.token;
+
+      if (!token) {
+        console.warn("No authentication token found for testimonial API");
+        return [];
       }
-      return await response.json();
+
+      const apiUrl = process.env.NEXT_PUBLIC_ADMIN_API_URL || 'http://localhost:5000/';
+      const response = await fetch(apiUrl + "admin/api/testimonial", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        console.error(`Testimonial API error: ${response.status} ${response.statusText}`);
+        return [];
+      }
+      
+      const data = await response.json();
+      return data.data || data || [];
     } catch (error) {
-      console.error("Error fetching products:", error);
+      console.error("Error fetching testimonials:", error);
       return []; // Return an empty array in case of an error
     }
   }
@@ -71,7 +75,7 @@ const token =userData.token
       throw new Error("User not authenticated!");
     }
   
-    const response = await fetch(process.env.NEXT_PUBLIC_ADMIN_API_URL+`api/testimonial/${id}`, {
+    const response = await fetch(process.env.NEXT_PUBLIC_ADMIN_API_URL+`admin/api/testimonial/${id}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -94,25 +98,27 @@ const token =userData.token
 
   export const getTestimonialById = async (id: string) => {
     const userData = JSON.parse(localStorage.getItem("user"));
-const token =userData.token
+    const token = userData?.token;
+    
     if (!token) {
       throw new Error("User not authenticated!");
     }
+
+    const apiUrl = (process.env.NEXT_PUBLIC_ADMIN_API_URL || "http://localhost:5000/") + `admin/api/testimonial/${id}`;
   
-    const response = await fetch(process.env.NEXT_PUBLIC_ADMIN_API_URL+`api/testimonial/${id}`, {
+    const response = await fetch(apiUrl, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
-      // body: JSON.stringify({ id }),
     });
   
     if (!response.ok) {
       const errorData = await response.json();
       throw new Error(errorData.message || "Failed to get testimonial");
     }
-  
+
     return response.json();
   };
 
@@ -127,7 +133,7 @@ const token =userData.token
       throw new Error("User not authenticated!");
     }
     
-    const response = await fetch(process.env.NEXT_PUBLIC_ADMIN_API_URL+`api/testimonial/${id}`, {
+    const response = await fetch(process.env.NEXT_PUBLIC_ADMIN_API_URL+`admin/api/testimonial/${id}`, {
       method: "PUT",
       headers: {
         // "Content-Type": "application/json",
@@ -136,9 +142,9 @@ const token =userData.token
       body: testimonial,
     });
   
-    if (!response.status) {
+    if (!response.ok) {
       const errorData = await response.json();
-      throw new Error(errorData.message || "Failed to add testimonial");
+      throw new Error(errorData.message || "Failed to update testimonial");
     }
   
     return response.json();

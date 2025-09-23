@@ -1,7 +1,7 @@
 "use client";
 import { allProducts } from "@/data/products";
-import { openCartModal } from "@/utlis/openCartModal";
-import { openWistlistModal } from "@/utlis/openWishlist";
+import { openCartModal } from "@/utils/modalUtils";
+import { openWistlistModal } from "@/utils/modalUtils";
 
 import React, { useEffect } from "react";
 import { useContext, useState } from "react";
@@ -13,7 +13,8 @@ export const useContextElement = () => {
 export default function Context({ children }) {
   const [cartProducts, setCartProducts] = useState([]);
   const [wishList, setWishList] = useState([1, 2, 3]);
-  const [compareItem, setCompareItem] = useState([1, 2, 3]);
+  const [compareItem, setCompareItem] = useState([]);
+  const [compareRobots, setCompareRobots] = useState([]);
   const [quickViewItem, setQuickViewItem] = useState(allProducts[0]);
   const [quickAddItem, setQuickAddItem] = useState(1);
   const [totalPrice, setTotalPrice] = useState(0);
@@ -69,12 +70,90 @@ export default function Context({ children }) {
   };
   const addToCompareItem = (id) => {
     if (!compareItem.includes(id)) {
+      if (compareItem.length >= 3) {
+        // Show notification that limit is reached
+        if (typeof window !== 'undefined') {
+          // You can replace this with a proper toast notification
+          alert('⚠️ You can compare maximum 3 robots at a time. Please remove a robot first.');
+        }
+        return;
+      }
       setCompareItem((pre) => [...pre, id]);
     }
   };
+  
   const removeFromCompareItem = (id) => {
     if (compareItem.includes(id)) {
       setCompareItem((pre) => [...pre.filter((elm) => elm != id)]);
+      // Also remove from compareRobots if it exists
+      setCompareRobots((pre) => [...pre.filter((robot) => robot.id !== id)]);
+    }
+  };
+
+  // Robot comparison functions
+  const addRobotToCompare = (robotData) => {
+    if (!robotData || !robotData.id) {
+      return;
+    }
+
+    if (!compareRobots.find(robot => robot.id === robotData.id)) {
+      if (compareRobots.length >= 3) {
+        if (typeof window !== 'undefined') {
+          alert('⚠️ You can compare maximum 3 robots at a time. Please remove a robot first.');
+        }
+        return;
+      }
+      setCompareRobots((pre) => {
+        const newList = [...pre, robotData];
+        return newList;
+      });
+      setCompareItem((pre) => {
+        const newList = [...pre, robotData.id];
+        return newList;
+      });
+    } else {
+      // Robot already in compare list
+      if (typeof window !== 'undefined') {
+        alert('This robot is already in your comparison list.');
+      }
+    }
+  };
+
+  const removeRobotFromCompare = (robotId) => {
+    setCompareRobots((pre) => {
+      const newList = pre.filter((robot) => robot.id !== robotId);
+      return newList;
+    });
+    
+    setCompareItem((pre) => {
+      const newList = pre.filter((id) => id !== robotId);
+      return newList;
+    });
+  };
+
+  const clearAllCompareRobots = () => {
+    setCompareRobots([]);
+    setCompareItem([]);
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem("compareRobots");
+    }
+  };
+
+  // Force clear all comparison data (for debugging)
+  const forceClearComparisonData = () => {
+    setCompareRobots([]);
+    setCompareItem([]);
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem("compareRobots");
+      localStorage.removeItem("compareItem");
+    }
+  };
+
+  // Function to open compare modal
+  const openCompareModal = () => {
+    if (typeof window !== 'undefined') {
+      const { openOffcanvasModal } = require('@/utils/modalUtils');
+      openOffcanvasModal('compare');
     }
   };
   const isAddedtoWishlist = (id) => {
@@ -89,26 +168,79 @@ export default function Context({ children }) {
     }
     return false;
   };
+  // Initialize cart and wishlist from localStorage
   useEffect(() => {
-    const items = JSON.parse(localStorage.getItem("cartList"));
-    if (items?.length) {
-      setCartProducts(items);
+    if (typeof window !== 'undefined') {
+      try {
+        const cartItems = JSON.parse(localStorage.getItem("cartList") || "[]");
+        const wishlistItems = JSON.parse(localStorage.getItem("wishlist") || "[]");
+        
+        if (cartItems?.length) setCartProducts(cartItems);
+        if (wishlistItems?.length) setWishList(wishlistItems);
+      } catch (error) {
+        // Handle localStorage errors silently
+      }
     }
   }, []);
 
+  // Save cart to localStorage with debouncing
   useEffect(() => {
-    localStorage.setItem("cartList", JSON.stringify(cartProducts));
+    if (typeof window !== 'undefined' && cartProducts.length > 0) {
+      const timeoutId = setTimeout(() => {
+        localStorage.setItem("cartList", JSON.stringify(cartProducts));
+      }, 300);
+      return () => clearTimeout(timeoutId);
+    }
   }, [cartProducts]);
+
+  // Save wishlist to localStorage with debouncing
   useEffect(() => {
-    const items = JSON.parse(localStorage.getItem("wishlist"));
-    if (items?.length) {
-      setWishList(items);
+    if (typeof window !== 'undefined' && wishList.length > 0) {
+      const timeoutId = setTimeout(() => {
+        localStorage.setItem("wishlist", JSON.stringify(wishList));
+      }, 300);
+      return () => clearTimeout(timeoutId);
+    }
+  }, [wishList]);
+
+  // Persist compare robots to localStorage (client-side only)
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem("compareRobots", JSON.stringify(compareRobots));
+    }
+  }, [compareRobots]);
+
+  // Load compare robots from localStorage on mount (client-side only)
+  useEffect(() => {
+    // Only run on client side
+    if (typeof window === 'undefined') return;
+    
+    try {
+      const savedCompareRobots = JSON.parse(localStorage.getItem("compareRobots") || "[]");
+      if (savedCompareRobots.length > 0) {
+        // Check if the saved data has the new format (with nested structures)
+        const hasNewFormat = savedCompareRobots.some(robot => 
+          robot.specifications || robot.capabilities || robot.operationalEnvironmentAndApplications
+        );
+        
+        if (hasNewFormat) {
+          setCompareRobots(savedCompareRobots);
+          setCompareItem(savedCompareRobots.map(robot => robot.id));
+        } else {
+          // Clear old format data
+          localStorage.removeItem("compareRobots");
+          setCompareRobots([]);
+          setCompareItem([]);
+        }
+      }
+    } catch (error) {
+      console.error('Error loading comparison data from localStorage:', error);
+      // Clear corrupted data
+      localStorage.removeItem("compareRobots");
+      setCompareRobots([]);
+      setCompareItem([]);
     }
   }, []);
-
-  useEffect(() => {
-    localStorage.setItem("wishlist", JSON.stringify(wishList));
-  }, [wishList]);
 
   const contextElement = {
     cartProducts,
@@ -130,6 +262,14 @@ export default function Context({ children }) {
     compareItem,
     setCompareItem,
     updateQuantity,
+    // Robot comparison
+    compareRobots,
+    setCompareRobots,
+    addRobotToCompare,
+    removeRobotFromCompare,
+    clearAllCompareRobots,
+    forceClearComparisonData,
+    openCompareModal,
   };
   return (
     <dataContext.Provider value={contextElement}>

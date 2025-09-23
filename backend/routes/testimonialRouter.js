@@ -1,24 +1,22 @@
 const express = require("express");
-
-// const multer = require("multer");
-// const upload = multer({ storage: multer.memoryStorage() });
-const { uploadPhoto } = require("../middlewares/uploadImage");
-
+const multer = require("multer");
 const {
   createTestimonial,
+  getTestimonials,
+  getTestimonialById,
   updateTestimonial,
   deleteTestimonial,
-  getTestimonial,
-  getallTestimonial,
 } = require("../controller/testimonialCtrl");
-const { authMiddleware, isAdmin } = require("../middlewares/authMiddleware");
+
 const router = express.Router();
 
-router.post("/", authMiddleware, isAdmin, uploadPhoto.array("logo", 10),
- createTestimonial);
-router.put("/:id", authMiddleware, isAdmin,uploadPhoto.array("logo", 10), updateTestimonial);
-router.delete("/:id", authMiddleware, isAdmin, deleteTestimonial);
-router.get("/:id", getTestimonial);
-router.get("/", getallTestimonial);
+// Configure multer for handling FormData
+const upload = multer();
+
+router.post("/", upload.none(), createTestimonial);
+router.get("/", getTestimonials);          
+router.get("/:id", getTestimonialById);
+router.put("/:id", upload.none(), updateTestimonial);       
+router.delete("/:id", deleteTestimonial);     
 
 module.exports = router;

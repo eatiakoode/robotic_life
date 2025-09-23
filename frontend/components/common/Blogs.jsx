@@ -65,13 +65,13 @@ export default function Blogs({
                   </p>
                   <div>
                     <h6 className="title fw-5">
-                      <Link className="link" href={`/blog-detail/${post.id}`}>
+                      <Link className="link" href={`/blog-detail/${post.slug || post.id}`}>
                         {post.title}
                       </Link>
                     </h6>
                     {readMore ? (
                       <Link
-                        href={`/blog-detail/${post.id}`}
+                        href={`/blog-detail/${post.slug || post.id}`}
                         className="btn-readmore mt-0 link"
                       >
                         Readmore

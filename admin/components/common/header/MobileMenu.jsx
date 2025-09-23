@@ -13,8 +13,8 @@ const MobileMenu = () => {
               width={170}
               height={65}
               className="nav_logo_img contain mt20"
-              src="/assets/images/header-logo2.png"
-              alt="header-logo2.png"
+              src={`${process.env.NEXT_PUBLIC_BACKEND_API_URL}public/assets/images/logo1.svg`}
+              alt="logo1.svg"
             />
            
             {/* <span className="mt20">WeGrow</span> */}
@@ -27,11 +27,11 @@ const MobileMenu = () => {
                 <span className="flaticon-user"></span>
               </Link>
             </li> */}
-            <li className="list-inline-item border_listing">
+            {/* <li className="list-inline-item border_listing">
             <a href="tel:+917421922000">
               <span className="flaticon-telephone"></span>
             </a>
-          </li>
+          </li> */}
             <li
               className="list-inline-item"
               data-bs-toggle="offcanvas"

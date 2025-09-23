@@ -1,13 +1,36 @@
+"use client";
 import Header from "../../common/header/dashboard/Header";
 import SidebarMenu from "../../common/header/dashboard/SidebarMenu";
 import MobileMenu from "../../common/header/MobileMenu";
 import TableData from "./TableData";
 import Filtering from "./Filtering";
 import Pagination from "./Pagination";
-import SearchBox from "./SearchBox";
+import SearchBox from "../../common/SearchBox";
 import CopyRight from "../../common/footer/CopyRight";
+import { useSearchAndPagination } from "../../../hooks/useSearchAndPagination";
+import { getTestimonialTableData } from "../../../api/testimonial";
+import { useState, useEffect } from "react";
 
-const index = () => {
+const TestimonialIndex = () => {
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  // Use the custom hook for search and pagination
+  const {
+    currentData: currentTestimonials,
+    loading,
+    error,
+    searchQuery,
+    handleSearch,
+    currentPage,
+    totalPages,
+    handlePageChange,
+    refreshData: handleRefresh,
+    searchInfo
+  } = useSearchAndPagination(getTestimonialTableData, 10, ['name', 'designation', 'message']);
   return (
     <>
       {/* <!-- Main Header Nav --> */}
@@ -54,7 +77,13 @@ const index = () => {
                 <div className="col-lg-4 col-xl-4 mb10">
                   <div className="breadcrumb_content style2 mb30-991">
                     <h2 className="breadcrumb_title">All Testimonials</h2>
-                    <p>View, manage, and organize feedback shared by clients or property buyers.</p>
+                    <p>View, manage, and organize feedback shared by users </p>
+                    {isClient && searchInfo.hasSearchQuery && (
+                      <small className="text-muted">
+                        Showing {searchInfo.totalResults} of {searchInfo.totalItems} results
+                        {searchQuery && ` for "${searchQuery}"`}
+                      </small>
+                    )}
                   </div>
                 </div>
                 {/* End .col */}
@@ -62,17 +91,24 @@ const index = () => {
                 <div className="col-lg-8 col-xl-8">
                   <div className="candidate_revew_select style2 text-end mb30-991">
                     <ul className="mb0">
-                      {/* <li className="list-inline-item">
-                        <div className="candidate_revew_search_box course fn-520">
-                          <SearchBox />
-                        </div>
-                      </li> */}
-                      {/* End li */}
+                      {isClient && (
+                        <>
+                          <li className="list-inline-item">
+                            <div className="candidate_revew_search_box course fn-520">
+                              <SearchBox 
+                                onSearch={handleSearch} 
+                                placeholder="Search testimonials..." 
+                              />
+                            </div>
+                          </li>
+                          {/* End li */}
 
-                      {/* <li className="list-inline-item">
-                        <Filtering />
-                      </li> */}
-                      {/* End li */}
+                          <li className="list-inline-item">
+                            <Filtering />
+                          </li>
+                          {/* End li */}
+                        </>
+                      )}
                     </ul>
                   </div>
                 </div>
@@ -82,13 +118,26 @@ const index = () => {
                   <div className="my_dashboard_review mb40">
                     <div className="property_table">
                       <div className="table-responsive mt0">
-                        <TableData />
+                        <TableData 
+                          testimonials={currentTestimonials}
+                          loading={loading}
+                          error={error}
+                          onRefresh={handleRefresh}
+                        />
                       </div>
                       {/* End .table-responsive */}
 
-                      {/* <div className="mbp_pagination">
-                        <Pagination />
-                      </div> */}
+                      {isClient && !loading && !error && searchInfo.totalResults > 0 && (
+                        <div className="mbp_pagination">
+                          <Pagination 
+                            currentPage={currentPage}
+                            totalPages={totalPages}
+                            onPageChange={handlePageChange}
+                            totalItems={searchInfo.totalResults}
+                            itemsPerPage={searchInfo.itemsPerPage}
+                          />
+                        </div>
+                      )}
                       {/* End .mbp_pagination */}
                     </div>
                     {/* End .property_table */}
@@ -115,4 +164,4 @@ const index = () => {
   );
 };
 
-export default index;
+export default TestimonialIndex;

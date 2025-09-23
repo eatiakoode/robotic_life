@@ -44,7 +44,7 @@ export default function QuickAdd() {
                   <Image alt="" src={item.imgSrc} width={600} height={800} />
                 </div>
                 <div className="content">
-                  <Link href={`/product-detail/${item.id}`}>{item.title}</Link>
+                  <Link href={`/product-detail/${item.slug || item.id}`}>{item.title}</Link>
                   <div className="tf-product-info-price">
                     <h5 className="price-on-sale font-2">
                       ${item.price.toFixed(2)}

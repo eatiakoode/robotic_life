@@ -8,7 +8,7 @@ import React from "react";
 export default function BlogDefaultPage() {
   return (
     <>
-      <Topbar6 bgColor="bg-main" />
+      {/* <Topbar6 bgColor="bg-main" /> */}
       <Header1 />
       <div
         className="page-title"
@@ -42,7 +42,7 @@ export default function BlogDefaultPage() {
         </div>
       </div>
       <BlogDefault />
-      <Footer1 />
+      <Footer1 dark />
     </>
   );
 }

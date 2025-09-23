@@ -1,36 +1,38 @@
-const mongoose = require("mongoose"); // Erase if already required
+const mongoose = require("mongoose");
 
-// Declare the Schema of the Mongo model
-var categorySchema = new mongoose.Schema(
+const CategorySchema = new mongoose.Schema(
   {
-    title: {
+    name: {
       type: String,
       required: true,
-      unique: true,
-      index: true,
+      trim: true
     },
     slug: {
       type: String,
       required: true,
       unique: true,
       index: true,
+      lowercase: true
     },
-    logoimage:{
+    description: {
+      type: String,
+      trim: true
+    },
+    logoimage: {
       type: String,
       // required: true,
       unique: true,
       index: true,
     },
-    h1title:{
+    parent: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Category",
+      default: null
+    },
+    metatitle: {
       type: String,
     },
-    description:{
-      type: String,
-    },
-    metatitle:{
-      type: String,
-    },
-    metadescription:{
+    metadescription: {
       type: String,
     },
     status: {
@@ -38,10 +40,14 @@ var categorySchema = new mongoose.Schema(
       default: true,
     },
   },
-  {
-    timestamps: true,
-  }
+  { timestamps: true }
 );
 
-//Export the model
-module.exports = mongoose.model("Category", categorySchema);
+CategorySchema.pre("save", function (next) {
+  if (this.parent && this.parent.equals(this._id)) {
+    return next(new Error("A category cannot be its own parent."));
+  }
+  next();
+});
+
+module.exports = mongoose.model("Category", CategorySchema);

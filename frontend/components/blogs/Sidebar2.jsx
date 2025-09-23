@@ -2,7 +2,17 @@ import Link from "next/link";
 import React from "react";
 import Image from "next/image";
 import { blogPosts6 } from "@/data/blogs";
+
 export default function Sidebar2() {
+  const formatDate = (dateString) => {
+    if (!dateString) return "Unknown Date";
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric'
+    });
+  };
   return (
     <div className="sidebar maxw-360">
       <div className="sidebar-item sidebar-writer">
@@ -89,27 +99,27 @@ export default function Sidebar2() {
                 />
               </div>
               <div className="content">
-                <div className="meta">
-                  <div className="meta-item gap-8">
-                    <div className="icon">
-                      <i className="icon-calendar" />
+                <div className="meta blog-meta-horizontal d-flex align-items-center justify-content-between mb-3">
+                  <div className="blog-date-author d-flex align-items-center gap-3">
+                    <div className="meta-item d-flex align-items-center gap-2">
+                      <div className="icon">
+                        <i className="icon-calendar" />
+                      </div>
+                      <span className="blog-date text-caption-1">{formatDate(post.date)}</span>
                     </div>
-                    <p className="text-caption-1">{post.date}</p>
-                  </div>
-                  <div className="meta-item gap-8">
-                    <div className="icon">
-                      <i className="icon-user" />
+                    <span className="blog-separator">|</span>
+                    <div className="meta-item d-flex align-items-center gap-2">
+                      <div className="icon">
+                        <i className="icon-user" />
+                      </div>
+                      <span className="blog-author text-caption-1">
+                        by <a className="link" href="#">{post.author}</a>
+                      </span>
                     </div>
-                    <p className="text-caption-1">
-                      by{" "}
-                      <a className="link" href="#">
-                        {post.author}
-                      </a>
-                    </p>
                   </div>
                 </div>
                 <h6 className="title fw-5">
-                  <Link className="link" href={`/blog-detail/${post.id}`}>
+                  <Link className="link" href={`/blog-detail/${post.slug || post.id}`}>
                     {post.description.split(" ").slice(0, 8).join(" ")}
                   </Link>
                 </h6>

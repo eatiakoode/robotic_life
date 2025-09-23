@@ -9,7 +9,7 @@ export default function Topbar9() {
   return (
     <div className="tf-topbar style-2 type-space-lg topbar-fullwidth-2 bg-main">
       <div className="container">
-        <div className="row align-items-center">
+        {/* <div className="row align-items-center">
           <div className="col-xl-3 d-none d-xl-block">
             <div className="tf-cur">
               <div className="tf-currencies">
@@ -82,7 +82,7 @@ export default function Topbar9() {
               </li>
             </ul>
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   );

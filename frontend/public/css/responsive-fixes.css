@@ -1,0 +1,1908 @@
+/* =============================================================================
+   COMPREHENSIVE RESPONSIVE FIXES FOR ROBOTIC LIFE
+   Critical fixes for mobile, tablet, and desktop responsiveness
+   ============================================================================= */
+
+/* =============================================================================
+   GLOBAL RESPONSIVE IMPROVEMENTS
+   ============================================================================= */
+
+/* Base responsive container */
+.container {
+  max-width: 100%;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+/* Ensure all images are responsive */
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* =============================================================================
+   HEADER RESPONSIVE FIXES - MINIMAL CHANGES
+   ============================================================================= */
+
+/* Only add minimal responsive improvements without affecting original design */
+@media (max-width: 575px) {
+  .header-default .wrapper-header {
+    min-height: 60px;
+  }
+  
+  .header-default .logo-header img,
+  .logo-header img,
+  .logo-fix img {
+    max-width: 120px;
+    height: auto;
+  }
+  
+  .nav-icon {
+    gap: 8px;
+  }
+  
+  .nav-icon-item {
+    padding: 6px;
+  }
+}
+
+@media (min-width: 576px) and (max-width: 767px) {
+  .header-default .logo-header img,
+  .logo-header img,
+  .logo-fix img {
+    max-width: 130px;
+    height: auto;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  .header-default .logo-header img,
+  .logo-header img,
+  .logo-fix img {
+    max-width: 140px;
+    height: auto;
+  }
+}
+
+/* =============================================================================
+   SEARCH MODAL RESPONSIVE FIXES
+   ============================================================================= */
+
+.modal-search .modal-dialog {
+  max-width: 95%;
+  margin: 10px auto;
+}
+
+.modal-search .modal-content {
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+/* Mobile search modal */
+@media (max-width: 575px) {
+  .modal-search .modal-dialog {
+    max-width: 100%;
+    margin: 0;
+    height: 100vh;
+  }
+  
+  .modal-search .modal-content {
+    height: 100vh;
+    border-radius: 0;
+    max-height: 100vh;
+  }
+  
+  .search-results-grid {
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+  }
+  
+  .search-result-card {
+    max-width: 100% !important;
+  }
+  
+  .search-result-image-container {
+    height: 140px !important;
+  }
+  
+  .search-result-details {
+    padding: 8px !important;
+  }
+  
+  .search-result-title {
+    font-size: 12px !important;
+  }
+  
+  .search-result-manufacturer {
+    font-size: 10px !important;
+  }
+  
+  .search-result-price {
+    font-size: 12px !important;
+  }
+  
+  .recently-viewed-compact {
+    gap: 6px !important;
+  }
+  
+  .recently-viewed-item {
+    width: 70px !important;
+    height: 90px !important;
+  }
+  
+  .recently-viewed-image {
+    width: 50px !important;
+    height: 50px !important;
+  }
+  
+  .recently-viewed-title {
+    font-size: 8px !important;
+  }
+}
+
+/* Tablet search modal */
+@media (min-width: 576px) and (max-width: 991px) {
+  .modal-search .modal-dialog {
+    max-width: 90%;
+    margin: 20px auto;
+  }
+  
+  .search-results-grid {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)) !important;
+    gap: 15px !important;
+  }
+}
+
+/* =============================================================================
+   HOMEPAGE COMPONENTS RESPONSIVE FIXES
+   ============================================================================= */
+
+/* Hero section responsive - minimal changes only */
+@media (max-width: 575px) {
+  .tf-slideshow .wrap-slider {
+    height: 300px !important;
+  }
+}
+
+@media (min-width: 576px) and (max-width: 767px) {
+  .tf-slideshow .wrap-slider {
+    height: 400px !important;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  .tf-slideshow .wrap-slider {
+    height: 500px !important;
+  }
+}
+
+/* Product cards responsive */
+.card-product {
+  margin-bottom: 20px;
+}
+
+.card-product-wrapper {
+  position: relative;
+  overflow: hidden;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.card-product-wrapper:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Product grid responsive */
+.tf-grid-layout {
+  display: grid;
+  gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+}
+
+@media (max-width: 575px) {
+  .tf-grid-layout {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 15px;
+  }
+  
+  .card-product {
+    margin-bottom: 15px;
+  }
+}
+
+@media (min-width: 576px) and (max-width: 767px) {
+  .tf-grid-layout {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 18px;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  .tf-grid-layout {
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+  }
+}
+
+/* Swiper responsive improvements */
+.swiper {
+  overflow: hidden;
+}
+
+.swiper-slide {
+  height: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Features section responsive */
+.features-responsive {
+  margin: 80px 55px !important;
+}
+
+@media (max-width: 575px) {
+  .features-responsive {
+    margin: 40px 15px !important;
+    border-radius: 15px !important;
+  }
+}
+
+@media (min-width: 576px) and (max-width: 767px) {
+  .features-responsive {
+    margin: 50px 25px !important;
+    border-radius: 18px !important;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  .features-responsive {
+    margin: 60px 35px !important;
+  }
+}
+
+@media (min-width: 992px) and (max-width: 1199px) {
+  .features-responsive {
+    margin: 70px 45px !important;
+  }
+}
+
+/* Collections section responsive */
+.tf-sw-collection .swiper-slide {
+  height: auto;
+}
+
+.tf-sw-recent .swiper-slide {
+  height: auto;
+}
+
+/* Testimonials responsive */
+.testimonials-responsive {
+  padding: 60px 0;
+}
+
+@media (max-width: 575px) {
+  .testimonials-responsive {
+    padding: 40px 0;
+  }
+}
+
+@media (min-width: 576px) and (max-width: 767px) {
+  .testimonials-responsive {
+    padding: 50px 0;
+  }
+}
+
+/* Blog section responsive */
+.blog-responsive {
+  padding: 60px 0;
+}
+
+@media (max-width: 575px) {
+  .blog-responsive {
+    padding: 40px 0;
+  }
+}
+
+@media (min-width: 576px) and (max-width: 767px) {
+  .blog-responsive {
+    padding: 50px 0;
+  }
+}
+
+/* =============================================================================
+   COMPARE PAGE RESPONSIVE FIXES
+   ============================================================================= */
+
+.tf-compare-table {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.tf-compare-row {
+  display: flex;
+  min-width: 600px;
+}
+
+@media (max-width: 575px) {
+  .tf-compare-row {
+    min-width: 500px;
+  }
+  
+  .tf-compare-col:first-child {
+    min-width: 100px !important;
+    max-width: 100px !important;
+    flex: 0 0 100px !important;
+    font-size: 10px !important;
+    padding: 8px 6px !important;
+  }
+  
+  .tf-compare-col {
+    padding: 8px 4px !important;
+    min-width: 120px !important;
+  }
+  
+  .tf-compare-field {
+    font-size: 10px !important;
+  }
+  
+  .tf-compare-image {
+    min-height: 150px !important;
+  }
+  
+  .tf-compare-image img {
+    max-height: 130px !important;
+    min-height: 100px !important;
+  }
+  
+  .tf-compare-content .link {
+    font-size: 12px !important;
+  }
+  
+  .tf-compare-content .desc {
+    font-size: 10px !important;
+  }
+}
+
+@media (min-width: 576px) and (max-width: 767px) {
+  .tf-compare-row {
+    min-width: 550px;
+  }
+  
+  .tf-compare-col:first-child {
+    min-width: 110px !important;
+    max-width: 110px !important;
+    flex: 0 0 110px !important;
+    font-size: 11px !important;
+  }
+  
+  .tf-compare-col {
+    padding: 10px 6px !important;
+    min-width: 130px !important;
+  }
+  
+  .tf-compare-field {
+    font-size: 11px !important;
+  }
+  
+  .tf-compare-image {
+    min-height: 180px !important;
+  }
+  
+  .tf-compare-image img {
+    max-height: 160px !important;
+    min-height: 120px !important;
+  }
+}
+
+/* =============================================================================
+   FOOTER RESPONSIVE FIXES
+   ============================================================================= */
+
+.footer-default {
+  margin-top: 60px;
+}
+
+@media (max-width: 767px) {
+  .footer-default {
+    margin-top: 40px;
+  }
+  
+  .footer-default .widget {
+    margin-bottom: 30px;
+  }
+  
+  .footer-default .widget-title {
+    font-size: 16px;
+    margin-bottom: 15px;
+  }
+  
+  .footer-default .widget-content {
+    font-size: 14px;
+  }
+}
+
+/* =============================================================================
+   BREADCRUMB ALIGNMENT FIXES
+   ============================================================================= */
+
+/* Standard breadcrumb alignment */
+.tf-breadcrumb-wrap .tf-breadcrumb-list {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tf-breadcrumb-wrap .tf-breadcrumb-list .icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  line-height: 1;
+}
+
+.tf-breadcrumb-wrap .tf-breadcrumb-list .text {
+  display: inline-flex;
+  align-items: center;
+  line-height: 1;
+}
+
+.tf-breadcrumb-wrap .tf-breadcrumb-prev-next {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tf-breadcrumb-wrap .tf-breadcrumb-prev-next a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.tf-breadcrumb-wrap .tf-breadcrumb-prev-next a:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+/* Compare page breadcrumb alignment fixes */
+ul.breadcrumbs {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  flex-wrap: wrap;
+}
+
+ul.breadcrumbs li {
+  display: flex;
+  align-items: center;
+  line-height: 1;
+}
+
+ul.breadcrumbs li a {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+ul.breadcrumbs li a:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+ul.breadcrumbs li i {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  line-height: 1;
+  margin: 0 4px;
+}
+
+ul.breadcrumbs li:last-child {
+  font-weight: 500;
+}
+
+/* Responsive breadcrumb adjustments */
+@media (max-width: 575px) {
+  ul.breadcrumbs {
+    gap: 8px;
+    font-size: 14px;
+  }
+  
+  ul.breadcrumbs li i {
+    font-size: 12px;
+    margin: 0 2px;
+  }
+  
+  ul.breadcrumbs li a {
+    padding: 2px 6px;
+  }
+}
+
+@media (min-width: 576px) and (max-width: 767px) {
+  ul.breadcrumbs {
+    gap: 10px;
+    font-size: 15px;
+  }
+  
+  ul.breadcrumbs li i {
+    font-size: 13px;
+    margin: 0 3px;
+  }
+}
+
+@media (min-width: 768px) {
+  ul.breadcrumbs {
+    gap: 12px;
+    font-size: 16px;
+  }
+  
+  ul.breadcrumbs li i {
+    font-size: 14px;
+    margin: 0 4px;
+  }
+}
+
+/* =============================================================================
+   UTILITY CLASSES FOR RESPONSIVE DESIGN
+   ============================================================================= */
+
+/* Hide on mobile */
+.d-mobile-none {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .d-mobile-none {
+    display: block;
+  }
+}
+
+/* Show only on mobile */
+.d-mobile-only {
+  display: block;
+}
+
+@media (min-width: 768px) {
+  .d-mobile-only {
+    display: none;
+  }
+}
+
+/* Responsive text sizing */
+.text-responsive {
+  font-size: 14px;
+}
+
+@media (max-width: 575px) {
+  .text-responsive {
+    font-size: 12px;
+  }
+}
+
+@media (min-width: 576px) and (max-width: 767px) {
+  .text-responsive {
+    font-size: 13px;
+  }
+}
+
+@media (min-width: 768px) {
+  .text-responsive {
+    font-size: 14px;
+  }
+}
+
+/* Responsive spacing */
+.spacing-responsive {
+  padding: 20px 0;
+}
+
+@media (max-width: 575px) {
+  .spacing-responsive {
+    padding: 15px 0;
+  }
+}
+
+@media (min-width: 768px) {
+  .spacing-responsive {
+    padding: 30px 0;
+  }
+}
+
+/* =============================================================================
+   CRITICAL MOBILE FIXES
+   ============================================================================= */
+
+/* Ensure touch targets are at least 44px */
+/* button, .btn, a, input, select, textarea {
+  min-height: 44px;
+  min-width: 44px;
+} */
+
+/* Prevent horizontal scroll on mobile */
+body {
+  overflow-x: hidden;
+}
+
+/* Improve touch scrolling */
+* {
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Fix viewport issues on mobile */
+html {
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+}
+
+/* =============================================================================
+   PERFORMANCE OPTIMIZATIONS
+   ============================================================================= */
+
+/* Optimize animations for mobile */
+@media (max-width: 767px) {
+  * {
+    animation-duration: 0.3s !important;
+    transition-duration: 0.3s !important;
+  }
+  
+  .wow {
+    animation-duration: 0.3s !important;
+  }
+}
+
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* =============================================================================
+   CRITICAL MOBILE FIXES FOR SEARCH MODAL
+   ============================================================================= */
+
+/* Ensure search modal is fully responsive */
+@media (max-width: 575px) {
+  .modal-search .modal-dialog {
+    margin: 0 !important;
+    max-width: 100% !important;
+    height: 100vh !important;
+  }
+  
+  .modal-search .modal-content {
+    height: 100vh !important;
+    border-radius: 0 !important;
+    overflow-y: auto !important;
+  }
+  
+  .modal-search .form-search {
+    margin-bottom: 20px !important;
+  }
+  
+  .modal-search .form-search input {
+    font-size: 16px !important; /* Prevents zoom on iOS */
+    padding: 12px 15px !important;
+  }
+  
+  .modal-search h5 {
+    font-size: 18px !important;
+    margin-bottom: 15px !important;
+  }
+  
+  .modal-search h6 {
+    font-size: 16px !important;
+    margin-bottom: 12px !important;
+  }
+}
+
+/* =============================================================================
+   MOBILE MENU SEARCH BAR FIX - ICON AND PLACEHOLDER SPACING
+   ============================================================================= */
+
+/* Fix search icon and placeholder text overlap in mobile menu */
+.canvas-mb .form-search {
+  position: relative !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+}
+
+.canvas-mb .form-search .text {
+  flex: 1 !important;
+  position: relative !important;
+}
+
+.canvas-mb .form-search input {
+  width: 100% !important;
+  padding-left: 40px !important; /* Space for icon */
+  padding-right: 12px !important;
+  padding-top: 12px !important;
+  padding-bottom: 12px !important;
+  border: 1px solid #e0e0e0 !important;
+  border-radius: 8px !important;
+  font-size: 16px !important;
+  background-color: #f8f9fa !important;
+  box-sizing: border-box !important;
+}
+
+.canvas-mb .form-search button {
+  position: absolute !important;
+  left: 12px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  background: none !important;
+  border: none !important;
+  padding: 0 !important;
+  z-index: 2 !important;
+  pointer-events: none !important; /* Allow clicks to pass through to input */
+}
+
+.canvas-mb .form-search button svg {
+  width: 20px !important;
+  height: 20px !important;
+  color: #666 !important;
+}
+
+/* Ensure proper spacing on all mobile devices */
+@media (max-width: 767px) {
+  .canvas-mb .form-search {
+    gap: 10px !important;
+  }
+  
+  .canvas-mb .form-search input {
+    padding-left: 36px !important;
+    font-size: 15px !important;
+  }
+  
+  .canvas-mb .form-search button {
+    left: 10px !important;
+  }
+  
+  .canvas-mb .form-search button svg {
+    width: 18px !important;
+    height: 18px !important;
+  }
+}
+
+@media (max-width: 575px) {
+  .canvas-mb .form-search {
+    gap: 8px !important;
+  }
+  
+  .canvas-mb .form-search input {
+    padding-left: 32px !important;
+    font-size: 14px !important;
+  }
+  
+  .canvas-mb .form-search button {
+    left: 8px !important;
+  }
+  
+  .canvas-mb .form-search button svg {
+    width: 16px !important;
+    height: 16px !important;
+  }
+}
+
+/* =============================================================================
+   CRITICAL TABLET FIXES
+   ============================================================================= */
+
+@media (min-width: 576px) and (max-width: 991px) {
+  .modal-search .modal-dialog {
+    max-width: 90% !important;
+    margin: 20px auto !important;
+  }
+  
+  .search-results-grid {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)) !important;
+  }
+  
+  .tf-compare-table {
+    font-size: 12px !important;
+  }
+  
+  .tf-compare-col:first-child {
+    min-width: 120px !important;
+    font-size: 11px !important;
+  }
+}
+
+/* =============================================================================
+   SORTING DROPDOWN POSITIONING FIX - STYLING PRESERVED
+   ============================================================================= */
+
+/* Fix sorting dropdown positioning - ensure it appears below the button */
+.tf-dropdown-sort {
+  position: relative !important;
+}
+
+/* Only fix positioning, preserve all original styling */
+.tf-dropdown-sort .dropdown-menu {
+  position: absolute !important;
+  top: 100% !important;
+  left: 0 !important;
+  right: auto !important;
+  transform: none !important;
+}
+
+/* Bootstrap dropdown positioning fix - only positioning */
+.tf-dropdown-sort .dropdown-menu[data-bs-popper] {
+  top: 100% !important;
+  left: 0 !important;
+  transform: none !important;
+}
+
+/* Fix for Bootstrap dropdown positioning conflicts - only positioning */
+.dropdown-menu[data-bs-popper] {
+  top: 100% !important;
+  left: 0 !important;
+  transform: none !important;
+}
+
+/* Ensure dropdown doesn't appear from top-left corner - only positioning */
+.tf-control-sorting .tf-dropdown-sort .dropdown-menu {
+  position: absolute !important;
+  top: 100% !important;
+  left: 0 !important;
+  right: auto !important;
+  transform: none !important;
+}
+
+/* =============================================================================
+   CRITICAL DESKTOP FIXES
+   ============================================================================= */
+
+@media (min-width: 1200px) {
+  .container {
+    max-width: 1320px !important;
+  }
+  
+  .search-results-grid {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)) !important;
+  }
+  
+  .tf-compare-table {
+    font-size: 14px !important;
+  }
+}
+
+/* =============================================================================
+   PRINT STYLES
+   ============================================================================= */
+
+@media print {
+  .header-default,
+  .footer-default,
+  .btn,
+  .swiper-pagination,
+  .swiper-button-next,
+  .swiper-button-prev {
+    display: none !important;
+  }
+  
+  .container {
+    max-width: 100% !important;
+    padding: 0 !important;
+  }
+  
+  .card-product {
+    break-inside: avoid;
+    margin-bottom: 20px;
+  }
+}
+
+/* =============================================================================
+   POPULAR CATEGORIES RESPONSIVE FIXES
+   ============================================================================= */
+
+/* Categories horizontal scroll container */
+.categories-scroll-container {
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: #ccc transparent;
+}
+
+.categories-scroll-container::-webkit-scrollbar {
+  height: 3px;
+}
+
+.categories-scroll-container::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+.categories-scroll-container::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 3px;
+}
+
+.categories-scroll-container::-webkit-scrollbar-thumb:hover {
+  background: #999;
+}
+
+/* Categories list styling */
+.categories-list {
+  display: flex;
+  flex-wrap: nowrap;
+  min-width: max-content;
+  padding-bottom: 5px;
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 575px) {
+  .categories-scroll-container {
+    margin: 0 -15px;
+    padding: 0 15px;
+  }
+  
+  .categories-list {
+    gap: 8px;
+  }
+  
+  .categories-list .nav-tab-item a {
+    white-space: nowrap;
+    padding: 8px 12px;
+    font-size: 14px;
+  }
+  
+  .categories-list .text-line {
+    display: none !important;
+  }
+}
+
+@media (min-width: 576px) and (max-width: 767px) {
+  .categories-scroll-container {
+    margin: 0 -10px;
+    padding: 0 10px;
+  }
+  
+  .categories-list {
+    gap: 10px;
+  }
+  
+  .categories-list .nav-tab-item a {
+    white-space: nowrap;
+    padding: 8px 14px;
+    font-size: 15px;
+  }
+}
+
+@media (min-width: 768px) {
+  .categories-scroll-container {
+    overflow: visible;
+  }
+  
+  .categories-list {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+}
+
+/* =============================================================================
+   HERO SLIDER TEXT OVERLAP FIX
+   ============================================================================= */
+
+/* Fix hero slider text overlapping with robot image on desktop */
+@media (min-width: 1200px) {
+  .slider-default .box-content.type-2.type-3 {
+    left: 80px !important;
+    right: auto !important;
+    max-width: 50% !important;
+    width: auto !important;
+  }
+  
+  .slider-default .box-content.type-2.type-3 .content-slider {
+    max-width: 100% !important;
+  }
+}
+
+/* Ensure text doesn't overlap on large screens */
+@media (min-width: 1400px) {
+  .slider-default .box-content.type-2.type-3 {
+    max-width: 45% !important;
+  }
+}
+
+/* =============================================================================
+   TESTIMONIAL STARS GRADIENT STYLING
+   ============================================================================= */
+
+/* Gradient stars for testimonials with grayish gradient */
+.testimonial-item-v2 .rate-box .list-star-default .icon {
+  background: linear-gradient(135deg, #6b7280 0%, #9ca3af 50%, #d1d5db 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+  font-size: 22px;
+  filter: drop-shadow(0 2px 4px rgba(107, 114, 128, 0.3));
+  transition: all 0.3s ease;
+}
+
+/* Hover effect for stars */
+.testimonial-item-v2 .rate-box .list-star-default:hover .icon {
+  background: linear-gradient(135deg, #d1d5db 0%, #9ca3af 50%, #6b7280 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  transform: scale(1.1);
+  filter: drop-shadow(0 3px 6px rgba(156, 163, 175, 0.4));
+}
+
+/* Alternative gradient for general star lists */
+.list-star-default .icon {
+  background: linear-gradient(135deg, #6b7280 0%, #9ca3af 50%, #d1d5db 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 1px 2px rgba(107, 114, 128, 0.2));
+  transition: all 0.3s ease;
+}
+
+/* Hover effect for general stars */
+.list-star-default:hover .icon {
+  background: linear-gradient(135deg, #d1d5db 0%, #9ca3af 50%, #6b7280 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  transform: scale(1.05);
+  filter: drop-shadow(0 2px 4px rgba(156, 163, 175, 0.3));
+}
+
+/* Fallback for browsers that don't support background-clip */
+@supports not (-webkit-background-clip: text) {
+  .testimonial-item-v2 .rate-box .list-star-default .icon,
+  .list-star-default .icon {
+    background: none;
+    -webkit-text-fill-color: initial;
+    color: #6b7280;
+  }
+}
+
+/* =============================================================================
+   VIDEO CARDS STYLING
+   ============================================================================= */
+
+/* Video Cards Grid Layout */
+.video-cards-grid {
+  display: grid;
+  gap: 24px;
+  margin-top: 20px;
+}
+
+/* Single video - centered and larger */
+.video-cards-grid.single-video {
+  grid-template-columns: 1fr;
+  max-width: 800px;
+  margin: 20px auto 0;
+}
+
+/* Multiple videos - responsive grid */
+.video-cards-grid.multiple-videos {
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+
+/* Video Card Styling */
+.video-card {
+  background: #fff;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+  border: 1px solid #f0f0f0;
+}
+
+.video-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+.video-card-header {
+  padding: 16px 20px 12px;
+  border-bottom: 1px solid #f5f5f5;
+}
+
+.video-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.video-container {
+  margin: 0;
+}
+
+/* Ensure iframe videos fill the container completely */
+.video-container iframe {
+  width: 100% !important;
+  height: 100% !important;
+  border: none !important;
+  border-radius: 12px;
+  object-fit: cover;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .video-cards-grid.multiple-videos {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  
+  .video-cards-grid.single-video {
+    max-width: 100%;
+    margin: 20px 0 0;
+  }
+  
+  .video-card-header {
+    padding: 12px 16px;
+  }
+  
+  .video-title {
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .video-cards-grid {
+    gap: 16px;
+  }
+  
+  .video-card-header {
+    padding: 10px 12px;
+  }
+  
+  .video-title {
+    font-size: 14px;
+  }
+}
+
+/* =============================================================================
+   COLLECTIONS RESPONSIVE FIXES
+   ============================================================================= */
+
+/* Collections grid responsive behavior - Restore original full-width layout */
+.collections-responsive {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  width: 100%;
+  max-width: 100%;
+}
+
+/* Ensure cards maintain full width on desktop */
+.collections-responsive .collection-default {
+  width: 100%;
+  min-height: 400px;
+  max-width: none;
+}
+
+/* Override any container constraints for collections */
+.flat-spacing .container .collections-responsive {
+  max-width: 100%;
+  width: 100%;
+}
+
+/* Mobile and tablet - stack vertically */
+@media (max-width: 767px) {
+  .collections-responsive {
+    grid-template-columns: 1fr !important;
+    gap: 20px !important;
+  }
+  
+  .collections-responsive .collection-default {
+    width: 100% !important;
+    margin-bottom: 20px !important;
+    min-height: 300px;
+  }
+  
+  .collections-responsive .collection-default:last-child {
+    margin-bottom: 0 !important;
+  }
+}
+
+/* Small mobile adjustments */
+@media (max-width: 575px) {
+  .collections-responsive {
+    gap: 15px !important;
+  }
+  
+  .collections-responsive .collection-default {
+    margin-bottom: 15px !important;
+    min-height: 250px;
+  }
+}
+
+/* =============================================================================
+   FOOTER RESPONSIVE FIXES - MINIMAL SPACING
+   ============================================================================= */
+
+/* Footer bottom minimal spacing */
+.footer-bottom {
+  padding: 8px 0 !important;
+}
+
+.footer-bottom-wrap {
+  padding: 8px 0 !important;
+}
+
+/* Mobile footer minimal spacing */
+@media (max-width: 767px) {
+  .footer-bottom {
+    padding: 4px 0 !important;
+  }
+  
+  .footer-bottom-wrap {
+    padding: 4px 0 !important;
+  }
+  
+  .copyright-widget {
+    font-size: 12px !important;
+    line-height: 1.3 !important;
+  }
+  
+  .footer-body {
+    padding: 20px 0 !important;
+  }
+  
+  .footer-wrap {
+    margin-top: 0 !important;
+  }
+}
+
+@media (max-width: 575px) {
+  .footer-bottom {
+    padding: 2px 0 !important;
+  }
+  
+  .footer-bottom-wrap {
+    padding: 2px 0 !important;
+  }
+  
+  .copyright-widget {
+    font-size: 11px !important;
+    line-height: 1.2 !important;
+  }
+  
+  .footer-body {
+    padding: 15px 0 !important;
+  }
+  
+  .footer-wrap {
+    margin-top: 0 !important;
+  }
+}
+
+/* Extra small screens - almost no gap */
+@media (max-width: 480px) {
+  .footer-bottom {
+    padding: 1px 0 !important;
+  }
+  
+  .footer-bottom-wrap {
+    padding: 1px 0 !important;
+  }
+  
+  .footer-body {
+    padding: 10px 0 !important;
+  }
+}
+
+/* =============================================================================
+   BLOG META ALIGNMENT FIXES
+   ============================================================================= */
+
+/* Fix blog meta item alignment */
+.meta-item {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
+
+/* Revert to original icon styling - keep it simple */
+.meta-item .icon {
+  display: inline-block !important;
+  vertical-align: middle !important;
+}
+
+.meta-item p {
+  margin: 0 !important;
+  display: inline !important;
+  vertical-align: middle !important;
+}
+
+.meta-item .link {
+  display: inline !important;
+  vertical-align: middle !important;
+}
+
+/* Keep icons simple and responsive */
+.meta-item i {
+  vertical-align: middle !important;
+  display: inline-block !important;
+}
+
+/* Make calendar icon transparent with white border */
+.icon-calendar {
+  -webkit-text-stroke: 1px white !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+  background: transparent !important;
+}
+
+/* Fix Insights section calendar icon (using Lucide React Calendar component) */
+.wg-blog.style-abs .content svg {
+  stroke: white !important;
+  fill: transparent !important;
+  stroke-width: 1.5 !important;
+}
+
+/* Target the specific Calendar component in Insights */
+.wg-blog.style-abs .content p svg {
+  stroke: white !important;
+  fill: transparent !important;
+  stroke-width: 1.5 !important;
+  color: white !important;
+}
+
+/* Simple responsive icon sizing */
+@media (max-width: 768px) {
+  .meta-item i {
+    font-size: 12px !important;
+  }
+  
+  .relatest-post-item .blog-meta-horizontal .icon i {
+    font-size: 11px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .meta-item i {
+    font-size: 11px !important;
+  }
+  
+  .relatest-post-item .blog-meta-horizontal .icon i {
+    font-size: 10px !important;
+  }
+}
+
+/* Ensure proper spacing between meta items */
+.meta {
+  display: flex !important;
+  align-items: center !important;
+  flex-wrap: wrap !important;
+  gap: 15px !important;
+}
+
+/* Fix blog list specific alignment */
+.wg-blog .meta {
+  margin-bottom: 12px !important;
+}
+
+.wg-blog .meta-item {
+  margin-bottom: 0 !important;
+}
+
+/* Perfect alignment for user icon and text */
+.meta-item .icon i {
+  font-size: 14px !important;
+  line-height: 1 !important;
+  vertical-align: middle !important;
+  display: inline-block !important;
+  position: relative !important;
+  top: -1px !important;
+}
+
+.meta-item p {
+  font-size: 14px !important;
+  line-height: 1.4 !important;
+  vertical-align: middle !important;
+  display: inline-flex !important;
+  align-items: center !important;
+}
+
+/* Ensure the entire meta item is perfectly aligned */
+.meta-item {
+  line-height: 1.4 !important;
+  vertical-align: middle !important;
+}
+
+/* =============================================================================
+   BLOG CARD REDESIGN - HORIZONTAL LAYOUT
+   ============================================================================= */
+
+/* New horizontal blog meta layout */
+.blog-meta-horizontal {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  margin-bottom: 12px !important;
+}
+
+.blog-date-author {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+}
+
+.blog-date {
+  font-size: 12px !important;
+  color: #666 !important;
+  font-weight: 400 !important;
+  font-family: "Kumbh Sans", sans-serif !important;
+}
+
+.blog-separator {
+  font-size: 12px !important;
+  color: #ccc !important;
+  font-weight: 300 !important;
+}
+
+.blog-author {
+  font-size: 12px !important;
+  color: #666 !important;
+  font-weight: 400 !important;
+  font-family: "Kumbh Sans", sans-serif !important;
+}
+
+.blog-author .link {
+  color: #333 !important;
+  text-decoration: none !important;
+  font-weight: 500 !important;
+}
+
+.blog-author .link:hover {
+  color: #007bff !important;
+  text-decoration: underline !important;
+}
+
+/* Clean up old meta styles for blog list */
+.wg-blog .meta {
+  display: none !important;
+}
+
+/* Ensure proper spacing for the new layout */
+.wg-blog .content {
+  padding: 20px !important;
+}
+
+.wg-blog .title {
+  margin-bottom: 12px !important;
+  font-size: 18px !important;
+  line-height: 1.4 !important;
+  font-weight: 600 !important;
+  font-family: "Kumbh Sans", sans-serif !important;
+}
+
+.wg-blog .title .link {
+  color: #333 !important;
+  text-decoration: none !important;
+}
+
+.wg-blog .title .link:hover {
+  color: #007bff !important;
+  text-decoration: underline !important;
+}
+
+.wg-blog p {
+  color: #666 !important;
+  font-size: 14px !important;
+  line-height: 1.6 !important;
+  margin-bottom: 15px !important;
+  font-family: "Kumbh Sans", sans-serif !important;
+}
+
+/* =============================================================================
+   RELATED POSTS STYLING
+   ============================================================================= */
+
+/* Apply same horizontal layout to related posts */
+.relatest-post-item .blog-meta-horizontal {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  margin-bottom: 8px !important;
+}
+
+/* Ensure meta content is visible */
+.relatest-post-item .meta.blog-meta-horizontal {
+  display: flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+.relatest-post-item .blog-date-author {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
+
+/* Style the meta items within the horizontal layout */
+.relatest-post-item .blog-meta-horizontal .meta-item {
+  display: flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+}
+
+/* Keep related posts icons simple and responsive */
+.relatest-post-item .blog-meta-horizontal .icon {
+  display: inline-block !important;
+  vertical-align: middle !important;
+}
+
+.relatest-post-item .blog-meta-horizontal .icon i {
+  vertical-align: middle !important;
+  display: inline-block !important;
+}
+
+.relatest-post-item .blog-date {
+  font-size: 12px !important;
+  color: #666 !important;
+  font-weight: 400 !important;
+  font-family: "Kumbh Sans", sans-serif !important;
+}
+
+.relatest-post-item .blog-separator {
+  font-size: 12px !important;
+  color: #ccc !important;
+  font-weight: 300 !important;
+}
+
+.relatest-post-item .blog-author {
+  font-size: 12px !important;
+  color: #666 !important;
+  font-weight: 400 !important;
+  font-family: "Kumbh Sans", sans-serif !important;
+}
+
+.relatest-post-item .blog-author .link {
+  color: #333 !important;
+  text-decoration: none !important;
+  font-weight: 500 !important;
+}
+
+.relatest-post-item .blog-author .link:hover {
+  color: #333 !important;
+  text-decoration: underline !important;
+}
+
+/* Show meta layout for related posts with horizontal design */
+.relatest-post-item .meta {
+  display: flex !important;
+}
+
+/* Style related post titles */
+.relatest-post-item .title {
+  font-size: 14px !important;
+  line-height: 1.4 !important;
+  font-weight: 600 !important;
+  font-family: "Kumbh Sans", sans-serif !important;
+  margin-bottom: 0 !important;
+}
+
+.relatest-post-item .title .link {
+  color: #333 !important;
+  text-decoration: none !important;
+}
+
+.relatest-post-item .title .link:hover {
+  color: #333 !important;
+  text-decoration: underline !important;
+}
+
+/* Force visibility of all meta elements in related posts */
+.relatest-post-item .meta,
+.relatest-post-item .meta-item,
+.relatest-post-item .blog-meta-horizontal,
+.relatest-post-item .blog-date-author,
+.relatest-post-item .blog-date,
+.relatest-post-item .blog-author,
+.relatest-post-item .blog-separator {
+  display: flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+/* Ensure Relatest Post horizontal layout works */
+.relatest-post-item .blog-meta-horizontal {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  margin-bottom: 8px !important;
+}
+
+.relatest-post-item .blog-date-author {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
+
+.relatest-post-item .meta-item {
+  display: flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+}
+
+/* Ensure text content is visible */
+.relatest-post-item .text-caption-1 {
+  display: inline !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+/* Make blog meta text smaller */
+.wg-blog .blog-date,
+.wg-blog .blog-author,
+.wg-blog .blog-separator {
+  font-size: 12px !important;
+}
+
+.wg-blog .text-caption-1 {
+  font-size: 12px !important;
+}
+
+/* Fix vertical alignment for blog meta elements */
+.blog-date-author {
+  display: flex !important;
+  align-items: baseline !important;
+  gap: 8px !important;
+}
+
+.blog-date,
+.blog-author,
+.blog-separator {
+  display: inline !important;
+  vertical-align: baseline !important;
+  line-height: 1.2 !important;
+  font-size: 12px !important;
+}
+
+/* Ensure all text elements are on the same baseline */
+.blog-date-author * {
+  vertical-align: baseline !important;
+  line-height: 1.2 !important;
+}
+
+/* Fix alignment for related posts */
+.relatest-post-item .blog-date-author {
+  display: flex !important;
+  align-items: baseline !important;
+  gap: 8px !important;
+}
+
+.relatest-post-item .blog-date,
+.relatest-post-item .blog-author,
+.relatest-post-item .blog-separator {
+  display: inline !important;
+  vertical-align: baseline !important;
+  line-height: 1.2 !important;
+  font-size: 12px !important;
+}
+
+/* Additional alignment fixes for perfect baseline alignment */
+.blog-date-author .meta-item {
+  display: inline-flex !important;
+  align-items: baseline !important;
+  vertical-align: baseline !important;
+}
+
+.blog-date-author .meta-item span,
+.blog-date-author .meta-item a {
+  vertical-align: baseline !important;
+  line-height: 1.2 !important;
+}
+
+/* Force all text to align on the same baseline */
+.blog-date-author .text-caption-1 {
+  vertical-align: baseline !important;
+  line-height: 1.2 !important;
+  display: inline !important;
+}
+
+/* =============================================================================
+   INSIGHTS SECTION - WHITE TEXT OVERLAY
+   ============================================================================= */
+
+/* Ensure Insights section text stays white */
+.wg-blog.style-abs .content p {
+  color: white !important;
+}
+
+.wg-blog.style-abs .content .text-btn-uppercase {
+  color: white !important;
+}
+
+.wg-blog.style-abs .content .text-secondary-2 {
+  color: white !important;
+}
+
+.wg-blog.style-abs .content .title {
+  color: white !important;
+}
+
+.wg-blog.style-abs .content .title .link {
+  color: white !important;
+  text-decoration: none !important;
+  transition: all 0.3s ease !important;
+}
+
+.wg-blog.style-abs .content .title .link:hover {
+  background: linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+  text-decoration: none !important;
+}
+
+/* Ensure calendar icon is white */
+.wg-blog.style-abs .content svg {
+  color: white !important;
+  fill: white !important;
+}
+
+/* Override any black text overrides for Insights section */
+.wg-blog.style-abs .content * {
+  color: white !important;
+}
+
+.wg-blog.style-abs .content .link {
+  color: white !important;
+}
+
+/* =============================================================================
+   CARD HOVER Z-INDEX FIX
+   ============================================================================= */
+
+/* Fix card hover to appear above banner */
+.wg-blog.style-abs {
+  position: relative !important;
+  z-index: 1 !important;
+}
+
+.wg-blog.style-abs:hover {
+  z-index: 999 !important;
+  position: relative !important;
+}
+
+/* Ensure the container doesn't clip the cards - only for Features section */
+.features-banner .swiper.tf-sw-partner {
+  overflow: visible !important;
+}
+
+.features-banner .swiper-wrapper {
+  overflow: visible !important;
+}
+
+.features-banner .swiper-slide {
+  overflow: visible !important;
+}
+
+/* Keep Insights section Swiper with proper overflow */
+.wg-blog.style-abs .swiper {
+  overflow: hidden !important;
+}
+
+/* Make sure the section container allows overflow - but not for Insights */
+section:not(.features-banner) {
+  overflow: visible !important;
+}
+
+/* Keep Insights section with proper overflow */
+.wg-blog.style-abs {
+  overflow: hidden !important;
+}
+
+/* Ensure cards can expand above other elements */
+.wg-blog.style-abs .content {
+  position: relative !important;
+  z-index: 2 !important;
+}
+
+.wg-blog.style-abs:hover .content {
+  z-index: 1000 !important;
+}
+
+/* Ensure Insights section maintains proper styling */
+.wg-blog.style-abs {
+  position: relative !important;
+  z-index: 1 !important;
+  overflow: hidden !important;
+}
+
+/* Keep Insights section container properly styled */
+.wg-blog.style-abs .image {
+  overflow: hidden !important;
+  border-radius: 15px !important;
+}
+
+.wg-blog.style-abs .content {
+  position: absolute !important;
+  bottom: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  background: linear-gradient(transparent, rgba(0,0,0,0.7)) !important;
+  padding: 20px !important;
+  border-radius: 0 0 15px 15px !important;
+}
+
+/* =============================================================================
+   FOOTER COPYRIGHT SPACING FIX
+   ============================================================================= */
+
+/* Add proper spacing to footer copyright from horizontal line */
+/* .footer-bottom {
+  padding: 20px 0 !important;
+  margin-top: 0 !important;
+} */
+
+/* .footer-bottom-wrap {
+  padding: 20px 0 !important;
+} */
+
+/* .copyright-widget {
+  padding: 15px 0 !important;
+  margin: 0 !important;
+} */
+
+/* Ensure proper spacing from the horizontal line above */
+.footer-bottom::before {
+  /* content: ''; */
+  display: block;
+  height: 1px;
+  background-color: #333;
+  margin-bottom: 20px;
+}
+
+/* Mobile responsive spacing */
+@media (max-width: 767px) {
+  .footer-bottom {
+    padding: 15px 0 !important;
+  }
+  
+  .footer-bottom-wrap {
+    padding: 15px 0 !important;
+  }
+  
+  .copyright-widget {
+    padding: 12px 0 !important;
+  }
+  
+  .footer-bottom::before {
+    margin-bottom: 15px;
+  }
+}
+
+@media (max-width: 575px) {
+  .footer-bottom {
+    padding: 12px 0 !important;
+  }
+  
+  .footer-bottom-wrap {
+    padding: 12px 0 !important;
+  }
+  
+  .copyright-widget {
+    padding: 10px 0 !important;
+  }
+  
+  .footer-bottom::before {
+    margin-bottom: 12px;
+  }
+}

@@ -18,7 +18,7 @@ import { getLocationByCityTableData } from "@/api/location";
 import { getCategoryTableData } from "@/api/category";
 import { getPropertytypeByCategoryTableData} from "@/api/propertytype";
 import { getAmenityTableData } from "@/api/amenity";
-import { getBuilderTableData } from "@/api/builder";
+import { getBuilderTableData } from "@/api/manufacturer";
 import { getConstructionstatusTableData } from "@/api/constructionstatus";
 import { getFurnishingstatusTableData } from "@/api/furnishingstatus";
 import { addPropertyAPI } from "@/api/frontend/property";
@@ -312,7 +312,7 @@ const index = () => {
   
   
       const res = await addPropertyAPI(formData);
-      // router.push("/cmswegrow/my-properties");
+      // router.push("/cmsthebotsworld/my-properties");
       alert(res.message);
   
       // Reset fields and errors

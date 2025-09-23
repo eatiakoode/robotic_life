@@ -27,7 +27,7 @@ const CopyrightFooter = () => {
 
       <div className="col-lg-12 col-xl-12">
         <div className="copyright-widget text-center">
-        <span>© 2025 WeGrow. All rights reserved | Made With <a target="_blank" href="https://www.akoode.com/"> <i className="fa fa-heart"></i> </a></span>
+        <span>© 2025 TheBotsWorld. All rights reserved | Made With <a target="_blank" href="https://www.akoode.com/"> <i className="fa fa-heart"></i> </a></span>
         </div>
       </div>
       {/* End .col */}

@@ -1,11 +1,10 @@
 "use client";
 import { slides } from "@/data/singleProductSliders";
-import Drift from "drift-zoom";
-import PhotoSwipeLightbox from "photoswipe/lightbox";
 import { useEffect, useRef, useState } from "react";
 import { Navigation, Thumbs } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import Image from "next/image";
+
 export default function Slider1({
   activeColor = "gray",
   setActiveColor = () => {},
@@ -13,103 +12,83 @@ export default function Slider1({
   slideItems = slides,
   thumbSlidePerView = 6,
   thumbSlidePerViewOnMobile = 6,
+  productImages = [], // New prop for robot images
 }) {
-  const items = [...slideItems];
-  items[0].src = firstItem ?? items[0].src;
+  // Use robot images if available, otherwise fall back to static slides
+  const items =
+    productImages && productImages.length > 0
+      ? productImages.map((img, index) => ({
+          id: index + 1,
+          color: activeColor,
+          src: img,
+          alt: `Robot image ${index + 1}`,
+          width: 600,
+          height: 800,
+        }))
+      : [...slideItems];
 
-  useEffect(() => {
-    // Function to initialize Drift
-    const imageZoom = () => {
-      const driftAll = document.querySelectorAll(".tf-image-zoom");
-      const pane = document.querySelector(".tf-zoom-main");
+  // Set first item if provided
+  if (firstItem && items.length > 0) {
+    items[0].src = firstItem;
+  }
 
-      driftAll.forEach((el) => {
-        new Drift(el, {
-          zoomFactor: 2,
-          paneContainer: pane,
-          inlinePane: false,
-          handleTouch: false,
-          hoverBoundingBox: true,
-          containInline: true,
-        });
-      });
-    };
-    imageZoom();
-    const zoomElements = document.querySelectorAll(".tf-image-zoom");
 
-    const handleMouseOver = (event) => {
-      const parent = event.target.closest(".section-image-zoom");
-      if (parent) {
-        parent.classList.add("zoom-active");
-      }
-    };
-
-    const handleMouseLeave = (event) => {
-      const parent = event.target.closest(".section-image-zoom");
-      if (parent) {
-        parent.classList.remove("zoom-active");
-      }
-    };
-
-    zoomElements.forEach((element) => {
-      element.addEventListener("mouseover", handleMouseOver);
-      element.addEventListener("mouseleave", handleMouseLeave);
-    });
-
-    // Cleanup event listeners on component unmount
-    return () => {
-      zoomElements.forEach((element) => {
-        element.removeEventListener("mouseover", handleMouseOver);
-        element.removeEventListener("mouseleave", handleMouseLeave);
-      });
-    };
-  }, []); // Empty dependency array to run only once on mount
-
-  const lightboxRef = useRef(null);
-  useEffect(() => {
-    // Initialize PhotoSwipeLightbox
-    const lightbox = new PhotoSwipeLightbox({
-      gallery: "#gallery-swiper-started",
-      children: ".item",
-      pswpModule: () => import("photoswipe"),
-    });
-
-    lightbox.init();
-
-    // Store the lightbox instance in the ref for later use
-    lightboxRef.current = lightbox;
-
-    // Cleanup: destroy the lightbox when the component unmounts
-    return () => {
-      lightbox.destroy();
-    };
-  }, []);
 
   const [thumbsSwiper, setThumbsSwiper] = useState(null);
   const [activeIndex, setActiveIndex] = useState(0);
   const swiperRef = useRef(null);
+
   useEffect(() => {
-    if (!(items[activeIndex].color == activeColor)) {
+    if (items && items.length > 0 && items[activeIndex] && !(items[activeIndex].color == activeColor)) {
       const slideIndex =
         items.filter((elm) => elm.color == activeColor)[0]?.id - 1;
-      swiperRef.current.slideTo(slideIndex);
-    }
-  }, [activeColor]);
-  useEffect(() => {
-    setTimeout(() => {
-      if (swiperRef.current) {
-        swiperRef.current.slideTo(1);
-        swiperRef.current.slideTo(
-          items.filter((elm) => elm.color == activeColor)[0]?.id - 1
-        );
+      if (slideIndex >= 0) {
+        swiperRef.current?.slideTo(slideIndex);
       }
-    });
-  }, []);
+    }
+  }, [activeColor, items, activeIndex]);
+
+  useEffect(() => {
+    if (items && items.length > 0) {
+      setTimeout(() => {
+        if (swiperRef.current) {
+          swiperRef.current.slideTo(1);
+          const slideIndex = items.filter((elm) => elm.color == activeColor)[0]?.id - 1;
+          if (slideIndex >= 0) {
+            swiperRef.current.slideTo(slideIndex);
+          }
+        }
+      });
+    }
+  }, [items, activeColor]);
+
+  // Don't render if no items
+  if (!items || items.length === 0) {
+    return (
+      <div className="thumbs-slider">
+        <div className="swiper tf-product-media-main">
+          <div className="swiper-wrapper">
+            <div className="swiper-slide">
+              <div className="item">
+                <Image
+                  className="lazyload"
+                  src={firstItem || "/images/section/no-image.png"}
+                  alt="No image available"
+                  width={600}
+                  height={800}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="thumbs-slider">
       <Swiper
-        className="swiper tf-product-media-thumbs other-image-zoom"
+        className="swiper tf-product-media-thumbs"
         dir="ltr"
         direction="vertical"
         spaceBetween={10}
@@ -174,7 +153,7 @@ export default function Slider1({
         id="gallery-swiper-started"
         spaceBetween={10}
         slidesPerView={1}
-        thumbs={{ swiper: thumbsSwiper }}
+        thumbs={thumbsSwiper ? { swiper: thumbsSwiper } : undefined}
         modules={[Thumbs]}
         onSwiper={(swiper) => (swiperRef.current = swiper)}
         onSlideChange={(swiper) => {
@@ -186,24 +165,16 @@ export default function Slider1({
       >
         {items.map((slide, index) => (
           <SwiperSlide key={index} className="swiper-slide" data-color="gray">
-            <a
-              href={slide.src}
-              target="_blank"
-              className="item"
-              data-pswp-width={slide.width}
-              data-pswp-height={slide.height}
-              //   onClick={() => openLightbox(index)}
-            >
+            <div className="item">
               <Image
-                className="tf-image-zoom lazyload"
-                data-zoom={slide.src}
+                className="lazyload"
                 data-src={slide.src}
-                alt=""
+                alt={slide.alt}
                 src={slide.src}
                 width={slide.width}
                 height={slide.height}
               />
-            </a>
+            </div>
           </SwiperSlide>
         ))}
       </Swiper>

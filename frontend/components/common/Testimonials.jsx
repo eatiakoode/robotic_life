@@ -1,13 +1,100 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import Image from "next/image";
 import { Pagination } from "swiper/modules";
-import { testimonialsWithProduct9 } from "@/data/products";
+import { testimonialAPI } from "@/api/testimonial";
 import { useContextElement } from "@/context/Context";
+
 export default function Testimonials({ parentClass = "flat-spacing" }) {
   const { setQuickViewItem } = useContextElement();
+  const [testimonials, setTestimonials] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchTestimonials = async () => {
+      try {
+        setLoading(true);
+        const response = await testimonialAPI.getTestimonials();
+        if (response.success) {
+          setTestimonials(response.data);
+        } else {
+          setError("Failed to fetch testimonials");
+        }
+      } catch (err) {
+        console.error("Error fetching testimonials:", err);
+        setError("Failed to fetch testimonials");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchTestimonials();
+  }, []);
+  // Loading state
+  if (loading) {
+    return (
+      <section className={parentClass}>
+        <div className="container">
+          <div className="heading-section text-center">
+            <h3 className="heading wow fadeInUp">Customer Say!</h3>
+            <p className="subheading wow fadeInUp">
+              Our customers adore our products, and we constantly aim to delight
+              them.
+            </p>
+          </div>
+          <div className="text-center">
+            <div className="spinner-border" role="status">
+              <span className="visually-hidden">Loading...</span>
+            </div>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  // Error state
+  if (error) {
+    return (
+      <section className={parentClass}>
+        <div className="container">
+          <div className="heading-section text-center">
+            <h3 className="heading wow fadeInUp">Customer Say!</h3>
+            <p className="subheading wow fadeInUp">
+              Our customers adore our products, and we constantly aim to delight
+              them.
+            </p>
+          </div>
+          <div className="text-center">
+            <p className="text-danger">Failed to load testimonials. Please try again later.</p>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  // No testimonials
+  if (!testimonials || testimonials.length === 0) {
+    return (
+      <section className={parentClass}>
+        <div className="container">
+          <div className="heading-section text-center">
+            <h3 className="heading wow fadeInUp">Customer Say!</h3>
+            <p className="subheading wow fadeInUp">
+              Our customers adore our products, and we constantly aim to delight
+              them.
+            </p>
+          </div>
+          <div className="text-center">
+            <p>No testimonials available at the moment.</p>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section className={parentClass}>
       <div className="container">
@@ -47,37 +134,28 @@ export default function Testimonials({ parentClass = "flat-spacing" }) {
             }}
             dir="ltr"
           >
-            {testimonialsWithProduct9.map((testimonial, index) => (
-              <SwiperSlide key={index}>
+            {testimonials.map((testimonial, index) => (
+              <SwiperSlide key={testimonial._id || index}>
                 <div className="testimonial-item hover-img">
                   <div className="img-style">
                     <Image
-                      src={testimonial.imgSrc}
-                      alt={testimonial.alt}
+                      src="/images/testimonial/default-testimonial.jpg"
+                      alt="Testimonial"
                       width={468}
                       height={624}
                     />
-                    <a
-                      href="#quickView"
-                      onClick={() => setQuickViewItem(testimonial)}
-                      data-bs-toggle="modal"
-                      className="box-icon hover-tooltip center"
-                    >
-                      <span className="icon icon-eye" />
-                      <span className="tooltip">Quick View</span>
-                    </a>
                   </div>
                   <div className="content">
                     <div className="content-top">
                       <div className="list-star-default">
-                        {[...Array(5)].map((_, i) => (
+                        {[...Array(testimonial.rating || 5)].map((_, i) => (
                           <i key={i} className="icon icon-star" />
                         ))}
                       </div>
-                      <p className="text-secondary">{testimonial.quote}</p>
+                      <p className="text-secondary">"{testimonial.message}"</p>
                       <div className="box-author">
                         <div className="text-title author">
-                          {testimonial.author}
+                          {testimonial.name}
                         </div>
                         <svg
                           className="icon"
@@ -119,19 +197,16 @@ export default function Testimonials({ parentClass = "flat-spacing" }) {
                     <div className="box-avt">
                       <div className="avatar avt-60 round">
                         <Image
-                          alt="avt"
-                          src={testimonial.avatar}
+                          alt="avatar"
+                          src="/images/avatar/default-avatar.jpg"
                           width={90}
                           height={91}
                         />
                       </div>
                       <div className="box-price">
                         <p className="text-title text-line-clamp-1">
-                          {testimonial.title}
+                          {testimonial.designation}
                         </p>
-                        <div className="text-button price">
-                          ${testimonial.price.toFixed(2)}
-                        </div>
                       </div>
                     </div>
                   </div>

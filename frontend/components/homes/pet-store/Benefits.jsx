@@ -1,23 +1,25 @@
 "use client";
 
 import { Swiper, SwiperSlide } from "swiper/react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faRobot, faBookOpen, faFlask, faUsers } from "@fortawesome/free-solid-svg-icons";
 
 const benefits = [
   {
-    icon: "icon-return",
-    text: "Risk-free shopping with easy returns.",
+    icon: faRobot,
+    text: "Latest updates on new and upcoming robots.",
   },
   {
-    icon: "icon-shipping",
-    text: "Risk-free shopping with easy returns.",
+    icon: faBookOpen,
+    text: "Educational content that makes robotics easy to understand.",
   },
   {
-    icon: "icon-headset",
-    text: "24/7 support, always here just for you.",
+    icon: faFlask,
+    text: "Research-backed knowledge and authentic information.",
   },
   {
-    icon: "icon-sealCheck",
-    text: "Risk-free shopping with easy returns.",
+    icon: faUsers,
+    text: "A platform for learners, educators, and robotics enthusiasts.",
   },
 ];
 
@@ -40,7 +42,7 @@ export default function Benefits() {
             <SwiperSlide key={index}>
               <div className="benefit-item">
                 <div className="icon-box">
-                  <span className={`icon ${benefit.icon}`} />
+                  <FontAwesomeIcon icon={benefit.icon} size="2x" />
                 </div>
                 <p className="text-caption-1">{benefit.text}</p>
               </div>

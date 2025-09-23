@@ -14,7 +14,7 @@ const token =userData.token
     throw new Error("User not authenticated!");
   }
 
-  const response = await fetch(process.env.NEXT_PUBLIC_ADMIN_API_URL+"api/faq", {
+  const response = await fetch(process.env.NEXT_PUBLIC_ADMIN_API_URL+"admin/api/faq", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -33,19 +33,41 @@ const token =userData.token
 
 
 export async function getFaqTableData(filter) {
-  // Fake delay
   await new Promise((resolve) => setTimeout(resolve, 10));
-  
 
   try {
-    const response = await fetch(process.env.NEXT_PUBLIC_ADMIN_API_URL+"api/faq?limit="+filter.limit+"&skip="+filter.page); // Replace with actual API endpoint
-    if (!response.ok) {
-      throw new Error("Failed to fetch products");
+    const userData = JSON.parse(localStorage.getItem("user") || "{}");
+    const token = userData?.token;
+
+    if (!token) {
+      console.warn("No authentication token found for FAQ API");
+      return { items: [], totalCount: 0 };
     }
-    return await response.json();
+
+    const apiUrl = process.env.NEXT_PUBLIC_ADMIN_API_URL || 'http://localhost:5000/';
+    const response = await fetch(apiUrl + "admin/api/faq?limit=" + filter.limit + "&skip=" + filter.page, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      next: { revalidate: 60 }
+    });
+
+    if (!response.ok) {
+      console.error(`FAQ API error: ${response.status} ${response.statusText}`);
+      return { items: [], totalCount: 0 };
+    }
+
+    const data = await response.json();
+
+    return {
+      items: data.data || [],
+      totalCount: data.count || 0
+    };
   } catch (error) {
-    console.error("Error fetching products:", error);
-    return []; // Return an empty array in case of an error
+    console.error("Error fetching FAQs:", error);
+    return { items: [], totalCount: 0 };
   }
 }
 
@@ -57,7 +79,7 @@ const token =userData.token
     throw new Error("User not authenticated!");
   }
 
-  const response = await fetch(process.env.NEXT_PUBLIC_ADMIN_API_URL+`api/faq/${id}`, {
+  const response = await fetch(process.env.NEXT_PUBLIC_ADMIN_API_URL+`admin/api/faq/${id}`, {
     method: "DELETE",
     headers: {
       "Content-Type": "application/json",
@@ -93,7 +115,7 @@ const token =userData.token
     throw new Error("User not authenticated!");
   }
 
-  const response = await fetch(process.env.NEXT_PUBLIC_ADMIN_API_URL+`api/faq/${id}`, {
+  const response = await fetch(process.env.NEXT_PUBLIC_ADMIN_API_URL+`admin/api/faq/${id}`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -120,7 +142,7 @@ const token =userData.token
     throw new Error("User not authenticated!");
   }
 
-  const response = await fetch(process.env.NEXT_PUBLIC_ADMIN_API_URL+`api/faq/${id}`, {
+  const response = await fetch(process.env.NEXT_PUBLIC_ADMIN_API_URL+`admin/api/faq/${id}`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",

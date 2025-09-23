@@ -1,52 +1,189 @@
 "use client";
 
 import ProductCard1 from "@/components/productCards/ProductCard1";
-import { products53 } from "@/data/products";
+import { useFeaturedRobots } from "@/hooks/useFeaturedRobots";
 import { Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import Link from "next/link";
+
 export default function Products2() {
+  const { robots, loading, error } = useFeaturedRobots();
+
+  // Helper function to map color names to CSS classes
+  const getColorClass = (colorName) => {
+    if (!colorName) return 'bg-primary';
+    
+    const colorMap = {
+      'red': 'bg-red',
+      'blue': 'bg-blue', 
+      'green': 'bg-success',
+      'yellow': 'bg-yellow',
+      'orange': 'bg-orange',
+      'purple': 'bg-purple',
+      'pink': 'bg-pink',
+      'brown': 'bg-brown',
+      'grey': 'bg-grey',
+      'gray': 'bg-grey',
+      'black': 'bg-black',
+      'white': 'bg-white',
+      'beige': 'bg-beige',
+      'light blue': 'bg-light-blue',
+      'light green': 'bg-light-green',
+      'light pink': 'bg-light-pink',
+      'dark blue': 'bg-dark-blue',
+      'dark grey': 'bg-dark-grey'
+    };
+    
+    const normalizedName = colorName.toLowerCase().trim();
+    return colorMap[normalizedName] || `bg-${normalizedName.replace(/\s+/g, '-')}`;
+  };
+
+  // Transform robot data to match ProductCard1 expected format
+  const transformedRobots = (robots || []).map(robot => {
+    // Create the transformed robot object - PRESERVE ALL BACKEND DATA
+    const transformedRobot = {
+      // Spread the original robot data FIRST to preserve all nested structures
+      ...robot,
+      
+      // Override specific fields for display
+      id: robot._id,
+      price: parseFloat(robot.totalPrice) || 0,
+      
+      // Image fields
+      imgSrc: robot.images && robot.images.length > 0 
+        ? (robot.images[0].startsWith('http') 
+            ? robot.images[0] 
+            : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}${robot.images[0].startsWith('/') ? robot.images[0] : `/${robot.images[0]}`}`)
+        : '/images/product/placeholder.jpg',
+      imgHover: robot.images && robot.images.length > 1 
+        ? (robot.images[1].startsWith('http') 
+            ? robot.images[1] 
+            : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}${robot.images[1].startsWith('/') ? robot.images[1] : `/${robot.images[1]}`}`)
+        : robot.images && robot.images.length > 0 
+          ? (robot.images[0].startsWith('http') 
+              ? robot.images[0] 
+              : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}${robot.images[0].startsWith('/') ? robot.images[0] : `/${robot.images[0]}`}`)
+          : '/images/product/placeholder.jpg',
+      
+      // Colors
+      colors: robot.specifications?.color && robot.specifications.color.length > 0 ? robot.specifications.color.map(color => ({
+        bgColor: getColorClass(color.name),
+        colorName: color.name || 'Unknown',
+        imgSrc: robot.images && robot.images.length > 0 
+          ? (robot.images[0].startsWith('http') 
+              ? robot.images[0] 
+              : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}${robot.images[0].startsWith('/') ? robot.images[0] : `/${robot.images[0]}`}`)
+          : '/images/product/placeholder.jpg'
+      })) : (robot.images && robot.images.length > 0 ? [{
+        bgColor: 'bg-primary',
+        colorName: 'Default',
+        imgSrc: robot.images[0].startsWith('http')
+          ? robot.images[0]
+          : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}${robot.images[0].startsWith('/') ? robot.images[0] : `/${robot.images[0]}`}`
+      }] : []),
+      
+      // Display fields
+      isOnSale: false,
+      salePercentage: 0,
+      sizes: [],
+      countdown: null,
+      hotSale: false,
+    };
+    
+    return transformedRobot;
+  });
+
+  if (loading) {
+    return (
+      <section className="flat-spacing">
+        <div className="container">
+          <div className="heading-section-2 type-2 wow fadeInUp">
+            <h3 className="heading font-5 fw-bold">Featured Robots</h3>
+            <Link href={`/shop-filter-canvas`} className="btn-line">
+              View All Robots
+            </Link>
+          </div>
+          <div className="text-center py-5">
+            <div className="spinner-border" role="status">
+              <span className="visually-hidden">Loading...</span>
+            </div>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  if (error) {
+    return (
+      <section className="flat-spacing">
+        <div className="container">
+          <div className="heading-section-2 type-2 wow fadeInUp">
+            <h3 className="heading font-5 fw-bold">Featured Robots</h3>
+            <Link href={`/shop-filter-canvas`} className="btn-line">
+              View All Robots
+            </Link>
+          </div>
+          <div className="text-center py-5">
+            <p className="text-danger">Error loading products: {error}</p>
+            <button 
+              className="btn btn-primary" 
+              onClick={() => window.location.reload()}
+            >
+              Retry
+            </button>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section className="flat-spacing">
       <div className="container">
         <div className="heading-section-2 type-2 wow fadeInUp">
-          <h3 className="heading font-5 fw-bold">Features Product</h3>
-          <Link href={`/shop-collection`} className="btn-line">
-            View All Products
+          <h3 className="heading font-5 fw-bold">Featured Robots</h3>
+          <Link href={`/shop-filter-canvas`} className="btn-line">
+            View All Robots
           </Link>
         </div>
-        <Swiper
-          dir="ltr"
-          className="swiper tf-sw-collection"
-          breakpoints={{
-            0: { slidesPerView: 1 },
-            575: {
-              slidesPerView: 1,
-            },
-            768: {
-              slidesPerView: 2,
-              spaceBetween: 20,
-            },
-            992: {
-              slidesPerView: 3,
-              spaceBetween: 30,
-            },
-          }}
-          spaceBetween={15}
-          modules={[Pagination]}
-          pagination={{
-            clickable: true,
-            el: ".spd27",
-          }}
-        >
-          {products53.map((product, i) => (
-            <SwiperSlide className="swiper-slide" key={i}>
-              <ProductCard1 isNotImageRatio product={product} />
-            </SwiperSlide>
-          ))}
+        {transformedRobots.length > 0 ? (
+          <Swiper
+            dir="ltr"
+            className="swiper tf-sw-collection"
+            breakpoints={{
+              0: { slidesPerView: 1 },
+              575: {
+                slidesPerView: 1,
+              },
+              768: {
+                slidesPerView: 2,
+                spaceBetween: 20,
+              },
+              992: {
+                slidesPerView: 3,
+                spaceBetween: 30,
+              },
+            }}
+            spaceBetween={15}
+            modules={[Pagination]}
+            pagination={{
+              clickable: true,
+              el: ".spd27",
+            }}
+          >
+            {transformedRobots.map((robot, i) => (
+              <SwiperSlide className="swiper-slide" key={i}>
+                <ProductCard1 isNotImageRatio product={robot} priority={i < 3} />
+              </SwiperSlide>
+            ))}
 
-          <div className="sw-pagination-collection sw-dots type-circle justify-content-center spd27" />
-        </Swiper>
+            <div className="sw-pagination-collection sw-dots type-circle justify-content-center spd27" />
+          </Swiper>
+        ) : (
+          <div className="text-center py-5">
+            <p className="text-muted">No products available at the moment.</p>
+          </div>
+        )}
       </div>
     </section>
   );

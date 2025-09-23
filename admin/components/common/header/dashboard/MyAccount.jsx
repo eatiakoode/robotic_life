@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { isSinglePageActive } from "../../../../utils/daynamicNavigation";
-import Image from "next/image";
+import { SafeImage } from "../../../../utils/imageUtils";
 import { usePathname } from "next/navigation";
 
 import { useRouter, useParams } from "next/navigation";
@@ -13,7 +13,7 @@ const MyAccount = () => {
   const router = useRouter();
   const handleLogout = () => {
     localStorage.removeItem('user');
-    router.push('/cmswegrow');
+    router.push('/cmsthebotsworld');
   };
   const pathname = usePathname()
   const profileMenuItems = [
@@ -27,7 +27,7 @@ const MyAccount = () => {
   return (
     <>
       <div className="user_set_header">
-        <Image
+        <SafeImage
           width={40}
           height={40}
           className="float-start"

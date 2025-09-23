@@ -1,6 +1,6 @@
 
 /* CSS Document */
-@import "~bootstrap/scss/bootstrap";
+@import "bootstrap/scss/bootstrap";
 @import url(../scss/all.css);
 @import url(../scss/font-awesome.min.css);
 @import url(../scss/font-awesome-animation.min.css);
@@ -21446,6 +21446,15 @@ button.gm-ui-hover-effect:focus {
     font-size: 20px;
   }
 }
+
+/* Fix placeholder showing with selected items */
+.color-select:not(:focus) {
+  color: transparent;   /* hide default select text */
+}
+.color-select:focus {
+  color: inherit;       /* show when dropdown open */
+}
+
 
 
 

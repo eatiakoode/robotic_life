@@ -11,7 +11,7 @@ const validateMongoDbId = require("../utils/validateMongodbId");
 const { generateRefreshToken } = require("../config/refreshtoken");
 const crypto = require("crypto");
 const jwt = require("jsonwebtoken");
-const sendEmail = require("./emailCtrl");
+// const sendEmail = require("./emailCtrl");
 const { createPasswordResetToken } = require("../models/userModel");
 
 // Create a User ----------------------------------------------
@@ -91,10 +91,10 @@ const loginAdmin = asyncHandler(async (req, res) => {
       httpOnly: true,
       maxAge: 72 * 60 * 60 * 1000,
     });
-    const message={
-      "status":"success",
-      "message":"Data Add sucessfully",
-      "data":{
+    const message = {
+      "status": "success",
+      "message": "Data Add sucessfully",
+      "data": {
         _id: findAdmin?._id,
         firstname: findAdmin?.firstname,
         lastname: findAdmin?.lastname,

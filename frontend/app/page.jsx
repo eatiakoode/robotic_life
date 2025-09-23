@@ -1,36 +1,55 @@
+import dynamic from "next/dynamic";
 import Footer1 from "@/components/footers/Footer1";
 import Header1 from "@/components/headers/Header1";
-import Topbar from "@/components/headers/Topbar";
-import BannerCollection from "@/components/homes/home-1/BannerCollection";
-import BannerCountdown from "@/components/homes/home-1/BannerCountdown";
-import Blogs from "@/components/common/Blogs";
-import Collections from "@/components/homes/home-1/Collections";
-import Features from "@/components/common/Features";
-import Hero from "@/components/homes/home-1/Hero";
-import Products from "@/components/common/Products3";
-import ShopGram from "@/components/common/ShopGram";
-import Testimonials from "@/components/common/Testimonials";
+import Hero from "@/components/homes/home-gaming/Hero";
+import LoadingSpinner from "@/components/common/LoadingSpinner";
+
+// Lazy load heavy components with optimized loading states
+const Collections = dynamic(() => import("@/components/homes/home-gaming/Collections"), {
+  loading: () => <LoadingSpinner text="Loading collections..." className="py-8" />
+});
+const Products = dynamic(() => import("@/components/homes/home-gaming/Products"), {
+  loading: () => <LoadingSpinner text="Loading products..." className="py-8" />
+});
+const Collections2 = dynamic(() => import("@/components/homes/home-gaming/Collections2"), {
+  loading: () => <LoadingSpinner text="Loading collections..." className="py-8" />
+});
+const Lookbook = dynamic(() => import("@/components/homes/home-gaming/Lookbook"), {
+  loading: () => <LoadingSpinner text="Loading lookbook..." className="py-8" />
+});
+const Products2 = dynamic(() => import("@/components/homes/home-gaming/Products2"), {
+  loading: () => <LoadingSpinner text="Loading products..." className="py-8" />
+});
+const Testimonials = dynamic(() => import("@/components/homes/home-gaming/Testimonials"), {
+  loading: () => <LoadingSpinner text="Loading testimonials..." className="py-8" />
+});
+const Blogs = dynamic(() => import("@/components/homes/home-gaming/Blogs"), {
+  loading: () => <LoadingSpinner text="Loading blogs..." className="py-8" />
+});
+const Features = dynamic(() => import("@/components/homes/home-gaming/Features"), {
+  loading: () => <LoadingSpinner text="Loading features..." className="py-8" />
+});
 
 export const metadata = {
-  title: "Home || Modave - Multipurpose React Nextjs eCommerce Template",
-  description: "Modave - Multipurpose React Nextjs eCommerce Template",
+  title: "TheBotsWorld || TheBotsWorld - Learn, Explore & Innovate with Robots",
+  description: "TheBotsWorld is an educational platform dedicated to robotics. Discover the latest innovations in robotics to learn, explore, and create the future of automation.",
 };
 
 export default function HomePage() {
   return (
     <>
-      <Topbar />
+      {/* <Topbar9 /> */}
       <Header1 />
       <Hero />
       <Collections />
       <Products />
-      <BannerCollection />
-      <BannerCountdown />
+      <Collections2 />
+      <Lookbook />
+      <Products2 />
       <Testimonials />
       <Blogs />
-      <ShopGram />
       <Features />
-      <Footer1 />
+      <Footer1 dark />
     </>
   );
 }

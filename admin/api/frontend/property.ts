@@ -1,22 +1,28 @@
-export async function getPropertyFeatureData() {
+export async function getPropertyFeatureData(filter) {
+  try {
+    // Fallback URL if environment variable is not set
+    const baseUrl = process.env.NEXT_PUBLIC_FRONTEND_API_URL || 'http://localhost:3000/';
     
-    await new Promise((resolve) => setTimeout(resolve, 10));
-    
-  
-    try {
-      const response = await fetch(process.env.NEXT_PUBLIC_FRONTEND_API_URL+"api/property/list?featured=yes&limit=9",
-        {
-          next: { revalidate: 60 }
-        }); // Replace with actual API endpoint
-      if (!response.ok) {
-        throw new Error("Failed to fetch products");
-      }
-      return await response.json();
-    } catch (error) {
-      console.error("Error fetching products:", error);
-      return []; // Return an empty array in case of an error
+    const response = await fetch(baseUrl + "api/property/feature", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(filter),
+    }); // Replace with actual API endpoint
+    if (!response.ok) {
+      throw new Error("Failed to fetch property feature data");
     }
+    return await response.json();
+  } catch (error) {
+    console.error("Error fetching property feature data:", error);
+    // Return mock data for development
+    return [
+      { id: 1, name: "Sample Feature 1", description: "Sample description" },
+      { id: 2, name: "Sample Feature 2", description: "Sample description" }
+    ];
   }
+}
   export async function getPropertyHotData() {
    
     await new Promise((resolve) => setTimeout(resolve, 10));

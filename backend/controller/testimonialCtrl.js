@@ -1,101 +1,62 @@
 const Testimonial = require("../models/testimonialModel");
-const asyncHandler = require("express-async-handler");
-const validateMongoDbId = require("../utils/validateMongodbId");
-const { uploadPhoto, testimonialImgResize } = require("../middlewares/uploadImage");
 
-const createTestimonial = asyncHandler(async (req, res) => {
+// Create testimonial
+const createTestimonial = async (req, res) => {
   try {
-    if(req.files){
-      const processedImages  =await testimonialImgResize(req);
-      if (processedImages.length > 0) {
-        // ✅ Append logo filename to req.body
-        req.body.logoimage = "public/images/testimonial/"+processedImages[0];
-      }
-    }
-    const newTestimonial = await Testimonial.create(req.body);
-    const message={
-      "status":"success",
-      "message":"Data Add sucessfully",
-      "data":newTestimonial
-    }
-    res.json(message);
+    const testimonial = await Testimonial.create(req.body);
+    res.status(201).json({ success: true, data: testimonial });
   } catch (error) {
-    throw new Error(error);
+    res.status(400).json({ success: false, message: error.message });
   }
-});
-const updateTestimonial = asyncHandler(async (req, res) => {
-  const { id } = req.params;
-  validateMongoDbId(id);
-  try {
-    
-    if(req.files){
-        const processedImages  =await testimonialImgResize(req);
-        console.log("newTestimonialimage")
-        console.log(processedImages)
-        if (processedImages.length > 0) {
-          // ✅ Append logo filename to req.body
-          req.body.logoimage = "public/images/testimonial/"+processedImages[0];
-        }
-      }
+};
 
-    const updatedTestimonial = await Testimonial.findByIdAndUpdate(id, req.body, {
-      new: true,
-    });
-    const message={
-      "status":"success",
-      "message":"Data updated sucessfully",
-      "data":updatedTestimonial
-    }
-    res.json(message);
-    // res.json(updatedTestimonial);
-  } catch (error) {
-    throw new Error(error);
-  }
-});
-const deleteTestimonial = asyncHandler(async (req, res) => {
-  const { id } = req.params;
-  validateMongoDbId(id);
+// Get all testimonials
+const getTestimonials = async (req, res) => {
   try {
-    const deletedTestimonial = await Testimonial.findByIdAndDelete(id);
+    const testimonials = await Testimonial.find({}).sort({ createdAt: -1 });
+    res.status(200).json({ success: true, count: testimonials.length, data: testimonials });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
 
-    const message={
-      "status":"success",
-      "message":"Data deleted sucessfully",
-      "data":deletedTestimonial
-    }
-    res.json(message);
-  } catch (error) {
-    throw new Error(error);
-  }
-});
-const getTestimonial = asyncHandler(async (req, res) => {
-  const { id } = req.params;
-  validateMongoDbId(id);
+// Get single testimonial
+const getTestimonialById = async (req, res) => {
   try {
-    const getaTestimonial = await Testimonial.findById(id);
-    const message={
-      "status":"success",
-      "message":"Data deleted sucessfully",
-      "data":getaTestimonial
-    }
-    res.json(message);
-   //res.json(getaTestimonial);
+    const testimonial = await Testimonial.findById(req.params.id);
+    if (!testimonial) return res.status(404).json({ success: false, message: "Not Found" });
+    res.status(200).json({ success: true, data: testimonial });
   } catch (error) {
-    throw new Error(error);
+    res.status(500).json({ success: false, message: error.message });
   }
-});
-const getallTestimonial = asyncHandler(async (req, res) => {
+};
+
+// Update testimonial
+const updateTestimonial = async (req, res) => {
   try {
-    const getallTestimonial = await Testimonial.find();
-    res.json(getallTestimonial);
+    const testimonial = await Testimonial.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    if (!testimonial) return res.status(404).json({ success: false, message: "Not Found" });
+    res.status(200).json({ success: true, data: testimonial });
   } catch (error) {
-    throw new Error(error);
+    res.status(400).json({ success: false, message: error.message });
   }
-});
+};
+
+// Delete testimonial
+const deleteTestimonial = async (req, res) => {
+  try {
+    const testimonial = await Testimonial.findByIdAndDelete(req.params.id);
+    if (!testimonial) return res.status(404).json({ success: false, message: "Not Found" });
+    res.status(200).json({ success: true, message: "Deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
 module.exports = {
   createTestimonial,
+  getTestimonials,
+  getTestimonialById,
   updateTestimonial,
   deleteTestimonial,
-  getTestimonial,
-  getallTestimonial,
 };

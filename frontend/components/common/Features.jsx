@@ -6,7 +6,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 
 export default function Features({ parentClass = "flat-spacing" }) {
   return (
-    <section className={parentClass}>
+    <section className={`${parentClass} features-banner`}>
       <div className="container">
         <Swiper
           dir="ltr"
@@ -26,11 +26,11 @@ export default function Features({ parentClass = "flat-spacing" }) {
         >
           {iconboxItems.map((item) => (
             <SwiperSlide key={item.id}>
-              <div className="tf-icon-box">
+              <div className="tf-icon-box style-2 type-2 type-column">
                 <div className="icon-box">
                   <span className={`icon ${item.icon}`} />
                 </div>
-                <div className="content text-center">
+                <div className="content">
                   <h6>{item.title}</h6>
                   <p className="text-secondary">{item.description}</p>
                 </div>

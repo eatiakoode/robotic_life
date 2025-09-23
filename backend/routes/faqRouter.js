@@ -1,19 +1,26 @@
 const express = require("express");
-const {
-  createFaq,
-  updateFaq,
-  deleteFaq,
-  getFaq,
-  getallFaq,
-} = require("../controller/faqCtrl");
-const { authMiddleware, isAdmin } = require("../middlewares/authMiddleware");
 const router = express.Router();
+const {
+  getFAQsByRobotId,
+  getAllFAQs,
+  createFAQ,
+  updateFAQ,
+  deleteFAQ
+} = require("../controller/faqCtrl");
 
-router.post("/", authMiddleware, isAdmin,
- createFaq);
-router.put("/:id", authMiddleware, isAdmin, updateFaq);
-router.delete("/:id", authMiddleware, isAdmin, deleteFaq);
-router.get("/:id", getFaq);
-router.get("/", getallFaq);
+// Get FAQs for a specific robot
+router.get("/robot/:robotId", getFAQsByRobotId);
+
+// Get all FAQs
+router.get("/", getAllFAQs);
+
+// Create a new FAQ
+router.post("/", createFAQ);
+
+// Update FAQ
+router.put("/:id", updateFAQ);
+
+// Delete FAQ
+router.delete("/:id", deleteFAQ);
 
 module.exports = router;

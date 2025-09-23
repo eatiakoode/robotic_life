@@ -46,7 +46,7 @@ export default function Blogs() {
               >
                 <div className="content">
                   <h5 className="title">
-                    <Link className="link" href={`/blog-detail/${post.id}`}>
+                    <Link className="link" href={`/blog-detail/${post.slug || post.id}`}>
                       {post.title}
                     </Link>
                   </h5>

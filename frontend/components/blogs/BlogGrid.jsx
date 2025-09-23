@@ -20,6 +20,8 @@ export default function BlogGrid() {
                       src={blog.imgSrc}
                       width={615}
                       height={461}
+                      style={{ width: '100%', height: 'auto', objectFit: 'cover' }}
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     />
                   </div>
                   <div className="content">
@@ -44,7 +46,7 @@ export default function BlogGrid() {
                     </div>
                     <div>
                       <h6 className="title fw-5">
-                        <Link className="link" href={`/blog-detail/${blog.id}`}>
+                        <Link className="link" href={`/blog-detail/${blog.slug || blog.id}`}>
                           {blog.title}
                         </Link>
                       </h6>

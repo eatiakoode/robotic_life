@@ -22,27 +22,27 @@ export default function BlogDefault() {
                       src={post.imgSrc}
                       width={1275}
                       height={717}
+                      style={{ width: '100%', height: 'auto', objectFit: 'cover' }}
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     />
                   </div>
                   <div className="content">
                     <div className="d-flex align-items-center justify-content-between flex-wrap gap-10">
-                      <div className="meta">
-                        <div className="meta-item gap-8">
+                      <div className="meta blog-meta-horizontal d-flex align-items-center gap-3">
+                        <div className="meta-item d-flex align-items-center gap-2">
                           <div className="icon">
                             <i className="icon-calendar" />
                           </div>
-                          <p>{post.date}</p>
+                          <span className="blog-date text-caption-1">{post.date}</span>
                         </div>
-                        <div className="meta-item gap-8">
+                        <span className="blog-separator">|</span>
+                        <div className="meta-item d-flex align-items-center gap-2">
                           <div className="icon">
                             <i className="icon-user" />
                           </div>
-                          <p>
-                            by{" "}
-                            <a className="link" href="#">
-                              {post.author}
-                            </a>
-                          </p>
+                          <span className="blog-author text-caption-1">
+                            by <a className="link" href="#">{post.author}</a>
+                          </span>
                         </div>
                       </div>
                       <div className="meta">
@@ -61,7 +61,7 @@ export default function BlogDefault() {
                       </div>
                     </div>
                     <h4 className="title fw-5">
-                      <Link className="link" href={`/blog-detail/${post.id}`}>
+                      <Link className="link" href={`/blog-detail/${post.slug || post.id}`}>
                         {post.title}
                       </Link>
                     </h4>
@@ -71,9 +71,7 @@ export default function BlogDefault() {
               </React.Fragment>
             ))}
 
-            <ul className="wg-pagination">
-              <Pagination />
-            </ul>
+            <Pagination />
           </div>
           <div className="col-lg-4">
             <Sidebar />

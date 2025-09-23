@@ -1,42 +1,34 @@
-const mongoose = require("mongoose"); // Erase if already required
+const mongoose = require("mongoose");
 
-// Declare the Schema of the Mongo model
-
-var testimonialSchema = new mongoose.Schema(
+const testimonialSchema = new mongoose.Schema(
   {
-    title: {
+    name: {
       type: String,
       required: true,
-      unique: true,
-      index: true,
+      trim: true,
     },
-    description:{
+    designation: {
       type: String,
       required: true,
-      unique: true,
-      index: true,
+      trim: true,
     },
-    logoimage:{
+    message: {
       type: String,
-      // required: true,
-      unique: true,
-      index: true,
+      required: true,
+      trim: true,
     },
-    designation:{
-      type: String,
-      // required: true,
-      unique: true,
-      index: true,
+    rating: {
+      type: Number,
+      min: 1,
+      max: 5,
+      default: 5,
     },
     status: {
       type: Boolean,
       default: true,
     },
   },
-  {
-    timestamps: true,
-  }
+  { timestamps: true }
 );
 
-//Export the model
 module.exports = mongoose.model("Testimonial", testimonialSchema);

@@ -4,7 +4,7 @@ export default function FilterMeta({ allProps, productLength }) {
   return (
     <div className="meta-filter-shop" style={{}}>
       <div id="product-count-grid" className="count-text">
-        <span className="count">{productLength}</span> Products Found
+        <span className="count">{productLength}</span> Robots Found
       </div>
 
       <div id="applied-filters">
@@ -20,20 +20,11 @@ export default function FilterMeta({ allProps, productLength }) {
           ""
         )}
         {allProps.size != "All" ? (
-          <span className="filter-tag" onClick={() => allProps.setSize("All")}>
-            {allProps.size}
-            <span className="remove-tag icon-close" />
-          </span>
-        ) : (
-          ""
-        )}
-        {allProps.color != "All" ? (
           <span
-            className="filter-tag color-tag"
-            onClick={() => allProps.setColor("All")}
+            className="filter-tag size-tag"
+            onClick={() => allProps.setSize("All")}
           >
-            <span className={`color bg-red ${allProps.color.className} `} />
-            {allProps.color.name}
+            {allProps.size}
             <span className="remove-tag icon-close" />
           </span>
         ) : (
@@ -56,11 +47,28 @@ export default function FilterMeta({ allProps, productLength }) {
         ) : (
           ""
         )}
+        
+        {/* Price filter tag */}
+        {allProps.price && allProps.priceBounds && 
+         (allProps.price[0] !== allProps.priceBounds[0] || 
+          allProps.price[1] !== allProps.priceBounds[1]) ? (
+          <span
+            className="filter-tag price-tag"
+            onClick={() => allProps.setPrice(allProps.priceBounds)}
+          >
+            ${allProps.price[0]} - ${allProps.price[1]}
+            <span className="remove-tag icon-close" />
+          </span>
+        ) : (
+          ""
+        )}
       </div>
       {allProps.availability != "All" ||
       allProps.size != "All" ||
-      allProps.color != "All" ||
-      allProps.brands.length ? (
+      allProps.brands.length ||
+      (allProps.price && allProps.priceBounds && 
+       (allProps.price[0] !== allProps.priceBounds[0] || 
+        allProps.price[1] !== allProps.priceBounds[1])) ? (
         <button
           id="remove-all"
           className="remove-all-filters text-btn-uppercase"

@@ -5,7 +5,7 @@ import MobileMenu from "../../common/header/MobileMenu";
 import TableData from "./TableData";
 import Filtering from "./Filtering";
 import Pagination from "./Pagination";
-import SearchBox from "./SearchBox";
+import SearchBox from "../../common/SearchBox";
 import CopyRight from "../../common/footer/CopyRight";
 
 import { useState, useEffect } from "react";
@@ -13,25 +13,46 @@ import { getCategoryTableData,deleteCategoryAPI } from "@/api/category";
 
 const index = () => {
   const [currentPage, setCurrentPage] = useState(1);
-    // const [properties, setProperties] = useState(initialProperties || []);
+  const [categoryList, setCategoryList] = useState([]);
+  const [totalCount, setTotalCount] = useState(0);
+  const [pageSize] = useState(10);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filterType, setFilterType] = useState("Featured First");
+  const [loading, setLoading] = useState(false);
   
-    const [categoryList, setCategoryList] = useState([]);
-    const [totalCount, setTotalCount] = useState([]);
-    const [pageSize] = useState(10);
-  
-    useEffect(() => {
-          const fetchCategoryData = async () => {
-          const filter ={
-       
-        "limit":pageSize,
-        "page":currentPage
-      };
-       const data = await getCategoryTableData(filter);
-          setCategoryList(data.items);
-            setTotalCount(data.totalCount)
+  useEffect(() => {
+    const fetchCategoryData = async () => {
+      setLoading(true);
+      try {
+        const filter = {
+          "limit": pageSize,
+          "page": currentPage,
+          "search": searchQuery,
+          "sort": filterType
         };
-      fetchCategoryData();
-    }, [currentPage]);
+        const data = await getCategoryTableData(filter);
+        setCategoryList(data.items);
+        setTotalCount(data.totalCount);
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+        setCategoryList([]);
+        setTotalCount(0);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchCategoryData();
+  }, [currentPage, searchQuery, filterType]);
+
+  const handleSearch = (query) => {
+    setSearchQuery(query);
+    setCurrentPage(1); // Reset to first page when searching
+  };
+
+  const handleFilterChange = (filter) => {
+    setFilterType(filter);
+    setCurrentPage(1); // Reset to first page when filtering
+  };
   return (
     <>
       {/* <!-- Main Header Nav --> */}
@@ -77,8 +98,8 @@ const index = () => {
 
                 <div className="col-lg-4 col-xl-4 mb10">
                   <div className="breadcrumb_content style2 mb30-991">
-                    <h2 className="breadcrumb_title">All Categorys</h2>
-                    <p>View, search, and manage category profiles associated with your property listings.</p>
+                    <h2 className="breadcrumb_title">All Categories</h2>
+                    <p>View, search, and manage category profiles associated with your robot listings.</p>
                   </div>
                 </div>
                 {/* End .col */}
@@ -86,16 +107,16 @@ const index = () => {
                 <div className="col-lg-8 col-xl-8">
                   <div className="candidate_revew_select style2 text-end mb30-991">
                     <ul className="mb0">
-                      {/* <li className="list-inline-item">
+                      <li className="list-inline-item">
                         <div className="candidate_revew_search_box course fn-520">
-                          <SearchBox />
+                          <SearchBox onSearch={handleSearch} placeholder="Search categories..." />
                         </div>
-                      </li> */}
+                      </li>
                       {/* End li */}
 
-                      {/* <li className="list-inline-item">
-                        <Filtering />
-                      </li> */}
+                      <li className="list-inline-item">
+                        <Filtering onFilterChange={handleFilterChange} />
+                      </li>
                       {/* End li */}
                     </ul>
                   </div>
@@ -106,13 +127,14 @@ const index = () => {
                   <div className="my_dashboard_review mb40">
                     <div className="property_table">
                       <div className="table-responsive mt0">
-                        <TableData categoryList={categoryList} setCategoryList={setCategoryList}/>
+                        <TableData categoryList={categoryList} setCategoryList={setCategoryList} loading={loading}/>
                       </div>
                       {/* End .table-responsive */}
-
-                      <div className="mbp_pagination">
-                         <Pagination totalCount={totalCount} pageSize={pageSize} currentPage={currentPage} onPageChange={(page) => setCurrentPage(page)} />
-                      </div>
+                      {totalCount > pageSize && (
+                        <div className="mbp_pagination">
+                          <Pagination totalCount={totalCount} pageSize={pageSize} currentPage={currentPage} onPageChange={(page) => setCurrentPage(page)} />
+                        </div>
+                      )}
                       {/* End .mbp_pagination */}
                     </div>
                     {/* End .property_table */}

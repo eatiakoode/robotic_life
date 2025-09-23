@@ -29,7 +29,7 @@ export default function ProductCard11({ product, gridClass = "" }) {
       } ${product.sizes ? "card-product-size" : ""}`}
     >
       <div className="card-product-wrapper">
-        <Link href={`/product-detail/${product.id}`} className="product-img">
+        <Link href={`/product-detail/${product.slug && product.slug.trim() ? product.slug : product.id}`} className="product-img">
           <Image
             className="lazyload img-product"
             src={currentImage}
@@ -213,7 +213,7 @@ export default function ProductCard11({ product, gridClass = "" }) {
         </div>
       </div>
       <div className="card-product-info">
-        <Link href={`/product-detail/${product.id}`} className="title link">
+        <Link href={`/product-detail/${product.slug && product.slug.trim() ? product.slug : product.id}`} className="title link">
           {product.title}
         </Link>
         <span className="price">
@@ -222,27 +222,11 @@ export default function ProductCard11({ product, gridClass = "" }) {
           )}{" "}
           ${product.price?.toFixed(2)}
         </span>
-        {product.colors && (
-          <ul className="list-color-product">
-            {product.colors.map((color, index) => (
-              <li
-                key={index}
-                className={`list-color-item color-swatch ${
-                  currentImage == color.imgSrc ? "active" : ""
-                }  ${color.bgColor == "bg-white" ? "line" : ""}`}
-                onMouseOver={() => setCurrentImage(color.imgSrc)}
-              >
-                <span className={`swatch-value ${color.bgColor}`} />
-                <Image
-                  className="lazyload"
-                  src={color.imgSrc}
-                  alt="color variant"
-                  width={600}
-                  height={800}
-                />
-              </li>
-            ))}
-          </ul>
+        {product.manufacturer && (
+          <div className="manufacturer-info">
+            <span className="manufacturer-label">Manufacturer:</span>
+            <span className="manufacturer-name">{product.manufacturer.name || product.manufacturer}</span>
+          </div>
         )}
         <a
           className="btn-main-product"
@@ -251,6 +235,23 @@ export default function ProductCard11({ product, gridClass = "" }) {
           {isAddedToCartProducts(product.id) ? "Already Added" : "ADD TO CART"}
         </a>
       </div>
+      <style jsx>{`
+        .manufacturer-info {
+          margin-top: 8px;
+          padding: 4px 0;
+        }
+        .manufacturer-label {
+          font-size: 12px;
+          color: #666;
+          font-weight: 500;
+          margin-right: 4px;
+        }
+        .manufacturer-name {
+          font-size: 13px;
+          color: #333;
+          font-weight: 600;
+        }
+      `}</style>
     </div>
   );
 }

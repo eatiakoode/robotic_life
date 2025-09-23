@@ -33,15 +33,15 @@ const Header = () => {
             width={170}
             height={65}
             className="logo1 img-fluid"
-            src="/assets/images/header-logo2.png"
-            alt="header-logo2.png"
+            src="/assets/images/logo1.svg"
+            alt="logo1.svg"
           />
           <Image
            width={170}
            height={65}
             className="logo2 img-fluid"
-            src="/assets/images/header-logo2.png"
-            alt="header-logo2.png"
+            src="/assets/images/logo1.svg"
+            alt="logo1.svg"
           />
           {/* <span>WeGrow</span> */}
         </Link>

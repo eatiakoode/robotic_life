@@ -2,19 +2,41 @@ import React from "react";
 import ProductCard1 from "../productCards/ProductCard1";
 import Pagination from "../common/Pagination";
 
-export default function GridView({ products, pagination = true }) {
+export default function GridView({ 
+  products, 
+  pagination = true, 
+  currentPage = 1, 
+  itemsPerPage = 12, 
+  onPageChange 
+}) {
+  
+  // Calculate pagination
+  const totalPages = Math.ceil(products.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const paginatedProducts = products.slice(startIndex, endIndex);
+  
+
   return (
     <>
-      {products.map((product, index) => (
-        <ProductCard1 key={index} product={product} gridClass="grid" />
+      {paginatedProducts.map((product, index) => (
+        <ProductCard1 
+          key={product.id || index} 
+          product={product} 
+          isNotImageRatio 
+          priority={index < 4} // Set priority for first 4 products (above the fold)
+        />
       ))}
+      
       {/* pagination */}
-      {pagination ? (
-        <ul className="wg-pagination justify-content-center">
-          <Pagination />
-        </ul>
-      ) : (
-        ""
+      {pagination && totalPages > 1 && (
+        <Pagination 
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={onPageChange}
+          totalItems={products.length}
+          itemsPerPage={itemsPerPage}
+        />
       )}
     </>
   );
