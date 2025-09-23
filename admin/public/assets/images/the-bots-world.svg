@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300.61 41.89">
+  <defs>
+    <style>
+      .cls-1 {
+        letter-spacing: 0em;
+      }
+
+      .cls-2 {
+        letter-spacing: -.04em;
+      }
+
+      .cls-3 {
+        fill: #231f20;
+        font-family: Mont-Bold, Mont;
+        font-size: 43.48px;
+        font-weight: 700;
+      }
+
+      .cls-4 {
+        letter-spacing: 0em;
+      }
+
+      .cls-5 {
+        letter-spacing: -.05em;
+      }
+    </style>
+  </defs>
+  <text class="cls-3" transform="translate(0 31.95)"><tspan x="0" y="0">th</tspan><tspan class="cls-4" x="46.54" y="0">e</tspan><tspan x="73.51" y="0">B</tspan><tspan class="cls-1" x="101.41" y="0">o</tspan><tspan x="129.45" y="0">t</tspan><tspan class="cls-2" x="148.14" y="0">s</tspan><tspan class="cls-5" x="169.27" y="0">W</tspan><tspan x="212.43" y="0">orld</tspan></text>
+</svg>

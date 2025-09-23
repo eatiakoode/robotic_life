@@ -3,7 +3,7 @@ import Header1 from "@/components/headers/Header1";
 import Topbar6 from "@/components/headers/Topbar6";
 import Products1 from "@/components/products/Products1";
 import Link from "next/link";
-import React from "react";
+import React, { Suspense } from "react";
 
 export default function ShopBreadcumbBackgroundPage() {
   return (
@@ -27,7 +27,9 @@ export default function ShopBreadcumbBackgroundPage() {
         </div>
       </div>
 
-      <Products1 />
+      <Suspense fallback={<div className="loading-spinner">Loading products...</div>}>
+        <Products1 />
+      </Suspense>
       <Footer1 />
     </>
   );
