@@ -22,11 +22,11 @@ const nextConfig = {
         pathname: '/images/**',
       },
       // Add your production domain when you deploy
-      // {
-      //   protocol: 'https',
-      //   hostname: 'your-production-domain.com',
-      //   pathname: '/images/**',
-      // },
+      {
+        protocol: 'https',
+        hostname: 'thebotsworld.onrender.com',
+        pathname: '/images/**',
+      },
     ],
     // Allow local images from public folder
     domains: ['localhost'],
