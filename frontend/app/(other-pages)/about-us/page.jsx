@@ -1,12 +1,10 @@
-import Brands from "@/components/common/Brands";
-import Features2 from "@/components/common/Features2";
+
+import Features from "@/components/homes/home-gaming/Features";
 import Footer1 from "@/components/footers/Footer1";
 import Header1 from "@/components/headers/Header1";
 import Link from "next/link";
-import Topbar6 from "@/components/headers/Topbar6";
 import About from "@/components/otherPages/About";
 import Info from "@/components/otherPages/Info";
-// import Testimonials from "@/components/otherPages/Testimonials";
 import Testimonials from "@/components/homes/home-gaming/Testimonials";
 import React from "react";
 
@@ -18,7 +16,6 @@ export const metadata = {
 export default function AboutUsPage() {
   return (
     <>
-      {/* <Topbar6 bgColor="bg-main" /> */}
       <Header1 />
       <div
         className="page-title"
@@ -44,9 +41,8 @@ export default function AboutUsPage() {
         </div>
       </div>
       <About />
-      <Features2 parentClass="flat-spacing line-bottom-container" />
+      <Features />
       <Info />
-      {/* <Brands parentClass="flat-spacing-5 bg-surface" /> */}
       <Testimonials />
       <Footer1 dark />
     </>

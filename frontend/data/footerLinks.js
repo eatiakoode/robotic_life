@@ -13,7 +13,7 @@ export const quickLinks = [
     items: [
       { label: "Home", href: "/", isLink: true },
       { label: "About Us", href: "/about-us", isLink: true },
-      { label: "Robots", href: "/shop-filter-canvas", isLink: true },
+      { label: "Robots", href: "/shop-default-grid", isLink: true },
       { label: "Blogs", href: "/blog-list", isLink: true },
       
       // { label: "Career", href: "#", isLink: false },

@@ -158,7 +158,7 @@ export default function Nav() {
             : ""
         } `}
       >
-        <a href="shop-default-grid" className="item-link">
+        <a href="/shop-default-grid" className="item-link">
           Robot
           <i className="icon icon-arrow-down" />
         </a>
@@ -607,68 +607,38 @@ export default function Nav() {
               )}
               <div className="col-xl-4 col-lg-12 col-md-12 col-12">
                 <div className="wrapper-sub-shop">
-                  {hoveredCategory &&
-                  subcategories[hoveredCategory._id] &&
-                  subcategories[hoveredCategory._id].length > 0 ? (
-                    <>
-                      <div className="menu-heading">
-                        Subcategories - {hoveredCategory.name}
+                  <div className="menu-heading">Recent Robots</div>
+                  {robotsLoading ? (
+                    <div className="text-center py-3">
+                      <div
+                        className="spinner-border spinner-border-sm"
+                        role="status"
+                      >
+                        <span className="visually-hidden">
+                          Loading robots...
+                        </span>
                       </div>
-                      <ul className="menu-list">
-                        {subcategories[hoveredCategory._id].map(
-                          (subcategory, index) => (
-                            <li key={subcategory._id} className="menu-item-li">
-                              <Link
-                                href={`/shop-default-grid?category=${
-                                  subcategory.slug
-                                }&categoryName=${encodeURIComponent(
-                                  subcategory.name
-                                )}&type=subcategory`}
-                                className="menu-link-text"
-                              >
-                                {subcategory.name}
-                              </Link>
-                            </li>
-                          )
-                        )}
-                      </ul>
-                    </>
-                  ) : (
-                    <>
-                      <div className="menu-heading">Recent Robots</div>
-                      {robotsLoading ? (
-                        <div className="text-center py-3">
-                          <div
-                            className="spinner-border spinner-border-sm"
-                            role="status"
-                          >
-                            <span className="visually-hidden">
-                              Loading robots...
-                            </span>
-                          </div>
-                        </div>
-                      ) : robots.length > 0 ? (
-                        <Swiper
-                          dir="ltr"
-                          className="swiper tf-product-header"
-                          slidesPerView={2}
-                          spaceBetween={20}
+                    </div>
+                  ) : robots.length > 0 ? (
+                    <Swiper
+                      dir="ltr"
+                      className="swiper tf-product-header"
+                      slidesPerView={2}
+                      spaceBetween={20}
+                    >
+                      {robots.map((robot, i) => (
+                        <SwiperSlide
+                          key={robot.id || i}
+                          className="swiper-slide"
                         >
-                          {robots.map((robot, i) => (
-                            <SwiperSlide
-                              key={robot.id || i}
-                              className="swiper-slide"
-                            >
-                              <ProductCard1 product={robot} priority={i < 2} />
-                            </SwiperSlide>
-                          ))}
-                        </Swiper>
-                      ) : (
-                        <div className="text-center py-3">
-                          <p className="text-muted mb-0">No robots available</p>
-                        </div>
-                      )}
-                    </>
+                          <ProductCard1 product={robot} priority={i < 2} />
+                        </SwiperSlide>
+                      ))}
+                    </Swiper>
+                  ) : (
+                    <div className="text-center py-3">
+                      <p className="text-muted mb-0">No robots available</p>
+                    </div>
                   )}
                 </div>
               </div>
@@ -677,17 +647,17 @@ export default function Nav() {
         </div>
       </li>
       <li>
-        <a href="blog-list" className="item-link">
+        <a href="/blog-list" className="item-link">
           Blog
         </a>
       </li>
       <li>
-        <a href="about-us" className="item-link">
+        <a href="/about-us" className="item-link">
           About Us
         </a>
       </li>
       <li>
-        <a href="contact" className="item-link">
+        <a href="/contact" className="item-link">
           Contact Us
         </a>
       </li>

@@ -14,7 +14,6 @@ export default function RelatedProducts({ productSlug, recentlyViewedIds = [] })
   const [error, setError] = useState(null);
   const [hasFetched, setHasFetched] = useState(false);
 
-  // Memoize the recently viewed IDs to prevent unnecessary re-renders
   const memoizedRecentlyViewedIds = useMemo(() => {
     return Array.isArray(recentlyViewedIds) ? recentlyViewedIds : [];
   }, [recentlyViewedIds]);
@@ -27,7 +26,6 @@ export default function RelatedProducts({ productSlug, recentlyViewedIds = [] })
       const related = await getRelatedProducts(slug);
       return Array.isArray(related) ? related : [];
     } catch (err) {
-      // Error fetching related robots
       return [];
     }
   }, []);
@@ -39,14 +37,13 @@ export default function RelatedProducts({ productSlug, recentlyViewedIds = [] })
       const recentlyViewed = await getRecentlyViewed(ids);
       return Array.isArray(recentlyViewed) ? recentlyViewed : [];
     } catch (err) {
-      // Error fetching recently viewed robots
       return [];
     }
   }, []);
 
   useEffect(() => {
     const fetchData = async () => {
-      // Prevent multiple simultaneous fetches
+ 
       if (hasFetched) return;
       
       try {
@@ -55,14 +52,12 @@ export default function RelatedProducts({ productSlug, recentlyViewedIds = [] })
 
         const promises = [];
 
-        // Fetch related products if slug is provided
         if (productSlug) {
           promises.push(fetchRelatedProducts(productSlug));
         } else {
           promises.push(Promise.resolve([]));
         }
 
-        // Fetch recently viewed products if IDs are provided
         if (memoizedRecentlyViewedIds.length > 0) {
           promises.push(fetchRecentlyViewedProducts(memoizedRecentlyViewedIds));
         } else {
@@ -76,7 +71,6 @@ export default function RelatedProducts({ productSlug, recentlyViewedIds = [] })
         setHasFetched(true);
 
       } catch (err) {
-        // Handle errors without fallback data
         setError('Unable to load robots. Please try refreshing the page.');
         console.error('Error fetching robots:', err);
       } finally {
@@ -87,7 +81,6 @@ export default function RelatedProducts({ productSlug, recentlyViewedIds = [] })
     fetchData();
   }, [productSlug, memoizedRecentlyViewedIds, fetchRelatedProducts, fetchRecentlyViewedProducts, hasFetched]);
 
-  // Show loading state
   if (loading) {
     return (
       <section className="flat-spacing">
@@ -213,7 +206,7 @@ export default function RelatedProducts({ productSlug, recentlyViewedIds = [] })
                     <h5 className="text-muted">No Related Robots Found</h5>
                     <p className="text-muted">
                       {productSlug 
-                        ? "We couldn't find any related robots for this robot. This might be the only robot in this category."
+                        ? "We couldn't find any related robots for this robot."
                         : "No related robots available at the moment."
                       }
                     </p>
@@ -259,8 +252,8 @@ export default function RelatedProducts({ productSlug, recentlyViewedIds = [] })
                     <h5 className="text-muted">No Recently Viewed Robots</h5>
                     <p className="text-muted">
                       {memoizedRecentlyViewedIds.length === 0
-                        ? "Start browsing robots to see your recently viewed robots here."
-                        : "Unable to load your recently viewed robots. Please try refreshing the page."
+                        ? "No Recently viewed robots yet."
+                        : "No recently viewed robots found."
                       }
                     </p>
                   </div>
